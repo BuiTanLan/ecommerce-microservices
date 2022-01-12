@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using BuildingBlocks.EFCore;
 using BuildingBlocks.IntegrationTests.Mock;
-using BuildingBlocks.Persistence;
+using BuildingBlocks.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -12,7 +13,6 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Xunit.Abstractions;
-using BuildingBlocks.Web;
 
 namespace BuildingBlocks.Test.Factories
 {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using MediatR;
 
@@ -10,7 +10,7 @@ namespace BuildingBlocks.Caching
 
         string GetCacheKey(TRequest request)
         {
-            var r = new {request};
+            var r = new { request };
             var props = r.request.GetType().GetProperties().Select(pi => $"{pi.Name}:{pi.GetValue(r.request, null)}");
             return $"{typeof(TRequest).FullName}{{{String.Join(",", props)}}}";
         }

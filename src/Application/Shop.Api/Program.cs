@@ -1,14 +1,15 @@
 using System.Reflection;
+using Ben.Diagnostics;
 using BuildingBlocks.Web;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Serilog;
-using Shop.Api;
+using Shop;
 using Shop.Api.Endpoints;
 using Shop.Core;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseCustomSerilog();
+builder.AddCustomSerilog();
 builder.Host.UseDefaultServiceProvider((env, c) =>
 {
     if (env.HostingEnvironment.IsDevelopment() || env.HostingEnvironment.IsStaging())
@@ -27,17 +28,12 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("api", policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
-});
-
 builder.Services.AddCustomHealthCheck(healthBuilder => { });
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddCustomVersioning();
 
-builder.AddCustomSwagger(builder.Configuration, typeof(Root).Assembly);
-;
+builder.AddCustomSwagger(builder.Configuration, typeof(ShopRoot).Assembly);
+
 
 builder.AddAuthentication();
 builder.AddAuthorization();
@@ -51,7 +47,9 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
     app.UseCustomSwagger();
 }
 
-app.UseCors("api");
+app.UseBlockingDetection();
+
+app.UseAppCors();
 
 app.UseRouting();
 
@@ -76,15 +74,5 @@ app.UseEndpoints(endpoints =>
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateBootstrapLogger();
-try
-{
-    await app.RunAsync();
-}
-catch (Exception ex)
-{
-    Log.Fatal(ex, "Host terminated unexpectedly");
-}
-finally
-{
-    Log.CloseAndFlush();
-}
+
+await app.RunAsync();

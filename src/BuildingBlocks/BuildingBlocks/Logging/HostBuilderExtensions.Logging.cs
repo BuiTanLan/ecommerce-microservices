@@ -1,13 +1,15 @@
+using Microsoft.AspNetCore.Builder;
+
 namespace Microsoft.Extensions.Hosting;
 
-using BuildingBlocks.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
+using BuildingBlocks.Logging;
 using Configuration;
 using DependencyInjection;
 using Hosting;
+using Microsoft.AspNetCore.Http;
 using Serilog;
 using Serilog.Events;
 using Serilog.Filters;
@@ -17,9 +19,17 @@ public static class HostBuilderExtensions
 {
     private const string LoggerSectionName = "Logging";
 
-    public static IHostBuilder UseCustomSerilog(this IHostBuilder builder,
-        Action<LoggerConfiguration> extraConfigure = null,
-        string loggerSectionName = LoggerSectionName)
+    public static WebApplicationBuilder AddCustomSerilog(this WebApplicationBuilder builder,
+        Action<LoggerConfiguration> extraConfigure = null)
+    {
+        AddCustomSerilog(builder.Host, extraConfigure);
+
+        return builder;
+    }
+
+
+    public static IHostBuilder AddCustomSerilog(this IHostBuilder builder,
+        Action<LoggerConfiguration> extraConfigure = null)
     {
         return builder.UseSerilog((context, serviceProvider, loggerConfiguration) =>
         {
@@ -33,7 +43,7 @@ public static class HostBuilderExtensions
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                 .Enrich.FromLogContext();
 
-            var loggerOptions = context.Configuration.GetSection(loggerSectionName).Get<LoggerOptions>();
+            var loggerOptions = context.Configuration.GetSection(nameof(LoggerOptions)).Get<LoggerOptions>();
             if (loggerOptions is { })
                 MapOptions(loggerOptions, loggerConfiguration, context);
 

@@ -35,7 +35,7 @@ namespace BuildingBlocks.Resiliency
                 .UsingRegistrationStrategy(RegistrationStrategy.Skip)
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
-            
+
             return services;
         }
     }

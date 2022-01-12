@@ -2,6 +2,8 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.CQRS.Query;
 using BuildingBlocks.Domain;
 using BuildingBlocks.Test.Factories;
 using BuildingBlocks.Test.Helpers;

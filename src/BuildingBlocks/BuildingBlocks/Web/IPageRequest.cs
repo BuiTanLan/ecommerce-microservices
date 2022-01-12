@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BuildingBlocks.CQRS;
 using BuildingBlocks.Domain;
 
 namespace BuildingBlocks.Web

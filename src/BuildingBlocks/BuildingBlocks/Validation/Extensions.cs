@@ -28,7 +28,7 @@ namespace BuildingBlocks.Validation
         public static IServiceCollection AddCustomValidators(this IServiceCollection services, Assembly assembly)
         {
             //https://codewithmukesh.com/blog/mediatr-pipeline-behaviour/
-           return services.AddValidatorsFromAssembly(assembly);
+            return services.AddValidatorsFromAssembly(assembly);
         }
     }
 }

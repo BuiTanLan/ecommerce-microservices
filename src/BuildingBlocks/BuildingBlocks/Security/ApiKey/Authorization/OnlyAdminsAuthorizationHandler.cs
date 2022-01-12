@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BuildingBlocks.Security.ApiKey.Authorization
 {
-    public class OnlyAdminsAuthorizationHandler: AuthorizationHandler<OnlyAdminsRequirement>
+    public class OnlyAdminsAuthorizationHandler : AuthorizationHandler<OnlyAdminsRequirement>
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OnlyAdminsRequirement requirement)
         {

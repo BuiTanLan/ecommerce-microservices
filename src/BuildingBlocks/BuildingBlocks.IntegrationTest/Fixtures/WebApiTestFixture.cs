@@ -90,7 +90,7 @@ namespace Trill.Shared.Tests.Integration
         }
     }
 
-     public abstract class WebApiTestFixture<TEntryPoint> : IntegrationTestFixture<TEntryPoint> where TEntryPoint : class
+    public abstract class WebApiTestFixture<TEntryPoint> : IntegrationTestFixture<TEntryPoint> where TEntryPoint : class
     {
         private string _route;
 

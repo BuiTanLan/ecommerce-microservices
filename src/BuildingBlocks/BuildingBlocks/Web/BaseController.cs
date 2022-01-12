@@ -1,7 +1,7 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.Web
 {

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using BuildingBlocks.Utils;
 
 namespace BuildingBlocks.Caching
 {
-    public static class CacheKey 
+    public static class CacheKey
     {
         public static string With(params string[] keys)
         {

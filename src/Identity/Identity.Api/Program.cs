@@ -1,56 +1,79 @@
-using Identity.Api;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using Ben.Diagnostics;
+using BuildingBlocks.Jwt;
+using BuildingBlocks.Web;
+using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
+using Hellang.Middleware.ProblemDetails;
+using Identity;
+using Identity.Api.Extensions.ServiceCollectionExtensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Serilog;
+
+//https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
-builder.AddSerilog();
-builder.AddSwagger();
-builder.Services.AddCors();
-builder.AddCustomIdentityServer(builder.Configuration.GetConnectionString("ShopDBPostgressConnection"));
+
+builder.Services.AddControllers(options =>
+    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer())));
+
+builder.AddCompression();
+
+builder.AddCustomProblemDetails();
+
+builder.AddCustomSerilog();
+
+builder.AddCustomSwagger(builder.Configuration, typeof(IdentityRoot).Assembly);
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddCustomHealthCheck(healthBuilder => { });
+
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+builder.Services.AddCustomJwtAuthentication(builder.Configuration);
+builder.Services.AddAuthorization();
+
+builder.AddIdentityModule();
 
 var app = builder.Build();
-
-await EnsureDb(app.Services, app.Logger);
 
 var environment = app.Environment;
 
 if (environment.IsDevelopment() || environment.IsEnvironment("docker"))
 {
-    app.UseDeveloperExceptionPage()
-        .UseSwaggerEndpoints(routePrefix: string.Empty);
+    app.UseDeveloperExceptionPage();
+    // Minimal Api not supported versioning in .net 6
+    app.UseCustomSwagger();
 }
 
 app.UseHttpsRedirection();
 
+app.UseBlockingDetection();
+
+app.UseProblemDetails();
+
 app.UseRouting();
+
 app.UseAppCors();
 
-app.UseIdentityServer();
+app.UseCustomHealthCheck();
 
+await app.ConfigureIdentityModule(environment, app.Logger);
+
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", () => "Identity Server Apis").ExcludeFromDescription();
+app.MapControllers();
 
-app.UseEndpoints(endpoints => {
-    endpoints.MapControllers();
-});
+app.MapIdentityModuleEndpoints();
 
-var userManager = app.Services.CreateScope().ServiceProvider.GetService<UserManager<ApplicationIdentityUser>>();
-IdentityDataSeeder.SeedAll(userManager);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-app.Run();
+await app.RunAsync();
 
-async Task EnsureDb(IServiceProvider services, ILogger logger)
+public partial class Program
 {
-    await using var db = services.CreateScope().ServiceProvider.GetRequiredService<IdentityContext>();
-    if (db.Database.IsRelational())
-    {
-        logger.LogInformation("Updating database...");
-        await db.Database.MigrateAsync();
-        logger.LogInformation("Updated database");
-    }
 }
-
-public partial class Program { }

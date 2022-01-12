@@ -1,7 +1,7 @@
 namespace Shop.Api.Endpoints;
 
-using Api;
 using System.Security.Claims;
+using Api;
 
 
 public static class WeatherForecastEndpoints
@@ -28,11 +28,11 @@ public static class WeatherForecastEndpoints
     private static Task<IResult> GetWeathers(ClaimsPrincipal principal, ILogger<WeatherForecast> logger)
     {
         var result = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
+        {
+            Date = DateTime.Now.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+        })
             .ToList();
 
         return Task.FromResult(Results.Ok(result));

@@ -9,8 +9,8 @@ namespace BuildingBlocks.Web
 {
     public static class ServiceCollectionExtensions
     {
-         public static void AddCustomVersioning(this IServiceCollection services,
-            Action<ApiVersioningOptions> configurator = null)
+        public static void AddCustomVersioning(this IServiceCollection services,
+           Action<ApiVersioningOptions> configurator = null)
         {
             //https://www.meziantou.net/versioning-an-asp-net-core-api.htm
             //https://exceptionnotfound.net/overview-of-api-versioning-in-asp-net-core-3-0/

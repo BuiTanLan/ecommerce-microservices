@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Swashbuckle.AspNetCore.SwaggerUI;
+
 namespace Microsoft.AspNetCore.Builder;
 
-using Mvc.ApiExplorer;
 
 public static class ApplicationBuilderExtensions
 {
@@ -15,6 +17,7 @@ public static class ApplicationBuilderExtensions
         app.UseSwaggerUI(
             options =>
             {
+                options.DocExpansion(DocExpansion.None);
                 if (provider is null)
                 {
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "API");

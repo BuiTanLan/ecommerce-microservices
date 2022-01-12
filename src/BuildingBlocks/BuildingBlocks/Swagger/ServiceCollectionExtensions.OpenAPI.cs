@@ -1,19 +1,22 @@
-﻿namespace Microsoft.Extensions.DependencyInjection;
-
-using BuildingBlocks.Swagger;
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using BuildingBlocks.Security.ApiKey;
-using AspNetCore.Builder;
-using AspNetCore.Mvc.Controllers;
-using DependencyInjection;
-using Options;
-using PlatformAbstractions;
-using OpenApi.Models;
+using BuildingBlocks.Swagger;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using IConfiguration = Configuration.IConfiguration;
+
+namespace Microsoft.Extensions.DependencyInjection;
 
 //https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/master/README.md
 public static class ServiceCollectionExtensions
@@ -74,24 +77,21 @@ public static class ServiceCollectionExtensions
                     Scheme = "Bearer"
                 });
 
-                options.AddSecurityDefinition(ApiKeyConstants.HeaderName, new OpenApiSecurityScheme
-                {
-                    Description = "Api key needed to access the endpoints. X-Api-Key: My_API_Key",
-                    In = ParameterLocation.Header,
-                    Name = ApiKeyConstants.HeaderName,
-                    Type = SecuritySchemeType.ApiKey
-                });
+                options.AddSecurityDefinition(ApiKeyConstants.HeaderName,
+                    new OpenApiSecurityScheme
+                    {
+                        Description = "Api key needed to access the endpoints. X-Api-Key: My_API_Key",
+                        In = ParameterLocation.Header,
+                        Name = ApiKeyConstants.HeaderName,
+                        Type = SecuritySchemeType.ApiKey
+                    });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            },
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" },
                             Scheme = "oauth2",
                             Name = "Bearer",
                             In = ParameterLocation.Header,
@@ -105,11 +105,68 @@ public static class ServiceCollectionExtensions
                             Type = SecuritySchemeType.ApiKey,
                             In = ParameterLocation.Header,
                             Reference = new OpenApiReference
-                                { Type = ReferenceType.SecurityScheme, Id = ApiKeyConstants.HeaderName },
+                            {
+                                Type = ReferenceType.SecurityScheme, Id = ApiKeyConstants.HeaderName
+                            },
                         },
                         new string[] { }
                     }
                 });
+
+                if (useApiVersioning)
+                {
+                    // Grouping endopings by version and ApiExplorer group name.
+                    options.DocInclusionPredicate((documentName, apiDescription) =>
+                    {
+                        ApiVersionModel actionApiVersionModel = apiDescription.ActionDescriptor
+                            .GetApiVersionModel(ApiVersionMapping.Explicit | ApiVersionMapping.Implicit);
+
+                        if (actionApiVersionModel == null)
+                        {
+                            return true;
+                        }
+
+                        ApiExplorerSettingsAttribute apiExplorerSettingsAttribute =
+                            (ApiExplorerSettingsAttribute)apiDescription.ActionDescriptor
+                                .EndpointMetadata.FirstOrDefault(x =>
+                                    x.GetType().Equals(typeof(ApiExplorerSettingsAttribute)));
+
+                        if (apiExplorerSettingsAttribute == null)
+                        {
+                            return true;
+                        }
+
+                        if (actionApiVersionModel.DeclaredApiVersions.Any())
+                        {
+                            return actionApiVersionModel.DeclaredApiVersions.Any(v =>
+                                $"v{v.MajorVersion}" == documentName);
+                        }
+
+                        return actionApiVersionModel.ImplementedApiVersions.Any(v =>
+                            $"v{v.MajorVersion}" == documentName);
+                    });
+
+                    // Adding all the available versions.
+                    IApiVersionDescriptionProvider apiVersionDescriptionProvider = services.BuildServiceProvider()
+                        .GetService<IApiVersionDescriptionProvider>();
+
+                    foreach (ApiVersionDescription description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                    {
+                        OpenApiInfo openApiInfo = new OpenApiInfo()
+                        {
+                            Title = $"{description.GroupName} API",
+                            Version = description.ApiVersion.ToString(),
+                            Description = $"{description.GroupName} API description."
+                        };
+
+                        if (description.IsDeprecated)
+                        {
+                            openApiInfo.Description += " This API version has been deprecated.";
+                        }
+
+                        options.SwaggerDoc(description.GroupName, openApiInfo);
+                    }
+                }
 
                 if (tagByActionName)
                 {
@@ -129,7 +186,11 @@ public static class ServiceCollectionExtensions
                         return new List<string>();
                     });
                 }
+
+                // Adding swagger data annotation support.
+                // options.EnableAnnotations();
             });
+
 
         return services;
 

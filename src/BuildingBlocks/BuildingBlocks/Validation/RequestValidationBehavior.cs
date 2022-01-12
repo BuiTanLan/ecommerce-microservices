@@ -4,8 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 
 namespace BuildingBlocks.Validation
@@ -21,7 +21,8 @@ namespace BuildingBlocks.Validation
         public RequestValidationBehavior(IServiceProvider serviceProvider,
             ILogger<RequestValidationBehavior<TRequest, TResponse>> logger)
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));;
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            ;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -31,7 +32,7 @@ namespace BuildingBlocks.Validation
         {
             _validator = _serviceProvider.GetService<IValidator<TRequest>>();
             if (_validator is null)
-               return await next();
+                return await next();
 
             _logger.LogInformation(
                 "[{Prefix}] Handle request={X-RequestData} and response={X-ResponseData}",

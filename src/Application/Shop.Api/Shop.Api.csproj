@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Shop\Shop.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="assets\http-client.env.json" />
+  </ItemGroup>
+
 </Project>
