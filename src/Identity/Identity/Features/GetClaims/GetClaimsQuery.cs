@@ -1,13 +1,14 @@
+using System.Security.Claims;
 using BuildingBlocks.CQRS.Query;
 using Microsoft.AspNetCore.Http;
 
 namespace Identity.Features.GetClaims;
 
-public class GetClaimsQuery : IQuery<Dictionary<string, string>>
+public class GetClaimsQuery : IQuery<GetClaimsQueryResult>
 {
 }
 
-public class GetClaimsQueryHandler : IQueryHandler<GetClaimsQuery, Dictionary<string, string>>
+public class GetClaimsQueryHandler : IQueryHandler<GetClaimsQuery, GetClaimsQueryResult>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -16,10 +17,13 @@ public class GetClaimsQueryHandler : IQueryHandler<GetClaimsQuery, Dictionary<st
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public Task<Dictionary<string, string>> Handle(GetClaimsQuery request, CancellationToken cancellationToken)
+    public Task<GetClaimsQueryResult> Handle(GetClaimsQuery request, CancellationToken cancellationToken)
     {
-        var claims = _httpContextAccessor.HttpContext?.User.Claims;
+        var claims = _httpContextAccessor.HttpContext?.User.Claims.Select(x => new ClaimDto
+        {
+            Type = x.Type, Value = x.Value
+        });
 
-        return Task.FromResult(claims?.ToDictionary(x => x.Type, x => x.Value));
+        return Task.FromResult(new GetClaimsQueryResult(claims));
     }
 }

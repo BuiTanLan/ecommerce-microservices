@@ -2,7 +2,8 @@ using MediatR;
 
 namespace BuildingBlocks.CQRS.Command;
 
-public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand> where TCommand : ICommand
+public interface ICommandHandler<in TCommand> : ICommandHandler<TCommand, Unit>
+    where TCommand : ICommand<Unit>
 {
 }
 

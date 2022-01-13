@@ -1,9 +1,11 @@
 using System.IO.Compression;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Api.Extensions.ServiceCollectionExtensions;
 
-public static partial class ServiceCollection
+public static class ServiceCollection
 {
     public static WebApplicationBuilder AddCompression(this WebApplicationBuilder builder)
     {

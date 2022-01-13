@@ -14,7 +14,7 @@ public static class Endpoint
         endpoints.MapPost($"{IdentityConfiguration.IdentityModulePrefixUri}/login", LoginUser)
             .AllowAnonymous()
             .WithTags(Tag)
-            .Produces<LoginCommandResponse>(StatusCodes.Status200OK)
+            .Produces<LoginCommandResponse>()
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
             .WithDisplayName("Login User.");

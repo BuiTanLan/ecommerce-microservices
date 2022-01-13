@@ -19,13 +19,13 @@ public record LoginCommand(string UserNameOrEmail, string Password, bool Remembe
 
 public class LoginCommandHandler : ICommandHandler<LoginCommand, LoginCommandResponse>
 {
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly ICommandProcessor _commandProcessor;
-    private readonly IQueryProcessor _queryProcessor;
     private readonly IJwtHandler _jwtHandler;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly ILogger<LoginCommandHandler> _logger;
     private readonly JwtOptions _jwtOptions;
+    private readonly ILogger<LoginCommandHandler> _logger;
+    private readonly IQueryProcessor _queryProcessor;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public LoginCommandHandler(UserManager<ApplicationUser> userManager,
         ICommandProcessor commandProcessor,
@@ -51,30 +51,23 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand, LoginCommandRes
         var identityUser = await _userManager.FindByNameAsync(request.UserNameOrEmail) ??
                            await _userManager.FindByEmailAsync(request.UserNameOrEmail);
 
-        if (identityUser == null)
-        {
-            throw new UserNotFoundException(request.UserNameOrEmail);
-        }
+        if (identityUser == null) throw new UserNotFoundException(request.UserNameOrEmail);
 
 
-        SignInResult signinResult = await _signInManager.PasswordSignInAsync(
+        var signinResult = await _signInManager.PasswordSignInAsync(
             request.UserNameOrEmail,
             request.Password,
-            isPersistent: request.Remember,
-            lockoutOnFailure: false);
+            request.Remember,
+            false);
 
 
         if (signinResult.IsNotAllowed)
         {
             if (!await _userManager.IsEmailConfirmedAsync(identityUser))
-            {
                 throw new EmailNotConfirmedException(identityUser.Email);
-            }
 
             if (!await _userManager.IsPhoneNumberConfirmedAsync(identityUser))
-            {
                 throw new PhoneNumberNotConfirmedException(identityUser.PhoneNumber);
-            }
         }
         else if (signinResult.IsLockedOut)
         {

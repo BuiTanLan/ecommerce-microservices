@@ -1,5 +1,3 @@
-root = true
-
 [*]
 indent_style = space
 indent_size = 2
@@ -44,20 +42,15 @@ dotnet_style_predefined_type_for_member_access = true:suggestion
 
 # name all constant fields using PascalCase
 dotnet_naming_rule.constant_fields_should_be_pascal_case.severity = suggestion
-dotnet_naming_rule.constant_fields_should_be_pascal_case.symbols  = constant_fields
-dotnet_naming_rule.constant_fields_should_be_pascal_case.style    = pascal_case_style
+dotnet_naming_rule.constant_fields_should_be_pascal_case.symbols = constant_fields
+dotnet_naming_rule.constant_fields_should_be_pascal_case.style = pascal_case_style
 
-dotnet_naming_symbols.constant_fields.applicable_kinds   = field
+dotnet_naming_symbols.constant_fields.applicable_kinds = field
 dotnet_naming_symbols.constant_fields.required_modifiers = const
 
 dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
-# static fields should have s_ prefix
-dotnet_naming_rule.static_fields_should_have_prefix.severity = suggestion
-dotnet_naming_rule.static_fields_should_have_prefix.symbols  = static_fields
-dotnet_naming_rule.static_fields_should_have_prefix.style    = static_prefix_style
-
-dotnet_naming_symbols.static_fields.applicable_kinds   = field
+dotnet_naming_symbols.static_fields.applicable_kinds = field
 dotnet_naming_symbols.static_fields.required_modifiers = static
 
 dotnet_naming_style.static_prefix_style.required_prefix = s_
@@ -65,8 +58,8 @@ dotnet_naming_style.static_prefix_style.capitalization = camel_case
 
 # internal and private fields should be _camelCase
 dotnet_naming_rule.camel_case_for_private_internal_fields.severity = suggestion
-dotnet_naming_rule.camel_case_for_private_internal_fields.symbols  = private_internal_fields
-dotnet_naming_rule.camel_case_for_private_internal_fields.style    = camel_case_underscore_style
+dotnet_naming_rule.camel_case_for_private_internal_fields.symbols = private_internal_fields
+dotnet_naming_rule.camel_case_for_private_internal_fields.style = camel_case_underscore_style
 
 dotnet_naming_symbols.private_internal_fields.applicable_kinds = field
 dotnet_naming_symbols.private_internal_fields.applicable_accessibilities = private, internal
@@ -128,53 +121,17 @@ csharp_space_between_parentheses = false
 csharp_space_between_square_brackets = false
 
 
-[*.cs]
-csharp_style_var_for_built_in_types=true:silent
-csharp_style_var_when_type_is_apparent=true:silent
-csharp_style_var_elsewhere=true:silent
-
-
-[*.{asm,inc}]
-indent_size = 8
-
-# Xml project files
-[*.{csproj,vcxproj,vcxproj.filters,proj,nativeproj,locproj}]
-indent_size = 2
-
-# Xml config files
-[*.{props,targets,config,nuspec}]
-indent_size = 2
-
-[CMakeLists.txt]
-indent_size = 2
-
-[*.cmd]
-indent_size = 2
-
-[*.md]
-insert_final_newline = false
-trim_trailing_whitespace = false
-
-[*.ts]
-indent_size = 2
-end_of_line = lf
-
-[*.tsx]
-indent_size = 2
-end_of_line = lf
-
-[.yml]
-indent_size = 2
-end_of_line = lf
-
-
+## https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/categories
+## Microsoft Rules
 ##
-## StyleCop.Analyzers
+
+
 ## https://github.com/DotNetAnalyzers/StyleCopAnalyzers/tree/master/documentation
+## StyleCop.Analyzers
 ##
 
 # Using directive should appear within a namespace declaration
-# dotnet_diagnostic.SA1200.severity = None
+dotnet_diagnostic.SA1200.severity = None
 
 # XML comment analysis is disabled due to project configuration
 dotnet_diagnostic.SA0001.severity = None
@@ -183,13 +140,13 @@ dotnet_diagnostic.SA0001.severity = None
 dotnet_diagnostic.SA1633.severity = None
 
 # Use string.Empty for empty strings
-# dotnet_diagnostic.SA1122.severity = None
+dotnet_diagnostic.SA1122.severity = None
 
 # Variable '_' should begin with lower-case letter
-# dotnet_diagnostic.SA1312.severity = None
+dotnet_diagnostic.SA1312.severity = None
 
 # Parameter '_' should begin with lower-case letter
-# dotnet_diagnostic.SA1313.severity = None
+dotnet_diagnostic.SA1313.severity = None
 
 # Elements should be documented
 dotnet_diagnostic.SA1600.severity = None
@@ -198,22 +155,22 @@ dotnet_diagnostic.SA1600.severity = None
 dotnet_diagnostic.SA1101.severity = None
 
 # 'public' members should come before 'private' members
-# dotnet_diagnostic.SA1202.severity = None
+dotnet_diagnostic.SA1202.severity = None
 
 # Comments should contain text
 dotnet_diagnostic.SA1120.severity = None
 
 # Constant fields should appear before non-constant fields
-# dotnet_diagnostic.SA1203.severity = None
+dotnet_diagnostic.SA1203.severity = None
 
 # Field '_blah' should not begin with an underscore
 dotnet_diagnostic.SA1309.severity = None
 
 # Use trailing comma in multi-line initializers
-# dotnet_diagnostic.SA1413.severity = None
+dotnet_diagnostic.SA1413.severity = None
 
 # A method should not follow a class
-# dotnet_diagnostic.SA1201.severity = None
+dotnet_diagnostic.SA1201.severity = None
 
 # Elements should be separated by blank line
 dotnet_diagnostic.SA1516.severity = None
@@ -246,7 +203,7 @@ dotnet_diagnostic.SA1602.severity = None
 dotnet_diagnostic.SA1502.severity = None
 
 # Closing parenthesis should not be preceded by a space
-# dotnet_diagnostic.SA1009.severity = None
+dotnet_diagnostic.SA1009.severity = None
 
 # Closing parenthesis should be on line of last parameter
 dotnet_diagnostic.SA1111.severity = None
@@ -254,10 +211,20 @@ dotnet_diagnostic.SA1111.severity = None
 # Braces should not be ommitted
 dotnet_diagnostic.SA1503.severity = None
 
+dotnet_diagnostic.SA1401.severity = None
+
+# The parameters to a C# method or indexer call or declaration are not all on the same line or each on a separate line.
+# dotnet_diagnostic.SA1117.severity = Suggestion 
+
+# The parameters to a C# method or indexer call or declaration span across multiple lines, but the first parameter does not start on the line after the opening bracket.
+# dotnet_diagnostic.SA1116.severity = Suggestion 
+
+# A C# partial element is missing a documentation header.
+dotnet_diagnostic.SA1601.severity = None 
+
 
 ##
 ## SonarAnalyzers.CSharp
-## https://rules.sonarsource.com/csharp/
 ##
 
 # Update this method so that its implementation is not identical to 'blah'
@@ -283,3 +250,36 @@ dotnet_diagnostic.S125.severity = None
 
 # 'System.Exception' should not be thrown by user code
 dotnet_diagnostic.S112.severity = None
+
+dotnet_diagnostic.S3903.severity = None
+
+
+## https://github.com/meziantou/Meziantou.Analyzer/tree/main/docs
+## Meziantou.Analyzer
+##
+
+# MA0004: Use Task.ConfigureAwait(false)
+dotnet_diagnostic.MA0004.severity = Suggestion   
+
+# MA0049: Type name should not match containing namespace
+dotnet_diagnostic.MA0049.severity = Suggestion   
+
+# MA0048: File name must match type name
+dotnet_diagnostic.MA0048.severity = Suggestion   
+
+# MA0051: Method is too long
+dotnet_diagnostic.MA0051.severity = Suggestion   
+
+# https://www.meziantou.net/string-comparisons-are-harder-than-it-seems.htm
+# MA0006 - Use String.Equals instead of equality operator
+dotnet_diagnostic.MA0006.severity = Suggestion   
+
+# MA0002 - IEqualityComparer<string> or IComparer<string> is missing
+dotnet_diagnostic.MA0002.severity = Suggestion 
+
+# MA0001 - StringComparison is missing
+dotnet_diagnostic.MA0001.severity = Suggestion 
+
+
+
+

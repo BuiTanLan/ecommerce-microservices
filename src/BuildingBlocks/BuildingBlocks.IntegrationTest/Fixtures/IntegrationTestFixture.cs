@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.Domain;
 using BuildingBlocks.Test.Factories;
 using BuildingBlocks.Test.Helpers;
 using MediatR;
@@ -16,241 +15,246 @@ using Respawn;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace BuildingBlocks.Test.Fixtures
+namespace BuildingBlocks.Test.Fixtures;
+
+public class IntegrationTestFixture<TEntryPoint, TDbContext> : IntegrationTestFixture<TEntryPoint>
+    where TEntryPoint : class
+    where TDbContext : DbContext
 {
-    public class IntegrationTestFixture<TEntryPoint, TDbContext> : IntegrationTestFixture<TEntryPoint>
-        where TEntryPoint : class
-        where TDbContext : DbContext
+    private readonly Checkpoint _checkpoint;
+
+    public IntegrationTestFixture()
     {
-        private readonly Checkpoint _checkpoint;
+        _checkpoint = new Checkpoint { TablesToIgnore = new[] { "__EFMigrationsHistory" } };
+    }
 
-        public IntegrationTestFixture()
+    private async Task ResetState()
+    {
+        try
         {
-            _checkpoint = new Checkpoint
-            {
-                TablesToIgnore = new[] { "__EFMigrationsHistory" }
-            };
+            var connection = OptionsHelper.GetConnectionString("OrdersConnection");
+            await _checkpoint.Reset(connection);
         }
-
-        private async Task ResetState()
+        catch
         {
-            try
-            {
-                var connection = OptionsHelper.GetConnectionString("OrdersConnection");
-                await _checkpoint.Reset(connection);
-            }
-            catch
-            {
-                // ignored
-            }
-        }
-
-        public Task ExecuteDbContextAsync(Func<TDbContext, Task> action)
-            => ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>()));
-
-        public Task ExecuteDbContextAsync(Func<TDbContext, ValueTask> action)
-            => ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>()).AsTask());
-
-        public Task ExecuteDbContextAsync(Func<TDbContext, IMediator, Task> action)
-            => ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>(), sp.GetService<IMediator>()));
-
-        public Task<T> ExecuteDbContextAsync<T>(Func<TDbContext, Task<T>> action)
-            => ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>()));
-
-        public Task<T> ExecuteDbContextAsync<T>(Func<TDbContext, ValueTask<T>> action)
-            => ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>()).AsTask());
-
-        public Task<T> ExecuteDbContextAsync<T>(Func<TDbContext, IMediator, Task<T>> action)
-            => ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>(), sp.GetService<IMediator>()));
-
-        public Task InsertAsync<T>(params T[] entities) where T : class
-        {
-            return ExecuteDbContextAsync(db =>
-            {
-                foreach (var entity in entities)
-                {
-                    db.Set<T>().Add(entity);
-                }
-
-                return db.SaveChangesAsync();
-            });
-        }
-
-        public Task InsertAsync<TEntity>(TEntity entity) where TEntity : class
-        {
-            return ExecuteDbContextAsync(db =>
-            {
-                db.Set<TEntity>().Add(entity);
-
-                return db.SaveChangesAsync();
-            });
-        }
-
-        public Task InsertAsync<TEntity, TEntity2>(TEntity entity, TEntity2 entity2)
-            where TEntity : class
-            where TEntity2 : class
-        {
-            return ExecuteDbContextAsync(db =>
-            {
-                db.Set<TEntity>().Add(entity);
-                db.Set<TEntity2>().Add(entity2);
-
-                return db.SaveChangesAsync();
-            });
-        }
-
-        public Task InsertAsync<TEntity, TEntity2, TEntity3>(TEntity entity, TEntity2 entity2, TEntity3 entity3)
-            where TEntity : class
-            where TEntity2 : class
-            where TEntity3 : class
-        {
-            return ExecuteDbContextAsync(db =>
-            {
-                db.Set<TEntity>().Add(entity);
-                db.Set<TEntity2>().Add(entity2);
-                db.Set<TEntity3>().Add(entity3);
-
-                return db.SaveChangesAsync();
-            });
-        }
-
-        public Task InsertAsync<TEntity, TEntity2, TEntity3, TEntity4>(TEntity entity, TEntity2 entity2,
-            TEntity3 entity3, TEntity4 entity4)
-            where TEntity : class
-            where TEntity2 : class
-            where TEntity3 : class
-            where TEntity4 : class
-        {
-            return ExecuteDbContextAsync(db =>
-            {
-                db.Set<TEntity>().Add(entity);
-                db.Set<TEntity2>().Add(entity2);
-                db.Set<TEntity3>().Add(entity3);
-                db.Set<TEntity4>().Add(entity4);
-
-                return db.SaveChangesAsync();
-            });
-        }
-
-        public Task<T> FindAsync<T>(long id) where T : class
-        {
-            return ExecuteDbContextAsync(db => db.Set<T>().FindAsync(id).AsTask());
-        }
-
-        public Task<T> FindFirstAsync<T>() where T : class
-        {
-            return ExecuteDbContextAsync(db => db.Set<T>().FirstOrDefaultAsync());
-        }
-
-        public override async Task InitializeAsync()
-        {
-            await base.InitializeAsync();
-
-            await ResetState();
+            // ignored
         }
     }
 
-    public class IntegrationTestFixture<TEntryPoint> : IAsyncLifetime
-        where TEntryPoint : class
+    public Task ExecuteDbContextAsync(Func<TDbContext, Task> action)
     {
-        protected readonly CustomApplicationFactory<TEntryPoint> Factory;
-        // protected readonly LaunchSettingsFixture LaunchSettings;
+        return ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>()));
+    }
 
-        protected HttpClient Client => Factory.CreateClient();
+    public Task ExecuteDbContextAsync(Func<TDbContext, ValueTask> action)
+    {
+        return ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>()).AsTask());
+    }
 
+    public Task ExecuteDbContextAsync(Func<TDbContext, IMediator, Task> action)
+    {
+        return ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>(), sp.GetService<IMediator>()));
+    }
 
-        public IHttpClientFactory HttpClientFactory =>
-            ServiceProvider.GetRequiredService<IHttpClientFactory>();
+    public Task<T> ExecuteDbContextAsync<T>(Func<TDbContext, Task<T>> action)
+    {
+        return ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>()));
+    }
 
-        public IHttpContextAccessor HttpContextAccessor =>
-            ServiceProvider.GetRequiredService<IHttpContextAccessor>();
+    public Task<T> ExecuteDbContextAsync<T>(Func<TDbContext, ValueTask<T>> action)
+    {
+        return ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>()).AsTask());
+    }
 
-        public IServiceProvider ServiceProvider => Factory.Services;
-        public IConfiguration Configuration => Factory.Configuration;
+    public Task<T> ExecuteDbContextAsync<T>(Func<TDbContext, IMediator, Task<T>> action)
+    {
+        return ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>(), sp.GetService<IMediator>()));
+    }
 
-        public IntegrationTestFixture()
+    public Task InsertAsync<T>(params T[] entities) where T : class
+    {
+        return ExecuteDbContextAsync(db =>
         {
-            Factory = new CustomApplicationFactory<TEntryPoint>();
-        }
+            foreach (var entity in entities) db.Set<T>().Add(entity);
 
-        public void SetOutput(ITestOutputHelper output)
+            return db.SaveChangesAsync();
+        });
+    }
+
+    public Task InsertAsync<TEntity>(TEntity entity) where TEntity : class
+    {
+        return ExecuteDbContextAsync(db =>
         {
-            Factory.OutputHelper = output;
-            Factory.Server.AllowSynchronousIO = true;
-        }
+            db.Set<TEntity>().Add(entity);
 
-        public void RegisterTestServices(Action<IServiceCollection> services)
+            return db.SaveChangesAsync();
+        });
+    }
+
+    public Task InsertAsync<TEntity, TEntity2>(TEntity entity, TEntity2 entity2)
+        where TEntity : class
+        where TEntity2 : class
+    {
+        return ExecuteDbContextAsync(db =>
         {
-            Factory.TestRegistrationServices = services;
-        }
+            db.Set<TEntity>().Add(entity);
+            db.Set<TEntity2>().Add(entity2);
 
-        public async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
+            return db.SaveChangesAsync();
+        });
+    }
+
+    public Task InsertAsync<TEntity, TEntity2, TEntity3>(TEntity entity, TEntity2 entity2, TEntity3 entity3)
+        where TEntity : class
+        where TEntity2 : class
+        where TEntity3 : class
+    {
+        return ExecuteDbContextAsync(db =>
         {
-            using var scope = ServiceProvider.CreateScope();
+            db.Set<TEntity>().Add(entity);
+            db.Set<TEntity2>().Add(entity2);
+            db.Set<TEntity3>().Add(entity3);
 
-            await action(scope.ServiceProvider);
-        }
+            return db.SaveChangesAsync();
+        });
+    }
 
-        public async Task<T> ExecuteScopeAsync<T>(Func<IServiceProvider, Task<T>> action)
+    public Task InsertAsync<TEntity, TEntity2, TEntity3, TEntity4>(TEntity entity, TEntity2 entity2,
+        TEntity3 entity3, TEntity4 entity4)
+        where TEntity : class
+        where TEntity2 : class
+        where TEntity3 : class
+        where TEntity4 : class
+    {
+        return ExecuteDbContextAsync(db =>
         {
-            using var scope = ServiceProvider.CreateScope();
+            db.Set<TEntity>().Add(entity);
+            db.Set<TEntity2>().Add(entity2);
+            db.Set<TEntity3>().Add(entity3);
+            db.Set<TEntity4>().Add(entity4);
 
-            var result = await action(scope.ServiceProvider);
+            return db.SaveChangesAsync();
+        });
+    }
 
-            return result;
-        }
+    public Task<T> FindAsync<T>(long id) where T : class
+    {
+        return ExecuteDbContextAsync(db => db.Set<T>().FindAsync(id).AsTask());
+    }
 
-        public Task PublishEventAsync<TEvent>(TEvent @event, CancellationToken cancellationToken)
-            where TEvent : class, INotification
+    public Task<T> FindFirstAsync<T>() where T : class
+    {
+        return ExecuteDbContextAsync(db => db.Set<T>().FirstOrDefaultAsync());
+    }
+
+    public override async Task InitializeAsync()
+    {
+        await base.InitializeAsync();
+
+        await ResetState();
+    }
+}
+
+public class IntegrationTestFixture<TEntryPoint> : IAsyncLifetime
+    where TEntryPoint : class
+{
+    protected readonly CustomApplicationFactory<TEntryPoint> Factory;
+
+    public IntegrationTestFixture()
+    {
+        Factory = new CustomApplicationFactory<TEntryPoint>();
+    }
+    // protected readonly LaunchSettingsFixture LaunchSettings;
+
+    protected HttpClient Client => Factory.CreateClient();
+
+
+    public IHttpClientFactory HttpClientFactory =>
+        ServiceProvider.GetRequiredService<IHttpClientFactory>();
+
+    public IHttpContextAccessor HttpContextAccessor =>
+        ServiceProvider.GetRequiredService<IHttpContextAccessor>();
+
+    public IServiceProvider ServiceProvider => Factory.Services;
+    public IConfiguration Configuration => Factory.Configuration;
+
+    public virtual Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    public virtual Task DisposeAsync()
+    {
+        Factory?.Dispose();
+        return Task.CompletedTask;
+    }
+
+    public void SetOutput(ITestOutputHelper output)
+    {
+        Factory.OutputHelper = output;
+        Factory.Server.AllowSynchronousIO = true;
+    }
+
+    public void RegisterTestServices(Action<IServiceCollection> services)
+    {
+        Factory.TestRegistrationServices = services;
+    }
+
+    public async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
+    {
+        using var scope = ServiceProvider.CreateScope();
+
+        await action(scope.ServiceProvider);
+    }
+
+    public async Task<T> ExecuteScopeAsync<T>(Func<IServiceProvider, Task<T>> action)
+    {
+        using var scope = ServiceProvider.CreateScope();
+
+        var result = await action(scope.ServiceProvider);
+
+        return result;
+    }
+
+    public Task PublishEventAsync<TEvent>(TEvent @event, CancellationToken cancellationToken)
+        where TEvent : class, INotification
+    {
+        return ExecuteScopeAsync(sp =>
         {
-            return ExecuteScopeAsync(sp =>
-            {
-                var mediator = sp.GetRequiredService<IMediator>();
+            var mediator = sp.GetRequiredService<IMediator>();
 
-                return mediator.Publish(@event, cancellationToken);
-            });
-        }
+            return mediator.Publish(@event, cancellationToken);
+        });
+    }
 
-        public Task<TResponse> SendAsync<TResponse>(ICommand<TResponse> request, CancellationToken cancellationToken)
+    public Task<TResponse> SendAsync<TResponse>(ICommand<TResponse> request, CancellationToken cancellationToken)
+    {
+        return ExecuteScopeAsync(sp =>
         {
-            return ExecuteScopeAsync(sp =>
-            {
-                var mediator = sp.GetRequiredService<IMediator>();
+            var mediator = sp.GetRequiredService<IMediator>();
 
-                return mediator.Send(request, cancellationToken);
-            });
-        }
+            return mediator.Send(request, cancellationToken);
+        });
+    }
 
-        public Task SendAsync<T>(T request, CancellationToken cancellationToken) where T : class, ICommand
+    public Task SendAsync<T>(T request, CancellationToken cancellationToken) where T : class, ICommand
+    {
+        return ExecuteScopeAsync(sp =>
         {
-            return ExecuteScopeAsync(sp =>
-            {
-                var mediator = sp.GetRequiredService<IMediator>();
+            var mediator = sp.GetRequiredService<IMediator>();
 
-                return mediator.Send(request, cancellationToken);
-            });
-        }
+            return mediator.Send(request, cancellationToken);
+        });
+    }
 
-        public Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
-            where TResponse : class
+    public Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
+        where TResponse : class
+    {
+        return ExecuteScopeAsync(sp =>
         {
-            return ExecuteScopeAsync(sp =>
-            {
-                var mediator = sp.GetRequiredService<IMediator>();
+            var mediator = sp.GetRequiredService<IMediator>();
 
-                return mediator.Send(query, cancellationToken);
-            });
-        }
-
-        public virtual Task InitializeAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        public virtual Task DisposeAsync()
-        {
-            Factory?.Dispose();
-            return Task.CompletedTask;
-        }
+            return mediator.Send(query, cancellationToken);
+        });
     }
 }

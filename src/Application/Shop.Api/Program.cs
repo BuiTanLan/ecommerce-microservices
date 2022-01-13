@@ -12,10 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddCustomSerilog();
 builder.Host.UseDefaultServiceProvider((env, c) =>
 {
-    if (env.HostingEnvironment.IsDevelopment() || env.HostingEnvironment.IsStaging())
-    {
-        c.ValidateScopes = true;
-    }
+    if (env.HostingEnvironment.IsDevelopment() || env.HostingEnvironment.IsStaging()) c.ValidateScopes = true;
 });
 
 

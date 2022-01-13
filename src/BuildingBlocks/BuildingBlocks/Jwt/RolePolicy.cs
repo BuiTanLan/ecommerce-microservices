@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 
-namespace BuildingBlocks.Jwt
+namespace BuildingBlocks.Jwt;
+
+public class RolePolicy
 {
-    public class RolePolicy
-    {
-        public string Name { get; set; }
-        public IList<string> Roles { get; set; }
-    }
+    public string Name { get; set; }
+    public IList<string> Roles { get; set; }
 }

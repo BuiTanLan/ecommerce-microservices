@@ -13,9 +13,9 @@ public record GenerateJwtTokenCommand(ApplicationUser User, string RefreshToken)
 public class GenerateRefreshTokenCommandHandler :
     ICommandHandler<GenerateJwtTokenCommand, GenerateJwtTokenCommandResult>
 {
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly IJwtHandler _jwtHandler;
     private readonly ILogger<GenerateRefreshTokenCommandHandler> _logger;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public GenerateRefreshTokenCommandHandler(UserManager<ApplicationUser> userManager, IJwtHandler jwtHandler,
         ILogger<GenerateRefreshTokenCommandHandler> logger)
@@ -32,7 +32,7 @@ public class GenerateRefreshTokenCommandHandler :
 
         // authentication successful so generate jwt and refresh tokens
         var allClaims = await GetClaimsAsync(request.User.UserName);
-        string fullName = $"{identityUser.FirstName} {identityUser.LastName}";
+        var fullName = $"{identityUser.FirstName} {identityUser.LastName}";
 
         var jsonWebToken = _jwtHandler.GenerateJwtToken(identityUser.UserName, identityUser.Email,
             identityUser.Id.ToString(), identityUser.EmailConfirmed || identityUser.PhoneNumberConfirmed, fullName,
@@ -49,7 +49,7 @@ public class GenerateRefreshTokenCommandHandler :
         var appUser = await _userManager.FindByNameAsync(userName);
         var userClaims =
             (await _userManager.GetClaimsAsync(appUser)).Where(x => x.Type != CustomClaimTypes.Permission).ToList();
-        var roles = (await _userManager.GetRolesAsync(appUser));
+        var roles = await _userManager.GetRolesAsync(appUser);
 
         var permissions = (await _userManager.GetClaimsAsync(appUser))
             .Where(x => x.Type == CustomClaimTypes.Permission)?.Select(x => x

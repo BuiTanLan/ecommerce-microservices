@@ -7,55 +7,54 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 
-namespace BuildingBlocks.Jwt
+namespace BuildingBlocks.Jwt;
+
+internal sealed class InMemoryAccessTokenService : IAccessTokenService
 {
-    internal sealed class InMemoryAccessTokenService : IAccessTokenService
+    private readonly IEasyCachingProvider _cacheProvider;
+    private readonly TimeSpan _expires;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public InMemoryAccessTokenService(IEasyCachingProviderFactory cachingFactory,
+        IHttpContextAccessor httpContextAccessor,
+        IOptions<JwtOptions> jwtOptions)
     {
-        private readonly TimeSpan _expires;
-        private readonly IEasyCachingProvider _cacheProvider;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        _cacheProvider = cachingFactory.GetCachingProvider("mem");
+        _httpContextAccessor = httpContextAccessor;
+        _expires = TimeSpan.FromMinutes(jwtOptions.Value?.ExpiryMinutes ?? 120);
+    }
 
-        public InMemoryAccessTokenService(IEasyCachingProviderFactory cachingFactory,
-            IHttpContextAccessor httpContextAccessor,
-            IOptions<JwtOptions> jwtOptions)
-        {
-            _cacheProvider = cachingFactory.GetCachingProvider("mem");
-            _httpContextAccessor = httpContextAccessor;
-            _expires = TimeSpan.FromMinutes(jwtOptions.Value?.ExpiryMinutes ?? 120);
-        }
+    public async Task<bool> IsCurrentActiveToken()
+    {
+        return await IsActiveAsync(GetCurrent());
+    }
 
-        public async Task<bool> IsCurrentActiveToken()
-        {
-            return await IsActiveAsync(GetCurrent());
-        }
+    public Task DeactivateCurrentAsync()
+    {
+        return DeactivateAsync(GetCurrent());
+    }
 
-        public Task DeactivateCurrentAsync()
-        {
-            return DeactivateAsync(GetCurrent());
-        }
+    public async Task<bool> IsActiveAsync(string token)
+    {
+        return string.IsNullOrWhiteSpace((await _cacheProvider.GetAsync<string>(GetKey(token))).Value);
+    }
 
-        public async Task<bool> IsActiveAsync(string token)
-        {
-            return string.IsNullOrWhiteSpace((await _cacheProvider.GetAsync<string>(GetKey(token))).Value);
-        }
+    public Task DeactivateAsync(string token)
+    {
+        return _cacheProvider.SetAsync(GetKey(token), "revoked", _expires);
+    }
 
-        public Task DeactivateAsync(string token)
-        {
-            return _cacheProvider.SetAsync(GetKey(token), "revoked", _expires);
-        }
+    private string GetCurrent()
+    {
+        var authorizationHeader = _httpContextAccessor.HttpContext?.Request.Headers.Get<string>("authorization");
 
-        private string GetCurrent()
-        {
-            var authorizationHeader = _httpContextAccessor.HttpContext?.Request.Headers.Get<string>("authorization");
+        return authorizationHeader is null || authorizationHeader == StringValues.Empty
+            ? string.Empty
+            : authorizationHeader.Split(' ').Last();
+    }
 
-            return authorizationHeader is null || authorizationHeader == StringValues.Empty
-                ? string.Empty
-                : authorizationHeader.Split(' ').Last();
-        }
-
-        private static string GetKey(string token)
-        {
-            return $"blacklisted-tokens:{token}";
-        }
+    private static string GetKey(string token)
+    {
+        return $"blacklisted-tokens:{token}";
     }
 }

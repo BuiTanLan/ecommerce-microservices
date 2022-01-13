@@ -1,6 +1,5 @@
-using System;
-using Ardalis.GuardClauses;
 using BuildingBlocks.Email.Configs;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,15 +7,38 @@ namespace BuildingBlocks.Email;
 
 public static class Extensions
 {
-    public static void AddSendGrid(this IServiceCollection services, IConfiguration configuration,
-        Action<SendGridConfig> configure = null)
+    public static WebApplicationBuilder AddEmailService(
+        this WebApplicationBuilder builder,
+        IConfiguration configuration,
+        EmailProvider provider = EmailProvider.MimKit,
+        Action<EmailConfig> configure = null)
     {
-        services.AddSingleton<IEmailSender, EmailSender>();
+        AddEmailService(builder.Services, configuration, provider, configure);
 
-        var config = configuration.GetSection(nameof(SendGridConfig)).Get<SendGridConfig>();
+        return builder;
+    }
 
-        services.Configure<SendGridConfig>(configuration.GetSection(nameof(SendGridConfig)));
+    public static IServiceCollection AddEmailService(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        EmailProvider provider = EmailProvider.MimKit,
+        Action<EmailConfig> configure = null)
+    {
+        if (provider == EmailProvider.SendGrid)
+        {
+            services.AddSingleton<IEmailSender, SendGridEmailSender>();
+        }
+        else
+        {
+            services.AddSingleton<IEmailSender, MimeKitEmailSender>();
+        }
+
+        var config = configuration.GetSection(nameof(EmailConfig)).Get<EmailConfig>();
+
+        services.Configure<EmailConfig>(configuration.GetSection(nameof(EmailConfig)));
         if (configure is { })
-            services.Configure(nameof(SendGridConfig), configure);
+            services.Configure(nameof(EmailConfig), configure);
+
+        return services;
     }
 }

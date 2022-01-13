@@ -1,9 +1,11 @@
-namespace Shop.Api.Extensions;
-
 using System.Security.Claims;
+
+namespace Shop.Api.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {
     public static string GetClaimValue(this ClaimsPrincipal principal, string type)
-        => principal.FindFirst(type)!.Value;
+    {
+        return principal.FindFirst(type)!.Value;
+    }
 }

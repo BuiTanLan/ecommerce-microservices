@@ -1,8 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Jwt;
-using BuildingBlocks.Utils;
 using Identity.Core.Exceptions;
 using Identity.Core.Models;
 using Identity.Features.GenerateJwtToken;
@@ -15,9 +15,9 @@ public record RefreshTokenCommand(string AccessToken, string RefreshToken) : ICo
 
 internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, RefreshTokenCommandResult>
 {
+    private readonly ICommandProcessor _commandProcessor;
     private readonly IJwtTokenValidator _tokenValidator;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ICommandProcessor _commandProcessor;
 
     public RefreshTokenCommandHandler(IJwtTokenValidator tokenValidator, UserManager<ApplicationUser> userManager,
         ICommandProcessor commandProcessor)
@@ -38,7 +38,7 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
         if (userClaimsPrincipal is null)
             throw new InvalidTokenException();
 
-        string userId = userClaimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = userClaimsPrincipal.FindFirstValue(JwtRegisteredClaimNames.NameId);
 
         var identityUser = await _userManager.FindByIdAsync(userId);
 

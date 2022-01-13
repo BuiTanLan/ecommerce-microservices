@@ -1,8 +1,12 @@
 using BuildingBlocks.EFCore;
+using Identity.Features.ConfirmEmail;
 using Identity.Features.GetClaims;
 using Identity.Features.Login;
+using Identity.Features.Logout;
 using Identity.Features.RefreshToken;
 using Identity.Features.RegisterNewUser;
+using Identity.Features.RevokeRefreshToken;
+using Identity.Features.SendEmailVerificationCode;
 using Identity.Infrastructure.Data;
 using Identity.Infrastructure.Extensions.ApplicationBuilderExtensions;
 using Identity.Infrastructure.Extensions.ServiceCollectionExtensions;
@@ -44,24 +48,32 @@ public static class IdentityConfiguration
     {
         endpoints.MapGet("/", () => "Identity Server Apis").ExcludeFromDescription();
 
-        endpoints.MapGet($"{IdentityModulePrefixUri}/user-role",
+        endpoints.MapGet(
+            $"{IdentityModulePrefixUri}/user-role",
             [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        () => new { Role = "User" }).WithTags("Identity");
+            () => new { Role = "User" }).WithTags("Identity");
 
-        endpoints.MapGet($"{IdentityModulePrefixUri}/admin-role",
+        endpoints.MapGet(
+            $"{IdentityModulePrefixUri}/admin-role",
             [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        () => new { Role = "Admin" }).WithTags("Identity");
+            () => new { Role = "Admin" }).WithTags("Identity");
 
         endpoints.MapRegisterNewUserEndpoint();
         endpoints.MapLoginUserEndpoint();
+        endpoints.MapLogoutEndpoint();
+        endpoints.MapSendEmailVerificationCodeEndpoint();
+        endpoints.MapSendVerifyEmailEndpoint();
         endpoints.MapRefreshTokenEndpoint();
+        endpoints.MapRevokeTokenEndpoint();
         endpoints.MapGetClaimsEndpoint();
 
         return endpoints;
     }
 
-    public static async Task ConfigureIdentityModule(this IApplicationBuilder app,
-        IWebHostEnvironment environment, ILogger logger)
+    public static async Task ConfigureIdentityModule(
+        this IApplicationBuilder app,
+        IWebHostEnvironment environment,
+        ILogger logger)
     {
         app.UseIdentityServer();
         await app.ApplyDatabaseMigrations(logger);

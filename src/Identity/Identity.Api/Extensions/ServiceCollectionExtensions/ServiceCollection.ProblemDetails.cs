@@ -1,12 +1,17 @@
+using System;
 using BuildingBlocks.Exception;
 using BuildingBlocks.Validation;
 using Hellang.Middleware.ProblemDetails;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 
 namespace Identity.Api.Extensions.ServiceCollectionExtensions;
 
-public static partial class ServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static WebApplicationBuilder AddCustomProblemDetails(this WebApplicationBuilder builder)
     {
@@ -31,43 +36,56 @@ public static partial class ServiceCollectionExtensions
                 Title = "Application rule broken",
                 Status = StatusCodes.Status409Conflict,
                 Detail = ex.Message,
-                Type = "https://somedomain/application-rule-validation-error",
+                Type = "https://somedomain/application-rule-validation-error"
             });
+
             // Exception will produce and returns from our FluentValidation RequestValidationBehavior
             x.Map<ValidationException>(ex => new ProblemDetails
             {
                 Title = "input validation rules broken",
                 Status = StatusCodes.Status400BadRequest,
                 Detail = JsonConvert.SerializeObject(ex.ValidationResultModel.Errors),
-                Type = "https://somedomain/input-validation-rules-error",
+                Type = "https://somedomain/input-validation-rules-error"
             });
             x.Map<BadRequestException>(ex => new ProblemDetails
             {
                 Title = "bad request exception",
                 Status = StatusCodes.Status400BadRequest,
                 Detail = ex.Message,
-                Type = "https://somedomain/bad-request-error",
+                Type = "https://somedomain/bad-request-error"
             });
             x.Map<NotFoundException>(ex => new ProblemDetails
             {
                 Title = "not found exception",
                 Status = StatusCodes.Status404NotFound,
                 Detail = ex.Message,
-                Type = "https://somedomain/not-found-error",
+                Type = "https://somedomain/not-found-error"
             });
             x.Map<ApiException>(ex => new ProblemDetails
             {
                 Title = "api server exception",
                 Status = StatusCodes.Status500InternalServerError,
                 Detail = ex.Message,
-                Type = "https://somedomain/api-server-error",
+                Type = "https://somedomain/api-server-error"
             });
             x.Map<AppException>(ex => new ProblemDetails
             {
                 Title = "application exception",
                 Status = StatusCodes.Status500InternalServerError,
                 Detail = ex.Message,
-                Type = "https://somedomain/application-error",
+                Type = "https://somedomain/application-error"
+            });
+            x.Map<IdentityException>(ex =>
+            {
+                var pd = new ProblemDetails
+                {
+                    Status = (int)ex.StatusCode,
+                    Title = "identity exception",
+                    Detail = ex.Message,
+                    Type = "https://somedomain/identity-error"
+                };
+
+                return pd;
             });
             x.MapToStatusCode<ArgumentNullException>(StatusCodes.Status400BadRequest);
         });

@@ -14,8 +14,8 @@ public static partial class ApplicationBuilderExtensions
         var configuration = app.ApplicationServices.GetRequiredService<IConfiguration>();
         if (configuration.GetValue<bool>("UseInMemoryDatabase") == false)
         {
-            using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
-            IdentityContext dbContext = serviceScope.ServiceProvider.GetRequiredService<IdentityContext>();
+            using var serviceScope = app.ApplicationServices.CreateScope();
+            var dbContext = serviceScope.ServiceProvider.GetRequiredService<IdentityContext>();
             logger.LogInformation("Updating database...");
             await dbContext.Database.MigrateAsync();
             logger.LogInformation("Updated database");

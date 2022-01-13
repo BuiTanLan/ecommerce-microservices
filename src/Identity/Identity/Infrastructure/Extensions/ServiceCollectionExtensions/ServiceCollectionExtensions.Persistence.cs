@@ -1,6 +1,4 @@
-using Identity.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Infrastructure.Extensions.ServiceCollectionExtensions;

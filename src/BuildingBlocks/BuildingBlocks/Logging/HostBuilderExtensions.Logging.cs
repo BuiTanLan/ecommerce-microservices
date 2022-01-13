@@ -1,19 +1,17 @@
-using Microsoft.AspNetCore.Builder;
-
-namespace Microsoft.Extensions.Hosting;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using BuildingBlocks.Logging;
-using Configuration;
-using DependencyInjection;
-using Hosting;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using Serilog.Filters;
 using Serilog.Sinks.SpectreConsole;
+
+namespace Microsoft.Extensions.Hosting;
 
 public static class HostBuilderExtensions
 {
@@ -37,7 +35,7 @@ public static class HostBuilderExtensions
             loggerConfiguration
                 .WriteTo.SpectreConsole(
                     "{Timestamp:HH:mm:ss} [{Level:u4}] {Message:lj}{NewLine}{Exception}",
-                    minLevel: LogEventLevel.Information)
+                    LogEventLevel.Information)
                 .ReadFrom.Configuration(context.Configuration)
                 .ReadFrom.Services(serviceProvider)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)

@@ -7,8 +7,8 @@ namespace BuildingBlocks.CQRS.Event;
 
 public class EventProcessor : IEventProcessor
 {
-    private readonly IMediator _mediator;
     private readonly IExternalEventProducer _externalEventProducer;
+    private readonly IMediator _mediator;
 
     public EventProcessor(
         IMediator mediator,
@@ -16,7 +16,8 @@ public class EventProcessor : IEventProcessor
     )
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        _externalEventProducer = externalEventProducer ?? throw new ArgumentNullException(nameof(externalEventProducer));
+        _externalEventProducer =
+            externalEventProducer ?? throw new ArgumentNullException(nameof(externalEventProducer));
     }
 
     public async Task PublishAsync(params IEvent[] events)

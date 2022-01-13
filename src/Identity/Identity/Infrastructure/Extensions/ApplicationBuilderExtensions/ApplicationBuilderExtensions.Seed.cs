@@ -15,7 +15,7 @@ public static partial class ApplicationBuilderExtensions
         {
             // https://stackoverflow.com/questions/38238043/how-and-where-to-call-database-ensurecreated-and-database-migrate
             // https://www.michalbialecki.com/2020/07/20/adding-entity-framework-core-5-migrations-to-net-5-project/
-            using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
+            using var serviceScope = app.ApplicationServices.CreateScope();
             var seeders = serviceScope.ServiceProvider.GetServices<IDataSeeder>();
 
             foreach (var seeder in seeders)

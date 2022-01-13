@@ -19,7 +19,7 @@ internal class RegisterNewUserCommandHandler : ICommandHandler<RegisterNewUserCo
     public async Task<RegisterNewUserCommandResult> Handle(RegisterNewUserCommand request,
         CancellationToken cancellationToken)
     {
-        ApplicationUser applicationUser = new ApplicationUser
+        var applicationUser = new ApplicationUser
         {
             FirstName = request.FirstName,
             LastName = request.LastName,

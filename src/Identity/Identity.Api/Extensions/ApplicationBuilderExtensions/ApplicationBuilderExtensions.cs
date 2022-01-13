@@ -1,9 +1,9 @@
 namespace Microsoft.AspNetCore.Builder;
 
-public static partial class ApplicationBuilderExtensions
+public static class ApplicationBuilderExtensions
 {
     /// <summary>
-    /// Register CORS.
+    ///     Register CORS.
     /// </summary>
     public static IApplicationBuilder UseAppCors(this IApplicationBuilder app)
     {

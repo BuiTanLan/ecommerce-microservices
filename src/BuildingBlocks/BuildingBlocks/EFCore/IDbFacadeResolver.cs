@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace BuildingBlocks.EFCore
+namespace BuildingBlocks.EFCore;
+
+public interface IDbFacadeResolver
 {
-    public interface IDbFacadeResolver
-    {
-        DatabaseFacade Database { get; }
-    }
+    DatabaseFacade Database { get; }
 }

@@ -11,9 +11,9 @@ namespace BuildingBlocks.Jwt;
 
 public class DistributedTokenService : IAccessTokenService
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IEasyCachingProvider _cacheProvider;
     private readonly TimeSpan _expires;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public DistributedTokenService(IEasyCachingProviderFactory cachingFactory,
         IHttpContextAccessor httpContextAccessor,

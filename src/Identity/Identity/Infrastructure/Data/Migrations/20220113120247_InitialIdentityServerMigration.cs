@@ -196,22 +196,23 @@ namespace Identity.Infrastructure.Data.Migrations
                 name: "RefreshTokens",
                 columns: table => new
                 {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    token = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    token = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     expired_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     created_by_ip = table.Column<string>(type: "text", nullable: true),
-                    revoked_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    application_user_id = table.Column<Guid>(type: "uuid", nullable: true)
+                    revoked_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_refresh_tokens", x => new { x.token, x.user_id });
+                    table.PrimaryKey("pk_refresh_tokens", x => x.id);
                     table.ForeignKey(
                         name: "fk_refresh_tokens_asp_net_users_application_user_id",
-                        column: x => x.application_user_id,
+                        column: x => x.user_id,
                         principalTable: "AspNetUsers",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -279,9 +280,15 @@ namespace Identity.Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_refresh_tokens_application_user_id",
+                name: "ix_refresh_tokens_token_user_id",
                 table: "RefreshTokens",
-                column: "application_user_id");
+                columns: new[] { "token", "user_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_refresh_tokens_user_id",
+                table: "RefreshTokens",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_user_old_passwords_user_id",

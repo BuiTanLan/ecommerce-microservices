@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 
 namespace BuildingBlocks.Utils;
 
-
 public static class TypeProvider
 {
     private static bool IsRecord(this Type objectType)
@@ -16,7 +15,7 @@ public static class TypeProvider
                .GetMethod?.GetCustomAttribute(typeof(CompilerGeneratedAttribute)) != null;
     }
 
-    public static Type? GetTypeFromAnyReferencingAssembly(string typeName)
+    public static Type GetTypeFromAnyReferencingAssembly(string typeName)
     {
         var referencedAssemblies = Assembly.GetEntryAssembly()?
             .GetReferencedAssemblies()
@@ -31,7 +30,7 @@ public static class TypeProvider
             .FirstOrDefault();
     }
 
-    public static Type? GetFirstMatchingTypeFromCurrentDomainAssembly(string typeName)
+    public static Type GetFirstMatchingTypeFromCurrentDomainAssembly(string typeName)
     {
         return AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes().Where(x => x.FullName == typeName || x.Name == typeName))

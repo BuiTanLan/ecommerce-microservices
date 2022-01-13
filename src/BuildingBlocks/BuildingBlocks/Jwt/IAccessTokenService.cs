@@ -1,12 +1,11 @@
 using System.Threading.Tasks;
 
-namespace BuildingBlocks.Jwt
+namespace BuildingBlocks.Jwt;
+
+public interface IAccessTokenService
 {
-    public interface IAccessTokenService
-    {
-        Task<bool> IsCurrentActiveToken();
-        Task DeactivateCurrentAsync();
-        Task<bool> IsActiveAsync(string token);
-        Task DeactivateAsync(string token);
-    }
+    Task<bool> IsCurrentActiveToken();
+    Task DeactivateCurrentAsync();
+    Task<bool> IsActiveAsync(string token);
+    Task DeactivateAsync(string token);
 }

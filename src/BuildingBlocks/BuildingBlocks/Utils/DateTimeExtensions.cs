@@ -1,12 +1,11 @@
 using System;
 
-namespace BuildingBlocks.Utils
+namespace BuildingBlocks.Utils;
+
+public static class DateTimeExtensions
 {
-    public static class DateTimeExtensions
+    public static long ToUnixTimeMilliseconds(this DateTime dateTime)
     {
-        public static long ToUnixTimeMilliseconds(this DateTime dateTime)
-        {
-            return new DateTimeOffset(dateTime).ToUnixTimeMilliseconds();
-        }
+        return new DateTimeOffset(dateTime).ToUnixTimeMilliseconds();
     }
 }

@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 using BuildingBlocks.Exception;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -19,20 +16,16 @@ namespace BuildingBlocks.Jwt;
 
 public static class Extensions
 {
-    private const string SectionName = "jwt";
-
     public static IServiceCollection AddCustomJwtAuthentication(this IServiceCollection services,
         IConfiguration configuration,
-        IList<ClaimPolicy> claimPolicies = null,
-        IList<RolePolicy> rolePolicies = null,
         TokenStorageType storageType = TokenStorageType.InMemory,
         Action<JwtBearerOptions> optionsFactory = null,
         Action<JwtOptions> jwtOptionsConfigure = null)
     {
-        //https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/issues/415
-        //https://mderriey.com/2019/06/23/where-are-my-jwt-claims/
-        //https://leastprivilege.com/2017/11/15/missing-claims-in-the-asp-net-core-2-openid-connect-handler/
-        //https://stackoverflow.com/a/50012477/581476
+        // https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/issues/415
+        // https://mderriey.com/2019/06/23/where-are-my-jwt-claims/
+        // https://leastprivilege.com/2017/11/15/missing-claims-in-the-asp-net-core-2-openid-connect-handler/
+        // https://stackoverflow.com/a/50012477/581476
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
@@ -50,9 +43,7 @@ public static class Extensions
         if (storageType == TokenStorageType.InMemory)
             services.AddSingleton<IAccessTokenService, InMemoryAccessTokenService>();
         else
-        {
             services.AddSingleton<IAccessTokenService, DistributedTokenService>();
-        }
 
         services.AddScoped<AccessTokenValidatorMiddleware>();
 
@@ -105,7 +96,7 @@ public static class Extensions
                     ? new X509Certificate2(rawData, password)
                     : new X509Certificate2(rawData);
                 var keyType = certificate.HasPrivateKey ? "with private key" : "with public key only";
-                Log.Information("Loaded X.509 certificate from raw data {keyType}", keyType);
+                Log.Information("Loaded X.509 certificate from raw data {KeyType}", keyType);
             }
 
             if (certificate is { })
@@ -136,9 +127,8 @@ public static class Extensions
         if (!string.IsNullOrWhiteSpace(options.RoleClaimType))
             tokenValidationParameters.RoleClaimType = options.RoleClaimType;
 
-        //https://docs.microsoft.com/en-us/aspnet/core/security/authentication
-        services
-            .AddAuthentication(authOptions =>
+        // https://docs.microsoft.com/en-us/aspnet/core/security/authentication
+        services.AddAuthentication(authOptions =>
             {
                 // will choose bellow JwtBearer handler for handling authentication because of our default schema to `JwtBearerDefaults.AuthenticationScheme` we could another schemas with their handlers
                 authOptions.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -168,11 +158,13 @@ public static class Extensions
                     {
                         if (context.Exception is SecurityTokenExpiredException)
                         {
-                            throw new IdentityException("The Token is expired.",
+                            throw new IdentityException(
+                                "The Token is expired.",
                                 statusCode: HttpStatusCode.Unauthorized);
                         }
 
-                        throw new IdentityException("An unhandled error has occurred.",
+                        throw new IdentityException(
+                            context.Exception.Message,
                             statusCode: HttpStatusCode.InternalServerError);
                     },
                     OnChallenge = context =>
@@ -180,26 +172,36 @@ public static class Extensions
                         context.HandleResponse();
                         if (!context.Response.HasStarted)
                         {
-                            throw new IdentityException("You are not Authorized.",
+                            throw new IdentityException(
+                                "You are not Authorized.",
                                 statusCode: HttpStatusCode.Unauthorized);
                         }
 
                         return Task.CompletedTask;
                     },
                     OnForbidden = _ =>
-                        throw new IdentityException("You are not authorized to access this resource.",
-                            statusCode: HttpStatusCode.Forbidden),
+                        throw new IdentityException(
+                            "You are not authorized to access this resource.",
+                            statusCode: HttpStatusCode.Forbidden)
                 };
                 optionsFactory?.Invoke(bearer);
             });
 
-
         services.AddSingleton(tokenValidationParameters);
 
+        return services;
+    }
+
+
+    public static IServiceCollection AddCustomAuthorization(
+        this IServiceCollection services,
+        IList<ClaimPolicy> claimPolicies = null,
+        IList<RolePolicy> rolePolicies = null)
+    {
         services.AddAuthorization(authorizationOptions =>
         {
-            //https://docs.microsoft.com/en-us/aspnet/core/security/authorization/limitingidentitybyscheme
-            //https://andrewlock.net/setting-global-authorization-policies-using-the-defaultpolicy-and-the-fallbackpolicy-in-aspnet-core-3/
+            // https://docs.microsoft.com/en-us/aspnet/core/security/authorization/limitingidentitybyscheme
+            // https://andrewlock.net/setting-global-authorization-policies-using-the-defaultpolicy-and-the-fallbackpolicy-in-aspnet-core-3/
             var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
                 JwtBearerDefaults.AuthenticationScheme);
             defaultAuthorizationPolicyBuilder =
@@ -208,19 +210,19 @@ public static class Extensions
 
             // https://docs.microsoft.com/en-us/aspnet/core/security/authorization/claims
             if (claimPolicies is { })
+            {
                 foreach (var policy in claimPolicies)
                 {
                     authorizationOptions.AddPolicy(policy.Name, x =>
                     {
                         x.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
-                        foreach (var policyClaim in policy.Claims)
-                        {
-                            x.RequireClaim(policyClaim.Type, policyClaim.Value);
-                        }
+                        foreach (var policyClaim in policy.Claims) x.RequireClaim(policyClaim.Type, policyClaim.Value);
                     });
                 }
+            }
 
             if (rolePolicies is { })
+            {
                 foreach (var rolePolicy in rolePolicies)
                 {
                     authorizationOptions.AddPolicy(rolePolicy.Name, x =>
@@ -229,6 +231,7 @@ public static class Extensions
                         x.RequireRole(rolePolicy.Roles);
                     });
                 }
+            }
         });
 
         return services;

@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace BuildingBlocks.Jwt
+namespace BuildingBlocks.Jwt;
+
+public class ClaimPolicy
 {
-    public class ClaimPolicy
-    {
-        public string Name { get; set; }
-        public IList<Claim> Claims { get; set; }
-    }
+    public string Name { get; set; }
+    public IList<Claim> Claims { get; set; }
 }

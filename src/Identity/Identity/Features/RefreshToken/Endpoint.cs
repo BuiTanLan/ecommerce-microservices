@@ -11,11 +11,10 @@ public static class Endpoint
 
     internal static IEndpointRouteBuilder MapRefreshTokenEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost($"{IdentityConfiguration.IdentityModulePrefixUri}/refresh-token",
-                LoginUser)
-            .AllowAnonymous()
+        endpoints.MapPost($"{IdentityConfiguration.IdentityModulePrefixUri}/refresh-token", RefreshToken)
             .WithTags(Tag)
-            .Produces<RefreshTokenCommandResult>(StatusCodes.Status200OK)
+            .RequireAuthorization()
+            .Produces<RefreshTokenCommandResult>()
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
             .WithDisplayName("Refresh Token.");
@@ -23,8 +22,10 @@ public static class Endpoint
         return endpoints;
     }
 
-    private static async Task<IResult> LoginUser(RefreshTokenRequest request,
-        ICommandProcessor commandProcessor, CancellationToken cancellationToken)
+    private static async Task<IResult> RefreshToken(
+        RefreshTokenRequest request,
+        ICommandProcessor commandProcessor,
+        CancellationToken cancellationToken)
     {
         var command = new RefreshTokenCommand(request.AccessToken, request.RefreshToken);
 

@@ -21,10 +21,8 @@ public abstract class DbContextDesignFactoryBase<TDbContext> : IDesignTimeDbCont
             ?.GetConnectionString(_connectionStringName);
 
         if (string.IsNullOrWhiteSpace(connString))
-        {
             throw new InvalidOperationException(
                 $"Could not find a connection string named '{connString}'.");
-        }
         Console.WriteLine($"Connection String: {connString}");
 
         var optionsBuilder = new DbContextOptionsBuilder<TDbContext>()

@@ -1,18 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore.Specification;
 
 namespace BuildingBlocks.EFCore;
 
-public interface IPageRepository<TEntity, Tkey> where TEntity : IAggregateRoot<Tkey>
+public interface IPageRepository<TEntity, Tkey>
+    where TEntity : IAggregateRoot<Tkey>
 {
     ValueTask<long> CountAsync(IPageSpecification<TEntity> spec, CancellationToken cancellationToken = default);
     Task<List<TEntity>> FindAsync(IPageSpecification<TEntity> spec, CancellationToken cancellationToken = default);
 }
 
-public interface IPageRepository<TEntity> : IPageRepository<TEntity, Guid> where TEntity : IAggregateRoot<Guid>
+public interface IPageRepository<TEntity> : IPageRepository<TEntity, Guid>
+    where TEntity : IAggregateRoot<Guid>
 {
 }

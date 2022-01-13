@@ -1,9 +1,8 @@
 using System.Security.Claims;
 
-namespace BuildingBlocks.Jwt
+namespace BuildingBlocks.Jwt;
+
+public interface IJwtTokenValidator
 {
-    public interface IJwtTokenValidator
-    {
-        ClaimsPrincipal GetPrincipalFromToken(string token);
-    }
+    ClaimsPrincipal GetPrincipalFromToken(string token);
 }

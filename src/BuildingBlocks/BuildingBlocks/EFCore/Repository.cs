@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore.Specification;
 using Microsoft.EntityFrameworkCore;
@@ -23,38 +18,41 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         DbSet = dbContext.Set<TEntity>();
     }
 
-    public async Task<TEntity> FindById(TKey id, CancellationToken cancellationToken = default)
-    {
-        return await DbSet.SingleOrDefaultAsync(e => e.Id.Equals(id), cancellationToken: cancellationToken);
-    }
-
-    public async Task<TEntity> FindOneAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default)
-    {
-        var specificationResult = GetQuery(DbSet, spec);
-        return await specificationResult.FirstOrDefaultAsync(cancellationToken: cancellationToken);
-    }
-
-    public async Task<List<TEntity>> FindAsync(ISpecification<TEntity> spec,
-        CancellationToken cancellationToken = default)
-    {
-        var specificationResult = GetQuery(DbSet, spec);
-        return await specificationResult.ToListAsync(cancellationToken: cancellationToken);
-    }
-
-    public async ValueTask<long> CountAsync(IPageSpecification<TEntity> spec,
+    public async ValueTask<long> CountAsync(
+        IPageSpecification<TEntity> spec,
         CancellationToken cancellationToken = default)
     {
         spec.IsPagingEnabled = false;
         var specificationResult = GetQuery(DbSet, spec);
         return await ValueTask.FromResult(
-            await specificationResult.LongCountAsync(cancellationToken: cancellationToken));
+            await specificationResult.LongCountAsync(cancellationToken));
     }
 
-    public async Task<List<TEntity>> FindAsync(IPageSpecification<TEntity> spec,
+    public async Task<List<TEntity>> FindAsync(
+        IPageSpecification<TEntity> spec,
         CancellationToken cancellationToken = default)
     {
         var specificationResult = GetQuery(DbSet, spec);
-        return await specificationResult.ToListAsync(cancellationToken: cancellationToken);
+        return await specificationResult.ToListAsync(cancellationToken);
+    }
+
+    public async Task<TEntity> FindByIdAsync(TKey id, CancellationToken cancellationToken = default)
+    {
+        return await DbSet.SingleOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
+    }
+
+    public async Task<TEntity> FindOneAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default)
+    {
+        var specificationResult = GetQuery(DbSet, spec);
+        return await specificationResult.FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<List<TEntity>> FindAsync(
+        ISpecification<TEntity> spec,
+        CancellationToken cancellationToken = default)
+    {
+        var specificationResult = GetQuery(DbSet, spec);
+        return await specificationResult.ToListAsync(cancellationToken);
     }
 
     public async Task<TEntity> AddAsync(TEntity entity, bool autoSave = true,
@@ -62,10 +60,7 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
     {
         await DbSet.AddAsync(entity, cancellationToken);
 
-        if (autoSave)
-        {
-            await DbContext.SaveChangesAsync(cancellationToken);
-        }
+        if (autoSave) await DbContext.SaveChangesAsync(cancellationToken);
 
         return entity;
     }
@@ -76,10 +71,7 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         var entry = DbContext.Entry(entity);
         entry.State = EntityState.Modified;
 
-        if (autoSave)
-        {
-            await DbContext.SaveChangesAsync(cancellationToken);
-        }
+        if (autoSave) await DbContext.SaveChangesAsync(cancellationToken);
 
         return await Task.FromResult(entry.Entity);
     }
@@ -89,10 +81,12 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
     {
         DbSet.Remove(entity);
 
-        if (autoSave)
-        {
-            await DbContext.SaveChangesAsync(cancellationToken);
-        }
+        if (autoSave) await DbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
     }
 
     private static IQueryable<TEntity> GetQuery(IQueryable<TEntity> inputQuery,
@@ -100,23 +94,16 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
     {
         var query = inputQuery;
 
-        if (specification.Criteria is not null)
-        {
-            query = query.Where(specification.Criteria);
-        }
+        if (specification.Criteria is not null) query = query.Where(specification.Criteria);
 
         query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
 
         query = specification.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
 
         if (specification.OrderBy is not null)
-        {
             query = query.OrderBy(specification.OrderBy);
-        }
         else if (specification.OrderByDescending is not null)
-        {
             query = query.OrderByDescending(specification.OrderByDescending);
-        }
 
         if (specification.GroupBy is not null)
         {
@@ -145,10 +132,7 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         if (specification.Criterias is not null && specification.Criterias.Count > 0)
         {
             var expr = specification.Criterias.First();
-            for (var i = 1; i < specification.Criterias.Count; i++)
-            {
-                expr = expr.And(specification.Criterias[i]);
-            }
+            for (var i = 1; i < specification.Criterias.Count; i++) expr = expr.And(specification.Criterias[i]);
 
             query = query.Where(expr);
         }
@@ -158,13 +142,9 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         query = specification.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
 
         if (specification.OrderBy is not null)
-        {
             query = query.OrderBy(specification.OrderBy);
-        }
         else if (specification.OrderByDescending is not null)
-        {
             query = query.OrderByDescending(specification.OrderByDescending);
-        }
 
         if (specification.GroupBy is not null)
         {
@@ -183,11 +163,6 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         query = query.AsSplitQuery();
 
         return query;
-    }
-
-    public void Dispose()
-    {
-        throw new NotImplementedException();
     }
 }
 

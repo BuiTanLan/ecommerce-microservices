@@ -8,8 +8,8 @@ namespace Identity.Core.Models
 
         public string Code { get; set; }
 
-        public DateTime SentAtUtc { get; set; }
+        public DateTime SentAt { get; set; }
 
-        public DateTime? UsedAtUtc { get; set; }
+        public DateTime? UsedAt { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-namespace BuildingBlocks.Caching;
-
 using System;
+
+namespace BuildingBlocks.Caching;
 
 public class ExpirationOptions
 {

@@ -3,6 +3,7 @@ using System;
 using Identity.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Identity.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20220112105608_InitialIdentityServerMigration")]
+    [Migration("20220113120247_InitialIdentityServerMigration")]
     partial class InitialIdentityServerMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -250,18 +251,11 @@ namespace Identity.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Identity.Core.Models.RefreshToken", b =>
                 {
-                    b.Property<string>("Token")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("token");
-
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.Property<Guid?>("ApplicationUserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("application_user_id");
+                        .HasColumnName("id")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -279,11 +273,24 @@ namespace Identity.Infrastructure.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("revoked_at");
 
-                    b.HasKey("Token", "UserId")
+                    b.Property<string>("Token")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("token");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
                         .HasName("pk_refresh_tokens");
 
-                    b.HasIndex("ApplicationUserId")
-                        .HasDatabaseName("ix_refresh_tokens_application_user_id");
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_refresh_tokens_user_id");
+
+                    b.HasIndex("Token", "UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_refresh_tokens_token_user_id");
 
                     b.ToTable("RefreshTokens", (string)null);
                 });
@@ -452,7 +459,9 @@ namespace Identity.Infrastructure.Data.Migrations
                 {
                     b.HasOne("Identity.Core.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("RefreshTokens")
-                        .HasForeignKey("ApplicationUserId")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_refresh_tokens_asp_net_users_application_user_id");
 
                     b.Navigation("ApplicationUser");

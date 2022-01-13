@@ -22,23 +22,15 @@ public static class Config
 
 
     public static IEnumerable<ApiScope> ApiScopes =>
-        new List<ApiScope>
-        {
-            new ApiScope("shop-api", "Shop Web API")
-        };
+        new List<ApiScope> { new("shop-api", "Shop Web API") };
 
     public static List<ApiResource> ApiResources =>
-
         new()
         {
             new ApiResource("ShopApiResource", "Shop Web API Resource")
             {
                 Scopes = { "shop-api" },
-                UserClaims = {
-                    JwtClaimTypes.Role,
-                    JwtClaimTypes.Name,
-                    JwtClaimTypes.Id
-                }
+                UserClaims = { JwtClaimTypes.Role, JwtClaimTypes.Name, JwtClaimTypes.Id }
             }
         };
 
@@ -66,7 +58,7 @@ public static class Config
                 ClientId = "oauthClient",
                 ClientName = "Example client application using client credentials",
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = new List<Secret> {new("SuperSecretPassword".Sha256())}, // change me!
+                ClientSecrets = new List<Secret> { new("SuperSecretPassword".Sha256()) }, // change me!
                 AllowedScopes =
                 {
                     IdentityServerConstants.StandardScopes.OpenId,

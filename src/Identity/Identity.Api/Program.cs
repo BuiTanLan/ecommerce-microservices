@@ -6,16 +6,21 @@ using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
 using Hellang.Middleware.ProblemDetails;
 using Identity;
 using Identity.Api.Extensions.ServiceCollectionExtensions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
-//https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
+// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
+// https://benfoster.io/blog/mvc-to-minimal-apis-aspnet-6/
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
-    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer())));
+        options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer())))
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 builder.AddCompression();
 
@@ -32,7 +37,8 @@ builder.Services.AddCustomHealthCheck(healthBuilder => { });
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.AddCustomJwtAuthentication(builder.Configuration);
-builder.Services.AddAuthorization();
+
+builder.Services.AddCustomAuthorization();
 
 builder.AddIdentityModule();
 
@@ -43,6 +49,7 @@ var environment = app.Environment;
 if (environment.IsDevelopment() || environment.IsEnvironment("docker"))
 {
     app.UseDeveloperExceptionPage();
+
     // Minimal Api not supported versioning in .net 6
     app.UseCustomSwagger();
 }

@@ -7,7 +7,8 @@ public interface IDeleteCommand<TId, out TResponse> : ICommand<TResponse>
     public TId Id { get; init; }
 }
 
-public interface IDeleteCommand<TId> : ICommand where TId : struct
+public interface IDeleteCommand<TId> : ICommand
+    where TId : struct
 {
     public TId Id { get; init; }
 }

@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace BuildingBlocks.EFCore
+namespace BuildingBlocks.EFCore;
+
+public interface IDataSeeder
 {
-    public interface IDataSeeder
-    {
-        Task SeedAllAsync();
-    }
+    Task SeedAllAsync();
 }

@@ -1,7 +1,7 @@
-namespace Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
-using AspNetCore.Authentication.JwtBearer;
-using AspNetCore.Authorization;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static partial class ServiceCollectionExtensions
 {
@@ -10,6 +10,7 @@ public static partial class ServiceCollectionExtensions
         AddAuthentication(builder.Services);
         return builder;
     }
+
     public static WebApplicationBuilder AddAuthorization(this WebApplicationBuilder builder)
     {
         builder.Services.AddAuthorization(options =>

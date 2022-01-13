@@ -15,15 +15,14 @@ public static class Endpoint
     {
         endpoints.MapGet($"{IdentityConfiguration.IdentityModulePrefixUri}/claims", GetClaims)
             .WithTags(Tag)
-            .Produces<Dictionary<string, string>>(StatusCodes.Status200OK)
+            .RequireAuthorization()
+            .Produces<GetClaimsQueryResult>()
             .Produces(StatusCodes.Status401Unauthorized)
-            .Produces(StatusCodes.Status500InternalServerError)
             .WithDisplayName("Get IdentityUser claims");
 
         return endpoints;
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     private static async Task<IResult> GetClaims(
         IQueryProcessor queryProcessor, CancellationToken cancellationToken)
     {

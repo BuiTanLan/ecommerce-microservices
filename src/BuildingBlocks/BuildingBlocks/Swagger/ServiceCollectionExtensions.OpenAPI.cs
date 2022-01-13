@@ -33,7 +33,6 @@ public static class ServiceCollectionExtensions
         IConfiguration configuration, Assembly assembly, bool useApiVersioning = false, bool tagByActionName = false)
     {
         if (useApiVersioning)
-        {
             services.AddVersionedApiExplorer(options =>
             {
                 // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
@@ -44,7 +43,6 @@ public static class ServiceCollectionExtensions
                 // can also be used to control the format of the API version in route templates
                 options.SubstituteApiVersionInUrl = true;
             });
-        }
 
         // swagger docs for route to code style --> works in .net 6
         //https://dotnetthoughts.net/openapi-support-for-aspnetcore-minimal-webapi/
@@ -61,10 +59,7 @@ public static class ServiceCollectionExtensions
             {
                 options.OperationFilter<SwaggerDefaultValues>();
                 var xmlFile = XmlCommentsFilePath(assembly);
-                if (File.Exists(xmlFile))
-                {
-                    options.IncludeXmlComments(xmlFile);
-                }
+                if (File.Exists(xmlFile)) options.IncludeXmlComments(xmlFile);
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -86,7 +81,7 @@ public static class ServiceCollectionExtensions
                         Type = SecuritySchemeType.ApiKey
                     });
 
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -94,7 +89,7 @@ public static class ServiceCollectionExtensions
                             Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" },
                             Scheme = "oauth2",
                             Name = "Bearer",
-                            In = ParameterLocation.Header,
+                            In = ParameterLocation.Header
                         },
                         new List<string>()
                     },
@@ -107,7 +102,7 @@ public static class ServiceCollectionExtensions
                             Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme, Id = ApiKeyConstants.HeaderName
-                            },
+                            }
                         },
                         new string[] { }
                     }
@@ -118,41 +113,33 @@ public static class ServiceCollectionExtensions
                     // Grouping endopings by version and ApiExplorer group name.
                     options.DocInclusionPredicate((documentName, apiDescription) =>
                     {
-                        ApiVersionModel actionApiVersionModel = apiDescription.ActionDescriptor
+                        var actionApiVersionModel = apiDescription.ActionDescriptor
                             .GetApiVersionModel(ApiVersionMapping.Explicit | ApiVersionMapping.Implicit);
 
-                        if (actionApiVersionModel == null)
-                        {
-                            return true;
-                        }
+                        if (actionApiVersionModel == null) return true;
 
-                        ApiExplorerSettingsAttribute apiExplorerSettingsAttribute =
+                        var apiExplorerSettingsAttribute =
                             (ApiExplorerSettingsAttribute)apiDescription.ActionDescriptor
                                 .EndpointMetadata.FirstOrDefault(x =>
                                     x.GetType().Equals(typeof(ApiExplorerSettingsAttribute)));
 
-                        if (apiExplorerSettingsAttribute == null)
-                        {
-                            return true;
-                        }
+                        if (apiExplorerSettingsAttribute == null) return true;
 
                         if (actionApiVersionModel.DeclaredApiVersions.Any())
-                        {
                             return actionApiVersionModel.DeclaredApiVersions.Any(v =>
                                 $"v{v.MajorVersion}" == documentName);
-                        }
 
                         return actionApiVersionModel.ImplementedApiVersions.Any(v =>
                             $"v{v.MajorVersion}" == documentName);
                     });
 
                     // Adding all the available versions.
-                    IApiVersionDescriptionProvider apiVersionDescriptionProvider = services.BuildServiceProvider()
+                    var apiVersionDescriptionProvider = services.BuildServiceProvider()
                         .GetService<IApiVersionDescriptionProvider>();
 
-                    foreach (ApiVersionDescription description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                    foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
                     {
-                        OpenApiInfo openApiInfo = new OpenApiInfo()
+                        var openApiInfo = new OpenApiInfo
                         {
                             Title = $"{description.GroupName} API",
                             Version = description.ApiVersion.ToString(),
@@ -160,32 +147,23 @@ public static class ServiceCollectionExtensions
                         };
 
                         if (description.IsDeprecated)
-                        {
                             openApiInfo.Description += " This API version has been deprecated.";
-                        }
 
                         options.SwaggerDoc(description.GroupName, openApiInfo);
                     }
                 }
 
                 if (tagByActionName)
-                {
                     //https://rimdev.io/swagger-grouping-with-controller-name-fallback-using-swashbuckle-aspnetcore/
                     options.TagActionsBy(api =>
                     {
-                        if (api.GroupName != null)
-                        {
-                            return new[] { api.GroupName };
-                        }
+                        if (api.GroupName != null) return new[] { api.GroupName };
 
                         if (api.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
-                        {
                             return new[] { controllerActionDescriptor.ControllerName };
-                        }
 
                         return new List<string>();
                     });
-                }
 
                 // Adding swagger data annotation support.
                 // options.EnableAnnotations();

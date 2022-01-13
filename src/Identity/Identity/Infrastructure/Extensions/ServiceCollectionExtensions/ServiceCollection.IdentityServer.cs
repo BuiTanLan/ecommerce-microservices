@@ -1,9 +1,7 @@
 using Identity.Core;
 using Identity.Core.Models;
-using Identity.Infrastructure.Data;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 //Ref:https://www.scottbrady91.com/identity-server/getting-started-with-identityserver-4

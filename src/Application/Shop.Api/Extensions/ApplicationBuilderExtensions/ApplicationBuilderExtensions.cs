@@ -1,23 +1,20 @@
 namespace Microsoft.AspNetCore.Builder;
 
-public static partial class ApplicationBuilderExtensions
+public static class ApplicationBuilderExtensions
 {
     /// <summary>
-    /// Register exception handling.
+    ///     Register exception handling.
     /// </summary>
     public static IApplicationBuilder UseExceptionHandling(
         this IApplicationBuilder app, IWebHostEnvironment environment)
     {
-        if (environment.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
+        if (environment.IsDevelopment()) app.UseDeveloperExceptionPage();
 
         return app;
     }
 
     /// <summary>
-    /// Register CORS.
+    ///     Register CORS.
     /// </summary>
     public static IApplicationBuilder UseAppCors(this IApplicationBuilder app)
     {

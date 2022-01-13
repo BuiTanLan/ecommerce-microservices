@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Infrastructure.Extensions.ServiceCollectionExtensions;
 
-public static partial class ServiceCollection
+public static class ServiceCollection
 {
     public static WebApplicationBuilder AddInfrastructure(this WebApplicationBuilder builder,
         IConfiguration configuration)
@@ -23,7 +23,7 @@ public static partial class ServiceCollection
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSendGrid(configuration);
+        services.AddEmailService(configuration);
 
         services.AddCustomValidators(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(Assembly.GetExecutingAssembly());

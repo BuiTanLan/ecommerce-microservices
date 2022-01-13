@@ -25,18 +25,20 @@ public class
         _context = context;
     }
 
-    public async Task<GenerateRefreshTokenCommandResult> Handle(GenerateRefreshTokenCommand request,
+    public async Task<GenerateRefreshTokenCommandResult> Handle(
+        GenerateRefreshTokenCommand request,
         CancellationToken cancellationToken)
     {
         Guard.Against.Null(request, nameof(GenerateRefreshTokenCommand));
 
         var refreshToken = await _context.Set<Core.Models.RefreshToken>()
-            .FirstOrDefaultAsync(rt => rt.UserId == request.UserId && rt.Token == request.Token,
-                cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(
+                rt => rt.UserId == request.UserId && rt.Token == request.Token,
+                cancellationToken);
 
         if (refreshToken == null)
         {
-            string token = GetRefreshToken();
+            var token = Core.Models.RefreshToken.GetRefreshToken();
 
             refreshToken = new Core.Models.RefreshToken
             {
@@ -44,7 +46,7 @@ public class
                 Token = token,
                 CreatedAt = DateTime.Now,
                 ExpiredAt = DateTime.Now.AddDays(30),
-                CreatedByIp = IpHelper.GetIpAddress(),
+                CreatedByIp = IpHelper.GetIpAddress()
             };
 
             await _context.Set<Core.Models.RefreshToken>().AddAsync(refreshToken, cancellationToken);
@@ -52,10 +54,10 @@ public class
         }
         else
         {
-            if (IsRefreshTokenValid(refreshToken) == false)
+            if (!refreshToken.IsRefreshTokenValid())
                 throw new InvalidRefreshTokenException();
 
-            string token = GetRefreshToken();
+            var token = Core.Models.RefreshToken.GetRefreshToken();
 
             refreshToken.Token = token;
             refreshToken.ExpiredAt = DateTime.Now;
@@ -84,38 +86,12 @@ public class
         });
     }
 
-    private string GetRefreshToken()
-    {
-        byte[] randomNumber = new byte[32];
-        using RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
-        randomNumberGenerator.GetBytes(randomNumber);
-
-        string refreshToken = Convert.ToBase64String(randomNumber);
-
-        return refreshToken;
-    }
-
-    private bool IsRefreshTokenValid(Core.Models.RefreshToken existingToken, double? ttlRefreshToken = null)
-    {
-        // Token already expired or revoked, then return false
-        if (existingToken.IsActive == false)
-        {
-            return false;
-        }
-
-        if (ttlRefreshToken is not null && existingToken.CreatedAt.AddDays((long)ttlRefreshToken) <= DateTime.Now)
-        {
-            return false;
-        }
-
-        return true;
-    }
 
     private async Task RemoveOldRefreshTokens(Guid userId, long? ttlRefreshToken = null)
     {
         var refreshTokens = _context.Set<Core.Models.RefreshToken>().Where(rt => rt.UserId == userId);
 
-        refreshTokens.ToList().RemoveAll(x => IsRefreshTokenValid(x, ttlRefreshToken) == false);
+        refreshTokens.ToList().RemoveAll(x => !x.IsRefreshTokenValid(ttlRefreshToken));
 
         await _context.SaveChangesAsync();
     }

@@ -1,8 +1,7 @@
-namespace BuildingBlocks.Jwt
+namespace BuildingBlocks.Jwt;
+
+public enum TokenStorageType
 {
-    public enum TokenStorageType
-    {
-        InMemory = 1,
-        Redis = 2
-    }
+    InMemory = 1,
+    Redis = 2
 }

@@ -1,4 +1,3 @@
-
 using BuildingBlocks.Exception;
 
 namespace Identity.Features.RegisterNewUser;

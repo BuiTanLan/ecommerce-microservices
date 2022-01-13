@@ -16,7 +16,7 @@ public class EmailVerificationCodeConfiguration : IEntityTypeConfiguration<Email
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
         builder.Property(x => x.Email).HasMaxLength(50).IsRequired();
         builder.Property(x => x.Code).HasMaxLength(6).IsFixedLength().IsRequired();
-        builder.Property(x => x.SentAtUtc).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
-        builder.Property(x => x.UsedAtUtc).Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Throw);
+        builder.Property(x => x.SentAt).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
+        builder.Property(x => x.UsedAt).Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Throw);
     }
 }
