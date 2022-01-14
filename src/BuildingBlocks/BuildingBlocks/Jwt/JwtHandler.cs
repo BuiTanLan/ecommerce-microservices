@@ -78,7 +78,7 @@ public sealed class JwtHandler : IJwtHandler
         if (rolesClaims?.Any() is true)
         {
             foreach (var role in rolesClaims)
-                jwtClaims.Add(new Claim(ClaimTypes.Role, role));
+                jwtClaims.Add(new Claim(ClaimTypes.Role, role.ToLower(CultureInfo.InvariantCulture)));
         }
 
         if (!string.IsNullOrWhiteSpace(_options.Audience))
@@ -87,10 +87,11 @@ public sealed class JwtHandler : IJwtHandler
         if (permissionsClaims?.Any() is true)
         {
             foreach (var permissionsClaim in permissionsClaims)
-                jwtClaims.Add(new Claim(CustomClaimTypes.Permission, permissionsClaim));
+                jwtClaims.Add(new Claim(CustomClaimTypes.Permission, permissionsClaim.ToLower(CultureInfo.InvariantCulture)));
         }
 
-        if (usersClaims?.Any() is true) jwtClaims = jwtClaims.Union(usersClaims).ToList();
+        if (usersClaims?.Any() is true)
+            jwtClaims = jwtClaims.Union(usersClaims).ToList();
 
         var issuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.IssuerSigningKey));
         if (issuerSigningKey is null)

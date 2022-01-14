@@ -216,11 +216,15 @@ public static class Extensions
                     authorizationOptions.AddPolicy(policy.Name, x =>
                     {
                         x.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
-                        foreach (var policyClaim in policy.Claims) x.RequireClaim(policyClaim.Type, policyClaim.Value);
+                        foreach (var policyClaim in policy.Claims)
+                        {
+                            x.RequireClaim(policyClaim.Type, policyClaim.Value);
+                        }
                     });
                 }
             }
 
+            // https://docs.microsoft.com/en-us/aspnet/core/security/authorization
             if (rolePolicies is { })
             {
                 foreach (var rolePolicy in rolePolicies)

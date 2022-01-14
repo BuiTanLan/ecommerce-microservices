@@ -1,4 +1,7 @@
 using BuildingBlocks.EFCore;
+using BuildingBlocks.Security.ApiKey.Authorization;
+using Identity.Core;
+using Identity.Core.Models;
 using Identity.Features.ConfirmEmail;
 using Identity.Features.GetClaims;
 using Identity.Features.Login;
@@ -50,13 +53,17 @@ public static class IdentityConfiguration
 
         endpoints.MapGet(
             $"{IdentityModulePrefixUri}/user-role",
-            [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-            () => new { Role = "User" }).WithTags("Identity");
+            [Authorize(
+                AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+                Roles = Constants.Role.User)]
+            () => new { Role = ApplicationRole.User.Name }).WithTags("Identity");
 
         endpoints.MapGet(
             $"{IdentityModulePrefixUri}/admin-role",
-            [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-            () => new { Role = "Admin" }).WithTags("Identity");
+            [Authorize(
+                AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+                Roles = Constants.Role.Admin)]
+            () => new { Role = ApplicationRole.Admin.Name }).WithTags("Identity");
 
         endpoints.MapRegisterNewUserEndpoint();
         endpoints.MapLoginUserEndpoint();
