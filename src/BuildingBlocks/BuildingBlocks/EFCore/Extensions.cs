@@ -1,9 +1,6 @@
-using System;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using BuildingBlocks.Domain;
+using BuildingBlocks.Domain.Events;
+using BuildingBlocks.Domain.Model;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -17,8 +14,10 @@ namespace BuildingBlocks.EFCore;
 
 public static class Extensions
 {
-    public static IServiceCollection AddPostgresDbContext<TDbContext>(this IServiceCollection services,
-        string connString, Action<DbContextOptionsBuilder> doMoreDbContextOptionsConfigure = null,
+    public static IServiceCollection AddPostgresDbContext<TDbContext>(
+        this IServiceCollection services,
+        string connString,
+        Action<DbContextOptionsBuilder> doMoreDbContextOptionsConfigure = null,
         Action<IServiceCollection> doMoreActions = null)
         where TDbContext : DbContext, IDbFacadeResolver, IDomainEventContext
     {
@@ -43,24 +42,48 @@ public static class Extensions
         return services;
     }
 
-    public static IServiceCollection AddRepository(this IServiceCollection services, Type repoType)
+    public static IServiceCollection AddCustomRepository(this IServiceCollection services, Type customRepositoryType)
     {
         services.Scan(scan => scan
-            .FromAssembliesOf(repoType)
+            .FromAssembliesOf(customRepositoryType)
             .AddClasses(classes =>
-                classes.AssignableTo(repoType)).As(typeof(IRepository<,>)).WithScopedLifetime()
+                classes.AssignableTo(customRepositoryType)).As(typeof(IRepository<,>)).WithScopedLifetime()
             .AddClasses(classes =>
-                classes.AssignableTo(repoType)).As(typeof(IPageRepository<>)).WithScopedLifetime()
+                classes.AssignableTo(customRepositoryType)).As(typeof(IPageRepository<>)).WithScopedLifetime()
         );
 
         return services;
     }
 
+    public static IServiceCollection AddCustomRepository<TEntity, TKey, TRepository>(
+        this IServiceCollection services,
+        ServiceLifetime lifeTime = ServiceLifetime.Scoped)
+        where TEntity : class, IAggregateRoot<TKey>
+        where TRepository : class, IRepository<TEntity, TKey>
+    {
+        return services.RegisterService<IRepository<TEntity, TKey>, TRepository>(lifeTime);
+    }
+
+    public static IServiceCollection AddUnitOfWork<TContext>(
+        this IServiceCollection services,
+        ServiceLifetime lifeTime = ServiceLifetime.Scoped,
+        bool registerGeneric = false)
+        where TContext : AppDbContextBase
+    {
+        if (registerGeneric)
+        {
+            services.RegisterService<IUnitOfWork, EfUnitOfWork<TContext>>(lifeTime);
+        }
+
+        return services.RegisterService<IUnitOfWork<TContext>, EfUnitOfWork<TContext>>(lifeTime);
+    }
+
+
     public static void MigrateDataFromScript(this MigrationBuilder migrationBuilder)
     {
         var assembly = Assembly.GetCallingAssembly();
         var files = assembly.GetManifestResourceNames();
-        var filePrefix = $"{assembly.GetName().Name}.Data.Scripts."; //IMPORTANT
+        var filePrefix = $"{assembly.GetName().Name}.Data.Scripts.";
 
         foreach (var file in files
                      .Where(f => f.StartsWith(filePrefix) && f.EndsWith(".sql"))
@@ -107,11 +130,33 @@ public static class Extensions
                 retry => TimeSpan.FromSeconds(15),
                 (exception, timeSpan, retry, ctx) =>
                 {
-                    logger.LogWarning(exception,
+                    logger.LogWarning(
+                        exception,
                         "[{Prefix}] Exception {ExceptionType} with message {Message} detected on attempt {Retry} of {Retries}",
-                        prefix, exception.GetType().Name, exception.Message, retry, retries);
+                        prefix,
+                        exception.GetType().Name,
+                        exception.Message,
+                        retry,
+                        retries);
                 }
             );
         }
+    }
+
+    private static IServiceCollection RegisterService<TService, TImplementation>(
+        this IServiceCollection services,
+        ServiceLifetime lifeTime = ServiceLifetime.Scoped)
+        where TService : class
+        where TImplementation : class, TService
+    {
+        ServiceDescriptor serviceDescriptor = lifeTime switch
+        {
+            ServiceLifetime.Singleton => ServiceDescriptor.Singleton<TService, TImplementation>(),
+            ServiceLifetime.Scoped => ServiceDescriptor.Scoped<TService, TImplementation>(),
+            ServiceLifetime.Transient => ServiceDescriptor.Transient<TService, TImplementation>(),
+            _ => throw new ArgumentOutOfRangeException(nameof(lifeTime), lifeTime, null)
+        };
+        services.Add(serviceDescriptor);
+        return services;
     }
 }

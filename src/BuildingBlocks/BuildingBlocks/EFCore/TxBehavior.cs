@@ -1,11 +1,8 @@
-using System;
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using BuildingBlocks.Domain;
+using BuildingBlocks.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,8 +19,11 @@ public class TxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResp
     private readonly ILogger<TxBehavior<TRequest, TResponse>> _logger;
     private readonly IMediator _mediator;
 
-    public TxBehavior(IDbFacadeResolver dbFacadeResolver, IDomainEventContext domainEventContext,
-        IMediator mediator, ILogger<TxBehavior<TRequest, TResponse>> logger)
+    public TxBehavior(
+        IDbFacadeResolver dbFacadeResolver,
+        IDomainEventContext domainEventContext,
+        IMediator mediator,
+        ILogger<TxBehavior<TRequest, TResponse>> logger)
     {
         _domainEventContext = domainEventContext ?? throw new ArgumentNullException(nameof(domainEventContext));
         _dbFacadeResolver = dbFacadeResolver ?? throw new ArgumentNullException(nameof(dbFacadeResolver));
@@ -31,7 +31,8 @@ public class TxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResp
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+    public async Task<TResponse> Handle(
+        TRequest request, CancellationToken cancellationToken,
         RequestHandlerDelegate<TResponse> next)
     {
         if (request is not ITxRequest) return await next();
