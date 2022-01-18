@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Domain.Events;
 using BuildingBlocks.Domain.Events.External;
+using BuildingBlocks.Messaging.Transport.InMemory.Channels;
 using BuildingBlocks.Messaging.Transport.InMemory.Diagnostics;
 using Microsoft.Extensions.Logging;
 
@@ -8,20 +9,17 @@ namespace BuildingBlocks.Messaging.Transport.InMemory;
 public class InMemoryPublisher : IBusPublisher
 {
     private readonly ILogger<InMemoryPublisher> _logger;
-    private readonly IChannelFactory _channelFactory;
+    private readonly IMessageChannel _channel;
     private readonly InMemoryProducerDiagnostics _producerDiagnostics;
-    private readonly IServiceProvider _serviceProvider;
 
     public InMemoryPublisher(
         ILogger<InMemoryPublisher> logger,
-        IChannelFactory channelFactory,
-        InMemoryProducerDiagnostics producerDiagnostics,
-        IServiceProvider serviceProvider)
+        IMessageChannel channel,
+        InMemoryProducerDiagnostics producerDiagnostics)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _channelFactory = channelFactory;
+        _channel = channel;
         _producerDiagnostics = producerDiagnostics;
-        _serviceProvider = serviceProvider;
     }
 
     public async Task PublishAsync<TEvent>(TEvent integrationEvent, CancellationToken cancellationToken = default)
@@ -35,13 +33,13 @@ public class InMemoryPublisher : IBusPublisher
         //     var context = _serviceProvider.GetRequiredService<ICorrelationContextAccessor>();
         //     message.CorrelationId = Guid.Parse(context.CorrelationId);
         // }
-        if (_channelFactory.GetWriter<TEvent>() is not null)
+        if (_channel.Writer is not null)
         {
             _logger.LogInformation("publishing message '{message.Id}'...", integrationEvent.Id);
 
             // ProducerDiagnostics
             _producerDiagnostics.StartActivity(integrationEvent);
-            await _channelFactory.GetWriter<TEvent>().WriteAsync(integrationEvent, cancellationToken);
+            await _channel.Writer.WriteAsync(integrationEvent, cancellationToken);
             _producerDiagnostics.StopActivity(integrationEvent);
         }
         else

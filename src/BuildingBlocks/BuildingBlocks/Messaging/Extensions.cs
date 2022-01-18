@@ -2,6 +2,7 @@ using System.Reflection;
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Messaging.Serialization;
 using BuildingBlocks.Core.Messaging.Serialization.Newtonsoft;
+using BuildingBlocks.Domain.Events;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Messaging.BackgroundServices;
 using BuildingBlocks.Messaging.Message;
@@ -14,10 +15,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.Messaging;
 
-public static class TxOutboxConstants
+public enum TxOutboxConstants
 {
-    public const string InMemory = "inmem";
-    public const string EntityFramework = "ef";
+    InMemory = 1,
+    EntityFramework = 2
 }
 
 public static class Extensions
@@ -25,7 +26,7 @@ public static class Extensions
     public static IServiceCollection AddMessaging(
         this IServiceCollection services,
         IConfiguration configuration,
-        string outboxProvider = TxOutboxConstants.EntityFramework)
+        TxOutboxConstants outboxProvider = TxOutboxConstants.EntityFramework)
     {
         switch (outboxProvider)
         {
@@ -85,5 +86,12 @@ public static class Extensions
                 yield return messageType;
             }
         }
+    }
+
+    public static IServiceCollection AddBusSubscriber(this IServiceCollection services, Type subscriberType)
+    {
+        if (services.All(s => s.ImplementationType != subscriberType))
+            services.AddSingleton(typeof(IBusSubscriber), subscriberType);
+        return services;
     }
 }

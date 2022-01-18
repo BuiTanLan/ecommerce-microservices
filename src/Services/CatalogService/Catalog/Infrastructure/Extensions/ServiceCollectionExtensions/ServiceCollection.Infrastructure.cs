@@ -4,6 +4,7 @@ using BuildingBlocks.CQRS;
 using BuildingBlocks.Email;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Messaging;
+using BuildingBlocks.Messaging.Transport.InMemory;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Validation;
 
@@ -24,9 +25,10 @@ public static class ServiceCollection
     {
         services.AddCore();
 
-        services.AddMessaging(configuration);
+        services.AddMessaging(configuration, TxOutboxConstants.InMemory);
 
-        services.AddRabbitMQTransport(configuration);
+        // services.AddRabbitMqTransport(configuration);
+        services.AddInMemoryTransport(configuration);
 
         services.AddEmailService(configuration);
 
