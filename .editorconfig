@@ -222,6 +222,9 @@ dotnet_diagnostic.SA1401.severity = None
 # A C# partial element is missing a documentation header.
 dotnet_diagnostic.SA1601.severity = None 
 
+# A C# element is missing documentation for its return value.
+dotnet_diagnostic.SA1615.severity = None 
+
 
 ##
 ## SonarAnalyzers.CSharp

@@ -1,19 +1,18 @@
-# tye application configuration file
-# read all about it at https://github.com/dotnet/tye
-#
-# when you've given us a try, we'd love to know what you think:
-#    https://aka.ms/AA7q20u
-#
-name: shop
 services:
-- name: postgres
-  image: postgres:11.1-alpine
-  bindings:
-  - port: 5432
-    containerPort: 5432
-    protocol: http
-  env:
-  - name: POSTGRES_USER
-    value: postgres
-  - name: POSTGRES_PASSWORD
-    value: postgres
+  postgres:
+    image: postgres:11.1-alpine
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+      # volumes:
+      #   - rabbitmq:/var/lib/rabbitmq

@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +9,7 @@ public abstract class DbContextDesignFactoryBase<TDbContext> : IDesignTimeDbCont
 {
     private readonly string _connectionStringName;
 
-    public DbContextDesignFactoryBase(string connectionStringName)
+    protected DbContextDesignFactoryBase(string connectionStringName)
     {
         _connectionStringName = connectionStringName;
     }
@@ -21,13 +20,16 @@ public abstract class DbContextDesignFactoryBase<TDbContext> : IDesignTimeDbCont
             ?.GetConnectionString(_connectionStringName);
 
         if (string.IsNullOrWhiteSpace(connString))
+        {
             throw new InvalidOperationException(
                 $"Could not find a connection string named '{connString}'.");
+        }
+
         Console.WriteLine($"Connection String: {connString}");
 
         var optionsBuilder = new DbContextOptionsBuilder<TDbContext>()
             .UseNpgsql(
-                connString ?? throw new InvalidOperationException(),
+                connString,
                 sqlOptions =>
                 {
                     sqlOptions.MigrationsAssembly(GetType().Assembly.FullName);

@@ -56,14 +56,14 @@ public static class IdentityConfiguration
             [Authorize(
                 AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
                 Roles = Constants.Role.User)]
-            () => new { Role = ApplicationRole.User.Name }).WithTags("Identity");
+            () => new { Role = Constants.Role.User }).WithTags("Identity");
 
         endpoints.MapGet(
             $"{IdentityModulePrefixUri}/admin-role",
             [Authorize(
                 AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
                 Roles = Constants.Role.Admin)]
-            () => new { Role = ApplicationRole.Admin.Name }).WithTags("Identity");
+            () => new { Role = Constants.Role.Admin }).WithTags("Identity");
 
         endpoints.MapRegisterNewUserEndpoint();
         endpoints.MapLoginUserEndpoint();

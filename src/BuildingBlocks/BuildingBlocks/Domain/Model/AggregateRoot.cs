@@ -35,6 +35,6 @@ public abstract class AggregateRoot<TId> : IAggregateRoot<TId>
         => _domainEvents?.Clear();
 }
 
-public abstract class AggregateRoot : AggregateRoot<Guid>
+public abstract class AggregateRoot : AggregateRoot<Guid>, IAggregateRoot
 {
 }

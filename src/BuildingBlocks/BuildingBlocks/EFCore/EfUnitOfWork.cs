@@ -1,8 +1,5 @@
 using System.Collections.Concurrent;
-using System.Transactions;
-using BuildingBlocks.Domain.Events;
 using BuildingBlocks.Domain.Model;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using IsolationLevel = System.Data.IsolationLevel;
 
@@ -13,42 +10,52 @@ public class EfUnitOfWork<TDbContext> : IUnitOfWork<TDbContext>
     where TDbContext : AppDbContextBase
 {
     private readonly TDbContext _context;
-    private readonly IDomainEventDispatcher _domainEventDispatcher;
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<EfUnitOfWork<TDbContext>> _logger;
     private readonly IDictionary<Type, object> _repositories;
 
     public EfUnitOfWork(
         TDbContext context,
-        IDomainEventDispatcher domainEventDispatcher,
         IServiceProvider serviceProvider,
         ILogger<EfUnitOfWork<TDbContext>> logger)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
-        _domainEventDispatcher =
-            domainEventDispatcher ?? throw new ArgumentNullException(nameof(domainEventDispatcher));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _logger = logger;
 
         _repositories = new ConcurrentDictionary<Type, object>();
     }
 
-    public async Task BeginTransactionAsync(IsolationLevel isolationLevel)
+    public TDbContext DbContext { get; }
+
+
+    public Task BeginTransactionAsync(
+        IsolationLevel isolationLevel,
+        CancellationToken cancellationToken = default)
     {
-        await _context.BeginTransactionAsync(isolationLevel);
+        return _context.BeginTransactionAsync(isolationLevel, cancellationToken);
     }
 
-    public async Task CommitTransactionAsync()
+    public Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
-        // dispatch domain events before commiting transaction
-        await _domainEventDispatcher.DispatchEventsAsync();
-
-        await _context.CommitTransactionAsync();
+        return _context.CommitTransactionAsync(cancellationToken);
     }
 
-    public void RollbackTransaction()
+    public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
-        _context.RollbackTransaction();
+        return _context.RollbackTransactionAsync(cancellationToken);
+    }
+
+    public Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
+    {
+        // https://github.com/dotnet-architecture/eShopOnContainers/issues/700#issuecomment-461807560
+        // https://github.com/dotnet-architecture/eShopOnContainers/blob/e05a87658128106fef4e628ccb830bc89325d9da/src/Services/Ordering/Ordering.Infrastructure/OrderingContext.cs#L65
+        return _context.SaveEntitiesAsync(cancellationToken);
+    }
+
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return _context.SaveChangesAsync(cancellationToken);
     }
 
     public IRepository<TEntity, TKey> GetRepository<TEntity, TKey>()
@@ -76,15 +83,24 @@ public class EfUnitOfWork<TDbContext> : IUnitOfWork<TDbContext>
         return (IRepository<TEntity, TKey>)_repositories[entityType];
     }
 
-    public async Task RetryOnExceptionAsync(Func<Task> operation)
+    public IRepository<TEntity, Guid> GetRepository<TEntity>()
+        where TEntity : class, IAggregateRoot
     {
-        await _context.Database.CreateExecutionStrategy().ExecuteAsync(operation);
+        return GetRepository<TEntity, Guid>();
+    }
+
+    public Task RetryOnExceptionAsync(Func<Task> operation)
+    {
+        return _context.RetryOnExceptionAsync(operation);
+    }
+
+    public Task<TResult> RetryOnExceptionAsync<TResult>(Func<Task<TResult>> operation)
+    {
+        return _context.RetryOnExceptionAsync(operation);
     }
 
     public void Dispose()
     {
         _context.Dispose();
     }
-
-    public TDbContext DbContext { get; }
 }

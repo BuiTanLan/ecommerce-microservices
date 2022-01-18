@@ -4,7 +4,7 @@ namespace Identity.Infrastructure.Data;
 
 public class DbContextDesignFactory : DbContextDesignFactoryBase<IdentityContext>
 {
-    public DbContextDesignFactory() : base("ShopDBPostgresConnection")
+    public DbContextDesignFactory() : base("IdentityServiceConnection")
     {
     }
 }

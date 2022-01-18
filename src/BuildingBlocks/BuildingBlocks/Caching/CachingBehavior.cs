@@ -13,7 +13,8 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
     private readonly ILogger<CachingBehavior<TRequest, TResponse>> _logger;
     private readonly int defaultCacheExpirationInHours = 1;
 
-    public CachingBehavior(IEasyCachingProviderFactory cachingFactory,
+    public CachingBehavior(
+        IEasyCachingProviderFactory cachingFactory,
         ILogger<CachingBehavior<TRequest, TResponse>> logger,
         IEnumerable<ICachePolicy<TRequest, TResponse>> cachePolicies)
     {

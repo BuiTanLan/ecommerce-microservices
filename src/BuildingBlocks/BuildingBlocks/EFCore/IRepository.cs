@@ -23,7 +23,8 @@ public interface IRepository<TEntity, TKey> : IDisposable
     Task<IList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task<TEntity> EditAsync(TEntity entity, CancellationToken cancellationToken = default);
-    void Delete(TEntity entity, CancellationToken cancellationToken = default);
+    void Delete(TEntity entity);
+    void DeleteRange(IEnumerable<TEntity> entities);
 }
 
 public interface IRepository<TEntity> : IRepository<TEntity, Guid>

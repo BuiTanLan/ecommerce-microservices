@@ -1,6 +1,6 @@
 namespace Identity.Core;
 
-public class Constants
+public static class Constants
 {
     public static class Role
     {

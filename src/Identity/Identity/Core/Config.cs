@@ -1,12 +1,12 @@
+using Duende.IdentityServer;
+using Duende.IdentityServer.Models;
 using IdentityModel;
-using IdentityServer4;
-using IdentityServer4.Models;
 
 namespace Identity.Core;
 
-//Ref: https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/api_resources/
-//https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/identity/
-//https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/api_scopes/
+// Ref: https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/api_resources/
+// https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/identity/
+// https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/api_scopes/
 public static class Config
 {
     public static IEnumerable<IdentityResource> IdentityResources =>
@@ -22,12 +22,12 @@ public static class Config
 
 
     public static IEnumerable<ApiScope> ApiScopes =>
-        new List<ApiScope> { new("shop-api", "Shop Web API") };
+        new List<ApiScope> { new("shop-api", "Catalog Web API") };
 
-    public static List<ApiResource> ApiResources =>
-        new()
+    public static IList<ApiResource> ApiResources =>
+        new List<ApiResource>
         {
-            new ApiResource("ShopApiResource", "Shop Web API Resource")
+            new ApiResource("ShopApiResource", "Catalog Web API Resource")
             {
                 Scopes = { "shop-api" },
                 UserClaims = { JwtClaimTypes.Role, JwtClaimTypes.Name, JwtClaimTypes.Id }

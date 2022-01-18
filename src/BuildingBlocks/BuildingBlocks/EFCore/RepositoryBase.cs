@@ -75,18 +75,14 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         return await DbSet.ToListAsync(cancellationToken);
     }
 
-    public async Task<TEntity> AddAsync(
-        TEntity entity,
-        CancellationToken cancellationToken = default)
+    public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         await DbSet.AddAsync(entity, cancellationToken);
 
         return entity;
     }
 
-    public async Task<TEntity> EditAsync(
-        TEntity entity,
-        CancellationToken cancellationToken = default)
+    public async Task<TEntity> EditAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         var entry = DbContext.Entry(entity);
         entry.State = EntityState.Modified;
@@ -94,11 +90,14 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         return await Task.FromResult(entry.Entity);
     }
 
-    public void Delete(
-        TEntity entity,
-        CancellationToken cancellationToken = default)
+    public void Delete(TEntity entity)
     {
         DbSet.Remove(entity);
+    }
+
+    public void DeleteRange(IEnumerable<TEntity> entities)
+    {
+        DbSet.RemoveRange(entities);
     }
 
     public void Dispose()

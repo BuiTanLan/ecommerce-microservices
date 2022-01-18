@@ -1,5 +1,6 @@
 using System.Reflection;
 using BuildingBlocks.Domain.Events;
+using BuildingBlocks.Domain.Events.External;
 using BuildingBlocks.Domain.Model;
 using Newtonsoft.Json;
 
@@ -8,29 +9,39 @@ namespace BuildingBlocks.Messaging.Outbox;
 public class OutboxMessage : AggregateRoot
 {
     /// <summary>
-    /// Gets or sets name of message
+    /// Gets name of message.
     /// </summary>
-    public string Name { get; init; }
+    public string Name { get; private set; }
 
     /// <summary>
     /// Gets the date the message occurred.
     /// </summary>
-    public DateTime OccurredOn { get; init; }
+    public DateTime OccurredOn { get; private set; }
 
     /// <summary>
     /// Gets the event type full name.
     /// </summary>
-    public string Type { get; init; }
+    public string Type { get; private set; }
 
     /// <summary>
     /// Gets the event data - serialized to JSON.
     /// </summary>
-    public string Data { get; init; }
+    public string Data { get; private set; }
 
     /// <summary>
     /// Gets the date the message processed.
     /// </summary>
     public DateTime? ProcessedOn { get; private set; }
+
+    /// <summary>
+    /// Gets the type of our event.
+    /// </summary>
+    public EventType EventType { get; private set; }
+
+    /// <summary>
+    /// Gets the CorrelationId of our event.
+    /// </summary>
+    public string CorrelationId { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OutboxMessage"/> class.
@@ -39,38 +50,56 @@ public class OutboxMessage : AggregateRoot
     /// <param name="id">The outbox message identifier.</param>
     /// <param name="occurredOn">The outbox message date occurred on.</param>
     /// <param name="type">The outbox message type.</param>
+    /// <param name="name">The name of event type with underscore naming.</param>
     /// <param name="data">The outbox message data.</param>
-    public OutboxMessage(Guid id, DateTime occurredOn, string type, string data)
+    /// <param name="eventType">The outbox event type.</param>
+    /// <param name="correlationId">The correlationId of our outbox event.</param>
+    public OutboxMessage(
+        Guid id,
+        DateTime occurredOn,
+        string type,
+        string name,
+        string data,
+        EventType eventType,
+        string correlationId = null)
     {
         OccurredOn = occurredOn;
         Type = type;
         Data = data;
         Id = id;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="OutboxMessage"/> class.
-    /// Initializes a new outbox message.
-    /// </summary>
-    /// <param name="id">The outbox message identifier.</param>
-    /// <param name="occurredOn">The outbox message date occurred on.</param>
-    /// <param name="event">Our domain event</param>
-    public OutboxMessage(Guid id, DateTime occurredOn, IDomainEvent @event)
-    {
-        OccurredOn = occurredOn;
-        Type = Type = @event.GetType().FullName;
-        Data = JsonConvert.SerializeObject(@event);
-        Id = id;
+        Name = name;
+        EventType = eventType;
+        CorrelationId = correlationId;
     }
 
     /// <summary>
     /// Sets outbox message process date.
     /// </summary>
-    public void ChangeProcessDate()
+    public void MarkAsProcessed()
     {
         ProcessedOn = DateTime.Now;
     }
 
-    public virtual IDomainEvent RecreateMessage(Assembly assembly) =>
-        (IDomainEvent)JsonConvert.DeserializeObject(Data, assembly.GetType(Type)!);
+    public bool Validate()
+    {
+        if (Id == Guid.Empty)
+        {
+            throw new System.ComponentModel.DataAnnotations.ValidationException(
+                "Id of the Outbox entity couldn't be null.");
+        }
+
+        if (string.IsNullOrEmpty(Type))
+        {
+            throw new System.ComponentModel.DataAnnotations.ValidationException(
+                "Type of the Outbox entity couldn't be null or empty.");
+        }
+
+        if (Data is null)
+        {
+            throw new System.ComponentModel.DataAnnotations.ValidationException(
+                "Payload of the Outbox entity couldn't be null (should be an Avro format).");
+        }
+
+        return true;
+    }
 }

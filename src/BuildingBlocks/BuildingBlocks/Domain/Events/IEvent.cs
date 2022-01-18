@@ -21,7 +21,7 @@ public interface IEvent
     DateTime OccurredOn { get; }
 
     /// <summary>
-    /// Gets type of this event
+    /// Gets type of this event.
     /// </summary>
     public string EventType { get; }
 }

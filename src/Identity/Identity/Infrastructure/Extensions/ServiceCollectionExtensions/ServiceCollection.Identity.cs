@@ -11,34 +11,38 @@ namespace Identity.Infrastructure.Extensions.ServiceCollectionExtensions;
 
 public static partial class ServiceCollectionExtensions
 {
-    public static WebApplicationBuilder AddCustomIdentity(this WebApplicationBuilder builder,
-        IConfiguration configuration, Action<IdentityOptions> configure = null)
+    public static WebApplicationBuilder AddCustomIdentity(
+        this WebApplicationBuilder builder,
+        IConfiguration configuration,
+        Action<IdentityOptions> configure = null)
     {
         AddCustomIdentity(builder.Services, configuration, configure);
 
         return builder;
     }
 
-    public static IServiceCollection AddCustomIdentity(this IServiceCollection services, IConfiguration configuration,
+    public static IServiceCollection AddCustomIdentity(
+        this IServiceCollection services,
+        IConfiguration configuration,
         Action<IdentityOptions> configure = null)
     {
-        //Problem with .net core identity - will override our default authentication scheme `JwtBearerDefaults.AuthenticationScheme` to unwanted `Identity.Application` in `AddIdentity()` method .net identity
-        //https://github.com/IdentityServer/IdentityServer4/issues/1525
+        // Problem with .net core identity - will override our default authentication scheme `JwtBearerDefaults.AuthenticationScheme` to unwanted `Identity.Application` in `AddIdentity()` method .net identity
+        // https://github.com/IdentityServer/IdentityServer4/issues/1525
 
 
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
             services.AddDbContext<IdentityContext>(options =>
-                options.UseInMemoryDatabase("ShopDB"));
+                options.UseInMemoryDatabase("Shop.Services.Identity"));
         }
         else
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-            var connString = configuration.GetConnectionString("ShopDBPostgresConnection");
+            var connString = configuration.GetConnectionString("IdentityServiceConnection");
             Guard.Against.NullOrEmpty(connString, nameof(connString));
 
-            //Postgres
+            // Postgres
             services.AddDbContext<IdentityContext>(options =>
             {
                 options.UseNpgsql(connString, sqlOptions =>
@@ -49,8 +53,8 @@ public static partial class ServiceCollectionExtensions
             });
         }
 
-        //https://github.com/IdentityServer/IdentityServer4/issues/1525
-        //some dependencies will add here if not registered before
+        // https://github.com/IdentityServer/IdentityServer4/issues/1525
+        // some dependencies will add here if not registered before
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
                 // Password settings.

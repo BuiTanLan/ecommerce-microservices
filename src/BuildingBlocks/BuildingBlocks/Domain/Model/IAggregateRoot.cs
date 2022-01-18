@@ -2,7 +2,7 @@ using BuildingBlocks.Domain.Events;
 
 namespace BuildingBlocks.Domain.Model;
 
-public interface IAggregateRoot : IAggregateRoot<Guid>
+public interface IAggregateRoot : IAggregateRoot<Guid>, IEntity
 {
 }
 

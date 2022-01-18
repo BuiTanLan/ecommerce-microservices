@@ -3,6 +3,7 @@ using Ben.Diagnostics;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Web;
 using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
+using BuildingBlocks.Web.Extensions.ServiceCollection;
 using Hellang.Middleware.ProblemDetails;
 using Identity;
 using Identity.Api.Extensions.ServiceCollectionExtensions;
@@ -14,7 +15,6 @@ using Serilog;
 
 // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
 // https://benfoster.io/blog/mvc-to-minimal-apis-aspnet-6/
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
@@ -80,6 +80,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateBootstrapLogger();
 
 await app.RunAsync();
+
 
 public partial class Program
 {

@@ -22,7 +22,7 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration,
         EmailProvider provider = EmailProvider.MimKit,
-        Action<EmailConfig> configure = null)
+        Action<EmailConfig> configurator = null)
     {
         if (provider == EmailProvider.SendGrid)
         {
@@ -36,8 +36,8 @@ public static class Extensions
         var config = configuration.GetSection(nameof(EmailConfig)).Get<EmailConfig>();
 
         services.Configure<EmailConfig>(configuration.GetSection(nameof(EmailConfig)));
-        if (configure is { })
-            services.Configure(nameof(EmailConfig), configure);
+        if (configurator is { })
+            services.Configure(nameof(EmailConfig), configurator);
 
         return services;
     }

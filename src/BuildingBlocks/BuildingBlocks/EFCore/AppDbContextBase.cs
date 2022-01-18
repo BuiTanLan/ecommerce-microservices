@@ -2,34 +2,49 @@ using System.Collections.Immutable;
 using System.Data;
 using BuildingBlocks.Domain.Events;
 using BuildingBlocks.Domain.Model;
+using BuildingBlocks.EFCore.Extensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BuildingBlocks.EFCore;
 
-public abstract class AppDbContextBase : DbContext, IDomainEventContext, IDbFacadeResolver
+public abstract class AppDbContextBase :
+    DbContext,
+    IDomainEventContext,
+    IDbFacadeResolver,
+    IDbContext
 {
+    private readonly IMediator _mediator;
     private IDbContextTransaction _currentTransaction;
 
     protected AppDbContextBase(DbContextOptions options) : base(options)
     {
     }
 
-    public async Task BeginTransactionAsync(IsolationLevel isolationLevel)
+    protected AppDbContextBase(DbContextOptions options, IMediator mediator) : base(options)
     {
-        _currentTransaction ??= await Database.BeginTransactionAsync(isolationLevel);
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        System.Diagnostics.Debug.WriteLine($"{GetType().Name}::ctor");
     }
 
-    public async Task CommitTransactionAsync()
+    public async Task BeginTransactionAsync(
+        IsolationLevel isolationLevel,
+        CancellationToken cancellationToken = default)
+    {
+        _currentTransaction ??= await Database.BeginTransactionAsync(isolationLevel, cancellationToken);
+    }
+
+    public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            await SaveChangesAsync();
-            await _currentTransaction.CommitAsync();
+            await SaveChangesAsync(cancellationToken);
+            await _currentTransaction.CommitAsync(cancellationToken);
         }
         catch
         {
-            RollbackTransaction();
+            await RollbackTransactionAsync(cancellationToken);
             throw;
         }
         finally
@@ -39,11 +54,11 @@ public abstract class AppDbContextBase : DbContext, IDomainEventContext, IDbFaca
         }
     }
 
-    public void RollbackTransaction()
+    public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            _currentTransaction?.Rollback();
+            await _currentTransaction?.RollbackAsync(cancellationToken)!;
         }
         finally
         {
@@ -52,9 +67,30 @@ public abstract class AppDbContextBase : DbContext, IDomainEventContext, IDbFaca
         }
     }
 
+    public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
+    {
+        // https://github.com/dotnet-architecture/eShopOnContainers/blob/e05a87658128106fef4e628ccb830bc89325d9da/src/Services/Ordering/Ordering.Infrastructure/OrderingContext.cs#L65
+        // https://github.com/dotnet-architecture/eShopOnContainers/issues/700#issuecomment-461807560
+        // http://www.kamilgrzybek.com/design/how-to-publish-and-handle-domain-events/
+        // http://www.kamilgrzybek.com/design/handling-domain-events-missing-part/
+        await _mediator.DispatchDomainEventsAsync(this);
+
+        // After executing this line all the changes (from the Command Handler and Domain Event Handlers)
+        // performed through the DbContext will be committed
+        var result = await SaveChangesAsync(cancellationToken);
+
+        return true;
+    }
+
+
     public async Task RetryOnExceptionAsync(Func<Task> operation)
     {
         await Database.CreateExecutionStrategy().ExecuteAsync(operation);
+    }
+
+    public async Task<TResult> RetryOnExceptionAsync<TResult>(Func<Task<TResult>> operation)
+    {
+        return await Database.CreateExecutionStrategy().ExecuteAsync(operation);
     }
 
     public IEnumerable<IDomainEvent> GetDomainEvents()

@@ -7,13 +7,17 @@ public class OutboxMessageEntityTypeConfiguration : IEntityTypeConfiguration<Out
 {
     public void Configure(EntityTypeBuilder<OutboxMessage> builder)
     {
-        builder.ToTable("OutboxMessages", OutboxMessageDataContext.DefaultSchema);
+        builder.ToTable("OutboxMessages", OutboxDataContext.DefaultSchema);
 
         builder.HasKey(x => x.Id);
 
-        builder.HasKey(x => x.Name);
-
         builder.Ignore(x => x.DomainEvents);
+
+        builder.Property(x => x.Id)
+            .IsRequired();
+
+        builder.Property(x => x.Name)
+            .IsRequired();
 
         builder.Property(x => x.OccurredOn)
             .IsRequired();
@@ -23,6 +27,17 @@ public class OutboxMessageEntityTypeConfiguration : IEntityTypeConfiguration<Out
 
         builder.Property(x => x.Data)
             .IsRequired();
+
+        builder.Property(x => x.EventType)
+            .IsRequired();
+
+        builder.Property(x => x.EventType)
+            .HasMaxLength(50)
+            .HasConversion(
+                v => v.ToString(),
+                v => (EventType)Enum.Parse(typeof(EventType), v))
+            .IsRequired()
+            .IsUnicode(false);
 
         builder.Property(x => x.ProcessedOn)
             .IsRequired(false);

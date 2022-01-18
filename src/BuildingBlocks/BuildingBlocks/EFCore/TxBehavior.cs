@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.Text.Json;
 using BuildingBlocks.Domain;
 using BuildingBlocks.Domain.Events;
+using BuildingBlocks.EFCore.Extensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.EFCore;
@@ -14,66 +14,68 @@ public class TxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResp
     where TRequest : notnull, IRequest<TResponse>
     where TResponse : notnull
 {
-    private readonly IDbFacadeResolver _dbFacadeResolver;
-    private readonly IDomainEventContext _domainEventContext;
     private readonly ILogger<TxBehavior<TRequest, TResponse>> _logger;
+    private readonly IDomainEventContext _domainEventContext;
     private readonly IMediator _mediator;
+    private readonly IDbContext _dbContext;
 
     public TxBehavior(
-        IDbFacadeResolver dbFacadeResolver,
+        IDbContext dbContext,
+        ILogger<TxBehavior<TRequest, TResponse>> logger,
         IDomainEventContext domainEventContext,
-        IMediator mediator,
-        ILogger<TxBehavior<TRequest, TResponse>> logger)
+        IMediator mediator)
     {
-        _domainEventContext = domainEventContext ?? throw new ArgumentNullException(nameof(domainEventContext));
-        _dbFacadeResolver = dbFacadeResolver ?? throw new ArgumentNullException(nameof(dbFacadeResolver));
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _domainEventContext = domainEventContext ?? throw new ArgumentNullException(nameof(domainEventContext));
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
     public async Task<TResponse> Handle(
-        TRequest request, CancellationToken cancellationToken,
+        TRequest request,
+        CancellationToken cancellationToken,
         RequestHandlerDelegate<TResponse> next)
     {
         if (request is not ITxRequest) return await next();
 
-        _logger.LogInformation("{Prefix} Handled command {MediatRRequest}", nameof(TxBehavior<TRequest, TResponse>),
+        _logger.LogInformation(
+            "{Prefix} Handled command {MediatrRequest}",
+            nameof(TxBehavior<TRequest, TResponse>),
             typeof(TRequest).FullName);
-        _logger.LogDebug("{Prefix} Handled command {MediatRRequest} with content {RequestContent}",
-            nameof(TxBehavior<TRequest, TResponse>), typeof(TRequest).FullName, JsonSerializer.Serialize(request));
-        _logger.LogInformation("{Prefix} Open the transaction for {MediatRRequest}",
-            nameof(TxBehavior<TRequest, TResponse>), typeof(TRequest).FullName);
-        var strategy = _dbFacadeResolver.Database.CreateExecutionStrategy();
 
-        return await strategy.ExecuteAsync(async () =>
+        _logger.LogDebug(
+            "{Prefix} Handled command {MediatrRequest} with content {RequestContent}",
+            nameof(TxBehavior<TRequest, TResponse>),
+            typeof(TRequest).FullName,
+            JsonSerializer.Serialize(request));
+
+        _logger.LogInformation(
+            "{Prefix} Open the transaction for {MediatrRequest}",
+            nameof(TxBehavior<TRequest, TResponse>),
+            typeof(TRequest).FullName);
+
+        return await _dbContext.RetryOnExceptionAsync(async () =>
         {
             // Achieving atomicity
-            await using var transaction =
-                await _dbFacadeResolver.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
+            await _dbContext.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
 
             var response = await next();
-            _logger.LogInformation("{Prefix} Executed the {MediatRRequest} request",
-                nameof(TxBehavior<TRequest, TResponse>), typeof(TRequest).FullName);
 
-            var domainEvents = _domainEventContext.GetDomainEvents().ToList();
-            _logger.LogInformation("{Prefix} Published domain events for {MediatRRequest}",
-                nameof(TxBehavior<TRequest, TResponse>), typeof(TRequest).FullName);
+            _logger.LogInformation(
+                "{Prefix} Executed the {MediatrRequest} request",
+                nameof(TxBehavior<TRequest, TResponse>),
+                typeof(TRequest).FullName);
 
-            var tasks = domainEvents
-                .Select(async @event =>
-                {
-                    await _mediator.Publish(new EventWrapper(@event), cancellationToken);
-                    _logger.LogDebug(
-                        "{Prefix} Published domain event {DomainEventName} with payload {DomainEventContent}",
-                        nameof(TxBehavior<TRequest, TResponse>), @event.GetType().FullName,
-                        JsonSerializer.Serialize(@event));
-                });
+            // https://github.com/dotnet-architecture/eShopOnContainers/issues/700#issuecomment-461807560
+            // https://github.com/dotnet-architecture/eShopOnContainers/blob/e05a87658128106fef4e628ccb830bc89325d9da/src/Services/Ordering/Ordering.Infrastructure/OrderingContext.cs#L65
+            // http://www.kamilgrzybek.com/design/how-to-publish-and-handle-domain-events/
+            // http://www.kamilgrzybek.com/design/handling-domain-events-missing-part/
+            var events = _domainEventContext.GetDomainEvents();
+            await _mediator.DispatchDomainEventsAsync(events);
 
-            await Task.WhenAll(tasks).ConfigureAwait(false);
-
-            await transaction.CommitAsync(cancellationToken); // done all or lost all action
+            await _dbContext.CommitTransactionAsync(cancellationToken);
 
             return response;
-        }).ConfigureAwait(false);
+        });
     }
 }
