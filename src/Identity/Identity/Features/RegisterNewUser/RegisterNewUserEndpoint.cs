@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Identity.Features.RegisterNewUser;
 
-public static class Endpoint
+public static class RegisterNewUserEndpoint
 {
     private const string Tag = "Identity";
 

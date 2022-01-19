@@ -21,7 +21,7 @@ public class TestController : ControllerBase
     [HttpPost("publish")]
     public async Task<ActionResult> Publish()
     {
-        await _busPublisher.PublishAsync(new TestIntegrationEvent { Data = "Test" });
+        await _busPublisher.PublishAsync(new TestIntegrationEvent("Test"));
 
         return Ok();
     }
@@ -29,7 +29,7 @@ public class TestController : ControllerBase
     [HttpPost("outbox")]
     public async Task<ActionResult> Outbox()
     {
-        await _outboxService.SaveAsync(new TestIntegrationEvent { Data = "Test" });
+        await _outboxService.SaveAsync(new TestIntegrationEvent("Test"));
 
         return Ok();
     }

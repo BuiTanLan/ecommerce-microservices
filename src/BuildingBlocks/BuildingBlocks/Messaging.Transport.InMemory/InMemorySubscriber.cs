@@ -62,7 +62,7 @@ public class InMemorySubscriber : IBusSubscriber
                     e,
                     "an exception has occurred while processing '{FullName}' message '{Id}': {Message}",
                     @event.GetType().FullName,
-                    @event.Id,
+                    @event.EventId,
                     e.Message);
                 _consumerDiagnostics.StopActivity(@event);
             }

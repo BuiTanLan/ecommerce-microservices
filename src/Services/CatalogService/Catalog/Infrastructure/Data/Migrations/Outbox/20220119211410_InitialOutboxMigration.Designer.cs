@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Catalog.Infrastructure.Data.Migrations.Outbox
 {
     [DbContext(typeof(OutboxDataContext))]
-    [Migration("20220118112031_InitialOutboxMigration")]
+    [Migration("20220119211410_InitialOutboxMigration")]
     partial class InitialOutboxMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,10 @@ namespace Catalog.Infrastructure.Data.Migrations.Outbox
                     b.Property<string>("CorrelationId")
                         .HasColumnType("text")
                         .HasColumnName("correlation_id");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("integer")
+                        .HasColumnName("created_by");
 
                     b.Property<string>("Data")
                         .IsRequired()

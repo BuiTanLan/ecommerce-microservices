@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Identity.Features.Login;
 
-public static class Endpoint
+public static class LoginEndpoint
 {
     private const string Tag = "Identity";
 

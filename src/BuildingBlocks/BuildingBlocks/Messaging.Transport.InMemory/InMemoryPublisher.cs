@@ -35,7 +35,7 @@ public class InMemoryPublisher : IBusPublisher
         // }
         if (_channel.Writer is not null)
         {
-            _logger.LogInformation("publishing message '{message.Id}'...", integrationEvent.Id);
+            _logger.LogInformation("publishing message '{message.Id}'...", integrationEvent.EventId);
 
             // ProducerDiagnostics
             _producerDiagnostics.StartActivity(integrationEvent);
@@ -46,7 +46,7 @@ public class InMemoryPublisher : IBusPublisher
         {
             _logger.LogWarning(
                 "no suitable publisher found for message '{message.Id}' with type '{typeof(T).FullName}' !",
-                integrationEvent.Id,
+                integrationEvent.EventId,
                 typeof(TEvent).FullName);
             _producerDiagnostics.NoSubscriberToPublish(integrationEvent);
         }

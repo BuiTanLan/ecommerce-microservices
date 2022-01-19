@@ -6,16 +6,15 @@ namespace BuildingBlocks.Domain.Model;
 /// The aggregate root base class.
 /// </summary>
 /// <typeparam name="TId">The generic identifier.</typeparam>
-public abstract class AggregateRoot<TId> : IAggregateRoot<TId>
+public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot<TId>
 {
-    [NonSerialized] private List<DomainEvent> _domainEvents;
+    [NonSerialized]
+    private List<DomainEvent> _domainEvents;
 
     /// <summary>
     /// Gets the aggregate root domain events.
     /// </summary>
     public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
-
-    public TId Id { get; protected set; }
 
     public TId Version { get; protected set; } = default;
 

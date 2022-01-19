@@ -12,7 +12,7 @@ public class EventStoreBehaviour<TEvent> : IEventHandler<TEvent>
 
     public async Task Handle(TEvent @event, CancellationToken cancellationToken)
     {
-        await _eventStore.Append(@event.Id, cancellationToken, @event);
+        await _eventStore.Append(@event.EventId, cancellationToken, @event);
         await _eventStore.SaveChangesAsync(cancellationToken);
     }
 }

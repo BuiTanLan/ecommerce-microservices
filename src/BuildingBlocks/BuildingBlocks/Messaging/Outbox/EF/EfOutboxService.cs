@@ -78,7 +78,7 @@ public class EfOutboxService<TContext> : IOutboxService
         string name = integrationEvent.GetType().Name;
 
         var outboxMessages = new OutboxMessage(
-            integrationEvent.Id,
+            integrationEvent.EventId,
             integrationEvent.OccurredOn,
             integrationEvent.GetType().AssemblyQualifiedName,
             name.Underscore(),
@@ -107,7 +107,7 @@ public class EfOutboxService<TContext> : IOutboxService
         string name = domainNotificationEvent.GetType().Name;
 
         var outboxMessages = new OutboxMessage(
-            domainNotificationEvent.Id,
+            domainNotificationEvent.EventId,
             domainNotificationEvent.OccurredOn,
             domainNotificationEvent.GetType().AssemblyQualifiedName,
             name.Underscore(),
@@ -157,7 +157,7 @@ public class EfOutboxService<TContext> : IOutboxService
                 _logger.LogInformation(
                     "Published a notification: '{Name}' with ID: '{Id} (outbox)'",
                     outboxMessage.Name,
-                    domainNotificationEvent?.Id);
+                    domainNotificationEvent?.EventId);
             }
 
             if (outboxMessage.EventType == EventType.IntegrationEvent)
@@ -170,7 +170,7 @@ public class EfOutboxService<TContext> : IOutboxService
                 _logger.LogInformation(
                     "Published a message: '{Name}' with ID: '{Id} (outbox)'",
                     outboxMessage.Name,
-                    integrationEvent?.Id);
+                    integrationEvent?.EventId);
             }
 
             outboxMessage.MarkAsProcessed();

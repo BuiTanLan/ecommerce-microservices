@@ -7,6 +7,11 @@ public class SnowFlakIdGenerator : IIdGenerator
 {
     public long GenerateId()
     {
+        return New();
+    }
+
+    public static long New()
+    {
         // Let's say we take jan 17st 2022 as our epoch
         var epoch = new DateTime(2022, 1, 17, 0, 0, 0, DateTimeKind.Local);
 

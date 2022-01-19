@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace BuildingBlocks.CQRS;
 
 public interface IPageList

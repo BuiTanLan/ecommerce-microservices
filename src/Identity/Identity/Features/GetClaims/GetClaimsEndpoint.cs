@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Identity.Features.GetClaims;
 
-public static class Endpoint
+public static class GetClaimsEndpoint
 {
     private const string Tag = "Identity";
 

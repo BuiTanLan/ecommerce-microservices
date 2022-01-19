@@ -211,7 +211,7 @@ public class RabbitMqConsumer : IBusSubscriber
             "an error has occurred while processing Message '{MessageId}' from Exchange '{ExchangeName}' : {ExceptionMessage} . "
             + (requeue ? "Reenqueuing..." : "Nacking...");
 
-        _logger.LogWarning(ex, errorMsg, message.Id, deliveryProps.Exchange, ex.Message);
+        _logger.LogWarning(ex, errorMsg, message.EventId, deliveryProps.Exchange, ex.Message);
 
         if (!requeue)
             channel.BasicReject(deliveryProps.DeliveryTag, requeue: false);

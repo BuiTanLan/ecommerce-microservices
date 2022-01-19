@@ -1,9 +1,12 @@
 
+using Catalog.Products.Features.GetProducts;
+using Catalog.Products.Features.GetProductsView;
+
 namespace Catalog;
 
 public static class CatalogConfiguration
 {
-    public const string IdentityModulePrefixUri = "api/v1/catalog";
+    public const string CatalogModulePrefixUri = "api/v1/catalog";
 
     public static WebApplicationBuilder AddCatalogModule(this WebApplicationBuilder builder)
     {
@@ -26,6 +29,8 @@ public static class CatalogConfiguration
     public static IEndpointRouteBuilder MapCatalogModuleEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/", () => "Catalog Service Apis").ExcludeFromDescription();
+        endpoints.MapGetProductsViewEndpoint();
+        endpoints.MapGetProductsEndpoint();
 
         return endpoints;
     }

@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using BuildingBlocks.Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using IsolationLevel = System.Data.IsolationLevel;
 
@@ -28,6 +29,12 @@ public class EfUnitOfWork<TDbContext> : IUnitOfWork<TDbContext>
 
     public TDbContext DbContext { get; }
 
+
+    public DbSet<TEntity> Set<TEntity>() 
+        where TEntity : class
+    {
+        return _context.Set<TEntity>();
+    }
 
     public Task BeginTransactionAsync(
         IsolationLevel isolationLevel,

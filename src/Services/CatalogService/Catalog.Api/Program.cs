@@ -61,6 +61,8 @@ app.UseRouting();
 
 app.UseAppCors();
 
+app.UseSerilogRequestLogging();
+
 app.UseCustomHealthCheck();
 
 await app.ConfigureCatalogModule(environment, app.Logger);

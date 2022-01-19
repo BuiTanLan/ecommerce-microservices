@@ -25,23 +25,15 @@ public static class ServiceCollection
     {
         services.AddCore();
 
-        services.AddMessaging(configuration, TxOutboxConstants.InMemory);
-
-        // services.AddRabbitMqTransport(configuration);
-        services.AddInMemoryTransport(configuration);
+        services.AddMessaging(configuration, TxOutboxConstants.EntityFramework);
+        services.AddRabbitMqTransport(configuration);
 
         services.AddEmailService(configuration);
-
-
+        services.AddCustomMediatR();
         services.AddCustomValidators(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddCqrs(Assembly.GetExecutingAssembly());
 
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));
 
         services.AddCachingRequestPolicies(new List<Assembly> { Assembly.GetExecutingAssembly() });
         services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });

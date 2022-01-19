@@ -25,6 +25,7 @@ namespace Catalog.Infrastructure.Data.Migrations.Outbox
                     processed_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     event_type = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
                     correlation_id = table.Column<string>(type: "text", nullable: true),
+                    created_by = table.Column<int>(type: "integer", nullable: true),
                     version = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>

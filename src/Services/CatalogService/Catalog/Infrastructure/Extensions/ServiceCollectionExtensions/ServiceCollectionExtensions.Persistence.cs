@@ -1,5 +1,4 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+using Catalog.Core.Contracts;
 
 namespace Catalog.Infrastructure.Extensions.ServiceCollectionExtensions;
 
@@ -24,6 +23,8 @@ public static partial class ServiceCollectionExtensions
             services.AddPostgresDbContext<CatalogDbContext>(
                 configuration.GetConnectionString("CatalogServiceConnection"));
         }
+
+        services.AddScoped<ICatalogDbContext>(provider => provider.GetRequiredService<CatalogDbContext>());
 
         return services;
     }

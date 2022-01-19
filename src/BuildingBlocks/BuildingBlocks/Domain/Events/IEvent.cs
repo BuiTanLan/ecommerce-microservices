@@ -8,7 +8,7 @@ public interface IEvent
     /// <summary>
     /// Gets the event identifier.
     /// </summary>
-    Guid Id { get; }
+    Guid EventId { get; }
 
     /// <summary>
     /// Gets the event/aggregate root version.
@@ -23,5 +23,5 @@ public interface IEvent
     /// <summary>
     /// Gets type of this event.
     /// </summary>
-    public string EventType { get; }
+    public string? EventType { get; }
 }

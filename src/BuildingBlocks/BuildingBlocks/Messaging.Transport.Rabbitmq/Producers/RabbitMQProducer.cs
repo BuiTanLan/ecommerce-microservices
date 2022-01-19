@@ -50,7 +50,7 @@ public class RabbitMqProducer : IBusPublisher
             {
                 _logger.LogWarning(ex,
                     "Could not publish message '{MessageId}' to Exchange '{ExchangeName}', after {Timeout}s : {ExceptionMessage}",
-                    integrationEvent.Id,
+                    integrationEvent.EventId,
                     context.QueueReferences.ExchangeName,
                     $"{time.TotalSeconds:n1}", ex.Message);
             });
@@ -65,7 +65,7 @@ public class RabbitMqProducer : IBusPublisher
                 body: Encoding.UTF8.GetBytes(encodedMessage));
 
             _logger.LogInformation("message '{MessageId}' published to Exchange '{ExchangeName}'",
-                integrationEvent.Id,
+                integrationEvent.EventId,
                 context.QueueReferences.ExchangeName);
         });
 

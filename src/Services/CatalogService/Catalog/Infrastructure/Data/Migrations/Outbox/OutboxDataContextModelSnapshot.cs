@@ -33,6 +33,10 @@ namespace Catalog.Infrastructure.Data.Migrations.Outbox
                         .HasColumnType("text")
                         .HasColumnName("correlation_id");
 
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("integer")
+                        .HasColumnName("created_by");
+
                     b.Property<string>("Data")
                         .IsRequired()
                         .HasColumnType("text")

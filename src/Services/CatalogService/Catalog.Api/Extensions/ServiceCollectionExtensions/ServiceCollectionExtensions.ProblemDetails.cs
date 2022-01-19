@@ -1,3 +1,4 @@
+using BuildingBlocks.Domain.Exceptions;
 using BuildingBlocks.Exception;
 using BuildingBlocks.Validation;
 using Hellang.Middleware.ProblemDetails;
@@ -70,6 +71,13 @@ public static partial class ServiceCollectionExtensions
                 Detail = ex.Message,
                 Type = "https://somedomain/application-error"
             });
+            x.Map<DomainException>(ex => new ProblemDetails
+            {
+                Title = "domain exception",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = ex.Message,
+                Type = "https://somedomain/domain-error"
+            });
             x.Map<IdentityException>(ex =>
             {
                 var pd = new ProblemDetails
@@ -82,6 +90,7 @@ public static partial class ServiceCollectionExtensions
 
                 return pd;
             });
+
             x.MapToStatusCode<ArgumentNullException>(StatusCodes.Status400BadRequest);
         });
         return services;

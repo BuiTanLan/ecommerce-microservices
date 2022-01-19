@@ -82,7 +82,6 @@ public abstract class AppDbContextBase :
         return true;
     }
 
-
     public async Task RetryOnExceptionAsync(Func<Task> operation)
     {
         await Database.CreateExecutionStrategy().ExecuteAsync(operation);
@@ -96,7 +95,7 @@ public abstract class AppDbContextBase :
     public IEnumerable<IDomainEvent> GetDomainEvents()
     {
         var domainEntities = ChangeTracker
-            .Entries<IAggregateRoot>()
+            .Entries<IAggregateRoot<long>>()
             .Where(x =>
                 x.Entity.DomainEvents != null &&
                 x.Entity.DomainEvents.Any())

@@ -17,14 +17,14 @@ namespace BuildingBlocks.Diagnostics.OpenTelemetry.Transports
         public virtual void BeforeProcessInMemoryMessage(BeforeProcessMessage payload)
         {
             Console.WriteLine(
-                $"raising BeforeProcessInMemoryMessage event for message with message id: {payload.EventData.Id} - activity id: '{Activity.Current?.Id}'");
+                $"raising BeforeProcessInMemoryMessage event for message with message id: {payload.EventData.EventId} - activity id: '{Activity.Current?.Id}'");
         }
 
         [DiagnosticName(OTelTransportOptions.Events.AfterProcessInMemoryMessage)]
         public virtual void AfterProcessInMemoryMessage(AfterProcessMessage payload)
         {
             Console.WriteLine(
-                $"raising AfterProcessInMemoryMessage event for message with message id: {payload.EventData.Id} - activity id: '{Activity.Current?.Id}'");
+                $"raising AfterProcessInMemoryMessage event for message with message id: {payload.EventData.EventId} - activity id: '{Activity.Current?.Id}'");
         }
 
 
@@ -32,7 +32,7 @@ namespace BuildingBlocks.Diagnostics.OpenTelemetry.Transports
         public virtual void AfterSendInMemoryMessage(AfterSendMessage payload)
         {
             Console.WriteLine(
-                $"raising AfterSendInMemoryMessage event for message with message id: {payload.EventData.Id} - activity id: '{Activity.Current?.Id}'");
+                $"raising AfterSendInMemoryMessage event for message with message id: {payload.EventData.EventId} - activity id: '{Activity.Current?.Id}'");
         }
 
 
@@ -40,7 +40,7 @@ namespace BuildingBlocks.Diagnostics.OpenTelemetry.Transports
         public virtual void BeforeSendInMemoryMessage(BeforeSendMessage payload)
         {
             Console.WriteLine(
-                $"raising BeforeSendInMemoryMessage event for message with message id: {payload.EventData.Id} - activity id: '{Activity.Current?.Id}'");
+                $"raising BeforeSendInMemoryMessage event for message with message id: {payload.EventData.EventId} - activity id: '{Activity.Current?.Id}'");
         }
     }
 }

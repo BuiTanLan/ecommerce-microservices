@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Identity.Features.RefreshToken;
 
-public static class Endpoint
+public static class RefreshTokenEndpoint
 {
     private const string Tag = "Identity";
 
