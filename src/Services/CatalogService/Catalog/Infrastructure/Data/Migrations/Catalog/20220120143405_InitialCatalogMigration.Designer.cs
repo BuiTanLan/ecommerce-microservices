@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Catalog.Infrastructure.Data.Migrations.Catalog
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20220119145358_InitialCatalogMigration")]
+    [Migration("20220120143405_InitialCatalogMigration")]
     partial class InitialCatalogMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,20 +25,59 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Catalog.Core.Models.Category", b =>
+            modelBuilder.Entity("Catalog.Brands.Brand", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("integer")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint")
+                        .HasColumnName("version");
+
+                    b.HasKey("Id")
+                        .HasName("pk_brands");
+
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasDatabaseName("ix_brands_id");
+
+                    b.ToTable("brands", "catalog");
+                });
+
+            modelBuilder.Entity("Catalog.Categories.Category", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("integer")
                         .HasColumnName("created_by");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("description");
 
@@ -61,22 +100,29 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                     b.ToTable("categories", "catalog");
                 });
 
-            modelBuilder.Entity("Catalog.Core.Models.Product", b =>
+            modelBuilder.Entity("Catalog.Products.Product", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<int>("AvailableStock")
                         .HasColumnType("integer")
                         .HasColumnName("available_stock");
 
+                    b.Property<long>("BrandId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("brand_id");
+
                     b.Property<long>("CategoryId")
                         .HasColumnType("bigint")
                         .HasColumnName("category_id");
+
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("integer")
@@ -116,6 +162,9 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                     b.HasKey("Id")
                         .HasName("pk_products");
 
+                    b.HasIndex("BrandId")
+                        .HasDatabaseName("ix_products_brand_id");
+
                     b.HasIndex("CategoryId")
                         .HasDatabaseName("ix_products_category_id");
 
@@ -129,14 +178,57 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                     b.ToTable("products", "catalog");
                 });
 
-            modelBuilder.Entity("Catalog.Core.Models.Supplier", b =>
+            modelBuilder.Entity("Catalog.Products.ProductView", b =>
+                {
+                    b.Property<long>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("product_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ProductId"));
+
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("category_id");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("text")
+                        .HasColumnName("category_name");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("product_name");
+
+                    b.Property<long?>("SupplierId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("supplier_id");
+
+                    b.Property<string>("SupplierName")
+                        .HasColumnType("text")
+                        .HasColumnName("supplier_name");
+
+                    b.HasKey("ProductId")
+                        .HasName("pk_product_views");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_product_views_product_id");
+
+                    b.ToTable("product_views", "catalog");
+                });
+
+            modelBuilder.Entity("Catalog.Suppliers.Supplier", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("integer")
@@ -146,6 +238,10 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint")
+                        .HasColumnName("version");
 
                     b.HasKey("Id")
                         .HasName("pk_suppliers");
@@ -157,21 +253,30 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                     b.ToTable("suppliers", "catalog");
                 });
 
-            modelBuilder.Entity("Catalog.Core.Models.Product", b =>
+            modelBuilder.Entity("Catalog.Products.Product", b =>
                 {
-                    b.HasOne("Catalog.Core.Models.Category", "Category")
+                    b.HasOne("Catalog.Brands.Brand", "Brand")
+                        .WithMany()
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_products_brand_brand_id");
+
+                    b.HasOne("Catalog.Categories.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_products_categories_category_id");
 
-                    b.HasOne("Catalog.Core.Models.Supplier", "Supplier")
+                    b.HasOne("Catalog.Suppliers.Supplier", "Supplier")
                         .WithMany()
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_products_suppliers_supplier_id");
+
+                    b.Navigation("Brand");
 
                     b.Navigation("Category");
 

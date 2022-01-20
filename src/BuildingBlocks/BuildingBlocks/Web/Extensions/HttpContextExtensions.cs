@@ -13,7 +13,7 @@ public static class HttpContextExtensions
         return Activity.Current?.TraceId.ToString() ?? httpContextAccessor?.HttpContext?.TraceIdentifier;
     }
 
-    public static TResult SafeGetListQuery<TResult>(this HttpContext httpContext, string query)
+    public static TResult ExtractXQueryObjectFromHeader<TResult>(this HttpContext httpContext, string query)
         where TResult : IPageRequest, new()
     {
         var queryModel = new TResult();

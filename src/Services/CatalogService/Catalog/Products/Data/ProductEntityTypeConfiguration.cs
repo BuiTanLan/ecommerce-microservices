@@ -1,7 +1,6 @@
-using Catalog.Products;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Catalog.Infrastructure.Data.EntityConfigurations;
+namespace Catalog.Products.Data;
 
 public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
 {
@@ -11,6 +10,7 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
 
         builder.HasKey(c => c.Id);
         builder.HasIndex(x => x.Id).IsUnique();
+        builder.Property(x => x.Id).ValueGeneratedNever();
 
         builder.Ignore(c => c.DomainEvents);
 
@@ -29,5 +29,7 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
         builder.HasOne(c => c.Supplier)
             .WithMany()
             .HasForeignKey(x => x.SupplierId);
+
+        builder.Property(x => x.Created).HasDefaultValueSql(Consts.DateAlgorithm);
     }
 }

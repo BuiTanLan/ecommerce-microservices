@@ -1,5 +1,6 @@
 using BuildingBlocks.Domain.Model;
 using BuildingBlocks.IdsGenerator;
+using Catalog.Brands;
 using Catalog.Categories;
 using Catalog.Products.Exceptions.Domain;
 using Catalog.Products.Features.AddProductStock;
@@ -9,7 +10,10 @@ using Catalog.Suppliers;
 
 namespace Catalog.Products;
 
+// TODO: Using strongly type ids
+
 // https://event-driven.io/en/notes_about_csharp_records_and_nullable_reference_types/
+// https://enterprisecraftsmanship.com/posts/link-to-an-aggregate-reference-or-id/
 public class Product : AggregateRoot<long>
 {
     public string Name { get; private set; }
@@ -19,6 +23,8 @@ public class Product : AggregateRoot<long>
     public virtual Category Category { get; private set; }
     public long SupplierId { get; private set; }
     public virtual Supplier Supplier { get; private set; }
+    public long BrandId { get; private set; }
+    public virtual Brand Brand { get; private set; }
 
     /// <summary>
     /// Gets quantity in stock.
@@ -35,9 +41,6 @@ public class Product : AggregateRoot<long>
     /// </summary>
     public int MaxStockThreshold { get; private set; }
 
-    // Empty constructor for EF
-    private Product() { }
-
     public static Product Create(
         string name,
         int stock,
@@ -46,17 +49,19 @@ public class Product : AggregateRoot<long>
         string description,
         decimal price,
         long categoryId,
-        long supplierId)
+        long supplierId,
+        long brandId)
     {
         var product = new Product
         {
-            Id = SnowFlakIdGenerator.New(),
+            Id = SnowFlakIdGenerator.NewId(),
             MaxStockThreshold = maxStockThreshold,
             RestockThreshold = restockThreshold
         };
 
         product.ChangeName(name);
         product.ChangeCategoryId(categoryId);
+        product.ChangeBrandId(brandId);
         product.ChangeDescription(description);
         product.ChangePrice(price);
         product.ChangeSupplierId(supplierId);
@@ -183,5 +188,16 @@ public class Product : AggregateRoot<long>
         if (supplierId <= 0)
             throw new ProductDomainEventException("SupplierId should be greater than zero");
         SupplierId = supplierId;
+    }
+
+    /// <summary>
+    ///  Sets brand identifier.
+    /// </summary>
+    /// <param name="brandId">The brandId to be changed.</param>
+    public void ChangeBrandId(long brandId)
+    {
+        if (brandId <= 0)
+            throw new ProductDomainEventException("BrandId should be greater than zero");
+        SupplierId = brandId;
     }
 }

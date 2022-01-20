@@ -31,6 +31,7 @@ public class GetProductsQueryHandler : IQueryHandler<GetProductsQuery, GetProduc
         var products = await _catalogDbContext.Products
             .ApplyIncludeList(request.Includes)
             .ApplyFilterList(request.Filters)
+            .AsNoTracking()
             .PaginateAsync<Product, ProductDto>(_mapper.ConfigurationProvider, request.Page, request.PageSize);
 
         return new GetProductsQueryResult(products);

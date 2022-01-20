@@ -22,5 +22,14 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Products\Events\Domain" />
+    <Folder Include="Products\Events\Integration\External" />
+    <Folder Include="Products\Features\DeleteProduct" />
+    <Folder Include="Products\Features\GetProductById" />
+    <Folder Include="Products\Features\GetProductsByCategory" />
+    <Folder Include="Products\Features\UpdateProduct" />
+  </ItemGroup>
 
 </Project>

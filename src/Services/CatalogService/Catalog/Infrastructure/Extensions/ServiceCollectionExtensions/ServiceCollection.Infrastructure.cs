@@ -2,6 +2,7 @@ using BuildingBlocks.Caching;
 using BuildingBlocks.Core;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Email;
+using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Messaging;
 using BuildingBlocks.Messaging.Transport.InMemory;
@@ -23,6 +24,7 @@ public static class ServiceCollection
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        SnowFlakIdGenerator.Configure(1);
         services.AddCore();
 
         services.AddMessaging(configuration, TxOutboxConstants.EntityFramework);

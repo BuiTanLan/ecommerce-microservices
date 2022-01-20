@@ -1,3 +1,4 @@
+using Catalog.Brands;
 using Catalog.Categories;
 using Catalog.Products;
 using Catalog.Suppliers;
@@ -8,6 +9,7 @@ public interface ICatalogDbContext
 {
     DbSet<Product> Products { get; }
     DbSet<Category> Categories { get; }
+    DbSet<Brand> Brands { get; }
     DbSet<Supplier> Suppliers { get; }
 
     DbSet<TEntity> Set<TEntity>()

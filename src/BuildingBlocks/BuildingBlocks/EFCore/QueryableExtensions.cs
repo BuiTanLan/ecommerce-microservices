@@ -1,7 +1,4 @@
-using System;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BuildingBlocks.CQRS;
@@ -11,6 +8,8 @@ using FilterModel = BuildingBlocks.CQRS.FilterModel;
 
 namespace BuildingBlocks.EFCore;
 
+// https://github.com/nreco/lambdaparser
+// https://github.com/dynamicexpresso/DynamicExpresso
 public static class QueryableExtensions
 {
     public static async Task<ListResultModel<T>> PaginateAsync<T>(

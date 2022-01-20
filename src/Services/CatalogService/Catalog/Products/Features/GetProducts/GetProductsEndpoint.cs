@@ -26,7 +26,7 @@ public static class GetProductsEndpoint
         IQueryProcessor queryProcessor,
         CancellationToken cancellationToken)
     {
-        var request = httpContext.SafeGetListQuery<GetProductRequest>(xQuery);
+        var request = httpContext.ExtractXQueryObjectFromHeader<GetProductRequest>(xQuery);
         if (request is null)
             return Results.BadRequest();
 

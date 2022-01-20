@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -16,14 +17,30 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                 .Annotation("Npgsql:PostgresExtension:uuid-ossp", ",,");
 
             migrationBuilder.CreateTable(
+                name: "brands",
+                schema: "catalog",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    created_by = table.Column<int>(type: "integer", nullable: true),
+                    version = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_brands", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "categories",
                 schema: "catalog",
                 columns: table => new
                 {
-                    id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id = table.Column<long>(type: "bigint", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: true),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     created_by = table.Column<int>(type: "integer", nullable: true),
                     version = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -33,14 +50,33 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                 });
 
             migrationBuilder.CreateTable(
+                name: "product_views",
+                schema: "catalog",
+                columns: table => new
+                {
+                    product_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    product_name = table.Column<string>(type: "text", nullable: false),
+                    category_id = table.Column<long>(type: "bigint", nullable: false),
+                    category_name = table.Column<string>(type: "text", nullable: true),
+                    supplier_id = table.Column<long>(type: "bigint", nullable: true),
+                    supplier_name = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_product_views", x => x.product_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "suppliers",
                 schema: "catalog",
                 columns: table => new
                 {
-                    id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id = table.Column<long>(type: "bigint", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
-                    created_by = table.Column<int>(type: "integer", nullable: true)
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    created_by = table.Column<int>(type: "integer", nullable: true),
+                    version = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,22 +88,30 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                 schema: "catalog",
                 columns: table => new
                 {
-                    id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id = table.Column<long>(type: "bigint", nullable: false),
                     name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
                     price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     category_id = table.Column<long>(type: "bigint", nullable: false),
                     supplier_id = table.Column<long>(type: "bigint", nullable: false),
+                    brand_id = table.Column<long>(type: "bigint", nullable: false),
                     available_stock = table.Column<int>(type: "integer", nullable: false),
                     restock_threshold = table.Column<int>(type: "integer", nullable: false),
                     max_stock_threshold = table.Column<int>(type: "integer", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     created_by = table.Column<int>(type: "integer", nullable: true),
                     version = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_products", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_products_brand_brand_id",
+                        column: x => x.brand_id,
+                        principalSchema: "catalog",
+                        principalTable: "brands",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_products_categories_category_id",
                         column: x => x.category_id,
@@ -85,11 +129,31 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                 });
 
             migrationBuilder.CreateIndex(
+                name: "ix_brands_id",
+                schema: "catalog",
+                table: "brands",
+                column: "id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "ix_categories_id",
                 schema: "catalog",
                 table: "categories",
                 column: "id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_product_views_product_id",
+                schema: "catalog",
+                table: "product_views",
+                column: "product_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_products_brand_id",
+                schema: "catalog",
+                table: "products",
+                column: "brand_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_products_category_id",
@@ -121,7 +185,15 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "product_views",
+                schema: "catalog");
+
+            migrationBuilder.DropTable(
                 name: "products",
+                schema: "catalog");
+
+            migrationBuilder.DropTable(
+                name: "brands",
                 schema: "catalog");
 
             migrationBuilder.DropTable(

@@ -1,7 +1,6 @@
-using Catalog.Categories;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Catalog.Infrastructure.Data.EntityConfigurations;
+namespace Catalog.Categories.Data;
 
 public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category>
 {
@@ -10,7 +9,10 @@ public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category
         builder.ToTable("categories", CatalogDbContext.DefaultSchema);
         builder.HasKey(c => c.Id);
         builder.HasIndex(x => x.Id).IsUnique();
+        builder.Property(x => x.Id).ValueGeneratedNever();
 
         builder.Ignore(c => c.DomainEvents);
+
+        builder.Property(x => x.Created).HasDefaultValueSql(Consts.DateAlgorithm);
     }
 }

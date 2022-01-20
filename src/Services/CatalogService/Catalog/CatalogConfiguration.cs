@@ -1,6 +1,11 @@
 
+using Catalog.Brands;
+using Catalog.Categories;
+using Catalog.Categories.Data;
+using Catalog.Products;
 using Catalog.Products.Features.GetProducts;
 using Catalog.Products.Features.GetProductsView;
+using Catalog.Suppliers;
 
 namespace Catalog;
 
@@ -21,7 +26,10 @@ public static class CatalogConfiguration
 
         services.AddStorage(configuration);
 
-        services.AddScoped<IDataSeeder, CatalogDataSeeder>();
+        services.AddCategories();
+        services.AddProducts();
+        services.AddSuppliers();
+        services.AddBrands();
 
         return services;
     }

@@ -1,7 +1,6 @@
-using Catalog.Products;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Catalog.Infrastructure.Data.EntityConfigurations;
+namespace Catalog.Products.Data;
 
 public class ProductViewEntityTypeConfiguration : IEntityTypeConfiguration<ProductView>
 {

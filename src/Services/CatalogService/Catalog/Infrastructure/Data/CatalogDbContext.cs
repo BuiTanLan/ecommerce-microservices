@@ -1,4 +1,5 @@
 using BuildingBlocks.Domain.Model;
+using Catalog.Brands;
 using Catalog.Categories;
 using Catalog.Core.Contracts;
 using Catalog.Products;
@@ -29,6 +30,7 @@ public class CatalogDbContext : AppDbContextBase, ICatalogDbContext
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
+    public DbSet<Brand> Brands => Set<Brand>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
@@ -36,13 +38,20 @@ public class CatalogDbContext : AppDbContextBase, ICatalogDbContext
         {
             switch (entry.State)
             {
-                case EntityState.Added:
-                    entry.Entity.CreatedBy = 1;
-                    break;
-
                 case EntityState.Modified:
                     entry.Entity.LastModifiedBy = 1;
                     break;
+                case EntityState.Added:
+                    entry.Entity.CreatedBy = 1;
+                    break;
+            }
+        }
+
+        foreach (var entry in ChangeTracker.Entries<IEntity<long>>())
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedBy = 1;
             }
         }
 
