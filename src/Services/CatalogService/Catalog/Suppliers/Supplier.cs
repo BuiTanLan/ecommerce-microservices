@@ -1,14 +1,14 @@
-using BuildingBlocks.Domain.Model;
-using BuildingBlocks.IdsGenerator;
+using BuildingBlocks.Core.Domain.Model;
 using Catalog.Suppliers.Exceptions;
+using Catalog.Suppliers.Exceptions.Domain;
 
 namespace Catalog.Suppliers;
 
 public class Supplier : AggregateRoot<long>
 {
-    public static Supplier Create(string name)
+    public static Supplier Create(long id, string name)
     {
-        var supplier = new Supplier { Id = SnowFlakIdGenerator.NewId() };
+        var supplier = new Supplier { Id = id };
 
         supplier.ChangeName(name);
 

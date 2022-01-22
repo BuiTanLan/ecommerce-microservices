@@ -1,4 +1,4 @@
-using BuildingBlocks.Domain.Exceptions;
+using BuildingBlocks.Core.Domain.Exceptions;
 
 namespace Catalog.Products.Exceptions.Domain;
 

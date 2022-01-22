@@ -1,5 +1,6 @@
-using BuildingBlocks.Domain.Model;
+using BuildingBlocks.Core.Domain.Model;
 using Catalog.Brands.Exceptions;
+using Catalog.Brands.Exceptions.Domain;
 
 namespace Catalog.Brands;
 

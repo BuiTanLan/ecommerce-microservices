@@ -1,4 +1,4 @@
-
+using BuildingBlocks.Core;
 using Catalog.Brands;
 using Catalog.Categories;
 using Catalog.Categories.Data;
@@ -13,37 +13,35 @@ public static class CatalogConfiguration
 {
     public const string CatalogModulePrefixUri = "api/v1/catalog";
 
-    public static WebApplicationBuilder AddCatalogModule(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddCatalogServices(this WebApplicationBuilder builder)
     {
-        AddCatalogModule(builder.Services, builder.Configuration);
+        AddCatalogServices(builder.Services, builder.Configuration);
 
         return builder;
     }
 
-    public static IServiceCollection AddCatalogModule(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddCatalogServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddInfrastructure(configuration);
-
         services.AddStorage(configuration);
 
-        services.AddCategories();
-        services.AddProducts();
-        services.AddSuppliers();
-        services.AddBrands();
+        services.AddCategoriesServices()
+            .AddProductsServices()
+            .AddSuppliersServices()
+            .AddBrandsServices();
 
         return services;
     }
 
-    public static IEndpointRouteBuilder MapCatalogModuleEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapCatalogEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/", () => "Catalog Service Apis").ExcludeFromDescription();
-        endpoints.MapGetProductsViewEndpoint();
-        endpoints.MapGetProductsEndpoint();
+        endpoints.MapProductsEndpoints();
 
         return endpoints;
     }
 
-    public static async Task ConfigureCatalogModule(
+    public static async Task ConfigureCatalog(
         this IApplicationBuilder app,
         IWebHostEnvironment environment,
         ILogger logger)

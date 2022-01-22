@@ -1,14 +1,25 @@
+using Catalog.Products.Models;
+
 namespace Catalog.Products.Dtos;
 
-public class ProductDto
+public record ProductDto
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public decimal Price { get; set; }
-    public long CategoryId { get; set; }
-    public long SupplierId { get; set; }
-    public long BrandId { get; set; }
-    public int AvailableStock { get; set; }
-    public int RestockThreshold { get; set; }
-    public int MaxStockThreshold { get; set; }
+    public long Id { get; init; }
+    public string Name { get; init; } = default!;
+    public string? Description { get; init; }
+    public decimal Price { get; init; }
+    public long CategoryId { get; init; }
+    public string CategoryName { get; set; } = default!;
+    public long SupplierId { get; init; }
+    public string SupplierName { get; set; } = default!;
+    public long BrandId { get; init; }
+    public string BrandName { get; set; } = default!;
+    public int AvailableStock { get; init; }
+    public int RestockThreshold { get; init; }
+    public int MaxStockThreshold { get; init; }
+    public ProductStatus ProductStatus { get; init; }
+    public int Height { get; init; }
+    public int Width { get; init; }
+    public int Depth { get; init; }
+    public IEnumerable<ProductImageDto>? Images { get; set; }
 }

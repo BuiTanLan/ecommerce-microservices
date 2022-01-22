@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using BuildingBlocks.Domain.Model;
+using BuildingBlocks.Core.Domain.Model;
 using BuildingBlocks.EFCore.Specification;
 
 namespace BuildingBlocks.EFCore;

@@ -1,5 +1,5 @@
-﻿using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Domain.Events.External;
+﻿using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Domain.Events;
 using BuildingBlocks.Messaging.Transport.InMemory.Channels;
 using BuildingBlocks.Messaging.Transport.InMemory.Diagnostics;
 using Microsoft.Extensions.Logging;

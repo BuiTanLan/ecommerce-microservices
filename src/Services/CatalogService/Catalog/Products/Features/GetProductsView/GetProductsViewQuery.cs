@@ -1,5 +1,6 @@
 using AutoMapper;
 using BuildingBlocks.CQRS.Query;
+using Catalog.Products.Models;
 using Dapper;
 
 namespace Catalog.Products.Features.GetProductsView;

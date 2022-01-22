@@ -16,7 +16,7 @@ public static partial class ServiceCollectionExtensions
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
             services.AddDbContext<CatalogDbContext>(options =>
-                options.UseInMemoryDatabase("CatalogService"));
+                options.UseInMemoryDatabase("Shop.Services.Catalog"));
         }
         else
         {

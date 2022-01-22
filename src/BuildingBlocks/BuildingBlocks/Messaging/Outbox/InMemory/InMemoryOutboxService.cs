@@ -1,7 +1,8 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Messaging.Serialization;
 using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Domain.Events.External;
 using Humanizer;
 using MediatR;
 using Microsoft.Extensions.Logging;

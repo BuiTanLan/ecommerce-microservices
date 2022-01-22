@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Core.Domain;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.CQRS.Query;
 using BuildingBlocks.Domain;

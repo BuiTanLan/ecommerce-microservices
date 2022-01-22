@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using BuildingBlocks.Domain.Model;
+using BuildingBlocks.Core.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using IsolationLevel = System.Data.IsolationLevel;

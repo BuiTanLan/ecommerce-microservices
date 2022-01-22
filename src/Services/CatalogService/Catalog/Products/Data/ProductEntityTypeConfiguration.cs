@@ -1,3 +1,4 @@
+using Catalog.Products.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Catalog.Products.Data;
@@ -14,13 +15,23 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Ignore(c => c.DomainEvents);
 
-        builder.Property(ci => ci.Name)
-            .IsRequired()
-            .HasMaxLength(50);
+        builder.Property(x => x.Name).HasColumnType(Constants.NormalText).IsRequired();
 
         builder.Property(ci => ci.Price)
-            .HasColumnType("decimal(18,2)")
+            .HasColumnType(Constants.PriceDecimal)
             .IsRequired();
+
+        builder.Property(x => x.ProductStatus)
+            .HasConversion(
+                x => x.ToString(),
+                x => (ProductStatus)Enum.Parse(typeof(ProductStatus), x));
+
+        builder.OwnsOne(c => c.Dimensions, cm =>
+        {
+            cm.Property(c => c.Height);
+            cm.Property(c => c.Width);
+            cm.Property(c => c.Depth);
+        });
 
         builder.HasOne(c => c.Category)
             .WithMany()
@@ -30,6 +41,11 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
             .WithMany()
             .HasForeignKey(x => x.SupplierId);
 
-        builder.Property(x => x.Created).HasDefaultValueSql(Consts.DateAlgorithm);
+        builder.HasMany(s => s.Images)
+            .WithOne(s => s.Product)
+            .HasForeignKey(x => x.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(x => x.Created).HasDefaultValueSql(Constants.DateAlgorithm);
     }
 }

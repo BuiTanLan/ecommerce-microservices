@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.Domain.Events.External;
+﻿using BuildingBlocks.Core.Domain.Events.External;
 
 namespace BuildingBlocks.Diagnostics.OpenTelemetry.Messaging.Events;
 

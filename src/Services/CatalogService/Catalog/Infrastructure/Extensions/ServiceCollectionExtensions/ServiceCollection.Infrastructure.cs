@@ -1,5 +1,6 @@
 using BuildingBlocks.Caching;
 using BuildingBlocks.Core;
+using BuildingBlocks.Core.Extensions;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Email;
 using BuildingBlocks.IdsGenerator;

@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
 using Avro.Generic;
+using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Domain.Events.External;
 using BuildingBlocks.Messaging.Transport.Kafka.SchemaRegistry;
 using Confluent.Kafka;
 using Confluent.Kafka.SyncOverAsync;
@@ -37,7 +37,7 @@ public class KafkaConsumer : IBusSubscriber
         _logger.LogInformation("Kafka consumer started");
 
         using var scope = _serviceScopeFactory.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var eventProcessor = scope.ServiceProvider.GetRequiredService<IEventProcessor>();
 
         var schemaRegistryConfig = new SchemaRegistryConfig
         {
@@ -75,9 +75,10 @@ public class KafkaConsumer : IBusSubscriber
 
                     _logger.LogInformation(
                         $"Received {result.Message?.Key!}-{result.Message?.Value?.GetType().FullName!} message.");
-                    if (@event is INotification)
+                    if (@event is IEvent)
                     {
-                        await mediator.Publish(@event, cancellationToken);
+                        // Publish to internal event bus
+                        await eventProcessor.PublishAsync(@event as IEvent, cancellationToken);
                         _logger.LogInformation($"Dispatched {@event.GetType()?.FullName} event to internal handler.");
                     }
 

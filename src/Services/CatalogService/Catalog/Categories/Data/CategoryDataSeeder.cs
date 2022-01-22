@@ -27,9 +27,9 @@ public class CategoryDataSeeder : IDataSeeder
         // var categories = categoryFaker.Generate(5);
         await _dbContext.Categories.AddRangeAsync(new List<Category>
         {
-            Category.Create(SnowFlakIdGenerator.NewId(), "Electronics", "All electronic goods"),
-            Category.Create(SnowFlakIdGenerator.NewId(), "Clothing", "All clothing goods"),
-            Category.Create(SnowFlakIdGenerator.NewId(), "Books", "All books"),
+            Category.Create(SnowFlakIdGenerator.NewId(), "Electronics", "0001", "All electronic goods"),
+            Category.Create(SnowFlakIdGenerator.NewId(), "Clothing", "0002", "All clothing goods"),
+            Category.Create(SnowFlakIdGenerator.NewId(), "Books", "0003", "All books"),
         });
         await _dbContext.SaveChangesAsync();
     }

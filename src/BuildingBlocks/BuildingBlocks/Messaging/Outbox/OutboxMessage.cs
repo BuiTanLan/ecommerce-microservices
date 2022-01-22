@@ -1,7 +1,6 @@
 using System.Reflection;
+using BuildingBlocks.Core.Domain.Model;
 using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Domain.Events.External;
-using BuildingBlocks.Domain.Model;
 using Newtonsoft.Json;
 
 namespace BuildingBlocks.Messaging.Outbox;

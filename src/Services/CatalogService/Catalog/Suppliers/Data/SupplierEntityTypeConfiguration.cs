@@ -13,6 +13,7 @@ public class SupplierEntityTypeConfiguration : IEntityTypeConfiguration<Supplier
 
         builder.Ignore(x => x.DomainEvents);
 
-        builder.Property(x => x.Created).HasDefaultValueSql(Consts.DateAlgorithm);
+        builder.Property(x => x.Created).HasDefaultValueSql(Constants.DateAlgorithm);
+        builder.Property(x => x.Name).HasColumnType(Constants.NormalText).IsRequired();
     }
 }

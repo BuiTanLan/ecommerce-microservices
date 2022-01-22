@@ -1,4 +1,4 @@
-using BuildingBlocks.Domain.Events.External;
+using BuildingBlocks.Core.Domain.Events.External;
 using RabbitMQ.Client;
 
 namespace BuildingBlocks.Messaging.Transport.Rabbitmq;

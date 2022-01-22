@@ -26,9 +26,12 @@
   <ItemGroup>
     <Folder Include="Products\Events\Domain" />
     <Folder Include="Products\Events\Integration\External" />
+    <Folder Include="Products\Features\AddProductImage" />
     <Folder Include="Products\Features\DeleteProduct" />
     <Folder Include="Products\Features\GetProductById" />
-    <Folder Include="Products\Features\GetProductsByCategory" />
+    <Folder Include="Products\Features\GetProductsByCategoryAndBrand" />
+    <Folder Include="Products\Features\GetProductsByIds" />
+    <Folder Include="Products\Features\GetProductWithName" />
     <Folder Include="Products\Features\UpdateProduct" />
   </ItemGroup>
 

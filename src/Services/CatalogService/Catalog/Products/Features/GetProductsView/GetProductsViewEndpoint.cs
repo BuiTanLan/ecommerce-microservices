@@ -2,18 +2,17 @@ using BuildingBlocks.CQRS.Query;
 
 namespace Catalog.Products.Features.GetProductsView;
 
+// GET api/v1/catalog/products
 public static class GetProductsViewEndpoint
 {
-    private const string Tag = "Catalog";
-
     internal static IEndpointRouteBuilder MapGetProductsViewEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet(
                 $"{CatalogConfiguration.CatalogModulePrefixUri}/products-view/{{page}}/{{pageSize}}",
                 GetProductsView)
-            .WithTags(Tag)
+            .WithTags(Configs.Tag)
             // .RequireAuthorization()
-            .Produces<GetProductsViewQueryResult>()
+            .Produces<GetProductsViewQueryResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)
             .WithDisplayName("Get products.");

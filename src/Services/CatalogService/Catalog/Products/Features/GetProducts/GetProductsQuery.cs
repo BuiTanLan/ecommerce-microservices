@@ -3,16 +3,17 @@ using BuildingBlocks.CQRS;
 using BuildingBlocks.CQRS.Query;
 using Catalog.Core.Contracts;
 using Catalog.Products.Dtos;
+using Catalog.Products.Models;
 
 namespace Catalog.Products.Features.GetProducts;
 
 public record GetProductsQuery : IListQuery<GetProductsQueryResult>
 {
-    public List<string>? Includes { get; init; } = new(new[] { nameof(Product.Supplier), nameof(Product.Category) });
-    public List<FilterModel>? Filters { get; init; } = new();
-    public List<string>? Sorts { get; init; } = new();
-    public int Page { get; init; } = 1;
-    public int PageSize { get; init; } = 20;
+    public IList<string>? Includes { get; init; }
+    public IList<FilterModel>? Filters { get; init; }
+    public IList<string>? Sorts { get; init; }
+    public int Page { get; init; }
+    public int PageSize { get; init; }
 }
 
 public class GetProductsQueryHandler : IQueryHandler<GetProductsQuery, GetProductsQueryResult>

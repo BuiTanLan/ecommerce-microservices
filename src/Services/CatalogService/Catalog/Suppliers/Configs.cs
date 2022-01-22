@@ -2,7 +2,7 @@ namespace Catalog.Suppliers;
 
 internal static class Configs
 {
-    internal static IServiceCollection AddSuppliers(this IServiceCollection services)
+    internal static IServiceCollection AddSuppliersServices(this IServiceCollection services)
     {
         return services;
     }

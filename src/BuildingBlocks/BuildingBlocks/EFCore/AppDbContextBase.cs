@@ -1,8 +1,10 @@
 using System.Collections.Immutable;
 using System.Data;
+using BuildingBlocks.Core.Domain.Events;
+using BuildingBlocks.Core.Domain.Events.Internal;
+using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Core.Extensions;
 using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Domain.Model;
-using BuildingBlocks.EFCore.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -73,7 +75,11 @@ public abstract class AppDbContextBase :
         // https://github.com/dotnet-architecture/eShopOnContainers/issues/700#issuecomment-461807560
         // http://www.kamilgrzybek.com/design/how-to-publish-and-handle-domain-events/
         // http://www.kamilgrzybek.com/design/handling-domain-events-missing-part/
-        await _mediator.DispatchDomainEventsAsync(this);
+        // https://youtu.be/x-UXUGVLMj8?t=4515
+        // https://enterprisecraftsmanship.com/posts/domain-events-simple-reliable-solution/
+        // https://lostechies.com/jimmybogard/2014/05/13/a-better-domain-events-pattern/
+        // https://ardalis.com/immediate-domain-event-salvation-with-mediatr/
+        await _mediator.DispatchDomainEventsAsync(GetDomainEvents());
 
         // After executing this line all the changes (from the Command Handler and Domain Event Handlers)
         // performed through the DbContext will be committed

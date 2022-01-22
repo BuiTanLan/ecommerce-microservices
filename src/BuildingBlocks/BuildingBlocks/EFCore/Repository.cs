@@ -1,4 +1,4 @@
-using BuildingBlocks.Domain.Model;
+using BuildingBlocks.Core.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.EFCore;

@@ -13,6 +13,7 @@ public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category
 
         builder.Ignore(c => c.DomainEvents);
 
-        builder.Property(x => x.Created).HasDefaultValueSql(Consts.DateAlgorithm);
+        builder.Property(x => x.Created).HasDefaultValueSql(Constants.DateAlgorithm);
+        builder.Property(x => x.Name).HasColumnType(Constants.NormalText).IsRequired();
     }
 }

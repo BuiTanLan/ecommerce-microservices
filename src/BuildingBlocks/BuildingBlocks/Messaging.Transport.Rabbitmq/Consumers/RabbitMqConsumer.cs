@@ -1,7 +1,10 @@
 using System.Reflection;
+using BuildingBlocks.Core.Domain;
+using BuildingBlocks.Core.Domain.Events;
+using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Core.Extensions;
 using BuildingBlocks.Domain;
 using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Domain.Events.External;
 using BuildingBlocks.Utils;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,9 +19,7 @@ public class RabbitMqConsumer : IBusSubscriber
 {
     private readonly IBusConnection _connection;
     private readonly IMessageParser _messageParser;
-    private readonly IMediator _mediator;
     private readonly ILogger<RabbitMqConsumer> _logger;
-    private readonly IQueueReferenceFactory _queueReferenceFactory;
     private readonly RabbitConfiguration _rabbitCfg;
     private readonly IServiceProvider _serviceProvider;
     private IModel _channel;
@@ -26,18 +27,13 @@ public class RabbitMqConsumer : IBusSubscriber
     public RabbitMqConsumer(
         IBusConnection connection,
         IMessageParser messageParser,
-        IMediator mediator,
         ILogger<RabbitMqConsumer> logger,
-        IQueueReferenceFactory queueReferenceFactory,
         RabbitConfiguration rabbitCfg,
         IServiceProvider serviceProvider)
     {
         _connection = connection ?? throw new ArgumentNullException(nameof(connection));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _queueReferenceFactory =
-            queueReferenceFactory ?? throw new ArgumentNullException(nameof(queueReferenceFactory));
         _messageParser = messageParser ?? throw new ArgumentNullException(nameof(messageParser));
-        _mediator = mediator;
         _rabbitCfg = rabbitCfg ?? throw new ArgumentNullException(nameof(rabbitCfg));
         _serviceProvider = serviceProvider;
     }
@@ -178,19 +174,27 @@ public class RabbitMqConsumer : IBusSubscriber
         }
         catch (System.Exception ex)
         {
-            _logger.LogError(ex,
+            _logger.LogError(
+                ex,
                 "an exception has occured while decoding queue message from Exchange '{ExchangeName}', message cannot be parsed. Error: {ExceptionMessage}",
-                eventArgs.Exchange, ex.Message);
+                eventArgs.Exchange,
+                ex.Message);
             channel.BasicReject(eventArgs.DeliveryTag, requeue: false);
+
             return;
         }
 
-        // _logger.LogInformation(
-        //     "received message '{MessageId}' from Exchange '{ExchangeName}', Queue '{QueueName}'. Processing...",
-        //     message.Id, eventArgs.Exchange, _queueReferences.QueueName);
+        _logger.LogInformation(
+            "received message '{MessageId}' from Exchange '{ExchangeName}''. Processing...",
+            eventArgs.BasicProperties.MessageId,
+            eventArgs.Exchange);
         try
         {
-            await _mediator.Publish((dynamic)message);
+            using var scope = _serviceProvider.CreateScope();
+            var eventProcessor = scope.ServiceProvider.GetRequiredService<IEventProcessor>();
+
+            // Publish to internal event bus
+            await eventProcessor.PublishAsync(message);
 
             channel.BasicAck(eventArgs.DeliveryTag, multiple: false);
         }
@@ -209,7 +213,7 @@ public class RabbitMqConsumer : IBusSubscriber
     {
         var errorMsg =
             "an error has occurred while processing Message '{MessageId}' from Exchange '{ExchangeName}' : {ExceptionMessage} . "
-            + (requeue ? "Reenqueuing..." : "Nacking...");
+            + (requeue ? "Re-enqueuing...." : "Rejecting...");
 
         _logger.LogWarning(ex, errorMsg, message.EventId, deliveryProps.Exchange, ex.Message);
 

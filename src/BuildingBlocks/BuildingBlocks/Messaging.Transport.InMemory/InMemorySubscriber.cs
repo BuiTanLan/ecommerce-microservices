@@ -1,4 +1,5 @@
-﻿using BuildingBlocks.Domain.Events;
+﻿using BuildingBlocks.Core.Domain.Events;
+using BuildingBlocks.Domain.Events;
 using BuildingBlocks.Messaging.Transport.InMemory.Channels;
 using BuildingBlocks.Messaging.Transport.InMemory.Diagnostics;
 using MediatR;
@@ -44,7 +45,7 @@ public class InMemorySubscriber : IBusSubscriber
             return;
 
         using var scope = _serviceProvider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var eventProcessor = scope.ServiceProvider.GetRequiredService<IEventProcessor>();
 
         // https://dotnetcoretutorials.com/2020/11/24/using-channels-in-net-core-part-1-getting-started/
         await foreach (var @event in _messageChannel.Reader.ReadAllAsync(cancellationToken))
@@ -53,7 +54,9 @@ public class InMemorySubscriber : IBusSubscriber
             {
                 // ConsumerDiagnostics
                 _consumerDiagnostics.StartActivity(@event);
-                await mediator.Publish(@event, cancellationToken);
+
+                // Publish to internal event bus
+                await eventProcessor.PublishAsync(@event, cancellationToken);
                 _consumerDiagnostics.StopActivity(@event);
             }
             catch (System.Exception e)

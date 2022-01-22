@@ -1,8 +1,9 @@
-using BuildingBlocks.Domain.Model;
+using BuildingBlocks.Core.Domain.Model;
 using Catalog.Brands;
 using Catalog.Categories;
 using Catalog.Core.Contracts;
 using Catalog.Products;
+using Catalog.Products.Models;
 using Catalog.Suppliers;
 
 namespace Catalog.Infrastructure.Data;
@@ -21,13 +22,14 @@ public class CatalogDbContext : AppDbContextBase, ICatalogDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasPostgresExtension(Consts.UuidGenerator);
+        modelBuilder.HasPostgresExtension(Constants.UuidGenerator);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         base.OnModelCreating(modelBuilder);
     }
 
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<ProductView> ProductsView => Set<ProductView>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<Brand> Brands => Set<Brand>();

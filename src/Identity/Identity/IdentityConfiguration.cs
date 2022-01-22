@@ -1,7 +1,4 @@
 using BuildingBlocks.EFCore;
-using BuildingBlocks.Security.ApiKey.Authorization;
-using Identity.Core;
-using Identity.Core.Models;
 using Identity.Features.ConfirmEmail;
 using Identity.Features.GetClaims;
 using Identity.Features.Login;
@@ -22,6 +19,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Constants = Identity.Core.Constants;
 
 namespace Identity;
 

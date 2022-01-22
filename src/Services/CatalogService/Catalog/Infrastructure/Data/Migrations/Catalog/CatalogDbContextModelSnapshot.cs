@@ -41,7 +41,7 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
                     b.Property<long>("Version")
@@ -64,6 +64,11 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("code");
+
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -81,7 +86,7 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
                     b.Property<long>("Version")
@@ -127,7 +132,6 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                         .HasColumnName("created_by");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("description");
 
@@ -137,13 +141,17 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric(18,2)")
                         .HasColumnName("price");
+
+                    b.Property<string>("ProductStatus")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("product_status");
 
                     b.Property<int>("RestockThreshold")
                         .HasColumnType("integer")
@@ -174,6 +182,42 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                         .HasDatabaseName("ix_products_supplier_id");
 
                     b.ToTable("products", "catalog");
+                });
+
+            modelBuilder.Entity("Catalog.Products.ProductImage", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("integer")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("image_url");
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_main");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("product_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_product_images");
+
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasDatabaseName("ix_product_images_id");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_product_images_product_id");
+
+                    b.ToTable("product_images", "catalog");
                 });
 
             modelBuilder.Entity("Catalog.Products.ProductView", b =>
@@ -234,7 +278,7 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
                     b.Property<long>("Version")
@@ -258,7 +302,7 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_products_brand_brand_id");
+                        .HasConstraintName("fk_products_brands_brand_id");
 
                     b.HasOne("Catalog.Categories.Category", "Category")
                         .WithMany()
@@ -274,11 +318,58 @@ namespace Catalog.Infrastructure.Data.Migrations.Catalog
                         .IsRequired()
                         .HasConstraintName("fk_products_suppliers_supplier_id");
 
+                    b.OwnsOne("Catalog.Products.Dimensions", "Dimensions", b1 =>
+                        {
+                            b1.Property<long>("ProductId")
+                                .HasColumnType("bigint")
+                                .HasColumnName("id");
+
+                            b1.Property<int>("Depth")
+                                .HasColumnType("integer")
+                                .HasColumnName("dimensions_depth");
+
+                            b1.Property<int>("Height")
+                                .HasColumnType("integer")
+                                .HasColumnName("dimensions_height");
+
+                            b1.Property<int>("Width")
+                                .HasColumnType("integer")
+                                .HasColumnName("dimensions_width");
+
+                            b1.HasKey("ProductId");
+
+                            b1.ToTable("products", "catalog");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductId")
+                                .HasConstraintName("fk_products_products_id");
+                        });
+
                     b.Navigation("Brand");
 
                     b.Navigation("Category");
 
+                    b.Navigation("Dimensions")
+                        .IsRequired();
+
                     b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("Catalog.Products.ProductImage", b =>
+                {
+                    b.HasOne("Catalog.Products.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_product_images_products_product_id");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Catalog.Products.Product", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

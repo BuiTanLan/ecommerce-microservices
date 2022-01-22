@@ -1,3 +1,4 @@
+using Catalog.Products.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Catalog.Products.Data;

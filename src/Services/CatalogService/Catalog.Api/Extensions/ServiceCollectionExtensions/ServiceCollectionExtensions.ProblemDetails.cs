@@ -1,4 +1,4 @@
-using BuildingBlocks.Domain.Exceptions;
+using BuildingBlocks.Core.Domain.Exceptions;
 using BuildingBlocks.Exception;
 using BuildingBlocks.Validation;
 using Hellang.Middleware.ProblemDetails;
@@ -91,6 +91,7 @@ public static partial class ServiceCollectionExtensions
                 return pd;
             });
 
+            // Handling Guards exceptions
             x.MapToStatusCode<ArgumentNullException>(StatusCodes.Status400BadRequest);
         });
         return services;

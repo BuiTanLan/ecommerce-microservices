@@ -1,9 +1,11 @@
 using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
+using BuildingBlocks.Core.Domain;
+using BuildingBlocks.Core.Domain.Events;
+using BuildingBlocks.Core.Extensions;
 using BuildingBlocks.Domain;
 using BuildingBlocks.Domain.Events;
-using BuildingBlocks.EFCore.Extensions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

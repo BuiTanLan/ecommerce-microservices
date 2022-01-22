@@ -1,5 +1,6 @@
+using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Domain.Events.External;
 
 namespace BuildingBlocks.Messaging.Outbox;
 

@@ -1,21 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
+using BuildingBlocks.Utils;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace BuildingBlocks.Web.Extensions;
 
-//https://khalidabuhakmeh.com/read-and-convert-querycollection-values-in-aspnet
+// https://khalidabuhakmeh.com/read-and-convert-querycollection-values-in-aspnet
 public static class QueryCollectionExtensions
 {
     public static IEnumerable<T> All<T>(
         this IQueryCollection collection,
         string key)
     {
-        var values = new List<T>();
-
+        List<T> values = new List<T>();
         if (collection.TryGetValue(key, out var results))
+        {
             foreach (var s in results)
+            {
                 try
                 {
                     var result = (T)Convert.ChangeType(s, typeof(T));
@@ -26,8 +27,9 @@ public static class QueryCollectionExtensions
                     // conversion failed
                     // skip value
                 }
+            }
+        }
 
-        // return an array with at least one
         return values;
     }
 
@@ -41,13 +43,53 @@ public static class QueryCollectionExtensions
         var value = @default;
 
         if (values.Any())
+        {
             value = option switch
             {
                 ParameterPick.First => values.FirstOrDefault(),
                 ParameterPick.Last => values.LastOrDefault(),
                 _ => value
             };
+        }
 
         return value ?? @default;
+    }
+
+    public static T GetCollection<T>(
+        this IQueryCollection collection,
+        string key)
+        where T : IEnumerable
+    {
+        var type = typeof(T).GetGenericArguments()[0];
+        var listType = typeof(List<>);
+        var constructedListType = listType.MakeGenericType(type);
+        dynamic values = Activator.CreateInstance(constructedListType);
+
+        if (collection.TryGetValue(key, out var results))
+        {
+            foreach (var s in results)
+            {
+                try
+                {
+                    if (s.IsValidJson())
+                    {
+                        dynamic result = JsonConvert.DeserializeObject(s, type);
+                        values.Add(result);
+                    }
+                    else
+                    {
+                        dynamic result = Convert.ChangeType(s, type);
+                        values.Add(result);
+                    }
+                }
+                catch (System.Exception)
+                {
+                    // conversion failed
+                    // skip value
+                }
+            }
+        }
+
+        return (T)values;
     }
 }

@@ -1,6 +1,7 @@
 using System.Reflection;
+using BuildingBlocks.Core.Domain.Events;
+using BuildingBlocks.Core.Domain.Model;
 using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Domain.Model;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

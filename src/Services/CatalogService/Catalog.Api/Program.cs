@@ -1,5 +1,6 @@
 using System.Reflection;
 using Ben.Diagnostics;
+using BuildingBlocks.Core;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Web;
 using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
@@ -23,7 +24,14 @@ builder.Services.AddControllers(options =>
 builder.AddCompression();
 builder.AddCustomProblemDetails();
 
-builder.AddCustomSerilog();
+builder.AddCustomSerilog(config =>
+{
+    config.WriteTo.File(
+        GetLogPath(builder.Environment),
+        outputTemplate: CatalogConstants.LogTemplate,
+        rollingInterval: RollingInterval.Day,
+        rollOnFileSizeLimit: true);
+});
 
 builder.AddCustomSwagger(builder.Configuration, typeof(CatalogRoot).Assembly);
 
@@ -37,7 +45,7 @@ builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 
 builder.Services.AddCustomAuthorization();
 
-builder.AddCatalogModule();
+builder.AddCatalogServices();
 
 var app = builder.Build();
 
@@ -50,6 +58,9 @@ if (environment.IsDevelopment() || environment.IsEnvironment("docker"))
     // Minimal Api not supported versioning in .net 6
     app.UseCustomSwagger();
 }
+
+
+ServiceActivator.Configure(app.Services);
 
 app.UseHttpsRedirection();
 
@@ -65,14 +76,14 @@ app.UseSerilogRequestLogging();
 
 app.UseCustomHealthCheck();
 
-await app.ConfigureCatalogModule(environment, app.Logger);
+await app.ConfigureCatalog(environment, app.Logger);
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapCatalogModuleEndpoints();
+app.MapCatalogEndpoints();
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -83,4 +94,6 @@ await app.RunAsync();
 
 public partial class Program
 {
+    private static string GetLogPath(IWebHostEnvironment env)
+        => env.IsDevelopment() ? CatalogConstants.DevelopmentLogPath : CatalogConstants.ProductionLogPath;
 }

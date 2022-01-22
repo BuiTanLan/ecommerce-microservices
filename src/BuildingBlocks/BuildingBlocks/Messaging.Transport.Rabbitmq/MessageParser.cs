@@ -1,8 +1,8 @@
 using System.Text;
 using BuildingBlocks.Core;
+using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Messaging.Serialization;
 using BuildingBlocks.Core.Objects;
-using BuildingBlocks.Domain.Events.External;
 using Microsoft.Net.Http.Headers;
 using RabbitMQ.Client;
 
