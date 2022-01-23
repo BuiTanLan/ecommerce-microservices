@@ -3,10 +3,10 @@ using System.Security.Claims;
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Jwt;
-using Identity.Core.Exceptions;
-using Identity.Core.Models;
 using Identity.Features.GenerateJwtToken;
 using Identity.Features.GenerateRefreshToken;
+using Identity.Share.Core.Exceptions;
+using Identity.Share.Core.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Features.RefreshToken;

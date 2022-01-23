@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using BuildingBlocks.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Filters;
 using Serilog.Sinks.SpectreConsole;
@@ -15,9 +13,8 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class HostBuilderExtensions
 {
-    private const string LoggerSectionName = "Logging";
-
-    public static WebApplicationBuilder AddCustomSerilog(this WebApplicationBuilder builder,
+    public static WebApplicationBuilder AddCustomSerilog(
+        this WebApplicationBuilder builder,
         Action<LoggerConfiguration> extraConfigure = null)
     {
         AddCustomSerilog(builder.Host, extraConfigure);
@@ -25,8 +22,8 @@ public static class HostBuilderExtensions
         return builder;
     }
 
-
-    public static IHostBuilder AddCustomSerilog(this IHostBuilder builder,
+    public static IHostBuilder AddCustomSerilog(
+        this IHostBuilder builder,
         Action<LoggerConfiguration> extraConfigure = null)
     {
         return builder.UseSerilog((context, serviceProvider, loggerConfiguration) =>
@@ -39,6 +36,7 @@ public static class HostBuilderExtensions
                 .ReadFrom.Configuration(context.Configuration)
                 .ReadFrom.Services(serviceProvider)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                .Enrich.WithTraceId(httpContext)
                 .Enrich.FromLogContext();
 
             var loggerOptions = context.Configuration.GetSection(nameof(LoggerOptions)).Get<LoggerOptions>();
@@ -49,8 +47,10 @@ public static class HostBuilderExtensions
         });
     }
 
-    private static void MapOptions(LoggerOptions loggerOptions,
-        LoggerConfiguration loggerConfiguration, HostBuilderContext hostBuilderContext)
+    private static void MapOptions(
+        LoggerOptions loggerOptions,
+        LoggerConfiguration loggerConfiguration,
+        HostBuilderContext hostBuilderContext)
     {
         var level = GetLogEventLevel(loggerOptions.Level);
 
@@ -68,8 +68,11 @@ public static class HostBuilderExtensions
             if (loggerOptions.UseElasticSearch)
                 loggerConfiguration.WriteTo.Elasticsearch(loggerOptions.ElasticSearchLoggingOptions?.Url);
             if (loggerOptions.UseSeq)
+            {
                 loggerConfiguration.WriteTo.Seq(Environment.GetEnvironmentVariable("SEQ_URL") ??
                                                 loggerOptions.SeqOptions.Url);
+            }
+
             loggerConfiguration.WriteTo.Console();
         }
 
@@ -83,7 +86,7 @@ public static class HostBuilderExtensions
         }
 
         loggerOptions.ExcludePaths?.ToList().ForEach(p => loggerConfiguration.Filter
-            .ByExcluding(Matching.WithProperty<string>("RequestPath", n => n.EndsWith(p))));
+            .ByExcluding(Matching.WithProperty<string>("RequestPath", n => n.EndsWith(p, StringComparison.Ordinal))));
 
         loggerOptions.ExcludeProperties?.ToList().ForEach(p => loggerConfiguration.Filter
             .ByExcluding(Matching.WithProperty(p)));
@@ -94,5 +97,18 @@ public static class HostBuilderExtensions
         return Enum.TryParse<LogEventLevel>(level, true, out var logLevel)
             ? logLevel
             : LogEventLevel.Information;
+    }
+
+    internal static LoggerConfiguration WithTraceId(
+        this LoggerEnrichmentConfiguration loggerEnrichmentConfiguration,
+        IHttpContextAccessor httpContextAccessor)
+    {
+        if (loggerEnrichmentConfiguration == null)
+            throw new ArgumentNullException(nameof(loggerEnrichmentConfiguration));
+
+        if (httpContextAccessor == null)
+            throw new ArgumentNullException(nameof(httpContextAccessor));
+
+        return loggerEnrichmentConfiguration.With(new TraceIdEnricher(httpContextAccessor));
     }
 }

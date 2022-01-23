@@ -1,4 +1,4 @@
-using Identity.Core.Dtos;
+using Identity.Share.Core.Dtos;
 
 namespace Identity.Features.GenerateRefreshToken;
 

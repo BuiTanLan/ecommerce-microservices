@@ -59,7 +59,7 @@ public class InMemoryProducerDiagnostics
         var activity = Activity.Current;
         if (activity?.Duration == TimeSpan.Zero)
         {
-            activity.SetEndTime(DateTime.UtcNow);
+            activity.SetEndTime(DateTime.Now);
         }
 
         if (DiagnosticListener.IsEnabled(OTelTransportOptions.Events.AfterSendInMemoryMessage))

@@ -1,5 +1,5 @@
 using BuildingBlocks.IdsGenerator;
-using Catalog.Core.Contracts;
+using Catalog.Shared.Core.Contracts;
 
 namespace Catalog.Categories.Data;
 
@@ -17,14 +17,6 @@ public class CategoryDataSeeder : IDataSeeder
         if (await _dbContext.Categories.AnyAsync())
             return;
 
-        // https://github.com/bchavez/Bogus
-        // https://www.youtube.com/watch?v=T9pwE1GAr_U
-        // var categoryFaker = new Faker<Category>().CustomInstantiator(faker =>
-        // {
-        //     var category = Category.Create(faker.Commerce.Categories(10).First(),faker.Lorem.Sentence());
-        //     return category;
-        // });
-        // var categories = categoryFaker.Generate(5);
         await _dbContext.Categories.AddRangeAsync(new List<Category>
         {
             Category.Create(SnowFlakIdGenerator.NewId(), "Electronics", "0001", "All electronic goods"),

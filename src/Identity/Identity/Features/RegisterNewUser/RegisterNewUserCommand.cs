@@ -1,5 +1,5 @@
 using BuildingBlocks.CQRS.Command;
-using Identity.Core.Models;
+using Identity.Share.Core.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Features.RegisterNewUser;

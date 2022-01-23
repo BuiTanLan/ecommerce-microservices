@@ -26,13 +26,16 @@
   <ItemGroup>
     <Folder Include="Products\Events\Domain" />
     <Folder Include="Products\Events\Integration\External" />
-    <Folder Include="Products\Features\AddProductImage" />
-    <Folder Include="Products\Features\DeleteProduct" />
-    <Folder Include="Products\Features\GetProductById" />
-    <Folder Include="Products\Features\GetProductsByCategoryAndBrand" />
-    <Folder Include="Products\Features\GetProductsByIds" />
+    <Folder Include="Products\Features\AddingProductImage" />
+    <Folder Include="Products\Features\DeletingProduct" />
+    <Folder Include="Products\Features\GettingProductsByCategoryAndBrand" />
+    <Folder Include="Products\Features\GettingProductsByIds" />
     <Folder Include="Products\Features\GetProductWithName" />
-    <Folder Include="Products\Features\UpdateProduct" />
+    <Folder Include="Shared" />
+    <Folder Include="Shared\Infrastructure\Data\Migrations\Catalog" />
+    <Folder Include="Suppliers\Events\External\Handlers" />
+    <Folder Include="Suppliers\Features\GetSupplierById" />
+    <Folder Include="Suppliers\Features\GetSuppliers" />
   </ItemGroup>
 
 </Project>

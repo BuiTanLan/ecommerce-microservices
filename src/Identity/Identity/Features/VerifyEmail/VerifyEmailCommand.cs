@@ -1,10 +1,10 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Exception;
-using Identity.Core.Exceptions;
-using Identity.Core.Models;
 using Identity.Features.ConfirmEmail.Exceptions;
-using Identity.Infrastructure.Data;
+using Identity.Share.Core.Exceptions;
+using Identity.Share.Core.Models;
+using Identity.Share.Infrastructure.Data;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +59,7 @@ internal class VerifyEmailCommandHandler : ICommandHandler<VerifyEmailCommand>
                 throw new BadRequestException("Either email or code is incorrect.");
             }
 
-            if (DateTime.UtcNow > emailVerificationCode.SentAt.AddMinutes(5))
+            if (DateTime.Now > emailVerificationCode.SentAt.AddMinutes(5))
             {
                 throw new BadRequestException("The code is expired.");
             }

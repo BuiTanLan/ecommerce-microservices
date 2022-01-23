@@ -61,9 +61,9 @@ public class InMemoryOutboxService : IOutboxService
         return Task.CompletedTask;
     }
 
-    public Task SaveAsync(IIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
+    public Task SaveAsync(params IIntegrationEvent[] integrationEvents)
     {
-        Guard.Against.Null(integrationEvent, nameof(integrationEvent));
+        Guard.Against.Null(integrationEvents, nameof(integrationEvents));
 
         if (!_options.Enabled)
         {
@@ -71,29 +71,30 @@ public class InMemoryOutboxService : IOutboxService
             return Task.CompletedTask;
         }
 
-        string name = integrationEvent.GetType().Name;
+        foreach (var integrationEvent in integrationEvents)
+        {
+            string name = integrationEvent.GetType().Name;
 
-        var outboxMessages = new OutboxMessage(
-            integrationEvent.EventId,
-            integrationEvent.OccurredOn,
-            integrationEvent.GetType().AssemblyQualifiedName,
-            name.Underscore(),
-            _messageSerializer.Serialize(integrationEvent),
-            EventType.IntegrationEvent,
-            correlationId: null);
+            var outboxMessages = new OutboxMessage(
+                integrationEvent.EventId,
+                integrationEvent.OccurredOn,
+                integrationEvent.GetType().AssemblyQualifiedName,
+                name.Underscore(),
+                _messageSerializer.Serialize(integrationEvent),
+                EventType.IntegrationEvent,
+                correlationId: null);
 
-        _inMemoryOutboxStore.Events.Add(outboxMessages);
+            _inMemoryOutboxStore.Events.Add(outboxMessages);
+        }
 
         _logger.LogInformation("Saved messages to the outbox");
 
         return Task.CompletedTask;
     }
 
-    public Task SaveAsync(
-        IDomainNotificationEvent domainNotificationEvent,
-        CancellationToken cancellationToken = default)
+    public Task SaveAsync(params IDomainNotificationEvent[] domainNotificationEvents)
     {
-        Guard.Against.Null(domainNotificationEvent, nameof(domainNotificationEvent));
+        Guard.Against.Null(domainNotificationEvents, nameof(domainNotificationEvents));
 
         if (!_options.Enabled)
         {
@@ -101,23 +102,27 @@ public class InMemoryOutboxService : IOutboxService
             return Task.CompletedTask;
         }
 
-        string name = domainNotificationEvent.GetType().Name;
+        foreach (var domainNotificationEvent in domainNotificationEvents)
+        {
+            string name = domainNotificationEvent.GetType().Name;
 
-        var outboxMessages = new OutboxMessage(
-            domainNotificationEvent.EventId,
-            domainNotificationEvent.OccurredOn,
-            domainNotificationEvent.GetType().AssemblyQualifiedName,
-            name.Underscore(),
-            _messageSerializer.Serialize(domainNotificationEvent),
-            EventType.DomainNotificationEvent,
-            correlationId: null);
+            var outboxMessages = new OutboxMessage(
+                domainNotificationEvent.EventId,
+                domainNotificationEvent.OccurredOn,
+                domainNotificationEvent.GetType().AssemblyQualifiedName,
+                name.Underscore(),
+                _messageSerializer.Serialize(domainNotificationEvent),
+                EventType.DomainNotificationEvent,
+                correlationId: null);
 
-        _inMemoryOutboxStore.Events.Add(outboxMessages);
+            _inMemoryOutboxStore.Events.Add(outboxMessages);
+        }
 
         _logger.LogInformation("Saved messages to the outbox");
 
         return Task.CompletedTask;
     }
+
 
     public async Task PublishUnsentOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {

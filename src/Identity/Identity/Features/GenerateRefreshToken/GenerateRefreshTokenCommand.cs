@@ -2,9 +2,9 @@ using System.Security.Cryptography;
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Utils;
-using Identity.Core.Dtos;
 using Identity.Features.RefreshToken;
-using Identity.Infrastructure.Data;
+using Identity.Share.Core.Dtos;
+using Identity.Share.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Features.GenerateRefreshToken;
@@ -31,16 +31,16 @@ public class
     {
         Guard.Against.Null(request, nameof(GenerateRefreshTokenCommand));
 
-        var refreshToken = await _context.Set<Core.Models.RefreshToken>()
+        var refreshToken = await _context.Set<Share.Core.Models.RefreshToken>()
             .FirstOrDefaultAsync(
                 rt => rt.UserId == request.UserId && rt.Token == request.Token,
                 cancellationToken);
 
         if (refreshToken == null)
         {
-            var token = Core.Models.RefreshToken.GetRefreshToken();
+            var token = Share.Core.Models.RefreshToken.GetRefreshToken();
 
-            refreshToken = new Core.Models.RefreshToken
+            refreshToken = new Share.Core.Models.RefreshToken
             {
                 UserId = request.UserId,
                 Token = token,
@@ -49,7 +49,7 @@ public class
                 CreatedByIp = IpHelper.GetIpAddress()
             };
 
-            await _context.Set<Core.Models.RefreshToken>().AddAsync(refreshToken, cancellationToken);
+            await _context.Set<Share.Core.Models.RefreshToken>().AddAsync(refreshToken, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
         }
         else
@@ -57,14 +57,14 @@ public class
             if (!refreshToken.IsRefreshTokenValid())
                 throw new InvalidRefreshTokenException();
 
-            var token = Core.Models.RefreshToken.GetRefreshToken();
+            var token = Share.Core.Models.RefreshToken.GetRefreshToken();
 
             refreshToken.Token = token;
             refreshToken.ExpiredAt = DateTime.Now;
             refreshToken.CreatedAt = DateTime.Now.AddDays(10);
             refreshToken.CreatedByIp = IpHelper.GetIpAddress();
 
-            _context.Set<Core.Models.RefreshToken>().Update(refreshToken);
+            _context.Set<Share.Core.Models.RefreshToken>().Update(refreshToken);
             await _context.SaveChangesAsync(cancellationToken);
         }
 
@@ -89,7 +89,7 @@ public class
 
     private async Task RemoveOldRefreshTokens(Guid userId, long? ttlRefreshToken = null)
     {
-        var refreshTokens = _context.Set<Core.Models.RefreshToken>().Where(rt => rt.UserId == userId);
+        var refreshTokens = _context.Set<Share.Core.Models.RefreshToken>().Where(rt => rt.UserId == userId);
 
         refreshTokens.ToList().RemoveAll(x => !x.IsRefreshTokenValid(ttlRefreshToken));
 

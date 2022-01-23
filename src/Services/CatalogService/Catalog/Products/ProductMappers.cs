@@ -1,9 +1,8 @@
 using AutoMapper;
 using Catalog.Products.Dtos;
-using Catalog.Products.Features.CreateProduct;
-using Catalog.Products.Features.CreateProduct.Command;
-using Catalog.Products.Features.CreateProduct.Requests;
-using Catalog.Products.Features.GetProductsView;
+using Catalog.Products.Features.CreatingProduct;
+using Catalog.Products.Features.CreatingProduct.Requests;
+using Catalog.Products.Features.GettingProductsView;
 using Catalog.Products.Models;
 
 namespace Catalog.Products;

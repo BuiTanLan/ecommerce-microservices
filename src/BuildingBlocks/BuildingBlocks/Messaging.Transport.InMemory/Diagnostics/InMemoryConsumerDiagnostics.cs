@@ -98,7 +98,7 @@ public class InMemoryConsumerDiagnostics
         Activity activity = Activity.Current;
         if (activity?.Duration == TimeSpan.Zero)
         {
-            activity.SetEndTime(DateTime.UtcNow);
+            activity.SetEndTime(DateTime.Now);
         }
 
         if (DiagnosticListener.IsEnabled(OTelTransportOptions.Events.AfterProcessInMemoryMessage))

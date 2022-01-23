@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Jwt;
-using Identity.Core.Models;
+using Identity.Share.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 

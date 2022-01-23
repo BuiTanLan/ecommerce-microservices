@@ -66,9 +66,9 @@ public class EfOutboxService<TContext> : IOutboxService
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task SaveAsync(IIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
+    public async Task SaveAsync(params IIntegrationEvent[] integrationEvents)
     {
-        Guard.Against.Null(integrationEvent, nameof(integrationEvent));
+        Guard.Against.Null(integrationEvents, nameof(integrationEvents));
 
         if (!_options.Enabled)
         {
@@ -76,28 +76,30 @@ public class EfOutboxService<TContext> : IOutboxService
             return;
         }
 
-        string name = integrationEvent.GetType().Name;
+        foreach (var integrationEvent in integrationEvents)
+        {
+            string name = integrationEvent.GetType().Name;
 
-        var outboxMessages = new OutboxMessage(
-            integrationEvent.EventId,
-            integrationEvent.OccurredOn,
-            integrationEvent.GetType().AssemblyQualifiedName,
-            name.Underscore(),
-            _messageSerializer.Serialize(integrationEvent),
-            EventType.IntegrationEvent,
-            correlationId: null);
+            var outboxMessages = new OutboxMessage(
+                integrationEvent.EventId,
+                integrationEvent.OccurredOn,
+                integrationEvent.GetType().AssemblyQualifiedName,
+                name.Underscore(),
+                _messageSerializer.Serialize(integrationEvent),
+                EventType.IntegrationEvent,
+                correlationId: null);
 
-        await _unitOfWork.GetRepository<OutboxMessage>().AddAsync(outboxMessages, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.GetRepository<OutboxMessage>().AddAsync(outboxMessages);
+        }
+
+        await _unitOfWork.SaveChangesAsync();
 
         _logger.LogInformation("Saved messages to the outbox");
     }
 
-    public async Task SaveAsync(
-        IDomainNotificationEvent domainNotificationEvent,
-        CancellationToken cancellationToken = default)
+    public async Task SaveAsync(params IDomainNotificationEvent[] domainNotificationEvents)
     {
-        Guard.Against.Null(domainNotificationEvent, nameof(domainNotificationEvent));
+        Guard.Against.Null(domainNotificationEvents, nameof(domainNotificationEvents));
 
         if (!_options.Enabled)
         {
@@ -105,19 +107,22 @@ public class EfOutboxService<TContext> : IOutboxService
             return;
         }
 
-        string name = domainNotificationEvent.GetType().Name;
+        foreach (var domainNotificationEvent in domainNotificationEvents)
+        {
+            string name = domainNotificationEvent.GetType().Name;
 
-        var outboxMessages = new OutboxMessage(
-            domainNotificationEvent.EventId,
-            domainNotificationEvent.OccurredOn,
-            domainNotificationEvent.GetType().AssemblyQualifiedName,
-            name.Underscore(),
-            _messageSerializer.Serialize(domainNotificationEvent),
-            EventType.DomainNotificationEvent,
-            correlationId: null);
+            var outboxMessages = new OutboxMessage(
+                domainNotificationEvent.EventId,
+                domainNotificationEvent.OccurredOn,
+                domainNotificationEvent.GetType().AssemblyQualifiedName,
+                name.Underscore(),
+                _messageSerializer.Serialize(domainNotificationEvent),
+                EventType.DomainNotificationEvent,
+                correlationId: null);
 
-        await _unitOfWork.GetRepository<OutboxMessage>().AddAsync(outboxMessages, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.GetRepository<OutboxMessage>().AddAsync(outboxMessages);
+            await _unitOfWork.SaveChangesAsync();
+        }
 
         _logger.LogInformation("Saved messages to the outbox");
     }
@@ -141,7 +146,7 @@ public class EfOutboxService<TContext> : IOutboxService
         {
             var type = Type.GetType(outboxMessage.Type);
 
-            var data = _messageSerializer.Deserialize(outboxMessage.Data, type);
+            dynamic data = _messageSerializer.Deserialize(outboxMessage.Data, type);
             if (data is null)
             {
                 _logger.LogError("Invalid message type: {Name}", type?.Name);

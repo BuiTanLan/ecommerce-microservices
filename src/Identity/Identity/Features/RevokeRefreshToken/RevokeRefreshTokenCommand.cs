@@ -1,8 +1,8 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
-using Identity.Core.Exceptions;
 using Identity.Features.RefreshToken;
-using Identity.Infrastructure.Data;
+using Identity.Share.Core.Exceptions;
+using Identity.Share.Infrastructure.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +25,7 @@ internal class RevokeRefreshTokenCommandHandler : ICommandHandler<RevokeRefreshT
     {
         Guard.Against.Null(request, nameof(RevokeRefreshTokenCommand));
 
-        var refreshToken = await _context.Set<Core.Models.RefreshToken>()
+        var refreshToken = await _context.Set<Share.Core.Models.RefreshToken>()
             .SingleOrDefaultAsync(x => x.Token == request.RefreshToken, cancellationToken: cancellationToken);
 
         if (refreshToken == null)

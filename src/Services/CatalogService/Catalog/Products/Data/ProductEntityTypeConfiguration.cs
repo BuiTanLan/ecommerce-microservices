@@ -1,4 +1,5 @@
 using Catalog.Products.Models;
+using Catalog.Shared.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Catalog.Products.Data;

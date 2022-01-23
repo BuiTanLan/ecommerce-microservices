@@ -29,6 +29,17 @@ namespace BuildingBlocks.Core
             return _serviceProvider.GetService<T>();
         }
 
+        public static T GetRequiredService<T>()
+        {
+            return _serviceProvider.GetRequiredService<T>();
+        }
+
+        public static object GetRequiredServices(Type type)
+        {
+            return _serviceProvider.GetRequiredService(type);
+        }
+
+
         public static IEnumerable<T> GetServices<T>()
         {
             return _serviceProvider.GetServices<T>();

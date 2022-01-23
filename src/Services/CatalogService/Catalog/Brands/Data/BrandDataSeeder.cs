@@ -1,6 +1,6 @@
 using Bogus;
 using BuildingBlocks.IdsGenerator;
-using Catalog.Core.Contracts;
+using Catalog.Shared.Core.Contracts;
 
 namespace Catalog.Brands.Data;
 

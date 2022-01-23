@@ -5,8 +5,6 @@ global using BuildingBlocks;
 global using BuildingBlocks.EFCore;
 global using Catalog.Infrastructure.Data;
 global using Catalog.Infrastructure.Data;
-global using Catalog.Infrastructure.Extensions.ApplicationBuilderExtensions;
-global using Catalog.Infrastructure.Extensions.ServiceCollectionExtensions;
 global using FluentValidation;
 global using Google.Protobuf.Collections;
 global using MediatR;

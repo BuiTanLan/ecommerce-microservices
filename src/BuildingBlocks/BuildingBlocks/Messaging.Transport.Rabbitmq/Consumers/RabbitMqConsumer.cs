@@ -190,8 +190,7 @@ public class RabbitMqConsumer : IBusSubscriber
             eventArgs.Exchange);
         try
         {
-            using var scope = _serviceProvider.CreateScope();
-            var eventProcessor = scope.ServiceProvider.GetRequiredService<IEventProcessor>();
+            var eventProcessor = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IEventProcessor>();
 
             // Publish to internal event bus
             await eventProcessor.PublishAsync(message);

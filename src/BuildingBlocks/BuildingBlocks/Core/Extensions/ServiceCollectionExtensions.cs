@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITypeResolver>(typeResolver);
         services.AddSingleton<ISystemInfo>(systemInfo);
         services.AddSingleton(systemInfo);
-        services.AddSingleton<IEventProcessor, EventProcessor>();
+        services.AddTransient<IEventProcessor, EventProcessor>();
 
         RegisterAllMessages(typeResolver);
 

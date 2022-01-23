@@ -12,8 +12,7 @@ public class NewtonsoftJsonMessageSerializer : IMessageSerializer
 
     public NewtonsoftJsonMessageSerializer(
         IOptions<NewtonsoftJsonOptions> options,
-        NewtonsoftJsonUnSupportedTypeMatcher newtonsoftJsonUnSupportedTypeMatcher,
-        IServiceProvider serviceProvider)
+        NewtonsoftJsonUnSupportedTypeMatcher newtonsoftJsonUnSupportedTypeMatcher)
     {
         _newtonsoftJsonUnSupportedTypeMatcher = newtonsoftJsonUnSupportedTypeMatcher;
         _converters = options.Value.Converters;

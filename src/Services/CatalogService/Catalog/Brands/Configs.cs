@@ -13,7 +13,6 @@ internal static class Configs
 
     internal static IEndpointRouteBuilder MapBrandsEndpoints(this IEndpointRouteBuilder endpoints)
     {
-
         return endpoints;
     }
 }

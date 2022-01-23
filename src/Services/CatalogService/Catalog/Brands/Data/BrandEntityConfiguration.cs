@@ -1,3 +1,4 @@
+using Catalog.Shared.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Catalog.Brands.Data;

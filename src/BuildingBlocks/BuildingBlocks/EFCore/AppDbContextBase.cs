@@ -5,6 +5,7 @@ using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
 using BuildingBlocks.Core.Extensions;
 using BuildingBlocks.Domain.Events;
+using BuildingBlocks.Messaging.Outbox;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -18,15 +19,17 @@ public abstract class AppDbContextBase :
     IDbContext
 {
     private readonly IMediator _mediator;
+    private readonly IOutboxService _outboxService;
     private IDbContextTransaction _currentTransaction;
 
     protected AppDbContextBase(DbContextOptions options) : base(options)
     {
     }
 
-    protected AppDbContextBase(DbContextOptions options, IMediator mediator) : base(options)
+    protected AppDbContextBase(DbContextOptions options, IMediator mediator,IOutboxService outboxService) : base(options)
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        _outboxService = outboxService;
         System.Diagnostics.Debug.WriteLine($"{GetType().Name}::ctor");
     }
 
@@ -78,8 +81,14 @@ public abstract class AppDbContextBase :
         // https://youtu.be/x-UXUGVLMj8?t=4515
         // https://enterprisecraftsmanship.com/posts/domain-events-simple-reliable-solution/
         // https://lostechies.com/jimmybogard/2014/05/13/a-better-domain-events-pattern/
+        // https://www.ledjonbehluli.com/posts/domain_to_integration_event/
         // https://ardalis.com/immediate-domain-event-salvation-with-mediatr/
-        await _mediator.DispatchDomainEventsAsync(GetDomainEvents());
+        var events = GetDomainEvents()?.ToArray();
+        await _mediator.DispatchDomainEventAsync(events, cancellationToken: cancellationToken);
+
+        // save wrapped integration and notification events to outbox for further processing after commit
+        await _outboxService.SaveAsync(events?.GetDomainNotificationEventsFromDomainEvents()?.ToArray());
+        await _outboxService.SaveAsync(events?.GetIntegrationEventsFromDomainEvents()?.ToArray());
 
         // After executing this line all the changes (from the Command Handler and Domain Event Handlers)
         // performed through the DbContext will be committed

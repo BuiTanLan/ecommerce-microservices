@@ -7,9 +7,9 @@ using Identity.Features.RefreshToken;
 using Identity.Features.RegisterNewUser;
 using Identity.Features.RevokeRefreshToken;
 using Identity.Features.SendEmailVerificationCode;
-using Identity.Infrastructure.Data;
-using Identity.Infrastructure.Extensions.ApplicationBuilderExtensions;
-using Identity.Infrastructure.Extensions.ServiceCollectionExtensions;
+using Identity.Share.Infrastructure.Data;
+using Identity.Share.Infrastructure.Extensions.ApplicationBuilderExtensions;
+using Identity.Share.Infrastructure.Extensions.ServiceCollectionExtensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Constants = Identity.Core.Constants;
+using Constants = Identity.Share.Core.Constants;
 
 namespace Identity;
 

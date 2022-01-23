@@ -3,16 +3,17 @@ using BuildingBlocks.Core.Domain.Model;
 using Catalog.Brands;
 using Catalog.Categories;
 using Catalog.Products.Exceptions.Domain;
-using Catalog.Products.Features.AddProductStock;
-using Catalog.Products.Features.ChangeProductPrice;
-using Catalog.Products.Features.CreateProduct.Events.Domain;
-using Catalog.Products.Features.RemoveProductStock;
+using Catalog.Products.Features.AddingProductStock;
+using Catalog.Products.Features.ChangingProductBrand;
+using Catalog.Products.Features.ChangingProductCategory;
+using Catalog.Products.Features.ChangingProductPrice;
+using Catalog.Products.Features.ChangingProductSupplier;
+using Catalog.Products.Features.CreatingProduct;
+using Catalog.Products.Features.RemovingProductStock;
 using Catalog.Suppliers;
 using static BuildingBlocks.Core.Domain.Events.Internal.DomainEvents;
 
 namespace Catalog.Products.Models;
-
-// TODO: Using strongly type ids
 
 // https://event-driven.io/en/notes_about_csharp_records_and_nullable_reference_types/
 // https://enterprisecraftsmanship.com/posts/link-to-an-aggregate-reference-or-id/
@@ -58,12 +59,12 @@ public class Product : AggregateRoot<long>
         Dimensions dimensions,
         string? description,
         decimal price,
-        long categoryId,
-        long supplierId,
-        long brandId,
+        Category? category,
+        Supplier? supplier,
+        Brand? brand,
         IList<ProductImage>? images = null)
     {
-        await RaiseDomainEventsAsync(
+        await RaiseDomainEventAsync(
             new CreatingProductDomainEvent(
                 id,
                 name,
@@ -75,9 +76,9 @@ public class Product : AggregateRoot<long>
                 dimensions.Width,
                 dimensions.Height,
                 dimensions.Depth,
-                categoryId,
-                supplierId,
-                brandId,
+                category,
+                supplier,
+                brand,
                 description));
 
         var product = new Product
@@ -92,9 +93,9 @@ public class Product : AggregateRoot<long>
         product.ChangeStatus(status);
         product.ChangeDimensions(dimensions);
 
-        product.BrandId = Guard.Against.NegativeOrZero(brandId, nameof(brandId));
-        product.CategoryId = Guard.Against.NegativeOrZero(categoryId, nameof(categoryId));
-        product.SupplierId = Guard.Against.NegativeOrZero(supplierId, nameof(supplierId));
+        product.ChangeBrand(brand);
+        product.ChangeCategory(category);
+        product.ChangeSupplier(supplier);
 
         product.AddDomainEvent(new ProductCreatedDomainEvent(product));
 
@@ -213,11 +214,16 @@ public class Product : AggregateRoot<long>
     public void ChangeCategory(Category? category)
     {
         Guard.Against.Null(category, nameof(category));
-        RaiseDomainEventsAsync(new ChangingProductCategoryDomainEvent(category.Id));
+        Guard.Against.NullOrEmpty(category.Code, nameof(category.Code));
+        Guard.Against.NullOrEmpty(category.Name, nameof(category.Name));
+
+        // raising domain event immediately for checking some validation rule with some dependencies such as database
+        RaiseDomainEventAsync(new ChangingProductCategoryDomainEvent(category.Id));
 
         Category = category;
         CategoryId = category.Id;
 
+        // add event to domain events list that will be raise during commiting transaction
         AddDomainEvent(new ProductCategoryChangedDomainEvent(category.Id, Id));
     }
 
@@ -228,7 +234,9 @@ public class Product : AggregateRoot<long>
     public void ChangeSupplier(Supplier? supplier)
     {
         Guard.Against.Null(supplier, nameof(supplier));
-        RaiseDomainEventsAsync(new ChangingProductSupplierDomainEvent(supplier.Id));
+        Guard.Against.NullOrEmpty(supplier.Name, nameof(supplier.Name));
+
+        RaiseDomainEventAsync(new ChangingProductSupplierDomainEvent(supplier.Id));
 
         Supplier = supplier;
         SupplierId = supplier.Id;
@@ -243,7 +251,9 @@ public class Product : AggregateRoot<long>
     public void ChangeBrand(Brand? brand)
     {
         Guard.Against.Null(brand, nameof(brand));
-        RaiseDomainEventsAsync(new ChangingProductBrandDomainEvent(brand.Id));
+        Guard.Against.NullOrEmpty(brand.Name, nameof(brand.Name));
+
+        RaiseDomainEventAsync(new ChangingProductBrandDomainEvent(brand.Id));
 
         Brand = brand;
         BrandId = brand.Id;

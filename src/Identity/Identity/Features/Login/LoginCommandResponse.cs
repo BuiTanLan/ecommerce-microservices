@@ -1,5 +1,5 @@
 using BuildingBlocks.Jwt;
-using Identity.Core.Models;
+using Identity.Share.Core.Models;
 
 namespace Identity.Features.Login;
 
