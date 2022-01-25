@@ -68,6 +68,9 @@ public static class ServiceCollectionExtensions
     {
         services.Scan(scan => scan
             .FromAssemblies(assembliesToScan ?? AppDomain.CurrentDomain.GetAssemblies())
+            .AddClasses(classes => classes.AssignableTo(typeof(IEventMapper)), false)
+            .AddClasses(classes => classes.AssignableTo(typeof(IIntegrationEventMapper)), false)
+            .AddClasses(classes => classes.AssignableTo(typeof(IIDomainNotificationEventMapper)), false)
             .AddClasses(classes => classes.AssignableTo(typeof(IEventMapper<>)), false)
             .AddClasses(classes => classes.AssignableTo(typeof(IIntegrationEventMapper<>)), false)
             .AddClasses(classes => classes.AssignableTo(typeof(IIDomainNotificationEventMapper<>)), false)

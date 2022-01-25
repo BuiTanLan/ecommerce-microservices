@@ -5,7 +5,7 @@ namespace Catalog.Brands;
 
 public static class GuardExtensions
 {
-    public static void BrandNotFound(this IGuardClause guardClause, Brand brand, long brandId)
+    public static void BrandNotFound(this IGuardClause guardClause, Brand? brand, long brandId)
     {
         if (brand == null)
             throw new BrandNotFoundException(brandId);

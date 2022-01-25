@@ -1,3 +1,4 @@
+using Catalog.Products.Core.Models;
 using Catalog.Products.Models;
 
 namespace Catalog.Products.Features.CreatingProduct.Requests;

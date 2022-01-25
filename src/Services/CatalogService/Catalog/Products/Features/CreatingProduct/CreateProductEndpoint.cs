@@ -2,6 +2,7 @@ using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.CQRS.Command;
 using Catalog.Products.Features.CreatingProduct.Requests;
+using Catalog.Products.Infrastructure;
 
 namespace Catalog.Products.Features.CreatingProduct;
 
@@ -13,7 +14,7 @@ public static class CreateProductEndpoint
         endpoints.MapPost($"{CatalogConfiguration.CatalogModulePrefixUri}{ProductsConfigs.ProductsPrefixUri}", CreateProducts)
             .WithTags(ProductsConfigs.Tag)
             // .RequireAuthorization()
-            .Produces<CreateProductCommandResult>(StatusCodes.Status201Created)
+            .Produces<CreateProductResult>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)
             .WithName("CreateProduct")
@@ -29,7 +30,7 @@ public static class CreateProductEndpoint
         CancellationToken cancellationToken)
     {
         Guard.Against.Null(request, nameof(request));
-        var command = mapper.Map<CreateProductCommand>(request);
+        var command = mapper.Map<CreateProduct>(request);
         var result = await commandProcessor.SendAsync(command, cancellationToken);
 
         return Results.CreatedAtRoute("GetProductById", new { id = result.Product.Id }, result);

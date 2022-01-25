@@ -11,4 +11,8 @@ public class DomainException : System.Exception
         : base(message, innerException)
     {
     }
+
+    public DomainException()
+    {
+    }
 }

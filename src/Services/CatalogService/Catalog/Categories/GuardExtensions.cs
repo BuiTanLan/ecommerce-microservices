@@ -5,7 +5,7 @@ namespace Catalog.Categories;
 
 public static class GuardExtensions
 {
-    public static void CategoryNotFound(this IGuardClause guardClause, Category category, long categoryId)
+    public static void CategoryNotFound(this IGuardClause guardClause, Category? category, long categoryId)
     {
         if (category == null)
             throw new CategoryNotFoundException(categoryId);

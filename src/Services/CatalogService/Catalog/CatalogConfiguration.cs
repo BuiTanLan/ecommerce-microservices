@@ -3,6 +3,7 @@ using Catalog.Brands;
 using Catalog.Categories;
 using Catalog.Categories.Data;
 using Catalog.Products;
+using Catalog.Products.Infrastructure;
 using Catalog.Shared.Infrastructure.Extensions.ApplicationBuilderExtensions;
 using Catalog.Shared.Infrastructure.Extensions.ServiceCollectionExtensions;
 using Catalog.Suppliers;

@@ -1,5 +1,6 @@
 using Catalog.Brands;
 using Catalog.Categories;
+using Catalog.Products.Core.Models;
 using Catalog.Products.Models;
 using Catalog.Suppliers;
 

@@ -1,8 +1,16 @@
 namespace BuildingBlocks.Exception;
 
-public class NotFoundException : AppException
+public class NotFoundException : System.Exception
 {
-    public NotFoundException(string message, string code = null) : base(message, code)
+    public NotFoundException(string message) : base(message)
+    {
+    }
+
+    public NotFoundException()
+    {
+    }
+
+    public NotFoundException(string message, System.Exception innerException) : base(message, innerException)
     {
     }
 }

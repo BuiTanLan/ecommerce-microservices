@@ -1,4 +1,5 @@
 using BuildingBlocks.CQRS.Query;
+using Catalog.Products.Infrastructure;
 
 namespace Catalog.Products.Features.GettingProductsView;
 
@@ -12,7 +13,7 @@ public static class GetProductsViewEndpoint
                 GetProductsView)
             .WithTags(ProductsConfigs.Tag)
             // .RequireAuthorization()
-            .Produces<GetProductsViewQueryResult>(StatusCodes.Status200OK)
+            .Produces<GetProductsViewResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)
             .WithDisplayName("Get products.");
@@ -27,7 +28,7 @@ public static class GetProductsViewEndpoint
         int pageSize = 20)
     {
         var result = await queryProcessor.SendAsync(
-            new GetProductsViewQuery { Page = page, PageSize = pageSize },
+            new GetProductsView { Page = page, PageSize = pageSize },
             cancellationToken);
 
         return Results.Ok(result);

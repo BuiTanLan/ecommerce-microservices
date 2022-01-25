@@ -2,6 +2,7 @@ using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
 using Catalog.Brands;
 using Catalog.Categories;
+using Catalog.Products.Core.Models;
 using Catalog.Products.Models;
 using Catalog.Shared.Core.Contracts;
 using Catalog.Suppliers;
@@ -32,7 +33,7 @@ public class CatalogDbContext : AppDbContextBase, ICatalogDbContext
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        foreach (var entry in ChangeTracker.Entries<IAuditableEntity<long>>())
+        foreach (var entry in ChangeTracker.Entries<IHaveAudit>())
         {
             switch (entry.State)
             {
@@ -45,7 +46,7 @@ public class CatalogDbContext : AppDbContextBase, ICatalogDbContext
             }
         }
 
-        foreach (var entry in ChangeTracker.Entries<IEntity<long>>())
+        foreach (var entry in ChangeTracker.Entries<IHaveEntity>())
         {
             if (entry.State == EntityState.Added)
             {

@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
+using Catalog.Products.Infrastructure;
 
 namespace Catalog.Products.Features.GettingProducts;
 
@@ -11,7 +12,7 @@ public static class GetProductsEndpoint
         endpoints.MapGet($"{CatalogConfiguration.CatalogModulePrefixUri}{ProductsConfigs.ProductsPrefixUri}", GetProducts)
             .WithTags(ProductsConfigs.Tag)
             // .RequireAuthorization()
-            .Produces<GetProductsQueryResult>(StatusCodes.Status200OK)
+            .Produces<GetProductsResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)
             .WithName("GetProducts")
@@ -31,7 +32,7 @@ public static class GetProductsEndpoint
         Guard.Against.Null(request, nameof(request));
 
         var result = await queryProcessor.SendAsync(
-            new GetProductsQuery
+            new GetProducts
             {
                 Page = request.Page,
                 Sorts = request.Sorts,

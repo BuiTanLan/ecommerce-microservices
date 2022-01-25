@@ -1,6 +1,7 @@
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Web;
 using BuildingBlocks.Web.Extensions;
+using Catalog.Products.Core.Models;
 using Catalog.Products.Models;
 
 namespace Catalog.Products.Features.GettingProducts;
