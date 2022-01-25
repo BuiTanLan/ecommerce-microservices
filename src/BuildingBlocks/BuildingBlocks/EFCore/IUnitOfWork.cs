@@ -16,6 +16,6 @@ public interface IUnitOfWork : IDbContext, IDisposable
     public IRepository<TEntity, TKey> GetRepository<TEntity, TKey>()
         where TEntity : class, IAggregateRoot<TKey>;
 
-    public IRepository<TEntity, Guid> GetRepository<TEntity>()
-        where TEntity : class, IAggregateRoot;
+    public IRepository<TEntity, long> GetRepository<TEntity>()
+        where TEntity : class, IAggregateRoot<long>;
 }

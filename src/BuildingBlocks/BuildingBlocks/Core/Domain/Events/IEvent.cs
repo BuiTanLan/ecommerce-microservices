@@ -25,5 +25,5 @@ public interface IEvent : INotification
     /// <summary>
     /// Gets type of this event.
     /// </summary>
-    public string? EventType { get; }
+    public string EventType { get; }
 }

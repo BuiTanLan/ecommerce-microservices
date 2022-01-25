@@ -1,12 +1,9 @@
 using System.Collections.Immutable;
 using System.Data;
+using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Core.Extensions;
-using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Messaging.Outbox;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -18,18 +15,16 @@ public abstract class AppDbContextBase :
     IDbFacadeResolver,
     IDbContext
 {
-    private readonly IMediator _mediator;
-    private readonly IOutboxService _outboxService;
+    private readonly IDomainEventDispatcher _domainEventDispatcher;
     private IDbContextTransaction _currentTransaction;
 
     protected AppDbContextBase(DbContextOptions options) : base(options)
     {
     }
 
-    protected AppDbContextBase(DbContextOptions options, IMediator mediator,IOutboxService outboxService) : base(options)
+    protected AppDbContextBase(DbContextOptions options, IDomainEventDispatcher domainEventDispatcher) : base(options)
     {
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        _outboxService = outboxService;
+        _domainEventDispatcher = Guard.Against.Null(domainEventDispatcher, nameof(domainEventDispatcher));
         System.Diagnostics.Debug.WriteLine($"{GetType().Name}::ctor");
     }
 
@@ -83,12 +78,7 @@ public abstract class AppDbContextBase :
         // https://lostechies.com/jimmybogard/2014/05/13/a-better-domain-events-pattern/
         // https://www.ledjonbehluli.com/posts/domain_to_integration_event/
         // https://ardalis.com/immediate-domain-event-salvation-with-mediatr/
-        var events = GetDomainEvents()?.ToArray();
-        await _mediator.DispatchDomainEventAsync(events, cancellationToken: cancellationToken);
-
-        // save wrapped integration and notification events to outbox for further processing after commit
-        await _outboxService.SaveAsync(events?.GetDomainNotificationEventsFromDomainEvents()?.ToArray());
-        await _outboxService.SaveAsync(events?.GetIntegrationEventsFromDomainEvents()?.ToArray());
+        await _domainEventDispatcher.DispatchAsync(cancellationToken);
 
         // After executing this line all the changes (from the Command Handler and Domain Event Handlers)
         // performed through the DbContext will be committed
@@ -107,21 +97,44 @@ public abstract class AppDbContextBase :
         return await Database.CreateExecutionStrategy().ExecuteAsync(operation);
     }
 
-    public IEnumerable<IDomainEvent> GetDomainEvents()
+    public IReadOnlyList<IDomainEvent> GetDomainEvents()
     {
         var domainEntities = ChangeTracker
-            .Entries<IAggregateRoot<long>>()
+            .Entries<IHaveAggregate>()
             .Where(x =>
                 x.Entity.DomainEvents != null &&
                 x.Entity.DomainEvents.Any())
-            .ToImmutableList();
+            .Select(x => x.Entity)
+            .ToList();
 
         var domainEvents = domainEntities
-            .SelectMany(x => x.Entity.DomainEvents)
+            .SelectMany(x => x.DomainEvents)
             .ToImmutableList();
 
-        domainEntities.ForEach(entity => entity.Entity.DomainEvents.ToList().Clear());
+        domainEntities.ForEach(entity => entity.ClearDomainEvents());
 
-        return domainEvents;
+        return domainEvents.ToImmutableList();
+    }
+
+    public IReadOnlyList<(IHaveAggregate Aggregate, IReadOnlyList<IDomainEvent> DomainEvents)>
+        GetAggregateDomainEvents()
+    {
+        var domainEntities = ChangeTracker
+            .Entries<IHaveAggregate>()
+            .Where(x =>
+                x.Entity.DomainEvents != null &&
+                x.Entity.DomainEvents.Any())
+            .Select(x => x.Entity)
+            .ToList();
+
+        var aggregates = domainEntities
+            .GroupBy(x => x)
+            .Select(x => (Aggregate: x.Key,
+                DomainEvents: (IReadOnlyList<IDomainEvent>)x.Key.DomainEvents.ToList().AsReadOnly()))
+            .ToList();
+
+        domainEntities.ForEach(entity => entity.ClearDomainEvents());
+
+        return aggregates;
     }
 }

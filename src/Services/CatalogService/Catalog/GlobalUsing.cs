@@ -3,8 +3,6 @@ global using System.Reflection;
 global using System.Threading.Tasks;
 global using BuildingBlocks;
 global using BuildingBlocks.EFCore;
-global using Catalog.Infrastructure.Data;
-global using Catalog.Infrastructure.Data;
 global using FluentValidation;
 global using Google.Protobuf.Collections;
 global using MediatR;

@@ -1,24 +1,26 @@
+using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
 
 namespace Catalog.Products.Models;
 
-public class ProductImage : Entity<long>
+public class ProductImage : Entity<EntityId>
 {
     public ProductImage(long id, string imageUrl, bool isMain, long productId)
     {
         SetImageUrl(imageUrl);
         SetIsMain(isMain);
-        ProductId = productId;
-        Id = id;
+        Id = Guard.Against.NegativeOrZero(id, nameof(id));
+        ProductId = Guard.Against.NegativeOrZero(productId, nameof(productId));
+        Guard.Against.NegativeOrZero(productId, nameof(productId));
     }
 
-    // For EF
-    public ProductImage() { }
+    // Just for EF
+    private ProductImage(){}
 
-    public string ImageUrl { get; private set; }
+    public string ImageUrl { get; private set; } = default!;
     public bool IsMain { get; private set; }
-    public virtual Product Product { get; private set; }
-    public long ProductId { get; private set; }
+    public Product Product { get; private set; } = null!;
+    public ProductId ProductId { get; private set; }
 
     public void SetIsMain(bool isMain) => IsMain = isMain;
     public void SetImageUrl(string url) => ImageUrl = url;

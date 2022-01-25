@@ -61,7 +61,7 @@ public class InMemoryOutboxService : IOutboxService
         return Task.CompletedTask;
     }
 
-    public Task SaveAsync(params IIntegrationEvent[] integrationEvents)
+    public Task SaveAsync(CancellationToken cancellationToken = default, params IIntegrationEvent[] integrationEvents)
     {
         Guard.Against.Null(integrationEvents, nameof(integrationEvents));
 
@@ -92,7 +92,9 @@ public class InMemoryOutboxService : IOutboxService
         return Task.CompletedTask;
     }
 
-    public Task SaveAsync(params IDomainNotificationEvent[] domainNotificationEvents)
+    public Task SaveAsync(
+        CancellationToken cancellationToken = default,
+        params IDomainNotificationEvent[] domainNotificationEvents)
     {
         Guard.Against.Null(domainNotificationEvents, nameof(domainNotificationEvents));
 

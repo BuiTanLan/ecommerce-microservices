@@ -10,6 +10,7 @@ using Catalog.Products.Features.ChangingProductPrice;
 using Catalog.Products.Features.ChangingProductSupplier;
 using Catalog.Products.Features.CreatingProduct;
 using Catalog.Products.Features.RemovingProductStock;
+using Catalog.Products.Models.ValueObjects;
 using Catalog.Suppliers;
 using static BuildingBlocks.Core.Domain.Events.Internal.DomainEvents;
 
@@ -17,7 +18,8 @@ namespace Catalog.Products.Models;
 
 // https://event-driven.io/en/notes_about_csharp_records_and_nullable_reference_types/
 // https://enterprisecraftsmanship.com/posts/link-to-an-aggregate-reference-or-id/
-public class Product : AggregateRoot<long>
+// https://ardalis.com/avoid-collections-as-properties/?utm_sq=grcpqjyka3
+public class Product : AggregateRoot<ProductId>
 {
     private readonly List<ProductImage> _images = new();
 
@@ -25,14 +27,14 @@ public class Product : AggregateRoot<long>
     public string? Description { get; private set; }
     public decimal Price { get; private set; }
     public ProductStatus ProductStatus { get; private set; }
-    public long CategoryId { get; private set; }
-    public virtual Category Category { get; private set; } = null!;
-    public long SupplierId { get; private set; }
-    public virtual Supplier Supplier { get; private set; } = null!;
-    public long BrandId { get; private set; }
-    public virtual Brand Brand { get; private set; } = null!;
+    public CategoryId CategoryId { get; private set; } = null!;
+    public Category Category { get; private set; } = null!;
+    public SupplierId SupplierId { get; private set; } = null!;
+    public Supplier Supplier { get; private set; } = null!;
+    public BrandId BrandId { get; private set; } = null!;
+    public Brand Brand { get; private set; } = null!;
     public Dimensions Dimensions { get; private set; } = null!;
-    public virtual IReadOnlyList<ProductImage> Images => _images;
+    public IReadOnlyList<ProductImage> Images => _images;
 
     /// <summary>
     /// Gets quantity in stock.
@@ -59,9 +61,9 @@ public class Product : AggregateRoot<long>
         Dimensions dimensions,
         string? description,
         decimal price,
-        Category? category,
-        Supplier? supplier,
-        Brand? brand,
+        Category category,
+        Supplier supplier,
+        Brand brand,
         IList<ProductImage>? images = null)
     {
         await RaiseDomainEventAsync(

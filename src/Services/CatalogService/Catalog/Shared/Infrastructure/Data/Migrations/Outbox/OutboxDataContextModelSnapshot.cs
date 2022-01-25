@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Catalog.Infrastructure.Data.Migrations.Outbox
+namespace Catalog.Shared.Infrastructure.Data.Migrations.Outbox
 {
     [DbContext(typeof(OutboxDataContext))]
     partial class OutboxDataContextModelSnapshot : ModelSnapshot
@@ -32,10 +32,6 @@ namespace Catalog.Infrastructure.Data.Migrations.Outbox
                     b.Property<string>("CorrelationId")
                         .HasColumnType("text")
                         .HasColumnName("correlation_id");
-
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("integer")
-                        .HasColumnName("created_by");
 
                     b.Property<string>("Data")
                         .IsRequired()
@@ -66,10 +62,6 @@ namespace Catalog.Infrastructure.Data.Migrations.Outbox
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("type");
-
-                    b.Property<Guid>("Version")
-                        .HasColumnType("uuid")
-                        .HasColumnName("version");
 
                     b.HasKey("Id")
                         .HasName("pk_outbox_messages");

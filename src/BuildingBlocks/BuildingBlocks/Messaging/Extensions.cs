@@ -52,7 +52,9 @@ public static class Extensions
                 });
 
                 services.AddUnitOfWork<OutboxDataContext>();
+                services.AddScoped<IOutboxDataContext>(provider => provider.GetRequiredService<OutboxDataContext>());
                 services.AddScoped<IOutboxService, EfOutboxService<OutboxDataContext>>();
+
                 break;
             }
         }

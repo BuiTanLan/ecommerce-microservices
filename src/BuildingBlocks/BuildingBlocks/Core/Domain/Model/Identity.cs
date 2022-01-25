@@ -1,36 +1,38 @@
 namespace BuildingBlocks.Core.Domain.Model;
 
-/// <inheritdoc cref="IIdentity{TId}" />
 public abstract class Identity<TId> : IEquatable<Identity<TId>>, IIdentity<TId>
 {
-    /// <inheritdoc />
-    public TId Id { get; }
+    protected Identity(TId value) => Value = value;
+    public Identity(){}
 
-    /// <inheritdoc />
+    public TId Value { get; protected set; }
+
+    public static implicit operator TId(Identity<TId> identityId)
+        => identityId.Value;
+
     public bool Equals(Identity<TId> other)
     {
-        if (ReferenceEquals(this, other))
-            return true;
-
-        return !ReferenceEquals(null, other) && Id.Equals(other.Id);
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Value.Equals(other.Value);
     }
 
-    /// <inheritdoc />
     public override bool Equals(object obj)
     {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
         return Equals(obj as Identity<TId>);
     }
 
-    /// <inheritdoc />
     public override int GetHashCode()
     {
-        return (GetType().GetHashCode() ^ 93) + Id.GetHashCode();
+        return (GetType().GetHashCode() ^ 93) + Value.GetHashCode();
     }
 
-    /// <inheritdoc />
     public override string ToString()
     {
-        return $"{GetType().Name} [Id={Id}]";
+        return $"{GetType().Name} [Id={Value}]";
     }
 
     public static bool operator ==(Identity<TId> left, Identity<TId> right)
@@ -47,5 +49,17 @@ public abstract class Identity<TId> : IEquatable<Identity<TId>>, IIdentity<TId>
     public static bool operator !=(Identity<TId> left, Identity<TId> right)
     {
         return !(left == right);
+    }
+
+    protected IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
+    }
+}
+
+public abstract class Identity : Identity<long>
+{
+    protected Identity(long value) : base(value)
+    {
     }
 }

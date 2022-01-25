@@ -10,7 +10,9 @@ public class SupplierEntityTypeConfiguration : IEntityTypeConfiguration<Supplier
         builder.ToTable("suppliers", CatalogDbContext.DefaultSchema);
         builder.HasKey(x => x.Id);
         builder.HasIndex(x => x.Id).IsUnique();
-        builder.Property(x => x.Id).ValueGeneratedNever();
+        builder.Property(x => x.Id)
+            .HasConversion(x => x.Value, id => id)
+            .ValueGeneratedNever();
 
         builder.Ignore(x => x.DomainEvents);
 

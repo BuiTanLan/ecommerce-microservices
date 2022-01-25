@@ -12,7 +12,10 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
 
         builder.HasKey(c => c.Id);
         builder.HasIndex(x => x.Id).IsUnique();
-        builder.Property(x => x.Id).ValueGeneratedNever();
+
+        builder.Property(x => x.Id)
+            .HasConversion(x => x.Value, id => id)
+            .ValueGeneratedNever();
 
         builder.Ignore(c => c.DomainEvents);
 
@@ -37,6 +40,10 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
         builder.HasOne(c => c.Category)
             .WithMany()
             .HasForeignKey(x => x.CategoryId);
+
+        builder.HasOne(c => c.Brand)
+            .WithMany()
+            .HasForeignKey(x => x.BrandId);
 
         builder.HasOne(c => c.Supplier)
             .WithMany()

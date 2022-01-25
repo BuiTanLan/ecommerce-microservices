@@ -1,12 +1,10 @@
-using System.Reflection;
 using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Domain.Events;
-using Newtonsoft.Json;
 
 namespace BuildingBlocks.Messaging.Outbox;
 
-public class OutboxMessage : AggregateRoot
+public class OutboxMessage
 {
+    public Guid Id { get; private set; }
     /// <summary>
     /// Gets name of message.
     /// </summary>

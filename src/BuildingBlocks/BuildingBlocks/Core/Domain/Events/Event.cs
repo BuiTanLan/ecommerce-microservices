@@ -9,5 +9,5 @@ public abstract record Event : IEvent
 
     public DateTime OccurredOn { get; protected set; } = DateTime.Now;
 
-    public string? EventType { get { return GetType().FullName; } }
+    public string EventType { get { return GetType().FullName; } }
 }

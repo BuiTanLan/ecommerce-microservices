@@ -2,38 +2,52 @@ using BuildingBlocks.Core.Domain.Events.Internal;
 
 namespace BuildingBlocks.Core.Domain.Model;
 
-/// <summary>
-/// The aggregate root base class.
-/// </summary>
-/// <typeparam name="TId">The generic identifier.</typeparam>
 public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot<TId>
 {
-    [NonSerialized]
-    private List<DomainEvent> _domainEvents;
+    [NonSerialized] private readonly List<IDomainEvent> _domainEvents = new();
+    private bool _versionIncremented;
+
+    public int Version { get; protected set; }
 
     /// <summary>
     /// Gets the aggregate root domain events.
     /// </summary>
-    public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
 
-    public TId Version { get; protected set; } = default;
-
-    /// <inheritdoc />
-    public void AddDomainEvent(DomainEvent domainEvent)
+    public void AddDomainEvent(IDomainEvent domainEvent)
     {
-        _domainEvents ??= new List<DomainEvent>();
+        if (!_domainEvents.Any() && !_versionIncremented)
+        {
+            Version++;
+            _versionIncremented = true;
+        }
+
         _domainEvents.Add(domainEvent);
     }
 
-    /// <inheritdoc />
-    public void RemoveDomainEvent(DomainEvent domainEvent)
+    public void RemoveDomainEvent(IDomainEvent domainEvent)
         => _domainEvents?.Remove(domainEvent);
 
-    /// <inheritdoc />
     public void ClearDomainEvents()
         => _domainEvents?.Clear();
+
+    public void IncrementVersion()
+    {
+        if (_versionIncremented)
+        {
+            return;
+        }
+
+        Version++;
+        _versionIncremented = true;
+    }
 }
 
-public abstract class AggregateRoot : AggregateRoot<Guid>, IAggregateRoot
+public abstract class AggregateRoot<TIdentity, TId> : AggregateRoot<TIdentity>
+    where TIdentity : Identity<TId>
+{
+}
+
+public abstract class AggregateRoot : AggregateRoot<AggregateId, long>, IAggregateRoot
 {
 }

@@ -11,8 +11,6 @@ public class OutboxMessageEntityTypeConfiguration : IEntityTypeConfiguration<Out
 
         builder.HasKey(x => x.Id);
 
-        builder.Ignore(x => x.DomainEvents);
-
         builder.Property(x => x.Id)
             .IsRequired();
 

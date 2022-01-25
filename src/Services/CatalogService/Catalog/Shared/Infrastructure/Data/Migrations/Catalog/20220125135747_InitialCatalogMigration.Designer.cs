@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Catalog.Shared.Infrastructure.Data.Migrations.Catalog
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20220123133309_InitialCatalogMigration")]
+    [Migration("20220125135747_InitialCatalogMigration")]
     partial class InitialCatalogMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,8 +46,8 @@ namespace Catalog.Shared.Infrastructure.Data.Migrations.Catalog
                         .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
-                    b.Property<long>("Version")
-                        .HasColumnType("bigint")
+                    b.Property<int>("Version")
+                        .HasColumnType("integer")
                         .HasColumnName("version");
 
                     b.HasKey("Id")
@@ -91,8 +91,8 @@ namespace Catalog.Shared.Infrastructure.Data.Migrations.Catalog
                         .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
-                    b.Property<long>("Version")
-                        .HasColumnType("bigint")
+                    b.Property<int>("Version")
+                        .HasColumnType("integer")
                         .HasColumnName("version");
 
                     b.HasKey("Id")
@@ -163,8 +163,8 @@ namespace Catalog.Shared.Infrastructure.Data.Migrations.Catalog
                         .HasColumnType("bigint")
                         .HasColumnName("supplier_id");
 
-                    b.Property<long>("Version")
-                        .HasColumnType("bigint")
+                    b.Property<int>("Version")
+                        .HasColumnType("integer")
                         .HasColumnName("version");
 
                     b.HasKey("Id")
@@ -294,8 +294,8 @@ namespace Catalog.Shared.Infrastructure.Data.Migrations.Catalog
                         .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
-                    b.Property<long>("Version")
-                        .HasColumnType("bigint")
+                    b.Property<int>("Version")
+                        .HasColumnType("integer")
                         .HasColumnName("version");
 
                     b.HasKey("Id")
@@ -315,23 +315,23 @@ namespace Catalog.Shared.Infrastructure.Data.Migrations.Catalog
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_products_brands_brand_id");
+                        .HasConstraintName("fk_products_brands_brand_temp_id");
 
                     b.HasOne("Catalog.Categories.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_products_categories_category_id");
+                        .HasConstraintName("fk_products_categories_category_temp_id");
 
                     b.HasOne("Catalog.Suppliers.Supplier", "Supplier")
                         .WithMany()
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_products_suppliers_supplier_id");
+                        .HasConstraintName("fk_products_suppliers_supplier_temp_id");
 
-                    b.OwnsOne("Catalog.Products.Models.Dimensions", "Dimensions", b1 =>
+                    b.OwnsOne("Catalog.Products.Models.ValueObjects.Dimensions", "Dimensions", b1 =>
                         {
                             b1.Property<long>("ProductId")
                                 .HasColumnType("bigint")

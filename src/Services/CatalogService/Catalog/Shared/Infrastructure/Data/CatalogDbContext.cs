@@ -1,5 +1,5 @@
+using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Messaging.Outbox;
 using Catalog.Brands;
 using Catalog.Categories;
 using Catalog.Products.Models;
@@ -12,12 +12,7 @@ public class CatalogDbContext : AppDbContextBase, ICatalogDbContext
 {
     public const string DefaultSchema = "catalog";
 
-    public CatalogDbContext(DbContextOptions options) : base(options)
-    {
-    }
-
-    public CatalogDbContext(DbContextOptions options, IMediator mediator, IOutboxService outboxService)
-        : base(options, mediator, outboxService)
+    public CatalogDbContext(DbContextOptions options, IDomainEventDispatcher domainEventDispatcher) : base(options, domainEventDispatcher)
     {
     }
 

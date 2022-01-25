@@ -2,13 +2,10 @@ using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
 using BuildingBlocks.Core.Domain;
-using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Core.Extensions;
-using BuildingBlocks.Domain;
-using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Messaging.Outbox;
+using BuildingBlocks.Core.Domain.Events.Internal;
 using MediatR;
 using Microsoft.Extensions.Logging;
+
 
 namespace BuildingBlocks.EFCore;
 
@@ -18,23 +15,17 @@ public class TxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResp
     where TResponse : notnull
 {
     private readonly ILogger<TxBehavior<TRequest, TResponse>> _logger;
-    private readonly IDomainEventContext _domainEventContext;
-    private readonly IOutboxService _outboxService;
-    private readonly IMediator _mediator;
+    private readonly IDomainEventDispatcher _domainEventDispatcher;
     private readonly IDbContext _dbContext;
 
     public TxBehavior(
         IDbContext dbContext,
         ILogger<TxBehavior<TRequest, TResponse>> logger,
-        IDomainEventContext domainEventContext,
-        IOutboxService outboxService,
-        IMediator mediator)
+        IDomainEventDispatcher domainEventDispatcher)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _domainEventContext = domainEventContext ?? throw new ArgumentNullException(nameof(domainEventContext));
-        _outboxService = outboxService ?? throw new ArgumentNullException(nameof(outboxService));
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        _domainEventDispatcher = domainEventDispatcher ?? throw new ArgumentNullException(nameof(domainEventDispatcher));
     }
 
     public async Task<TResponse> Handle(
@@ -72,17 +63,7 @@ public class TxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResp
                 nameof(TxBehavior<TRequest, TResponse>),
                 typeof(TRequest).FullName);
 
-            // https://github.com/dotnet-architecture/eShopOnContainers/issues/700#issuecomment-461807560
-            // https://github.com/dotnet-architecture/eShopOnContainers/blob/e05a87658128106fef4e628ccb830bc89325d9da/src/Services/Ordering/Ordering.Infrastructure/OrderingContext.cs#L65
-            // http://www.kamilgrzybek.com/design/how-to-publish-and-handle-domain-events/
-            // http://www.kamilgrzybek.com/design/handling-domain-events-missing-part/
-            // https://www.ledjonbehluli.com/posts/domain_to_integration_event/
-            var events = _domainEventContext.GetDomainEvents()?.ToArray();
-            await _mediator.DispatchDomainEventAsync(events, cancellationToken: cancellationToken);
-
-            // save wrapped integration and notification events to outbox for further processing after commit
-            await _outboxService.SaveAsync(events?.GetDomainNotificationEventsFromDomainEvents()?.ToArray());
-            await _outboxService.SaveAsync(events?.GetIntegrationEventsFromDomainEvents()?.ToArray());
+            await _domainEventDispatcher.DispatchAsync(cancellationToken);
 
             await _dbContext.CommitTransactionAsync(cancellationToken);
 

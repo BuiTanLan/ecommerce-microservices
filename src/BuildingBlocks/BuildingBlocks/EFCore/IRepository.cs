@@ -4,10 +4,10 @@ using BuildingBlocks.EFCore.Specification;
 
 namespace BuildingBlocks.EFCore;
 
-public interface IRepository<TEntity, TKey> : IDisposable
-    where TEntity : IAggregateRoot<TKey>
+public interface IRepository<TEntity, TId> : IDisposable
+    where TEntity : IAggregateRoot<TId>
 {
-    Task<TEntity> FindByIdAsync(TKey id, CancellationToken cancellationToken = default);
+    Task<TEntity> FindByIdAsync(IIdentity<TId> id, CancellationToken cancellationToken = default);
 
     Task<TEntity> FindOneAsync(
         Expression<Func<TEntity, bool>> predicate,
@@ -27,7 +27,7 @@ public interface IRepository<TEntity, TKey> : IDisposable
     void DeleteRange(IEnumerable<TEntity> entities);
 }
 
-public interface IRepository<TEntity> : IRepository<TEntity, Guid>
-    where TEntity : IAggregateRoot<Guid>
+public interface IRepository<TEntity> : IRepository<TEntity, long>
+    where TEntity : IAggregateRoot<long>
 {
 }

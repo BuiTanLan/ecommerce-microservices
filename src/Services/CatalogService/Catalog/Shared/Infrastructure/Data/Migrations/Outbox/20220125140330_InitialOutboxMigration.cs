@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -23,9 +24,7 @@ namespace Catalog.Shared.Infrastructure.Data.Migrations.Outbox
                     data = table.Column<string>(type: "text", nullable: false),
                     processed_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     event_type = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
-                    correlation_id = table.Column<string>(type: "text", nullable: true),
-                    created_by = table.Column<int>(type: "integer", nullable: true),
-                    version = table.Column<Guid>(type: "uuid", nullable: false)
+                    correlation_id = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

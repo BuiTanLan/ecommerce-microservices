@@ -11,15 +11,15 @@ public static class MediatorExtensions
 {
     public static async Task DispatchDomainEventAsync(
         this IMediator mediator,
-        IDomainEvent[] domainEvents,
+        IList<IDomainEvent> domainEvents,
         CancellationToken cancellationToken = default)
     {
         Guard.Against.Null(domainEvents, nameof(domainEvents));
 
         var tasks = domainEvents
-            .Select(async @event =>
+            .Select(async domainEvent =>
             {
-                await DispatchDomainEventAsync(mediator, domainEvents, cancellationToken);
+                await DispatchDomainEventAsync(mediator, domainEvent, cancellationToken);
             });
 
         await Task.WhenAll(tasks).ConfigureAwait(false);
@@ -42,15 +42,15 @@ public static class MediatorExtensions
 
     public static async Task DispatchDomainNotificationEventAsync(
         this IMediator mediator,
-        IDomainNotificationEvent[] domainNotificationEvents,
+        IList<IDomainNotificationEvent> domainNotificationEvents,
         CancellationToken cancellationToken = default)
     {
         Guard.Against.Null(domainNotificationEvents, nameof(domainNotificationEvents));
 
         var tasks = domainNotificationEvents
-            .Select(async @event =>
+            .Select(async domainNotificationEvent =>
             {
-                await DispatchDomainNotificationEventAsync(mediator, domainNotificationEvents, cancellationToken);
+                await DispatchDomainNotificationEventAsync(mediator, domainNotificationEvent, cancellationToken);
             });
         await Task.WhenAll(tasks).ConfigureAwait(false);
     }
@@ -72,15 +72,15 @@ public static class MediatorExtensions
 
     public static async Task DispatchIntegrationEventAsync(
         this IMediator mediator,
-        IIntegrationEvent[] integrationEvents,
+        IList<IIntegrationEvent> integrationEvents,
         CancellationToken cancellationToken = default)
     {
         Guard.Against.Null(integrationEvents, nameof(integrationEvents));
 
         var tasks = integrationEvents
-            .Select(async @event =>
+            .Select(async integrationEvent =>
             {
-                await DispatchIntegrationEventAsync(mediator, @event, cancellationToken);
+                await DispatchIntegrationEventAsync(mediator, integrationEvent, cancellationToken);
             });
 
         await Task.WhenAll(tasks).ConfigureAwait(false);

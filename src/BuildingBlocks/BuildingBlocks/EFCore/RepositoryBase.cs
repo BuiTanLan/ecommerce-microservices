@@ -37,10 +37,11 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         return await specificationResult.ToListAsync(cancellationToken);
     }
 
-    public async Task<TEntity> FindByIdAsync(TKey id, CancellationToken cancellationToken = default)
+    public async Task<TEntity> FindByIdAsync(IIdentity<TKey> id, CancellationToken cancellationToken = default)
     {
         return await DbSet.SingleOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
     }
+
 
     public async Task<TEntity> FindOneAsync(
         Expression<Func<TEntity, bool>> predicate,

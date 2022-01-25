@@ -29,7 +29,7 @@ public class TestController : ControllerBase
     [HttpPost("outbox")]
     public async Task<ActionResult> Outbox()
     {
-        await _outboxService.SaveAsync(new TestIntegrationEvent("Test"));
+        await _outboxService.SaveAsync(default, new TestIntegrationEvent("Test"));
 
         return Ok();
     }

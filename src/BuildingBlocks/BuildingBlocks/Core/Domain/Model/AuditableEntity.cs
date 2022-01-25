@@ -1,11 +1,16 @@
 namespace BuildingBlocks.Core.Domain.Model;
 
-public abstract class AuditableEntity<TKey> : Entity<TKey>, IAuditableEntity<TKey>
+public class AuditableEntity<TId> : Entity<TId>, IAuditableEntity<TId>
 {
     public DateTime? LastModified { get; protected set; }
     public int? LastModifiedBy { get; set; }
 }
 
-public class AuditableEntity : AuditableEntity<Guid>
+public abstract class AuditableEntity<TIdentity, TId> : AuditableEntity<TIdentity>
+    where TIdentity : Identity<TId>
+{
+}
+
+public class AuditableEntity : AuditableEntity<Identity<long>, long>
 {
 }

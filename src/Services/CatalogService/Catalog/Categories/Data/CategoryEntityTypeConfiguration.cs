@@ -1,3 +1,4 @@
+using Catalog.Products.Models;
 using Catalog.Shared.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +11,9 @@ public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category
         builder.ToTable("categories", CatalogDbContext.DefaultSchema);
         builder.HasKey(c => c.Id);
         builder.HasIndex(x => x.Id).IsUnique();
-        builder.Property(x => x.Id).ValueGeneratedNever();
+        builder.Property(x => x.Id)
+            .HasConversion(x => x.Value, id => id)
+            .ValueGeneratedNever();
 
         builder.Ignore(c => c.DomainEvents);
 

@@ -6,6 +6,7 @@ using BuildingBlocks.Messaging.Outbox;
 using Catalog.Products.Dtos;
 using Catalog.Products.Features.CreatingProduct.Requests;
 using Catalog.Products.Models;
+using Catalog.Products.Models.ValueObjects;
 using Catalog.Shared.Core.Contracts;
 using Catalog.Shared.Infrastructure.Extensions;
 

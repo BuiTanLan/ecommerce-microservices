@@ -1,15 +1,15 @@
 using BuildingBlocks.Core.Domain.Model;
-using Catalog.Categories.Exceptions;
 using Catalog.Categories.Exceptions.Domain;
+using Catalog.Products.Models;
 
 namespace Catalog.Categories;
 
 // https://stackoverflow.com/a/32354885/581476
-public class Category : AggregateRoot<long>
+public class Category : AggregateRoot<CategoryId>
 {
-    public string Name { get; private set; }
-    public string Description { get; private set; }
-    public string Code { get; private set; }
+    public string Name { get; private set; } = null!;
+    public string Description { get; private set; } = null!;
+    public string Code { get; private set; } = null!;
 
     public static Category Create(long id, string name, string code, string description = "")
     {

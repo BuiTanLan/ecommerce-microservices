@@ -30,7 +30,7 @@ public class EfUnitOfWork<TDbContext> : IUnitOfWork<TDbContext>
     public TDbContext DbContext { get; }
 
 
-    public DbSet<TEntity> Set<TEntity>() 
+    public DbSet<TEntity> Set<TEntity>()
         where TEntity : class
     {
         return _context.Set<TEntity>();
@@ -90,10 +90,10 @@ public class EfUnitOfWork<TDbContext> : IUnitOfWork<TDbContext>
         return (IRepository<TEntity, TKey>)_repositories[entityType];
     }
 
-    public IRepository<TEntity, Guid> GetRepository<TEntity>()
-        where TEntity : class, IAggregateRoot
+    public IRepository<TEntity, long> GetRepository<TEntity>()
+        where TEntity : class, IAggregateRoot<long>
     {
-        return GetRepository<TEntity, Guid>();
+        return GetRepository<TEntity, long>();
     }
 
     public Task RetryOnExceptionAsync(Func<Task> operation)

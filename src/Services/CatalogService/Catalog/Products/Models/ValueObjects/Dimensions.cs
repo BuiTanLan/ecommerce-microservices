@@ -1,8 +1,9 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
 
-namespace Catalog.Products.Models;
+namespace Catalog.Products.Models.ValueObjects;
 
+// https://github.com/NimblePros/ValueObjects
 public class Dimensions : ValueObject
 {
     public int Height { get; private set; }

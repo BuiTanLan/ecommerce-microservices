@@ -25,7 +25,7 @@ namespace Catalog.Shared.Infrastructure.Data.Migrations.Catalog
                     name = table.Column<string>(type: "varchar(50)", nullable: false),
                     created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     created_by = table.Column<int>(type: "integer", nullable: true),
-                    version = table.Column<long>(type: "bigint", nullable: false)
+                    version = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,7 +43,7 @@ namespace Catalog.Shared.Infrastructure.Data.Migrations.Catalog
                     code = table.Column<string>(type: "text", nullable: false),
                     created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     created_by = table.Column<int>(type: "integer", nullable: true),
-                    version = table.Column<long>(type: "bigint", nullable: false)
+                    version = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,7 +79,7 @@ namespace Catalog.Shared.Infrastructure.Data.Migrations.Catalog
                     name = table.Column<string>(type: "varchar(50)", nullable: false),
                     created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     created_by = table.Column<int>(type: "integer", nullable: true),
-                    version = table.Column<long>(type: "bigint", nullable: false)
+                    version = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -107,27 +107,27 @@ namespace Catalog.Shared.Infrastructure.Data.Migrations.Catalog
                     max_stock_threshold = table.Column<int>(type: "integer", nullable: false),
                     created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     created_by = table.Column<int>(type: "integer", nullable: true),
-                    version = table.Column<long>(type: "bigint", nullable: false)
+                    version = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_products", x => x.id);
                     table.ForeignKey(
-                        name: "fk_products_brands_brand_id",
+                        name: "fk_products_brands_brand_temp_id",
                         column: x => x.brand_id,
                         principalSchema: "catalog",
                         principalTable: "brands",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_products_categories_category_id",
+                        name: "fk_products_categories_category_temp_id",
                         column: x => x.category_id,
                         principalSchema: "catalog",
                         principalTable: "categories",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_products_suppliers_supplier_id",
+                        name: "fk_products_suppliers_supplier_temp_id",
                         column: x => x.supplier_id,
                         principalSchema: "catalog",
                         principalTable: "suppliers",

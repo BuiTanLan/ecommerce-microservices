@@ -1,11 +1,14 @@
 namespace BuildingBlocks.Core.Domain.Model;
 
-public interface IAuditableEntity : IAuditableEntity<Guid>
+public interface IAuditableEntity<TId> : IEntity<TId>, IHaveAudit
 {
 }
 
-public interface IAuditableEntity<out TId> : IEntity<TId>
+public interface IAuditableEntity<TIdentity, TId> : IAuditableEntity<TIdentity>
+    where TIdentity : Identity<TId>
 {
-    DateTime? LastModified { get; }
-    int? LastModifiedBy { get; set; }
+}
+
+public interface IAuditableEntity : IAuditableEntity<Identity<long>, long>
+{
 }

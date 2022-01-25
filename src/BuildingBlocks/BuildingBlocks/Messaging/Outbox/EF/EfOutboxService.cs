@@ -6,6 +6,7 @@ using BuildingBlocks.Domain.Events;
 using BuildingBlocks.EFCore;
 using Humanizer;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -19,7 +20,7 @@ public class EfOutboxService<TContext> : IOutboxService
     private readonly IMessageSerializer _messageSerializer;
     private readonly IMediator _mediator;
     private readonly IBusPublisher _busPublisher;
-    private readonly IUnitOfWork<TContext> _unitOfWork;
+    private readonly IOutboxDataContext _outboxDataContext;
 
     public EfOutboxService(
         IOptions<OutboxOptions> options,
@@ -27,22 +28,23 @@ public class EfOutboxService<TContext> : IOutboxService
         IMessageSerializer messageSerializer,
         IMediator mediator,
         IBusPublisher busPublisher,
-        IUnitOfWork<TContext> unitOfWork)
+        IOutboxDataContext outboxDataContext)
     {
         _options = options.Value;
         _logger = logger;
         _messageSerializer = messageSerializer;
         _mediator = mediator;
         _busPublisher = busPublisher;
-        _unitOfWork = unitOfWork;
+        _outboxDataContext = outboxDataContext;
     }
 
     public async Task<IEnumerable<OutboxMessage>> GetAllUnsentOutboxMessagesAsync(
         EventType eventType = EventType.IntegrationEvent | EventType.DomainNotificationEvent,
         CancellationToken cancellationToken = default)
     {
-        var messages = await _unitOfWork.GetRepository<OutboxMessage>()
-            .FindAsync(x => x.EventType == eventType && x.ProcessedOn == null, cancellationToken);
+        var messages = await _outboxDataContext.OutboxMessages
+            .Where(x => x.EventType == eventType && x.ProcessedOn == null)
+            .ToListAsync(cancellationToken: cancellationToken);
 
         return messages;
     }
@@ -51,22 +53,24 @@ public class EfOutboxService<TContext> : IOutboxService
         EventType eventType = EventType.IntegrationEvent | EventType.DomainNotificationEvent,
         CancellationToken cancellationToken = default)
     {
-        var messages = await _unitOfWork.GetRepository<OutboxMessage>()
-            .FindAsync(x => x.EventType == eventType, cancellationToken);
+        var messages = await _outboxDataContext.OutboxMessages
+            .Where(x => x.EventType == eventType).ToListAsync(cancellationToken: cancellationToken);
 
         return messages;
     }
 
     public async Task CleanProcessedAsync(CancellationToken cancellationToken = default)
     {
-        var messages = await _unitOfWork.GetRepository<OutboxMessage>()
-            .FindAsync(x => x.ProcessedOn != null, cancellationToken);
+        var messages = await _outboxDataContext.OutboxMessages
+            .Where(x => x.ProcessedOn != null).ToListAsync(cancellationToken: cancellationToken);
 
-        _unitOfWork.GetRepository<OutboxMessage>().DeleteRange(messages);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        _outboxDataContext.OutboxMessages.RemoveRange(messages);
+        await _outboxDataContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task SaveAsync(params IIntegrationEvent[] integrationEvents)
+    public async Task SaveAsync(
+        CancellationToken cancellationToken = default,
+        params IIntegrationEvent[] integrationEvents)
     {
         Guard.Against.Null(integrationEvents, nameof(integrationEvents));
 
@@ -89,15 +93,17 @@ public class EfOutboxService<TContext> : IOutboxService
                 EventType.IntegrationEvent,
                 correlationId: null);
 
-            await _unitOfWork.GetRepository<OutboxMessage>().AddAsync(outboxMessages);
+            await _outboxDataContext.OutboxMessages.AddAsync(outboxMessages, cancellationToken);
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await _outboxDataContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Saved messages to the outbox");
     }
 
-    public async Task SaveAsync(params IDomainNotificationEvent[] domainNotificationEvents)
+    public async Task SaveAsync(
+        CancellationToken cancellationToken = default,
+        params IDomainNotificationEvent[] domainNotificationEvents)
     {
         Guard.Against.Null(domainNotificationEvents, nameof(domainNotificationEvents));
 
@@ -120,8 +126,8 @@ public class EfOutboxService<TContext> : IOutboxService
                 EventType.DomainNotificationEvent,
                 correlationId: null);
 
-            await _unitOfWork.GetRepository<OutboxMessage>().AddAsync(outboxMessages);
-            await _unitOfWork.SaveChangesAsync();
+            await _outboxDataContext.OutboxMessages.AddAsync(outboxMessages);
+            await _outboxDataContext.SaveChangesAsync();
         }
 
         _logger.LogInformation("Saved messages to the outbox");
@@ -129,8 +135,8 @@ public class EfOutboxService<TContext> : IOutboxService
 
     public async Task PublishUnsentOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
-        var unsentMessages = await _unitOfWork.GetRepository<OutboxMessage>()
-            .FindAsync(x => x.ProcessedOn == null, cancellationToken);
+        var unsentMessages = await _outboxDataContext.OutboxMessages
+            .Where(x => x.ProcessedOn == null).ToListAsync(cancellationToken: cancellationToken);
 
         if (!unsentMessages.Any())
         {
@@ -182,6 +188,6 @@ public class EfOutboxService<TContext> : IOutboxService
             outboxMessage.MarkAsProcessed();
         }
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _outboxDataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }
