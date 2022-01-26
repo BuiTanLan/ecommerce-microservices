@@ -5,6 +5,7 @@ using BuildingBlocks.Email;
 using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Messaging;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
+using BuildingBlocks.Monitoring;
 using BuildingBlocks.Validation;
 
 namespace Catalog.Shared.Infrastructure.Extensions.ServiceCollectionExtensions;
@@ -25,6 +26,8 @@ public static class ServiceCollection
         SnowFlakIdGenerator.Configure(1);
         services.AddCore();
 
+        services.AddMonitoring();
+
         services.AddMessaging(configuration, TxOutboxConstants.EntityFramework);
         services.AddRabbitMqTransport(configuration);
 
@@ -38,5 +41,10 @@ public static class ServiceCollection
         services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
 
         return services;
+    }
+
+    public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
+    {
+       return app.UseMonitoring();
     }
 }

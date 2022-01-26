@@ -15,7 +15,7 @@ public static class CatalogDbContextExtensions
 {
     public static Task<bool> ProductExistsAsync(
         this ICatalogDbContext context,
-        long id,
+        ProductId id,
         CancellationToken cancellationToken = default)
     {
         return context.Products.AnyAsync(x => x.Id == id, cancellationToken: cancellationToken);
@@ -23,7 +23,7 @@ public static class CatalogDbContextExtensions
 
     public static Task<Product?> FindProductAsync(
         this ICatalogDbContext context,
-        long id,
+        ProductId id,
         CancellationToken cancellationToken = default)
     {
         return context.Products.SingleOrDefaultAsync(x => x.Id == id, cancellationToken: cancellationToken);
@@ -31,7 +31,7 @@ public static class CatalogDbContextExtensions
 
     public static Task<bool> SupplierExistsAsync(
         this ICatalogDbContext context,
-        long id,
+        SupplierId id,
         CancellationToken cancellationToken = default)
     {
         return context.Suppliers.AnyAsync(x => x.Id == id, cancellationToken: cancellationToken);
@@ -39,7 +39,7 @@ public static class CatalogDbContextExtensions
 
     public static Task<Supplier?> FindSupplierAsync(
         this ICatalogDbContext context,
-        long id,
+        SupplierId id,
         CancellationToken cancellationToken = default)
     {
         return context.Suppliers.SingleOrDefaultAsync(x => x.Id == id, cancellationToken: cancellationToken);
@@ -47,7 +47,7 @@ public static class CatalogDbContextExtensions
 
     public static Task<bool> CategoryExistsAsync(
         this ICatalogDbContext context,
-        long id,
+        CategoryId id,
         CancellationToken cancellationToken = default)
     {
         return context.Categories.AnyAsync(x => x.Id == id, cancellationToken: cancellationToken);
@@ -55,7 +55,7 @@ public static class CatalogDbContextExtensions
 
     public static Task<Category?> FindCategoryAsync(
         this ICatalogDbContext context,
-        long id,
+        CategoryId id,
         CancellationToken cancellationToken = default)
     {
         return context.Categories.SingleOrDefaultAsync(x => x.Id == id, cancellationToken: cancellationToken);
@@ -63,7 +63,7 @@ public static class CatalogDbContextExtensions
 
     public static Task<bool> BrandExistsAsync(
         this ICatalogDbContext context,
-        long id,
+        BrandId id,
         CancellationToken cancellationToken = default)
     {
         return context.Brands.AnyAsync(x => x.Id == id, cancellationToken: cancellationToken);
@@ -71,7 +71,7 @@ public static class CatalogDbContextExtensions
 
     public static Task<Brand?> FindBrandAsync(
         this ICatalogDbContext context,
-        long id,
+        BrandId id,
         CancellationToken cancellationToken = default)
     {
         return context.Brands.SingleOrDefaultAsync(x => x.Id == id, cancellationToken: cancellationToken);

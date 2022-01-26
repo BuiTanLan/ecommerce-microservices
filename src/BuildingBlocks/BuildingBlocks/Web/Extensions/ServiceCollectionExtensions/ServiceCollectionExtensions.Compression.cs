@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BuildingBlocks.Web.Extensions.ServiceCollection;
+namespace BuildingBlocks.Web.Extensions.ServiceCollectionExtensions;
 
-public static class ServiceCollectionExtensions
+public static partial class ServiceCollectionExtensions
 {
     public static WebApplicationBuilder AddCompression(this WebApplicationBuilder builder)
     {

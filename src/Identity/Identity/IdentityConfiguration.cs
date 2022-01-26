@@ -80,7 +80,9 @@ public static class IdentityConfiguration
         IWebHostEnvironment environment,
         ILogger logger)
     {
+        app.UseInfrastructure();
         app.UseIdentityServer();
+
         await app.ApplyDatabaseMigrations(logger);
         await app.SeedData(logger, environment);
     }

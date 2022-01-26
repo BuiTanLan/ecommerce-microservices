@@ -5,7 +5,7 @@ namespace Catalog.Products.Features.CreatingProduct.Requests;
 
 public record CreateProductRequest
 {
-    public string Name { get; init; } = default!;
+    public string Name { get; init; } = null!;
     public decimal Price { get; init; }
     public int Stock { get; init; }
     public int RestockThreshold { get; init; }

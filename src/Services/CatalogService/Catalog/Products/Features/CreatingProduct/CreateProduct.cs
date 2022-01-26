@@ -2,14 +2,12 @@ using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.IdsGenerator;
-using BuildingBlocks.Messaging.Outbox;
 using Catalog.Brands;
 using Catalog.Categories;
-using Catalog.Products.Core.Dtos;
 using Catalog.Products.Core.Models;
 using Catalog.Products.Core.Models.ValueObjects;
+using Catalog.Products.Dtos;
 using Catalog.Products.Features.CreatingProduct.Requests;
-using Catalog.Products.Models;
 using Catalog.Shared.Core.Contracts;
 using Catalog.Shared.Infrastructure.Extensions;
 using Catalog.Suppliers;
@@ -33,46 +31,46 @@ public record CreateProduct(
     IEnumerable<CreateProductImageRequest>? Images = null) : ICreateCommand<CreateProductResult>
 {
     public long Id { get; } = SnowFlakIdGenerator.NewId();
+}
 
-    public class CreateProductValidator : AbstractValidator<CreateProduct>
+public class CreateProductValidator : AbstractValidator<CreateProduct>
+{
+    public CreateProductValidator()
     {
-        public CreateProductValidator()
-        {
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .GreaterThan(0).WithMessage("Id must be greater than 0");
+        RuleFor(x => x.Id)
+            .NotEmpty()
+            .GreaterThan(0).WithMessage("Id must be greater than 0");
 
-            RuleFor(x => x.Name)
-                .NotEmpty().WithMessage("Name is required.");
+        RuleFor(x => x.Name)
+            .NotEmpty().WithMessage("Name is required.");
 
-            RuleFor(x => x.Price)
-                .NotEmpty()
-                .GreaterThan(0).WithMessage("Price must be greater than 0");
+        RuleFor(x => x.Price)
+            .NotEmpty()
+            .GreaterThan(0).WithMessage("Price must be greater than 0");
 
-            RuleFor(x => x.Stock)
-                .NotEmpty()
-                .GreaterThan(0).WithMessage("Stock must be greater than 0");
+        RuleFor(x => x.Stock)
+            .NotEmpty()
+            .GreaterThan(0).WithMessage("Stock must be greater than 0");
 
-            RuleFor(x => x.MaxStockThreshold)
-                .NotEmpty()
-                .GreaterThan(0).WithMessage("MaxStockThreshold must be greater than 0");
+        RuleFor(x => x.MaxStockThreshold)
+            .NotEmpty()
+            .GreaterThan(0).WithMessage("MaxStockThreshold must be greater than 0");
 
-            RuleFor(x => x.RestockThreshold)
-                .NotEmpty()
-                .GreaterThan(0).WithMessage("RestockThreshold must be greater than 0");
+        RuleFor(x => x.RestockThreshold)
+            .NotEmpty()
+            .GreaterThan(0).WithMessage("RestockThreshold must be greater than 0");
 
-            RuleFor(x => x.CategoryId)
-                .NotEmpty()
-                .GreaterThan(0).WithMessage("CategoryId must be greater than 0");
+        RuleFor(x => x.CategoryId)
+            .NotEmpty()
+            .GreaterThan(0).WithMessage("CategoryId must be greater than 0");
 
-            RuleFor(x => x.SupplierId)
-                .NotEmpty()
-                .GreaterThan(0).WithMessage("SupplierId must be greater than 0");
+        RuleFor(x => x.SupplierId)
+            .NotEmpty()
+            .GreaterThan(0).WithMessage("SupplierId must be greater than 0");
 
-            RuleFor(x => x.BrandId)
-                .NotEmpty()
-                .GreaterThan(0).WithMessage("BrandId must be greater than 0");
-        }
+        RuleFor(x => x.BrandId)
+            .NotEmpty()
+            .GreaterThan(0).WithMessage("BrandId must be greater than 0");
     }
 }
 
@@ -97,13 +95,13 @@ public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProduct
             new ProductImage(SnowFlakIdGenerator.NewId(), x.ImageUrl, x.IsMain, command.Id)).ToList();
 
         var category = await _catalogDbContext.FindCategoryAsync(command.CategoryId, cancellationToken);
-        Guard.Against.CategoryNotFound(category, command.CategoryId);
+        Guard.Against.NullCategory(category, command.CategoryId);
 
         var brand = await _catalogDbContext.FindBrandAsync(command.BrandId, cancellationToken);
-        Guard.Against.BrandNotFound(brand, command.BrandId);
+        Guard.Against.NullBrand(brand, command.BrandId);
 
         var supplier = await _catalogDbContext.FindSupplierAsync(command.SupplierId, cancellationToken);
-        Guard.Against.SupplierNotFound(supplier, command.SupplierId);
+        Guard.Against.NullSupplier(supplier, command.SupplierId);
 
         var product = await Product.CreateAsync(
             command.Id,

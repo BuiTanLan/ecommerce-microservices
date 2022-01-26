@@ -22,7 +22,7 @@ internal class ChangingProductCategoryValidationHandler :
     {
         Guard.Against.Null(notification, nameof(notification));
         Guard.Against.NegativeOrZero(notification.CategoryId, nameof(notification.CategoryId));
-        Guard.Against.CategoryNotFound(
+        Guard.Against.ExistsCategory(
             await _catalogDbContext.CategoryExistsAsync(notification.CategoryId, cancellationToken: cancellationToken),
             notification.CategoryId);
     }

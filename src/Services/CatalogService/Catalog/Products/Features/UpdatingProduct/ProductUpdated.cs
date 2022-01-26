@@ -1,7 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using Catalog.Products.Core.Models;
-using Catalog.Products.Models;
 using Catalog.Shared.Core.Contracts;
 
 namespace Catalog.Products.Features.UpdatingProduct;

@@ -2,7 +2,6 @@ using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.CQRS.Command;
 using Catalog.Products.Features.CreatingProduct.Requests;
-using Catalog.Products.Infrastructure;
 
 namespace Catalog.Products.Features.CreatingProduct;
 

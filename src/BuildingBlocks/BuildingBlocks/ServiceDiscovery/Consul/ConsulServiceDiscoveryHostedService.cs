@@ -23,6 +23,7 @@ public class ConsulServiceDiscoveryHostedService : IHostedService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
+    // Registers service to Consul registry
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         _registrationId = $"{_consulOptions.ServiceName}-{Guid.NewGuid()}";
@@ -45,17 +46,23 @@ public class ConsulServiceDiscoveryHostedService : IHostedService
             {
                 DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(secondsAfterServiceDeRegistration),
                 Interval = TimeSpan.FromSeconds(intervalSeconds),
-                HTTP = new Uri(_consulOptions.ServiceAddress, "healthchecks").OriginalString
+                HTTP = string.IsNullOrEmpty(_consulOptions.HealthCheckEndPoint)
+                    ? new Uri(_consulOptions.ServiceAddress, "healthchecks").OriginalString
+                    : $"http://{_consulOptions.ServiceAddress.Host}:{_consulOptions.ServiceAddress.Port}/api/values/{_consulOptions.HealthCheckEndPoint}",
             };
         }
 
         _logger.LogInformation("Registering service with registration Id {RegistrationId} with Consul",
             _registrationId);
 
+        // Deregister already registered service
         await _consulClient.Agent.ServiceDeregister(registration.ID, cancellationToken);
+
+        // Registers service
         await _consulClient.Agent.ServiceRegister(registration, cancellationToken);
     }
 
+    // If the service is shutting down it de-registers service from Consul registry
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("De-registering service with registration Id {RegistrationId} from Consul",

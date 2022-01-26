@@ -3,7 +3,7 @@ using Ben.Diagnostics;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Web;
 using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
-using BuildingBlocks.Web.Extensions.ServiceCollection;
+using BuildingBlocks.Web.Extensions.ServiceCollectionExtensions;
 using Hellang.Middleware.ProblemDetails;
 using Identity;
 using Identity.Api.Extensions.ServiceCollectionExtensions;
@@ -31,8 +31,6 @@ builder.AddCustomSerilog();
 builder.AddCustomSwagger(builder.Configuration, typeof(IdentityRoot).Assembly);
 
 builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddCustomHealthCheck(healthBuilder => { });
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

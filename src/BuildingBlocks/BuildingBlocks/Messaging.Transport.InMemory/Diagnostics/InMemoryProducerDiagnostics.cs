@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Diagnostics.OpenTelemetry;
-using BuildingBlocks.Diagnostics.OpenTelemetry.Messaging.Events;
-using BuildingBlocks.Diagnostics.OpenTelemetry.Transports;
+using BuildingBlocks.Tracing;
+using BuildingBlocks.Tracing.Messaging.Events;
+using BuildingBlocks.Tracing.Transports;
 using Microsoft.AspNetCore.Http;
 using OpenTelemetry.Context.Propagation;
 using NameValueHeaderValue = Microsoft.Net.Http.Headers.NameValueHeaderValue;

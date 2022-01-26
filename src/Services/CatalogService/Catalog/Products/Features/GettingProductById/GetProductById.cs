@@ -1,8 +1,7 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.CQRS.Query;
-using Catalog.Products.Core.Dtos;
-using Catalog.Products.Infrastructure;
+using Catalog.Products.Dtos;
 using Catalog.Shared.Core.Contracts;
 using Catalog.Shared.Infrastructure.Extensions;
 
@@ -34,7 +33,7 @@ public class GetProductByIdHandler : IQueryHandler<GetProductById, GetProductByI
         Guard.Against.Null(query, nameof(query));
 
         var product = await _catalogDbContext.FindProductAsync(query.Id, cancellationToken);
-        Guard.Against.ProductNotFound(product, query.Id);
+        Guard.Against.NullProduct(product, query.Id);
 
         var productsDto = _mapper.Map<ProductDto>(product);
 

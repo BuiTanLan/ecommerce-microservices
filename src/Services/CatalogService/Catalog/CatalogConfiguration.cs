@@ -1,9 +1,6 @@
-using BuildingBlocks.Core;
 using Catalog.Brands;
 using Catalog.Categories;
-using Catalog.Categories.Data;
 using Catalog.Products;
-using Catalog.Products.Infrastructure;
 using Catalog.Shared.Infrastructure.Extensions.ApplicationBuilderExtensions;
 using Catalog.Shared.Infrastructure.Extensions.ServiceCollectionExtensions;
 using Catalog.Suppliers;
@@ -24,6 +21,7 @@ public static class CatalogConfiguration
     public static IServiceCollection AddCatalogServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddInfrastructure(configuration);
+
         services.AddStorage(configuration);
 
         services.AddCategoriesServices()
@@ -47,6 +45,8 @@ public static class CatalogConfiguration
         IWebHostEnvironment environment,
         ILogger logger)
     {
+        app.UseInfrastructure();
+
         await app.ApplyDatabaseMigrations(logger);
         await app.SeedData(logger, environment);
     }

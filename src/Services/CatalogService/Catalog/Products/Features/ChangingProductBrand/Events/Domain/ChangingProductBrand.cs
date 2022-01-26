@@ -23,7 +23,7 @@ internal class ChangingProductBrandValidationHandler :
         // Handling some validations
         Guard.Against.Null(notification, nameof(notification));
         Guard.Against.NegativeOrZero(notification.BrandId, nameof(notification.BrandId));
-        Guard.Against.BrandNotFound(
+        Guard.Against.ExistsBrand(
             await _catalogDbContext.BrandExistsAsync(notification.BrandId, cancellationToken: cancellationToken),
             notification.BrandId);
     }

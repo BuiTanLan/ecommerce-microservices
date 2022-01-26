@@ -24,4 +24,6 @@ public interface IHaveAggregate
     void ClearDomainEvents();
 
     void IncrementVersion();
+
+    void CheckRule(IBusinessRule rule);
 }

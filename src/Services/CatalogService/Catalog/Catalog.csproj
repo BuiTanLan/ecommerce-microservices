@@ -24,7 +24,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Folder Include="Products\Core" />
     <Folder Include="Products\Features\AddingProductImage" />
     <Folder Include="Products\Features\DeletingProduct" />
     <Folder Include="Products\Features\GettingProductsByCategoryAndBrand" />

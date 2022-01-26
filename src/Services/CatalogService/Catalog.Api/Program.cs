@@ -2,9 +2,10 @@ using System.Reflection;
 using Ben.Diagnostics;
 using BuildingBlocks.Core;
 using BuildingBlocks.Jwt;
+using BuildingBlocks.Monitoring;
 using BuildingBlocks.Web;
 using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
-using BuildingBlocks.Web.Extensions.ServiceCollection;
+using BuildingBlocks.Web.Extensions.ServiceCollectionExtensions;
 using Catalog;
 using Catalog.Api.Extensions.ApplicationBuilderExtensions;
 using Catalog.Api.Extensions.ServiceCollectionExtensions;
@@ -36,8 +37,6 @@ builder.AddCustomSerilog(config =>
 builder.AddCustomSwagger(builder.Configuration, typeof(CatalogRoot).Assembly);
 
 builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddCustomHealthCheck(healthBuilder => { });
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

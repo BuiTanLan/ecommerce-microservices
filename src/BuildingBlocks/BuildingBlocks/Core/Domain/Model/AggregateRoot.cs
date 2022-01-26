@@ -1,4 +1,5 @@
 using BuildingBlocks.Core.Domain.Events.Internal;
+using BuildingBlocks.Core.Domain.Exceptions;
 
 namespace BuildingBlocks.Core.Domain.Model;
 
@@ -40,6 +41,14 @@ public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot<TId>
 
         Version++;
         _versionIncremented = true;
+    }
+
+    public void CheckRule(IBusinessRule rule)
+    {
+        if (rule.IsBroken())
+        {
+            throw new BusinessRuleValidationException(rule);
+        }
     }
 }
 

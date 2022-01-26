@@ -1,6 +1,5 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
-using Catalog.Products.Infrastructure;
 
 namespace Catalog.Products.Features.GettingProductById;
 

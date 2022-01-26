@@ -10,11 +10,6 @@ public class ProductCreatedConsumer :
     IIntegrationEventHandler<ProductCreated>,
     IIntegrationEventHandler<IntegrationEventWrapper<Events.Domain.ProductCreated>>
 {
-
-    public ProductCreatedConsumer()
-    {
-    }
-
     public Task Handle(ProductCreated notification, CancellationToken cancellationToken)
     {
         Guard.Against.Null(notification, nameof(notification));

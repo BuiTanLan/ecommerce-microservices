@@ -3,6 +3,7 @@ using BuildingBlocks.Caching;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Email;
 using BuildingBlocks.Logging;
+using BuildingBlocks.Monitoring;
 using BuildingBlocks.Validation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -13,7 +14,8 @@ namespace Identity.Share.Infrastructure.Extensions.ServiceCollectionExtensions;
 
 public static class ServiceCollection
 {
-    public static WebApplicationBuilder AddInfrastructure(this WebApplicationBuilder builder,
+    public static WebApplicationBuilder AddInfrastructure(
+        this WebApplicationBuilder builder,
         IConfiguration configuration)
     {
         AddInfrastructure(builder.Services, configuration);
@@ -30,6 +32,8 @@ public static class ServiceCollection
         services.AddCustomMediatR();
         services.AddCqrs();
 
+        services.AddMonitoring();
+
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
@@ -40,5 +44,12 @@ public static class ServiceCollection
         services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
 
         return services;
+    }
+
+    public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
+    {
+        app.UseMonitoring();
+
+        return app;
     }
 }

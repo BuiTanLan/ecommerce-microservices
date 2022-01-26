@@ -4,6 +4,7 @@ using System.IO;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.IntegrationTests.Mock;
 using BuildingBlocks.Web;
+using BuildingBlocks.Web.Extensions.ServiceCollectionExtensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

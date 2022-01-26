@@ -22,7 +22,7 @@ internal class ChangingSupplierValidationHandler :
     {
         Guard.Against.Null(notification, nameof(notification));
         Guard.Against.NegativeOrZero(notification.SupplierId, nameof(notification.SupplierId));
-        Guard.Against.SupplierNotFound(
+        Guard.Against.ExistsSupplier(
             await _catalogDbContext.SupplierExistsAsync(notification.SupplierId, cancellationToken: cancellationToken),
             notification.SupplierId);
     }

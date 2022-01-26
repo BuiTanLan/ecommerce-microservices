@@ -1,9 +1,8 @@
 using AutoMapper;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.CQRS.Query;
-using Catalog.Products.Core.Dtos;
 using Catalog.Products.Core.Models;
-using Catalog.Products.Models;
+using Catalog.Products.Dtos;
 using Catalog.Shared.Core.Contracts;
 
 namespace Catalog.Products.Features.GettingProducts;

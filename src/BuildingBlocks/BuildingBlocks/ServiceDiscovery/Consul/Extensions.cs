@@ -20,7 +20,7 @@ public static class Extensions
         IConfiguration configuration,
         Action<ConsulOptions> configurator)
     {
-        var consulOptions = configuration.GetOptions<ConsulOptions>("Consul");
+        var consulOptions = configuration.GetOptions<ConsulOptions>(nameof(ConsulOptions));
 
         services.Configure<ConsulOptions>(configuration.GetSection(nameof(ConsulOptions)));
         if (configurator is { })
