@@ -35,13 +35,8 @@
       PrivateAssets="all"
       Condition="$(MSBuildProjectExtension) == '.csproj'"
     />
-	<PackageReference
-      Include="CSharpier.MsBuild"
-      Version="0.14.0"
-      PrivateAssets="all"
-      Condition="$(MSBuildProjectExtension) == '.csproj'"
-    />
   </ItemGroup>
+
   <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
       <PrivateAssets>all</PrivateAssets>
