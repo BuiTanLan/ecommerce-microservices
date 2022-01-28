@@ -353,3 +353,4 @@ MigrationBackup/
 .env
 .tye/
 .logs/
+.Log

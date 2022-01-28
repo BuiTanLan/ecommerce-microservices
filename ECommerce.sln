@@ -17,9 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E53E7978-050
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9AF80885-870A-4127-9CF7-1B99CF2671BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogs", "src\Services\ECommerce.Services.Catalogs\src\Catalogs\Catalogs.csproj", "{CEFF22DF-6074-4C25-BFF2-6C6BCADD715E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.Catalogs", "src\Services\ECommerce.Services.Catalogs\src\ECommerce.Services.Catalogs\ECommerce.Services.Catalogs.csproj", "{CEFF22DF-6074-4C25-BFF2-6C6BCADD715E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogs.Api", "src\Services\ECommerce.Services.Catalogs\src\Catalogs.Api\Catalogs.Api.csproj", "{B8504E2D-840E-46CD-934A-EE5EABD16066}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.Catalogs.Api", "src\Services\ECommerce.Services.Catalogs\src\ECommerce.Services.Catalogs.Api\ECommerce.Services.Catalogs.Api.csproj", "{B8504E2D-840E-46CD-934A-EE5EABD16066}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ECommerce.Services.Identity", "ECommerce.Services.Identity", "{98F379CC-6634-4FB3-86E2-7079D1EA8F4C}"
 EndProject
@@ -39,13 +39,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DD7A6407-D8D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A86438AC-AB01-4A82-8C44-383CFB5319A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity", "src\Services\ECommerce.Services.Identity\src\Identity\Identity.csproj", "{79B8D93F-5F03-4F83-A631-4C48ED33E879}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.Identity", "src\Services\ECommerce.Services.Identity\src\ECommerce.Services.Identity\ECommerce.Services.Identity.csproj", "{79B8D93F-5F03-4F83-A631-4C48ED33E879}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Api", "src\Services\ECommerce.Services.Identity\src\Identity.Api\Identity.Api.csproj", "{CC23CA0A-C571-497E-9A53-12FE84DCB281}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.Identity.Api", "src\Services\ECommerce.Services.Identity\src\ECommerce.Services.Identity.Api\ECommerce.Services.Identity.Api.csproj", "{CC23CA0A-C571-497E-9A53-12FE84DCB281}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customers.Api", "src\Services\ECommerce.Services.Customers\src\Customers.Api\Customers.Api.csproj", "{9375CD26-E325-47B6-9A97-D2302AB7307E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.Customers.Api", "src\Services\ECommerce.Services.Customers\src\ECommerce.Services.Customers.Api\ECommerce.Services.Customers.Api.csproj", "{9375CD26-E325-47B6-9A97-D2302AB7307E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customers", "src\Services\ECommerce.Services.Customers\src\Customers\Customers.csproj", "{2C11A090-5BA7-4FA5-B2B9-F2B9938A8016}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.Customers", "src\Services\ECommerce.Services.Customers\src\ECommerce.Services.Customers\ECommerce.Services.Customers.csproj", "{2C11A090-5BA7-4FA5-B2B9-F2B9938A8016}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

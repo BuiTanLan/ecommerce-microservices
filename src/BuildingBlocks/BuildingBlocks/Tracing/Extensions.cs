@@ -50,7 +50,7 @@ namespace BuildingBlocks.Tracing
                 {
                     foreach (var service in options.Services)
                     {
-                        builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(service)); // "Identity.Api"
+                        builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(service)); // "ECommerce.Services.ECommerce.Services.Identity.Api"
                     }
                 }
             });

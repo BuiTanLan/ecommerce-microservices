@@ -19,7 +19,8 @@ public interface IOutboxService
     Task CleanProcessedAsync(CancellationToken cancellationToken = default);
     Task SaveAsync(CancellationToken cancellationToken = default, params IIntegrationEvent[] integrationEvents);
 
-    Task SaveAsync(CancellationToken cancellationToken = default,
+    Task SaveAsync(
+        CancellationToken cancellationToken = default,
         params IDomainNotificationEvent[] domainNotificationEvents);
 
     Task PublishUnsentOutboxMessagesAsync(CancellationToken cancellationToken = default);

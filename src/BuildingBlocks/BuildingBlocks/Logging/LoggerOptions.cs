@@ -1,6 +1,6 @@
 namespace BuildingBlocks.Logging;
 
-internal class LoggerOptions
+public class LoggerOptions
 {
     public string Level { get; set; }
     public IDictionary<string, string> MinimumLevelOverrides { get; set; }
@@ -11,14 +11,17 @@ internal class LoggerOptions
     public bool UseElasticSearch { get; set; }
     public ElasticSearchLoggingOptions ElasticSearchLoggingOptions { get; set; }
     public SeqLoggingOptions SeqOptions { get; set; }
+    public string LogTemplate { get; set; }
+    public string DevelopmentLogPath { get; set; }
+    public string ProductionLogPath { get; set; }
 }
 
-internal class ElasticSearchLoggingOptions
+public class ElasticSearchLoggingOptions
 {
     public string Url { get; set; }
 }
 
-internal class SeqLoggingOptions
+public class SeqLoggingOptions
 {
     public string Url { get; set; }
 }

@@ -30,9 +30,6 @@ public static class HostBuilderExtensions
         {
             var httpContext = serviceProvider.GetService<IHttpContextAccessor>();
             loggerConfiguration
-                .WriteTo.SpectreConsole(
-                    "{Timestamp:HH:mm:ss} [{Level:u4}] {Message:lj}{NewLine}{Exception}",
-                    LogEventLevel.Information)
                 .ReadFrom.Configuration(context.Configuration)
                 .ReadFrom.Services(serviceProvider)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
@@ -61,7 +58,10 @@ public static class HostBuilderExtensions
 
         if (hostBuilderContext.HostingEnvironment.IsDevelopment())
         {
-            loggerConfiguration.WriteTo.Console();
+            loggerConfiguration.WriteTo.SpectreConsole(
+                loggerOptions.LogTemplate ??
+                "{Timestamp:HH:mm:ss} [{Level:u4}] {Message:lj}{NewLine}{Exception}",
+                LogEventLevel.Information);
         }
         else
         {
@@ -73,7 +73,10 @@ public static class HostBuilderExtensions
                                                 loggerOptions.SeqOptions.Url);
             }
 
-            loggerConfiguration.WriteTo.Console();
+            loggerConfiguration.WriteTo.SpectreConsole(
+                loggerOptions.LogTemplate ??
+                "{Timestamp:HH:mm:ss} [{Level:u4}] {Message:lj}{NewLine}{Exception}",
+                LogEventLevel.Information);
         }
 
         foreach (var (key, value) in loggerOptions.Tags ?? new Dictionary<string, object>())

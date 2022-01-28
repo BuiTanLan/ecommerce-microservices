@@ -1,9 +1,7 @@
-using System;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace BuildingBlocks.Utils;
+namespace BuildingBlocks.Utils.Reflections;
 
 public static class TypeProvider
 {

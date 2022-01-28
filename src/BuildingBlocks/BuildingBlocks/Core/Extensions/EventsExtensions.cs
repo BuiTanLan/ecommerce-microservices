@@ -3,6 +3,7 @@ using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Utils;
+using BuildingBlocks.Utils.Reflections;
 
 namespace BuildingBlocks.Core.Extensions;
 

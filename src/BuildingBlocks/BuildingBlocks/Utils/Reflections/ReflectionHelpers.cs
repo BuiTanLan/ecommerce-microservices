@@ -5,11 +5,10 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using AutoMapper.Internal;
 using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Domain.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace BuildingBlocks.Utils;
+namespace BuildingBlocks.Utils.Reflections;
 
 public static class ReflectionHelpers
 {

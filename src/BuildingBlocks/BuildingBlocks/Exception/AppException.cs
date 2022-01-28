@@ -7,17 +7,5 @@ public class AppException : System.Exception
         Code = code;
     }
 
-    public AppException() : base()
-    {
-    }
-
-    public AppException(string message) : base(message)
-    {
-    }
-
-    public AppException(string message, System.Exception innerException) : base(message, innerException)
-    {
-    }
-
     public string Code { get; }
 }
