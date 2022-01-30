@@ -9,7 +9,7 @@ public static class GetProductByIdEndpoint
     internal static IEndpointRouteBuilder MapGetProductByIdEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet(
-                $"{CatalogConfiguration.CatalogModulePrefixUri}{ProductsConfigs.ProductsPrefixUri}/{{id}}",
+                $"{ProductsConfigs.ProductsPrefixUri}/{{id}}",
                 GetProductById)
             .WithTags(ProductsConfigs.Tag)
             // .RequireAuthorization()

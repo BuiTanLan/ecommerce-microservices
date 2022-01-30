@@ -7,9 +7,10 @@ public static class ApplicationBuilderExtensions
 {
     /// <summary>
     ///     Register Swagger endpoints.
-    ///     Hint: Minimal Api not supported api versioning in .Net6
+    ///     Hint: Minimal Api not supported api versioning in .Net6.
     /// </summary>
-    public static IApplicationBuilder UseCustomSwagger(this IApplicationBuilder app,
+    public static IApplicationBuilder UseCustomSwagger(
+        this IApplicationBuilder app,
         IApiVersionDescriptionProvider provider = null)
     {
         app.UseSwagger();
@@ -18,11 +19,18 @@ public static class ApplicationBuilderExtensions
             {
                 options.DocExpansion(DocExpansion.None);
                 if (provider is null)
+                {
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
+                }
                 else
+                {
                     foreach (var description in provider.ApiVersionDescriptions)
-                        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                    {
+                        options.SwaggerEndpoint(
+                            $"/swagger/{description.GroupName}/swagger.json",
                             description.GroupName.ToUpperInvariant());
+                    }
+                }
             });
 
         return app;

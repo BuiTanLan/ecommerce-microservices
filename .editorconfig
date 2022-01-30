@@ -125,6 +125,8 @@ csharp_space_between_square_brackets = false
 ## Microsoft Rules
 ##
 
+#CA1305
+dotnet_diagnostic.CA1305.severity = None
 
 ## https://github.com/DotNetAnalyzers/StyleCopAnalyzers/tree/master/documentation
 ## StyleCop.Analyzers
@@ -296,3 +298,5 @@ dotnet_diagnostic.RCS1037.severity = None
 
 # RCS1194: Implement exception constructors
 dotnet_diagnostic.RCS1194.severity = None
+
+

@@ -1,14 +1,14 @@
-using System;
 using System.ComponentModel;
 
 namespace BuildingBlocks.Utils;
 
-//https://stackoverflow.com/a/19621488/581476
+// https://stackoverflow.com/a/19621488/581476
 public static class EnumExtensions
 {
     // This extension method is broken out so you can use a similar pattern with
     // other MetaData elements in the future. This is your base method for each.
-    public static T GetAttribute<T>(this Enum value) where T : Attribute
+    public static T GetAttribute<T>(this Enum value)
+        where T : Attribute
     {
         var type = value.GetType();
         var memberInfo = type.GetMember(value.ToString());

@@ -50,7 +50,7 @@ builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 
 builder.Services.AddCustomAuthorization();
 
-builder.AddCustomersServices();
+builder.AddCustomersModuleServices();
 
 var app = builder.Build();
 
@@ -81,21 +81,19 @@ app.UseSerilogRequestLogging();
 
 app.UseCustomHealthCheck();
 
-await app.ConfigureCustomers(environment, app.Logger);
+await app.ConfigureCustomersModule(environment, app.Logger);
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapCustomersEndpoints();
+app.MapCustomersModuleEndpoints();
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateBootstrapLogger();
 
 await app.RunAsync();
-
 
 namespace Customers.Api
 {

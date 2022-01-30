@@ -9,7 +9,7 @@ public static class DebitProductStockEndpoint
     internal static IEndpointRouteBuilder MapDebitProductStockEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost(
-                $"{CatalogConfiguration.CatalogModulePrefixUri}{ProductsConfigs.ProductsPrefixUri}/{{productId}}/debit-stock",
+                $"{ProductsConfigs.ProductsPrefixUri}/{{productId}}/debit-stock",
                 DebitProductStock)
             .WithTags(ProductsConfigs.Tag)
             .Produces<CreateProductResult>(StatusCodes.Status200OK)

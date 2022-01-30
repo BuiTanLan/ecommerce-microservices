@@ -10,7 +10,7 @@ public static class ReplenishingProductStockEndpoint
     internal static IEndpointRouteBuilder MapReplenishProductStockEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost(
-                $"{CatalogConfiguration.CatalogModulePrefixUri}{ProductsConfigs.ProductsPrefixUri}/{{productId}}/replenish-stock",
+                $"{ProductsConfigs.ProductsPrefixUri}/{{productId}}/replenish-stock",
                 ReplenishProductStock)
             .WithTags(ProductsConfigs.Tag)
             .Produces<CreateProductResult>(StatusCodes.Status200OK)

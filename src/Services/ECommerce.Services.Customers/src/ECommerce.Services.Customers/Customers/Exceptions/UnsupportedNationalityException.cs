@@ -1,8 +1,8 @@
-using BuildingBlocks.Core.Domain.Exceptions;
+using BuildingBlocks.Exception.Types;
 
 namespace ECommerce.Services.Customers.Customers.Exceptions;
 
-public class UnsupportedNationalityException : DomainException
+public class UnsupportedNationalityException : BadRequestException
 {
     public string Nationality { get; }
 

@@ -3,7 +3,7 @@ using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Messaging.Outbox;
 using ECommerce.Services.Catalogs.Products.Models;
-using ECommerce.Services.Catalogs.Shared.Core.Contracts;
+using ECommerce.Services.Catalogs.Shared.Contracts;
 
 namespace ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Events.Domain;
 

@@ -3,6 +3,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using BuildingBlocks.Exception;
+using BuildingBlocks.Exception.Types;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;

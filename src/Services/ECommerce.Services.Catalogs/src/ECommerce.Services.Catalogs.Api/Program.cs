@@ -49,7 +49,7 @@ builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 
 builder.Services.AddCustomAuthorization();
 
-builder.AddCatalogServices();
+builder.AddCatalogModuleServices();
 
 var app = builder.Build();
 
@@ -80,14 +80,14 @@ app.UseSerilogRequestLogging();
 
 app.UseCustomHealthCheck();
 
-await app.ConfigureCatalog(environment, app.Logger);
+await app.ConfigureCatalogModule(environment, app.Logger);
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapCatalogEndpoints();
+app.MapCatalogModuleEndpoints();
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()

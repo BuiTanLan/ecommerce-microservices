@@ -1,9 +1,11 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.CQRS.Query;
+using BuildingBlocks.Exception;
 using ECommerce.Services.Catalogs.Products.Dtos;
-using ECommerce.Services.Catalogs.Shared.Core.Contracts;
-using ECommerce.Services.Catalogs.Shared.Infrastructure.Extensions;
+using ECommerce.Services.Catalogs.Products.Exceptions.Application;
+using ECommerce.Services.Catalogs.Shared.Contracts;
+using ECommerce.Services.Catalogs.Shared.Extensions;
 
 namespace ECommerce.Services.Catalogs.Products.Features.GettingProductById;
 
@@ -32,8 +34,8 @@ public class GetProductByIdHandler : IQueryHandler<GetProductById, GetProductByI
     {
         Guard.Against.Null(query, nameof(query));
 
-        var product = await _catalogDbContext.FindProductAsync(query.Id, cancellationToken);
-        Guard.Against.NullProduct(product, query.Id);
+        var product = await _catalogDbContext.FindProductByIdAsync(query.Id, cancellationToken);
+        Guard.Against.NotFound(product, new ProductNotFoundException(query.Id));
 
         var productsDto = _mapper.Map<ProductDto>(product);
 

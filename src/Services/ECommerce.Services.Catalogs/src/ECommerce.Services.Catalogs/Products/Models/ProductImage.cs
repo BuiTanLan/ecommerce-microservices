@@ -5,7 +5,7 @@ namespace ECommerce.Services.Catalogs.Products.Models;
 
 public class ProductImage : Entity<EntityId>
 {
-    public ProductImage(long id, string imageUrl, bool isMain, long productId)
+    public ProductImage(EntityId id, string imageUrl, bool isMain, ProductId productId)
     {
         SetImageUrl(imageUrl);
         SetIsMain(isMain);

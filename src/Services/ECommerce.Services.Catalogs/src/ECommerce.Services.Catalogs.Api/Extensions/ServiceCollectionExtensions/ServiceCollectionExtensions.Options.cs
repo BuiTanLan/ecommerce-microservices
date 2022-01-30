@@ -1,4 +1,4 @@
-using ECommerce.Services.Catalogs.Shared.Core;
+using ECommerce.Services.Catalogs.Shared;
 
 namespace Catalogs.Api.Extensions.ServiceCollectionExtensions;
 

@@ -1,12 +1,17 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.Exception;
 using ECommerce.Services.Catalogs.Brands;
+using ECommerce.Services.Catalogs.Brands.Exceptions.Application;
 using ECommerce.Services.Catalogs.Categories;
+using ECommerce.Services.Catalogs.Categories.Exceptions.Application;
+using ECommerce.Services.Catalogs.Products.Exceptions.Application;
 using ECommerce.Services.Catalogs.Products.Models;
 using ECommerce.Services.Catalogs.Products.Models.ValueObjects;
-using ECommerce.Services.Catalogs.Shared.Core.Contracts;
-using ECommerce.Services.Catalogs.Shared.Infrastructure.Extensions;
+using ECommerce.Services.Catalogs.Shared.Contracts;
+using ECommerce.Services.Catalogs.Shared.Extensions;
 using ECommerce.Services.Catalogs.Suppliers;
+using ECommerce.Services.Catalogs.Suppliers.Exceptions.Application;
 
 namespace ECommerce.Services.Catalogs.Products.Features.UpdatingProduct;
 
@@ -38,18 +43,17 @@ internal class UpdateProductCommandHandler : ICommandHandler<UpdateProduct>
     {
         Guard.Against.Null(command, nameof(command));
 
-        var product = await _catalogDbContext.FindProductAsync(command.Id, cancellationToken);
-
-        Guard.Against.NullProduct(product, command.Id);
+        var product = await _catalogDbContext.FindProductByIdAsync(command.Id, cancellationToken);
+        Guard.Against.NotFound(product, new ProductNotFoundException(command.Id));
 
         var category = await _catalogDbContext.FindCategoryAsync(command.CategoryId, cancellationToken);
-        Guard.Against.NullCategory(category, command.CategoryId);
+        Guard.Against.NotFound(category, new CategoryNotFoundException(command.CategoryId));
 
         var brand = await _catalogDbContext.FindBrandAsync(command.BrandId, cancellationToken);
-        Guard.Against.NullBrand(brand, command.BrandId);
+        Guard.Against.NotFound(brand, new BrandNotFoundException(command.BrandId));
 
-        var supplier = await _catalogDbContext.FindSupplierAsync(command.SupplierId, cancellationToken);
-        Guard.Against.NullSupplier(supplier, command.SupplierId);
+        var supplier = await _catalogDbContext.FindSupplierByIdAsync(command.SupplierId, cancellationToken);
+        Guard.Against.NotFound(supplier, new SupplierNotFoundException(command.SupplierId));
 
         await product!.ChangeCategory(category);
         await product.ChangeBrand(brand);

@@ -3,7 +3,6 @@ namespace BuildingBlocks.Core.Domain.Model;
 public abstract class Identity<TId> : IEquatable<Identity<TId>>, IIdentity<TId>
 {
     protected Identity(TId value) => Value = value;
-    public Identity(){}
 
     public TId Value { get; protected set; }
 

@@ -12,7 +12,7 @@ namespace ECommerce.Services.Catalogs.Products;
 internal static class ProductsConfigs
 {
     public const string Tag = "Product";
-    public const string ProductsPrefixUri = "/products";
+    public const string ProductsPrefixUri = $"{CatalogModuleConfiguration.CatalogModulePrefixUri}/products";
 
     internal static IServiceCollection AddProductsServices(this IServiceCollection services)
     {

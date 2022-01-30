@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
 using ECommerce.Services.Catalogs.Suppliers.Exceptions.Domain;
 
@@ -7,9 +8,9 @@ public class Supplier : AggregateRoot<SupplierId>
 {
     public string Name { get; private set; } = default!;
 
-    public static Supplier Create(long id, string name)
+    public static Supplier Create(SupplierId id, string name)
     {
-        var supplier = new Supplier { Id = id };
+        var supplier = new Supplier { Id = Guard.Against.Null(id, nameof(id)) };
 
         supplier.ChangeName(name);
 

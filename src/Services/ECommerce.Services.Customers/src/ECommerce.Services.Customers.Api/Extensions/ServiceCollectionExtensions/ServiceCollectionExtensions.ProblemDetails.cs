@@ -1,5 +1,6 @@
 using BuildingBlocks.Core.Domain.Exceptions;
 using BuildingBlocks.Exception;
+using BuildingBlocks.Exception.Types;
 using BuildingBlocks.Validation;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc;

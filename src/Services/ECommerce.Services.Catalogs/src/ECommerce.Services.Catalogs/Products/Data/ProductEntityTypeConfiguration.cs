@@ -1,5 +1,5 @@
 using ECommerce.Services.Catalogs.Products.Models;
-using ECommerce.Services.Catalogs.Shared.Infrastructure.Data;
+using ECommerce.Services.Catalogs.Shared.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ECommerce.Services.Catalogs.Products.Data;
@@ -19,10 +19,10 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Ignore(c => c.DomainEvents);
 
-        builder.Property(x => x.Name).HasColumnType(Constants.NormalText).IsRequired();
+        builder.Property(x => x.Name).HasColumnType(Constants.ColumnTypes.NormalText).IsRequired();
 
         builder.Property(ci => ci.Price)
-            .HasColumnType(Constants.PriceDecimal)
+            .HasColumnType(Constants.ColumnTypes.PriceDecimal)
             .IsRequired();
 
         builder.Property(x => x.ProductStatus)

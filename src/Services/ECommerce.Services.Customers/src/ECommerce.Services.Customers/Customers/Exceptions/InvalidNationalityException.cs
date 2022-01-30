@@ -1,8 +1,8 @@
-using BuildingBlocks.Core.Domain.Exceptions;
+using BuildingBlocks.Exception.Types;
 
 namespace ECommerce.Services.Customers.Customers.Exceptions;
 
-public class InvalidNationalityException : DomainException
+public class InvalidNationalityException : BadRequestException
 {
     public string Nationality { get; }
 

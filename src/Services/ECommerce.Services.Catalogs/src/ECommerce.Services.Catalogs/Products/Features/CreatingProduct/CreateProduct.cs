@@ -1,16 +1,20 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
 using ECommerce.Services.Catalogs.Brands;
+using ECommerce.Services.Catalogs.Brands.Exceptions.Application;
 using ECommerce.Services.Catalogs.Categories;
+using ECommerce.Services.Catalogs.Categories.Exceptions.Domain;
 using ECommerce.Services.Catalogs.Products.Dtos;
 using ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Requests;
 using ECommerce.Services.Catalogs.Products.Models;
 using ECommerce.Services.Catalogs.Products.Models.ValueObjects;
-using ECommerce.Services.Catalogs.Shared.Core.Contracts;
-using ECommerce.Services.Catalogs.Shared.Infrastructure.Extensions;
+using ECommerce.Services.Catalogs.Shared.Contracts;
+using ECommerce.Services.Catalogs.Shared.Extensions;
 using ECommerce.Services.Catalogs.Suppliers;
+using ECommerce.Services.Catalogs.Suppliers.Exceptions.Application;
 
 namespace ECommerce.Services.Catalogs.Products.Features.CreatingProduct;
 
@@ -76,11 +80,13 @@ public class CreateProductValidator : AbstractValidator<CreateProduct>
 
 public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProductResult>
 {
+    private readonly ILogger<CreateProductHandler> _logger;
     private readonly IMapper _mapper;
     private readonly ICatalogDbContext _catalogDbContext;
 
-    public CreateProductHandler(ICatalogDbContext catalogDbContext, IMapper mapper)
+    public CreateProductHandler(ICatalogDbContext catalogDbContext, IMapper mapper, ILogger<CreateProductHandler> logger)
     {
+        _logger = Guard.Against.Null(logger, nameof(logger));
         _mapper = Guard.Against.Null(mapper, nameof(mapper));
         _catalogDbContext = Guard.Against.Null(catalogDbContext, nameof(catalogDbContext));
     }
@@ -95,13 +101,13 @@ public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProduct
             new ProductImage(SnowFlakIdGenerator.NewId(), x.ImageUrl, x.IsMain, command.Id)).ToList();
 
         var category = await _catalogDbContext.FindCategoryAsync(command.CategoryId, cancellationToken);
-        Guard.Against.NullCategory(category, command.CategoryId);
+        Guard.Against.NotFound(category, new CategoryDomainException(command.CategoryId));
 
         var brand = await _catalogDbContext.FindBrandAsync(command.BrandId, cancellationToken);
-        Guard.Against.NullBrand(brand, command.BrandId);
+        Guard.Against.NotFound(brand, new BrandNotFoundException(command.BrandId));
 
-        var supplier = await _catalogDbContext.FindSupplierAsync(command.SupplierId, cancellationToken);
-        Guard.Against.NullSupplier(supplier, command.SupplierId);
+        var supplier = await _catalogDbContext.FindSupplierByIdAsync(command.SupplierId, cancellationToken);
+        Guard.Against.NotFound(supplier, new SupplierNotFoundException(command.SupplierId));
 
         var product = await Product.CreateAsync(
             command.Id,
@@ -120,6 +126,8 @@ public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProduct
 
         var created = await _catalogDbContext.Products.AddAsync(product, cancellationToken: cancellationToken);
         var productDto = _mapper.Map<ProductDto>(created.Entity);
+
+        _logger.LogInformation("Product a with ID: '{ProductId} created.'", command.Id);
 
         return new CreateProductResult(productDto);
     }

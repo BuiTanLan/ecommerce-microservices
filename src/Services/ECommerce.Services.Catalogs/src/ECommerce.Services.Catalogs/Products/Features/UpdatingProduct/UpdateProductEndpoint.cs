@@ -9,7 +9,7 @@ public static class UpdateProductEndpoint
     internal static IEndpointRouteBuilder MapCreateProductsEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost(
-                $"{CatalogConfiguration.CatalogModulePrefixUri}{ProductsConfigs.ProductsPrefixUri}/{{id}}",
+                $"{ProductsConfigs.ProductsPrefixUri}/{{id}}",
                 UpdateProducts)
             .WithTags(ProductsConfigs.Tag)
             .Produces(StatusCodes.Status204NoContent)

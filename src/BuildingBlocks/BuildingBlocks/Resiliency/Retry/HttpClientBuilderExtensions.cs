@@ -7,8 +7,10 @@ namespace BuildingBlocks.Resiliency;
 
 public static class HttpClientBuilderExtensions
 {
-    public static IHttpClientBuilder AddCustomPolicyHandlers(this IHttpClientBuilder httpClientBuilder,
-        IConfiguration configuration, string policySectionName)
+    public static IHttpClientBuilder AddCustomPolicyHandlers(
+        this IHttpClientBuilder httpClientBuilder,
+        IConfiguration configuration,
+        string policySectionName)
     {
         var policyConfig = new PolicyConfig();
         configuration.Bind(policySectionName, policyConfig);
@@ -20,10 +22,11 @@ public static class HttpClientBuilderExtensions
             .AddCircuitBreakerHandler(circuitBreakerPolicyConfig);
     }
 
-    public static IHttpClientBuilder AddRetryPolicyHandler(this IHttpClientBuilder httpClientBuilder,
+    public static IHttpClientBuilder AddRetryPolicyHandler(
+        this IHttpClientBuilder httpClientBuilder,
         IRetryPolicyConfig retryPolicyConfig)
     {
-        //https://stackoverflow.com/questions/53604295/logging-polly-wait-and-retry-policy-asp-net-core-2-1
+        // https://stackoverflow.com/questions/53604295/logging-polly-wait-and-retry-policy-asp-net-core-2-1
         return httpClientBuilder.AddPolicyHandler((sp, _) =>
         {
             var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
@@ -33,7 +36,8 @@ public static class HttpClientBuilderExtensions
         });
     }
 
-    public static IHttpClientBuilder AddCircuitBreakerHandler(this IHttpClientBuilder httpClientBuilder,
+    public static IHttpClientBuilder AddCircuitBreakerHandler(
+        this IHttpClientBuilder httpClientBuilder,
         ICircuitBreakerPolicyConfig circuitBreakerPolicyConfig)
     {
         return httpClientBuilder.AddPolicyHandler((sp, _) =>
@@ -41,7 +45,8 @@ public static class HttpClientBuilderExtensions
             var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
             var circuitBreakerLogger = loggerFactory.CreateLogger("PollyHttpCircuitBreakerPoliciesLogger");
 
-            return HttpCircuitBreakerPolicies.GetHttpCircuitBreakerPolicy(circuitBreakerLogger,
+            return HttpCircuitBreakerPolicies.GetHttpCircuitBreakerPolicy(
+                circuitBreakerLogger,
                 circuitBreakerPolicyConfig);
         });
     }

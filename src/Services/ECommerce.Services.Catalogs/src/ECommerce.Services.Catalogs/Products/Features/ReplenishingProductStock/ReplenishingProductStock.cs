@@ -1,7 +1,9 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
-using ECommerce.Services.Catalogs.Shared.Core.Contracts;
-using ECommerce.Services.Catalogs.Shared.Infrastructure.Extensions;
+using BuildingBlocks.Exception;
+using ECommerce.Services.Catalogs.Products.Exceptions.Application;
+using ECommerce.Services.Catalogs.Shared.Contracts;
+using ECommerce.Services.Catalogs.Shared.Extensions;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ReplenishingProductStock;
 
@@ -20,8 +22,8 @@ internal class ReplenishingProductStockHandler : ICommandHandler<ReplenishingPro
     {
         Guard.Against.Null(command, nameof(command));
 
-        var product = await _catalogDbContext.FindProductAsync(command.ProductId, cancellationToken);
-        Guard.Against.NullProduct(product, command.ProductId);
+        var product = await _catalogDbContext.FindProductByIdAsync(command.ProductId, cancellationToken);
+        Guard.Against.NotFound(product, new ProductNotFoundException(command.ProductId));
 
         product!.ReplenishStock(command.Quantity);
         await _catalogDbContext.SaveChangesAsync(cancellationToken);

@@ -1,4 +1,4 @@
-using ECommerce.Services.Customers.Shared.Core;
+using ECommerce.Services.Customers.Shared;
 
 namespace Customers.Api.Extensions.ServiceCollectionExtensions;
 

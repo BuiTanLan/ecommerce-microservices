@@ -3,7 +3,7 @@ using BuildingBlocks.CQRS;
 using BuildingBlocks.CQRS.Query;
 using ECommerce.Services.Catalogs.Products.Dtos;
 using ECommerce.Services.Catalogs.Products.Models;
-using ECommerce.Services.Catalogs.Shared.Core.Contracts;
+using ECommerce.Services.Catalogs.Shared.Contracts;
 
 namespace ECommerce.Services.Catalogs.Products.Features.GettingProducts;
 

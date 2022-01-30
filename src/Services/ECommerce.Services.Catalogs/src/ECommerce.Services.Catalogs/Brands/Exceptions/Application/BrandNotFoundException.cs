@@ -1,4 +1,5 @@
 using BuildingBlocks.Exception;
+using BuildingBlocks.Exception.Types;
 
 namespace ECommerce.Services.Catalogs.Brands.Exceptions.Application;
 

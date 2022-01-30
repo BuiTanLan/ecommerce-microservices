@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
 using ECommerce.Services.Catalogs.Brands.Exceptions.Domain;
 
@@ -7,9 +8,9 @@ public class Brand : AggregateRoot<BrandId>
 {
     public string Name { get; private set; } = null!;
 
-    public static Brand Create(long id, string name)
+    public static Brand Create(BrandId id, string name)
     {
-        var brand = new Brand { Id = id };
+        var brand = new Brand { Id = Guard.Against.Null(id, nameof(id)) };
 
         brand.ChangeName(name);
 

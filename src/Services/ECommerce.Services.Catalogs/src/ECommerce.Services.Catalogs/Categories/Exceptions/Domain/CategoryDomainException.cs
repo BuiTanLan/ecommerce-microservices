@@ -8,7 +8,7 @@ public class CategoryDomainException : DomainException
     {
     }
 
-    public CategoryDomainException(string message, Exception innerException) : base(message, innerException)
+    public CategoryDomainException(long id) : base($"Category with id: '{id}' not found.")
     {
     }
 }

@@ -10,7 +10,7 @@ public static class CreateProductEndpoint
 {
     internal static IEndpointRouteBuilder MapCreateProductsEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost($"{CatalogConfiguration.CatalogModulePrefixUri}{ProductsConfigs.ProductsPrefixUri}", CreateProducts)
+        endpoints.MapPost($"{ProductsConfigs.ProductsPrefixUri}", CreateProducts)
             .WithTags(ProductsConfigs.Tag)
             // .RequireAuthorization()
             .Produces<CreateProductResult>(StatusCodes.Status201Created)
@@ -29,6 +29,7 @@ public static class CreateProductEndpoint
         CancellationToken cancellationToken)
     {
         Guard.Against.Null(request, nameof(request));
+        
         var command = mapper.Map<CreateProduct>(request);
         var result = await commandProcessor.SendAsync(command, cancellationToken);
 

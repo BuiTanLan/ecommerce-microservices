@@ -8,7 +8,7 @@ public static class GetProductsViewEndpoint
     internal static IEndpointRouteBuilder MapGetProductsViewEndpoint(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet(
-                $"{CatalogConfiguration.CatalogModulePrefixUri}/products-view/{{page}}/{{pageSize}}",
+                $"{CatalogModuleConfiguration.CatalogModulePrefixUri}/products-view/{{page}}/{{pageSize}}",
                 GetProductsView)
             .WithTags(ProductsConfigs.Tag)
             // .RequireAuthorization()

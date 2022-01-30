@@ -1,5 +1,5 @@
 using BuildingBlocks.IdsGenerator;
-using ECommerce.Services.Catalogs.Shared.Core.Contracts;
+using ECommerce.Services.Catalogs.Shared.Contracts;
 
 namespace ECommerce.Services.Catalogs.Categories.Data;
 

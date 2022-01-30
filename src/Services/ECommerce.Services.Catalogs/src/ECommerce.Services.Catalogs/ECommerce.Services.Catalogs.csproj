@@ -24,7 +24,6 @@
     <Folder Include="Products\Features\GettingProductsByCategoryAndBrand" />
     <Folder Include="Products\Features\GettingProductsByIds" />
     <Folder Include="Products\Features\GetProductWithName" />
-    <Folder Include="Shared" />
     <Folder Include="Suppliers\Events\External\Handlers" />
     <Folder Include="Suppliers\Features\GetSupplierById" />
     <Folder Include="Suppliers\Features\GetSuppliers" />

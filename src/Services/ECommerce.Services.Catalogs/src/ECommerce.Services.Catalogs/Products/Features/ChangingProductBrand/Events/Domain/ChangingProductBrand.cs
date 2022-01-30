@@ -1,8 +1,8 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using ECommerce.Services.Catalogs.Brands;
-using ECommerce.Services.Catalogs.Shared.Core.Contracts;
-using ECommerce.Services.Catalogs.Shared.Infrastructure.Extensions;
+using ECommerce.Services.Catalogs.Shared.Contracts;
+using ECommerce.Services.Catalogs.Shared.Extensions;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ChangingProductBrand.Events.Domain;
 

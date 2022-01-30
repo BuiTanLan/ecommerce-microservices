@@ -53,7 +53,7 @@ public class Product : AggregateRoot<ProductId>
     public int MaxStockThreshold { get; private set; }
 
     public static async Task<Product> CreateAsync(
-        long id,
+        ProductId id,
         string name,
         int stock,
         int restockThreshold,
@@ -86,7 +86,8 @@ public class Product : AggregateRoot<ProductId>
 
         var product = new Product
         {
-            Id = id, RestockThreshold = Guard.Against.NegativeOrZero(restockThreshold, nameof(restockThreshold))
+            Id = Guard.Against.Null(id, nameof(id)),
+            RestockThreshold = Guard.Against.NegativeOrZero(restockThreshold, nameof(restockThreshold))
         };
         product.ChangeName(name);
         product.ChangeDescription(description);

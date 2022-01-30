@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
 using ECommerce.Services.Catalogs.Categories.Exceptions.Domain;
 
@@ -10,9 +11,9 @@ public class Category : AggregateRoot<CategoryId>
     public string Description { get; private set; } = null!;
     public string Code { get; private set; } = null!;
 
-    public static Category Create(long id, string name, string code, string description = "")
+    public static Category Create(CategoryId id, string name, string code, string description = "")
     {
-        var category = new Category { Id = id };
+        var category = new Category { Id = Guard.Against.Null(id, nameof(id)) };
 
         category.ChangeName(name);
         category.ChangeDescription(description);
