@@ -9,6 +9,22 @@ namespace ECommerce.Services.Catalogs.Products.Features.ReplenishingProductStock
 
 public record ReplenishingProductStock(long ProductId, int Quantity) : ICommand<bool>;
 
+internal class ReplenishingProductStockValidator : AbstractValidator<ReplenishingProductStock>
+{
+    public ReplenishingProductStockValidator()
+    {
+        // https://docs.fluentvalidation.net/en/latest/conditions.html#stop-vs-stoponfirstfailure
+        CascadeMode = CascadeMode.Stop;
+
+        RuleFor(x => x.Quantity)
+            .GreaterThan(0);
+
+        RuleFor(x => x.ProductId)
+            .NotEmpty()
+            .WithMessage("ProductId must be greater than 0");
+    }
+}
+
 internal class ReplenishingProductStockHandler : ICommandHandler<ReplenishingProductStock, bool>
 {
     private readonly ICatalogDbContext _catalogDbContext;

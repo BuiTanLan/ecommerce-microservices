@@ -21,6 +21,12 @@ public static partial class ServiceCollectionExtensions
     {
         services.AddProblemDetails(x =>
         {
+            x.ShouldLogUnhandledException = (httpContext, exception, problemDetails) =>
+            {
+                var env = httpContext.RequestServices.GetRequiredService<IHostEnvironment>();
+                return env.IsDevelopment() || env.IsStaging();
+            };
+
             // Control when an exception is included
             x.IncludeExceptionDetails = (ctx, _) =>
             {

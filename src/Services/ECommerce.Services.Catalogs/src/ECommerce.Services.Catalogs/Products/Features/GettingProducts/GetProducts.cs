@@ -20,6 +20,8 @@ public class GetProductsValidator : AbstractValidator<GetProducts>
 {
     public GetProductsValidator()
     {
+        CascadeMode = CascadeMode.Stop;
+
         RuleFor(x => x.Page)
             .GreaterThanOrEqualTo(1).WithMessage("Page should at least greater than or equal to 1.");
 
@@ -42,6 +44,7 @@ public class GetProductsHandler : IQueryHandler<GetProducts, GetProductsResult>
     public async Task<GetProductsResult> Handle(GetProducts request, CancellationToken cancellationToken)
     {
         var products = await _catalogDbContext.Products
+            .OrderByDescending(x => x.Created)
             .ApplyIncludeList(request.Includes)
             .ApplyFilterList(request.Filters)
             .AsNoTracking()

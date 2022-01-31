@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ECommerce.Services.Customers.Shared.Data.Migrations.Outbox
+namespace ECommerce.Services.Identity.Shared.Data.Migrations.Outbox
 {
     public partial class InitialOutboxMigration : Migration
     {
@@ -24,7 +24,7 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Outbox
                     data = table.Column<string>(type: "text", nullable: false),
                     processed_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     event_type = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
-                    correlation_id = table.Column<string>(type: "text", nullable: false)
+                    correlation_id = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

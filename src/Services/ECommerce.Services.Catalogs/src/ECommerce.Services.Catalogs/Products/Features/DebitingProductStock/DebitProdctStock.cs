@@ -9,6 +9,22 @@ namespace ECommerce.Services.Catalogs.Products.Features.DebitingProductStock;
 
 public record DebitProductStock(long ProductId, int Quantity) : ICommand<bool>;
 
+internal class DebitProductStockValidator : AbstractValidator<DebitProductStock>
+{
+    public DebitProductStockValidator()
+    {
+        // https://docs.fluentvalidation.net/en/latest/conditions.html#stop-vs-stoponfirstfailure
+        CascadeMode = CascadeMode.Stop;
+
+        RuleFor(x => x.Quantity)
+            .GreaterThan(0);
+
+        RuleFor(x => x.ProductId)
+            .NotEmpty()
+            .WithMessage("ProductId must be greater than 0");
+    }
+}
+
 internal class DebitProductStockHandler : ICommandHandler<DebitProductStock, bool>
 {
     private readonly ICatalogDbContext _catalogDbContext;

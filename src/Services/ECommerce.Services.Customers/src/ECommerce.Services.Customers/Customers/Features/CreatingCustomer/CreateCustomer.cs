@@ -15,12 +15,17 @@ public record CreateCustomer(
     string Email,
     string FirstName,
     string LastName,
-    string Password) : ICreateCommand<CreateCustomerResult>;
+    string Password) : ICreateCommand<CreateCustomerResult>
+{
+    public long Id { get; init; } = SnowFlakIdGenerator.NewId();
+}
 
 internal class CreateCustomerValidator : AbstractValidator<CreateCustomer>
 {
     public CreateCustomerValidator()
     {
+        CascadeMode = CascadeMode.Stop;
+
         RuleFor(x => x.FirstName)
             .NotNull()
             .NotEmpty();
@@ -66,20 +71,27 @@ internal class CreateCustomerHandler : ICommandHandler<CreateCustomer, CreateCus
     {
         Guard.Against.Null(command, nameof(command));
 
-        var identityUser = (await _identityApiClient.CreateUserIdentityAsync(
-            new CreateUserRequest(
-                command.UserName,
-                command.Email,
-                command.FirstName,
-                command.LastName,
-                command.Password),
-            cancellationToken))?.UserIdentity;
+        var identityUser = (await _identityApiClient.GetUserByEmailAsync(command.Email, cancellationToken))
+            ?.UserIdentity;
+
+        if (identityUser is null)
+        {
+            identityUser = (await _identityApiClient.CreateUserIdentityAsync(
+                new CreateUserRequest(
+                    command.UserName,
+                    command.Email,
+                    command.FirstName,
+                    command.LastName,
+                    command.Password,
+                    command.Password),
+                cancellationToken))?.UserIdentity;
+        }
 
         if (identityUser == null)
             throw new CreatingUserForCustomerException();
 
         var customer = Customer.Create(
-            SnowFlakIdGenerator.NewId(),
+            command.Id,
             new Email(identityUser.Email),
             new Name(identityUser.FirstName, identityUser.LastName),
             identityUser.Id);

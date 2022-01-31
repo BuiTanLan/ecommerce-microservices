@@ -10,7 +10,7 @@ public static class GetUserByIdEndpoint
 {
     internal static IEndpointRouteBuilder MapGetUserByIdEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet($"{UsersConfigs.UsersPrefixUri}/{{id:guid}}", GetUserById)
+        endpoints.MapGet($"{UsersConfigs.UsersPrefixUri}/{{userId:guid}}", GetUserById)
             .AllowAnonymous()
             .WithTags(UsersConfigs.Tag)
             .Produces<RegisterUserResult>(StatusCodes.Status200OK)
@@ -23,11 +23,11 @@ public static class GetUserByIdEndpoint
     }
 
     private static async Task<IResult> GetUserById(
-        Guid id,
+        Guid userId,
         IQueryProcessor queryProcessor,
         CancellationToken cancellationToken)
     {
-        var result = await queryProcessor.SendAsync(new GetUserById(id), cancellationToken);
+        var result = await queryProcessor.SendAsync(new GetUserById(userId), cancellationToken);
 
         return Results.Ok(result);
     }

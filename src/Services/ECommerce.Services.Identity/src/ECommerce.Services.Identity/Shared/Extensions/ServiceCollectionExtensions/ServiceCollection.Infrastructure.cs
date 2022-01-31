@@ -1,8 +1,11 @@
 using System.Reflection;
 using BuildingBlocks.Caching;
+using BuildingBlocks.Core.Extensions;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Email;
 using BuildingBlocks.Logging;
+using BuildingBlocks.Messaging;
+using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
 using BuildingBlocks.Validation;
 using MediatR;
@@ -25,12 +28,22 @@ public static class ServiceCollection
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddCore();
         services.AddEmailService(configuration);
 
         services.AddCustomValidators(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        services.AddCqrs();
 
+        services.AddCqrs(doMoreActions: s =>
+        {
+            s.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));
+        });
+
+        services.AddMessaging(configuration);
+        services.AddRabbitMqTransport(configuration);
         services.AddMonitoring();
 
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))

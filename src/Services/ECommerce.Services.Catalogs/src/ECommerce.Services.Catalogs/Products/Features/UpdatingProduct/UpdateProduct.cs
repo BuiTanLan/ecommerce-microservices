@@ -30,6 +30,13 @@ public record UpdateProduct(
     long BrandId,
     string? Description = null) : IUpdateCommand;
 
+internal class UpdateProductValidator : AbstractValidator<UpdateProduct>
+{
+    public UpdateProductValidator()
+    {
+    }
+}
+
 internal class UpdateProductCommandHandler : ICommandHandler<UpdateProduct>
 {
     private readonly ICatalogDbContext _catalogDbContext;

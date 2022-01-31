@@ -29,9 +29,10 @@ internal class UserRegisteredConsumer : IIntegrationEventHandler<UserRegistered>
     public async Task Handle(UserRegistered notification, CancellationToken cancellationToken)
     {
         if (notification.Roles.Contains(CustomersConstants.Role.User) == false)
-        {
             return;
-        }
+
+        if (_customersDbContext.Customers.Any(x => x.IdentityId == notification.IdentityId))
+            return;
 
         var customer = Customer.Create(
             new CustomerId(SnowFlakIdGenerator.NewId()),

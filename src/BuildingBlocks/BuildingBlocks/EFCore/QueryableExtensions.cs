@@ -79,7 +79,7 @@ public static class QueryableExtensions
 
     public static IQueryable<TEntity> ApplyIncludeList<TEntity>(
         this IQueryable<TEntity> source,
-        IEnumerable<string> navigationPropertiesPath)
+        IEnumerable<string>? navigationPropertiesPath)
         where TEntity : class
     {
         if (navigationPropertiesPath is null)
@@ -95,7 +95,7 @@ public static class QueryableExtensions
 
     public static IQueryable<TEntity> ApplyFilterList<TEntity>(
         this IQueryable<TEntity> source,
-        IEnumerable<FilterModel> filters)
+        IEnumerable<FilterModel>? filters)
         where TEntity : class
     {
         if (filters is null)

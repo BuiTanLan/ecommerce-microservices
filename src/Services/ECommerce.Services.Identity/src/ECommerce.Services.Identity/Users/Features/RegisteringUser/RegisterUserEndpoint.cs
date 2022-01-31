@@ -35,6 +35,6 @@ public static class RegisterUserEndpoint
 
         var result = await commandProcessor.SendAsync(command, cancellationToken);
 
-        return Results.Created($"{UsersConfigs.UsersPrefixUri}/{result.User.Id}", result);
+        return Results.Created($"{UsersConfigs.UsersPrefixUri}/{result.UserIdentity?.Id}", result);
     }
 }

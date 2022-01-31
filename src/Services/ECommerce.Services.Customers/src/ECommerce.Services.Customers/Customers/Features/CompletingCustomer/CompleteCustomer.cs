@@ -22,6 +22,8 @@ internal class CompleteCustomerValidator : AbstractValidator<CompleteCustomer>
 {
     public CompleteCustomerValidator()
     {
+        CascadeMode = CascadeMode.Stop;
+
         RuleFor(x => x.CustomerId)
             .NotEmpty()
             .GreaterThan(0).WithMessage("CustomerId must be greater than 0");

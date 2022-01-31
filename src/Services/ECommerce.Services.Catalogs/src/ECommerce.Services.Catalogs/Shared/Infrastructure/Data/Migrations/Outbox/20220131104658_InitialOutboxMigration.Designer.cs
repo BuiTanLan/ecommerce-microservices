@@ -9,10 +9,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace ECommerce.Services.Identity.Shared.Data.Migrations.Outbox
+namespace ECommerce.Services.Catalogs.Shared.Infrastructure.Data.Migrations.Outbox
 {
     [DbContext(typeof(OutboxDataContext))]
-    [Migration("20220130200847_InitialOutboxMigration")]
+    [Migration("20220131104658_InitialOutboxMigration")]
     partial class InitialOutboxMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,7 +32,6 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Outbox
                         .HasColumnName("id");
 
                     b.Property<string>("CorrelationId")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("correlation_id");
 

@@ -15,7 +15,7 @@ public record RegisterUser(
     string Email,
     string Password,
     string ConfirmPassword,
-    List<string> Roles = null) : ICreateCommand<RegisterUserResult>
+    List<string>? Roles = null) : ICreateCommand<RegisterUserResult>
 {
     public DateTime CreatedAt { get; init; } = DateTime.Now;
 }
@@ -24,6 +24,8 @@ internal class RegisterUserValidator : AbstractValidator<RegisterUser>
 {
     public RegisterUserValidator()
     {
+        CascadeMode = CascadeMode.Stop;
+
         RuleFor(v => v.FirstName)
             .NotEmpty()
             .WithMessage("FirstName is required.");
@@ -113,11 +115,11 @@ internal class RegisterUserHandler : ICommandHandler<RegisterUser, RegisterUserR
             FirstName = applicationUser.FirstName,
             LastName = applicationUser.LastName,
             Roles = request.Roles ?? new List<string> { Constants.Role.User },
-            RefreshTokens = applicationUser.RefreshTokens?.Select(x => x.Token),
+            RefreshTokens = applicationUser?.RefreshTokens?.Select(x => x.Token),
             CreatedAt = request.CreatedAt,
             UserState = UserState.Active
         });
     }
 }
 
-internal record RegisterUserResult(IdentityUserDto User);
+internal record RegisterUserResult(IdentityUserDto? UserIdentity);

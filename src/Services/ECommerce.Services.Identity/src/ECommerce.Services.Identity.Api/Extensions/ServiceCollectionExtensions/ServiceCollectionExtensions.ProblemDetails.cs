@@ -25,6 +25,12 @@ public static class ServiceCollectionExtensions
     {
         services.AddProblemDetails(x =>
         {
+            x.ShouldLogUnhandledException = (httpContext, exception, problemDetails) =>
+            {
+                var env = httpContext.RequestServices.GetRequiredService<IHostEnvironment>();
+                return env.IsDevelopment() || env.IsStaging();
+            };
+
             // Control when an exception is included
             x.IncludeExceptionDetails = (ctx, _) =>
             {
@@ -58,21 +64,21 @@ public static class ServiceCollectionExtensions
             x.Map<NotFoundException>(ex => new ProblemDetails
             {
                 Title = "not found exception",
-                Status = StatusCodes.Status404NotFound,
+                Status = (int)ex.StatusCode,
                 Detail = ex.Message,
                 Type = "https://somedomain/not-found-error"
             });
             x.Map<ApiException>(ex => new ProblemDetails
             {
                 Title = "api server exception",
-                Status = StatusCodes.Status500InternalServerError,
+                Status = (int)ex.StatusCode,
                 Detail = ex.Message,
                 Type = "https://somedomain/api-server-error"
             });
             x.Map<AppException>(ex => new ProblemDetails
             {
                 Title = "application exception",
-                Status = StatusCodes.Status500InternalServerError,
+                Status = (int)ex.StatusCode,
                 Detail = ex.Message,
                 Type = "https://somedomain/application-error"
             });

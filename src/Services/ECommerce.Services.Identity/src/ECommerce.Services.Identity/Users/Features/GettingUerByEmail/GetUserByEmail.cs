@@ -16,6 +16,8 @@ internal class GetUserByIdValidator : AbstractValidator<GetUserByEmail>
 {
     public GetUserByIdValidator()
     {
+        CascadeMode = CascadeMode.Stop;
+
         RuleFor(x => x.Email)
             .NotEmpty()
             .EmailAddress()
@@ -38,9 +40,7 @@ internal class GetUserByEmailHandler : IQueryHandler<GetUserByEmail, GetUserByEm
     {
         Guard.Against.Null(query, nameof(query));
 
-        var identityUser = await _userManager.FindByIdAsync(query.Email);
-
-        Guard.Against.NotFound(identityUser, new UserNotFoundException(query.Email));
+        var identityUser = await _userManager.FindByEmailAsync(query.Email);
 
         var userDto = _mapper.Map<IdentityUserDto>(identityUser);
 
@@ -48,4 +48,4 @@ internal class GetUserByEmailHandler : IQueryHandler<GetUserByEmail, GetUserByEm
     }
 }
 
-public record GetUserByEmailResult(IdentityUserDto IdentityUser);
+public record GetUserByEmailResult(IdentityUserDto? UserIdentity);

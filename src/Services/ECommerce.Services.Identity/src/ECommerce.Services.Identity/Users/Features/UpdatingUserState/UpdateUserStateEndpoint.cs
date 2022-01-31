@@ -10,7 +10,7 @@ public static class UpdateUserStateEndpoint
 {
     internal static IEndpointRouteBuilder MapUpdateUserStateEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut($"{UsersConfigs.UsersPrefixUri}/{{Id:guid}}/state", UpdateUserState)
+        endpoints.MapPut($"{UsersConfigs.UsersPrefixUri}/{{userId:guid}}/state", UpdateUserState)
             .AllowAnonymous()
             .WithTags(UsersConfigs.Tag)
             .Produces<RegisterUserResult>(StatusCodes.Status204NoContent)

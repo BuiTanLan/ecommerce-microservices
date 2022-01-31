@@ -21,6 +21,12 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
             .HasConversion(x => x.Value, id => new CustomerId(id))
             .ValueGeneratedNever();
 
+        builder.Property(x => x.CustomerState)
+            .HasDefaultValue(CustomerState.None)
+            .HasConversion(
+                x => x.ToString(),
+                x => (CustomerState)Enum.Parse(typeof(CustomerState), x));
+
         builder.HasIndex(x => x.Email).IsUnique();
         builder.Property(x => x.Email).IsRequired()
             .HasMaxLength(Constants.Lenght.Medium)
@@ -30,7 +36,7 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
         builder.Property(x => x.PhoneNumber)
             .IsRequired(false)
             .HasMaxLength(Constants.Lenght.Tiny)
-            .HasConversion(x => x.Value, x => new PhoneNumber(x));
+            .HasConversion(x => (string?)x, x => (PhoneNumber?)x);
 
         builder.OwnsOne(m => m.Name, a =>
         {
@@ -58,7 +64,8 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
         builder.Property(x => x.Nationality)
             .IsRequired(false)
             .HasMaxLength(Constants.Lenght.Short)
-            .HasConversion(nationality => (string?)nationality,
+            .HasConversion(
+                nationality => (string?)nationality,
                 value => (Nationality?)value); // converting optional value objects
 
         builder.Property(x => x.BirthDate)

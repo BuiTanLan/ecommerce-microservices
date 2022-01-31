@@ -41,10 +41,10 @@ public class DomainEventDispatcher : IDomainEventDispatcher
 
         // Save wrapped integration and notification events to outbox for further processing after commit
         await _outboxService.SaveAsync(
-            cancellationToken, events.GetDomainNotificationEventsFromDomainEvents()?.ToArray());
-        await _outboxService.SaveAsync(cancellationToken, events.GetIntegrationEventsFromDomainEvents()?.ToArray());
+            cancellationToken, events.GetDomainNotificationEventsFromDomainEvents().ToArray());
+        await _outboxService.SaveAsync(cancellationToken, events.GetIntegrationEventsFromDomainEvents().ToArray());
 
-        var genericEventMappers = _serviceProvider.GetServices<IEventMapper>()?.ToList();
+        var genericEventMappers = _serviceProvider.GetServices<IEventMapper>().ToList();
         if (genericEventMappers.Any())
         {
             foreach (var genericEventMapper in genericEventMappers)
@@ -57,14 +57,14 @@ public class DomainEventDispatcher : IDomainEventDispatcher
         // Save event mapper events into outbox for further processing after commit
         foreach (var aggregateTuple in aggregatesTuple)
         {
-            dynamic aggregateEventMapper = _serviceProvider.GetService(
+            dynamic? aggregateEventMapper = _serviceProvider.GetService(
                 typeof(IEventMapper<>).MakeGenericType(aggregateTuple.Aggregate.GetType()));
-            dynamic integrationEventMapper = _serviceProvider.GetService(
+            dynamic? integrationEventMapper = _serviceProvider.GetService(
                 typeof(IIntegrationEventMapper<>).MakeGenericType(aggregateTuple.Aggregate.GetType()));
-            dynamic notificationMapper = _serviceProvider.GetService(
+            dynamic? notificationMapper = _serviceProvider.GetService(
                 typeof(IIDomainNotificationEventMapper<>).MakeGenericType(aggregateTuple.Aggregate.GetType()));
 
-            IEnumerable<IIntegrationEvent> integrationEvents =
+            IEnumerable<IIntegrationEvent>? integrationEvents =
                 aggregateEventMapper?.MapToIntegrationEvents(aggregateTuple.DomainEvents.ToImmutableList()) ??
                 integrationEventMapper?.MapToIntegrationEvents(aggregateTuple.DomainEvents.ToImmutableList());
 
@@ -72,7 +72,7 @@ public class DomainEventDispatcher : IDomainEventDispatcher
             if (integrationEvents is not null && integrationEvents.Any())
                 await _outboxService.SaveAsync(cancellationToken, integrationEvents.ToArray());
 
-            IEnumerable<IDomainNotificationEvent> notificationEvents =
+            IEnumerable<IDomainNotificationEvent>? notificationEvents =
                 aggregateEventMapper?.MapToDomainNotificationEvents(aggregateTuple.DomainEvents.ToImmutableList()) ??
                 notificationMapper?.MapToDomainNotificationEvents(aggregateTuple.DomainEvents.ToImmutableList());
             notificationEvents = notificationEvents?.Where(x => x is not null).ToList();

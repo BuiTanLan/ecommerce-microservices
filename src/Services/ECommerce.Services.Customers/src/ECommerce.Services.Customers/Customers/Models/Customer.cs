@@ -2,10 +2,12 @@ using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
 using BuildingBlocks.Core.ValueObjects;
 using BuildingBlocks.Exception;
-using ECommerce.Services.Customers.Customers.Events.Domain;
 using ECommerce.Services.Customers.Customers.Exceptions;
 using ECommerce.Services.Customers.Customers.Features.CompletingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
+using ECommerce.Services.Customers.Customers.Features.LockingCustomer.Events.Domain;
+using ECommerce.Services.Customers.Customers.Features.UnlockingCustomer.Events.Domain;
+using ECommerce.Services.Customers.Customers.Features.VerifyingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.ValueObjects;
 
 namespace ECommerce.Services.Customers.Customers.Models;
@@ -18,12 +20,13 @@ public class Customer : AggregateRoot<CustomerId>
     public Address? Address { get; private set; }
     public Nationality? Nationality { get; private set; }
     public BirthDate? BirthDate { get; private set; }
-    public PhoneNumber? PhoneNumber { get; private set; } = null!;
+    public PhoneNumber? PhoneNumber { get; private set; }
     public string? Notes { get; private set; }
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? CompletedAt { get; private set; }
     public DateTime? VerifiedAt { get; private set; }
+    public CustomerState CustomerState { get; private set; } = CustomerState.None;
 
     public static Customer Create(CustomerId id, Email email, Name name, Guid identityId)
     {
@@ -32,7 +35,8 @@ public class Customer : AggregateRoot<CustomerId>
             Id = Guard.Against.Null(id, nameof(id)),
             Email = Guard.Against.Null(email, nameof(email)),
             Name = Guard.Against.Null(name, nameof(name)),
-            IdentityId = Guard.Against.NullOrEmpty(identityId, nameof(IdentityId))
+            IdentityId = Guard.Against.NullOrEmpty(identityId, nameof(IdentityId)),
+            CustomerState = CustomerState.New
         };
 
         customer.AddDomainEvent(new CustomerCreated(customer));
@@ -62,6 +66,7 @@ public class Customer : AggregateRoot<CustomerId>
         BirthDate = birthDate;
         CompletedAt = Guard.Against.InvalidDate(completedAt);
         PhoneNumber = Guard.Against.Null(phoneNumber, nameof(phoneNumber))!;
+        CustomerState = CustomerState.Completed;
 
         AddDomainEvent(new CustomerCompleted(
             Id,
@@ -86,16 +91,21 @@ public class Customer : AggregateRoot<CustomerId>
         }
 
         VerifiedAt = verifiedAt;
+        CustomerState = CustomerState.Verified;
+
+        AddDomainEvent(new CustomerVerified(Id));
     }
 
-    public void Lock(string notes = null)
+    public void Lock(string? notes = null)
     {
         IsActive = false;
         Notes = notes?.Trim();
-        AddDomainEvent(new CustomerLocked(Id));
+        CustomerState = CustomerState.Locked;
+
+        AddDomainEvent(new CustomerLocked(Id, notes));
     }
 
-    public void Unlock(string notes = null)
+    public void Unlock(string? notes = null)
     {
         IsActive = true;
         Notes = notes?.Trim();

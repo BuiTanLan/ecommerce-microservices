@@ -38,8 +38,6 @@ internal class GetUserByIdHandler : IQueryHandler<GetUserById, UserByIdResponse>
 
         var identityUser = await _userManager.FindByIdAsync(query.Id.ToString());
 
-        Guard.Against.NotFound(identityUser, new UserNotFoundException(query.Id));
-
         var identityUserDto = _mapper.Map<IdentityUserDto>(identityUser);
 
         return new UserByIdResponse(identityUserDto);

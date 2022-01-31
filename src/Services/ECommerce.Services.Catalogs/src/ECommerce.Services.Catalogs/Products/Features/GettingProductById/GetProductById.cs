@@ -15,6 +15,8 @@ internal class GetProductByIdValidator : AbstractValidator<GetProductById>
 {
     public GetProductByIdValidator()
     {
+        CascadeMode = CascadeMode.Stop;
+
         RuleFor(x => x.Id).GreaterThan(0);
     }
 }

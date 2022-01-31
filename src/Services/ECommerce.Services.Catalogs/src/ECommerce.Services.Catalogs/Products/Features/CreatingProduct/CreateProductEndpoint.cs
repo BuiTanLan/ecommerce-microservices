@@ -29,7 +29,7 @@ public static class CreateProductEndpoint
         CancellationToken cancellationToken)
     {
         Guard.Against.Null(request, nameof(request));
-        
+
         var command = mapper.Map<CreateProduct>(request);
         var result = await commandProcessor.SendAsync(command, cancellationToken);
 

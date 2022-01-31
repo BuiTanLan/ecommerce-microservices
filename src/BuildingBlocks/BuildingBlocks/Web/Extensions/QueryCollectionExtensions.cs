@@ -57,7 +57,8 @@ public static class QueryCollectionExtensions
 
     public static T GetCollection<T>(
         this IQueryCollection collection,
-        string key)
+        string key,
+        T @default = default)
         where T : IEnumerable
     {
         var type = typeof(T).GetGenericArguments()[0];
@@ -89,7 +90,11 @@ public static class QueryCollectionExtensions
                 }
             }
         }
+        else
+        {
+            return @default;
+        }
 
-        return (T)values;
+        return values;
     }
 }

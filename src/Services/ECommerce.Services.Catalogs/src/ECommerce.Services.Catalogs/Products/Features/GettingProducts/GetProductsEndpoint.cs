@@ -21,7 +21,7 @@ public static class GetProductsEndpoint
     }
 
     private static async Task<IResult> GetProducts(
-            GetProductRequest? request,
+            GetProductsRequest? request,
             IQueryProcessor queryProcessor,
             CancellationToken cancellationToken)
 

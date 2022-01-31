@@ -15,6 +15,8 @@ public class GetProductsViewValidator : AbstractValidator<GetProductsView>
 {
     public GetProductsViewValidator()
     {
+        CascadeMode = CascadeMode.Stop;
+
         RuleFor(x => x.Page)
             .GreaterThanOrEqualTo(1).WithMessage("Page should at least greater than or equal to 1.");
 

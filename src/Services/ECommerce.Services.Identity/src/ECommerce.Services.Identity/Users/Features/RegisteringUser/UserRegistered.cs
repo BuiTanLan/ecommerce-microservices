@@ -7,4 +7,4 @@ public record UserRegistered(
     string Email,
     string FirstName,
     string LastName,
-    List<string> Roles) : IntegrationEvent;
+    List<string>? Roles) : IntegrationEvent;

@@ -3,6 +3,7 @@ using BuildingBlocks.Core.Extensions;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Email;
 using BuildingBlocks.IdsGenerator;
+using BuildingBlocks.Logging;
 using BuildingBlocks.Messaging;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
@@ -31,7 +32,13 @@ public static partial class ServiceCollectionExtensions
         services.AddRabbitMqTransport(configuration);
 
         services.AddEmailService(configuration);
-        services.AddCqrs();
+        services.AddCqrs(doMoreActions: s =>
+        {
+            s.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));
+        });
         services.AddCustomValidators(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

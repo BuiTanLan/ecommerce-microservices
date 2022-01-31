@@ -8,7 +8,7 @@ public static class CustomersDbContextExtensions
     public static ValueTask<Customer?> FindCustomerByIdAsync(
         this CustomersDbContext context,
         long id,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         return context.Customers.FindAsync(id, cancellationToken);
     }

@@ -28,11 +28,11 @@ public class IdentityApiClient : IIdentityApiClient
         Guard.Against.NullOrEmpty(email, nameof(email));
         Guard.Against.InvalidEmail(email);
 
-        var userIdentity = await _httpClient.GetFromJsonAsync<UserIdentityDto>(
-            $"{_options.UsersEndpoint}/{email}",
+        var userIdentity = await _httpClient.GetFromJsonAsync<GetUserByEmailResponse>(
+            $"{_options.UsersEndpoint}/by-email/{email}",
             cancellationToken);
 
-        return new GetUserByEmailResponse(userIdentity);
+        return userIdentity;
     }
 
     public async Task<CreateUserResponse?> CreateUserIdentityAsync(
@@ -50,8 +50,8 @@ public class IdentityApiClient : IIdentityApiClient
         response.EnsureSuccessStatusCode();
 
         var createdUser =
-            await response.Content.ReadFromJsonAsync<UserIdentityDto>(cancellationToken: cancellationToken);
+            await response.Content.ReadFromJsonAsync<CreateUserResponse?>(cancellationToken: cancellationToken);
 
-        return new CreateUserResponse(createdUser);
+        return createdUser;
     }
 }

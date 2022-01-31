@@ -30,7 +30,6 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Outbox
                         .HasColumnName("id");
 
                     b.Property<string>("CorrelationId")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("correlation_id");
 

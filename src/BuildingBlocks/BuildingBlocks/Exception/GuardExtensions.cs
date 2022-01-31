@@ -49,11 +49,6 @@ public static class GuardExtensions
         return input;
     }
 
-    public static string InvalidEmail(this IGuardClause guardClause, string? email)
-    {
-        return guardClause.InvalidEmail(email, new InvalidEmailException(email));
-    }
-
     public static DateTime InvalidDate(this IGuardClause guardClause, DateTime date)
     {
         if (date == default(DateTime))
@@ -64,6 +59,10 @@ public static class GuardExtensions
         return date;
     }
 
+    public static string InvalidEmail(this IGuardClause guardClause, string? email)
+    {
+        return guardClause.InvalidEmail(email, new InvalidEmailException(email ?? string.Empty));
+    }
 
     public static string InvalidEmail(this IGuardClause guardClause, string? email, System.Exception exception)
     {

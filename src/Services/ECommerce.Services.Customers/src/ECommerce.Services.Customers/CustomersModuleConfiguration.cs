@@ -21,7 +21,7 @@ public static class CustomersModuleConfiguration
 
         services.AddStorage(configuration);
 
-        services.AddCustomersServices();
+        services.AddCustomersServices(configuration);
 
         return services;
     }

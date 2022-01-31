@@ -18,6 +18,8 @@ internal class UpdateUserStateValidator : AbstractValidator<UpdateUserState>
 {
     public UpdateUserStateValidator()
     {
+        CascadeMode = CascadeMode.Stop;
+
         RuleFor(v => v.State)
             .NotEmpty();
 

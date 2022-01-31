@@ -14,8 +14,8 @@ public static class Extensions
 {
     public static WebApplicationBuilder AddCqrs(
         this WebApplicationBuilder builder,
-        Assembly[] assemblies = null,
-        Action<IServiceCollection> doMoreActions = null)
+        Assembly[]? assemblies = null,
+        Action<IServiceCollection>? doMoreActions = null)
     {
         AddCqrs(builder.Services, assemblies, doMoreActions);
 
@@ -24,17 +24,15 @@ public static class Extensions
 
     public static IServiceCollection AddCqrs(
         this IServiceCollection services,
-        Assembly[] assemblies = null,
-        Action<IServiceCollection> doMoreActions = null)
+        Assembly[]? assemblies = null,
+        Action<IServiceCollection>? doMoreActions = null)
     {
-        services.AddMediatR(assemblies ?? new[] { Assembly.GetExecutingAssembly() })
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));
+        services.AddMediatR(assemblies ?? new[] { Assembly.GetCallingAssembly() });
 
         services.AddTransient<ICommandProcessor, CommandProcessor>()
             .AddTransient<IQueryProcessor, QueryProcessor>();
+
+        doMoreActions?.Invoke(services);
 
         return services;
     }

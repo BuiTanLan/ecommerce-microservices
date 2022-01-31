@@ -34,13 +34,15 @@ public record CreateProduct(
     string? Description = null,
     IEnumerable<CreateProductImageRequest>? Images = null) : ICreateCommand<CreateProductResult>
 {
-    public long Id { get; } = SnowFlakIdGenerator.NewId();
+    public long Id { get; init; } = SnowFlakIdGenerator.NewId();
 }
 
 public class CreateProductValidator : AbstractValidator<CreateProduct>
 {
     public CreateProductValidator()
     {
+        CascadeMode = CascadeMode.Stop;
+
         RuleFor(x => x.Id)
             .NotEmpty()
             .GreaterThan(0).WithMessage("Id must be greater than 0");

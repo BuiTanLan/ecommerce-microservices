@@ -1,10 +1,9 @@
-using BuildingBlocks.Core.Domain.Model;
-
 namespace BuildingBlocks.Messaging.Outbox;
 
 public class OutboxMessage
 {
     public Guid Id { get; private set; }
+
     /// <summary>
     /// Gets name of message.
     /// </summary>
@@ -38,7 +37,7 @@ public class OutboxMessage
     /// <summary>
     /// Gets the CorrelationId of our event.
     /// </summary>
-    public string CorrelationId { get; private set; }
+    public string? CorrelationId { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OutboxMessage"/> class.

@@ -1,7 +1,7 @@
 using BuildingBlocks.Resiliency;
 using ECommerce.Services.Customers.Customers.Clients;
 
-namespace ECommerce.Services.Customers.Shared.Extensions.ServiceCollectionExtensions;
+namespace ECommerce.Services.Customers.Customers.Extensions;
 
 public static partial class ServiceCollectionExtensions
 {

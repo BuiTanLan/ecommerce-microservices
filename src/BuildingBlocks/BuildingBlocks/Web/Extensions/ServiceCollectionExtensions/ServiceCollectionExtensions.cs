@@ -5,7 +5,6 @@ namespace BuildingBlocks.Web.Extensions.ServiceCollectionExtensions;
 
 public static partial class ServiceCollectionExtensions
 {
-
     public static void Unregister<TService>(this IServiceCollection services)
     {
         var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(TService));
