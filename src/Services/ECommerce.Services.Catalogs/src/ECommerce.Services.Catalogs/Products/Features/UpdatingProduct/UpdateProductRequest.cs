@@ -12,6 +12,7 @@ public record UpdateProductRequest
     public int Height { get; init; }
     public int Width { get; init; }
     public int Depth { get; init; }
+    public string Size { get; init; } = null!;
     public long CategoryId { get; init; }
     public long SupplierId { get; init; }
     public long BrandId { get; init; }

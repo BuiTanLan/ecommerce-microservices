@@ -38,7 +38,7 @@ internal class ReplenishingProductStockHandler : ICommandHandler<ReplenishingPro
     {
         Guard.Against.Null(command, nameof(command));
 
-        var product = await _catalogDbContext.FindProductByIdAsync(command.ProductId, cancellationToken);
+        var product = await _catalogDbContext.FindProductByIdAsync(command.ProductId);
         Guard.Against.NotFound(product, new ProductNotFoundException(command.ProductId));
 
         product!.ReplenishStock(command.Quantity);

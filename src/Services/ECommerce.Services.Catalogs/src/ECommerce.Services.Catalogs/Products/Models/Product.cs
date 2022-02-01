@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Exception;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products.Events.Domain;
@@ -14,6 +15,7 @@ using ECommerce.Services.Catalogs.Products.Features.ReplenishingProductStock.Eve
 using ECommerce.Services.Catalogs.Products.Models.ValueObjects;
 using ECommerce.Services.Catalogs.Suppliers;
 using static BuildingBlocks.Core.Domain.Events.Internal.DomainEvents;
+using Size = ECommerce.Services.Catalogs.Products.Models.ValueObjects.Size;
 
 namespace ECommerce.Services.Catalogs.Products.Models;
 
@@ -24,9 +26,10 @@ public class Product : AggregateRoot<ProductId>
 {
     private readonly List<ProductImage> _images = new();
 
-    public string Name { get; private set; } = default!;
+    public Name Name { get; private set; } = default!;
     public string? Description { get; private set; }
-    public decimal Price { get; private set; }
+    public Price Price { get; private set; } = null!;
+    public ProductColor Color { get; private set; }
     public ProductStatus ProductStatus { get; private set; }
     public CategoryId CategoryId { get; private set; } = null!;
     public Category Category { get; private set; } = null!;
@@ -34,73 +37,44 @@ public class Product : AggregateRoot<ProductId>
     public Supplier Supplier { get; private set; } = null!;
     public BrandId BrandId { get; private set; } = null!;
     public Brand Brand { get; private set; } = null!;
+    public Size Size { get; private set; } = null!;
+    public Stock Stock { get; set; } = null!;
     public Dimensions Dimensions { get; private set; } = null!;
     public IReadOnlyList<ProductImage> Images => _images;
 
-    /// <summary>
-    /// Gets quantity in stock.
-    /// </summary>
-    public int AvailableStock { get; private set; }
 
-    /// <summary>
-    /// Gets available stock at which we should reorder.
-    /// </summary>
-    public int RestockThreshold { get; private set; }
-
-    /// <summary>
-    /// Gets maximum number of units that can be in-stock at any time (due to physicial/logistical constraints in warehouses).
-    /// </summary>
-    public int MaxStockThreshold { get; private set; }
-
-    public static async Task<Product> CreateAsync(
+    public static Product Create(
         ProductId id,
-        string name,
-        int stock,
-        int restockThreshold,
-        int maxStockThreshold,
+        Name name,
+        Stock stock,
         ProductStatus status,
         Dimensions dimensions,
+        Size size,
+        ProductColor color,
         string? description,
-        decimal price,
+        Price price,
         Category? category,
         Supplier? supplier,
         Brand? brand,
         IList<ProductImage>? images = null)
     {
-        await RaiseDomainEventAsync(
-            new CreatingProduct(
-                id,
-                name,
-                price,
-                stock,
-                restockThreshold,
-                maxStockThreshold,
-                status,
-                dimensions.Width,
-                dimensions.Height,
-                dimensions.Depth,
-                category,
-                supplier,
-                brand,
-                description));
-
         var product = new Product
         {
-            Id = Guard.Against.Null(id, nameof(id)),
-            RestockThreshold = Guard.Against.NegativeOrZero(restockThreshold, nameof(restockThreshold))
+            Id = Guard.Against.Null(id, new ProductDomainException("Product id can not be null")),
+            Stock = Guard.Against.Null(stock, new ProductDomainException("Product stock can not be null"))
         };
+
         product.ChangeName(name);
+        product.ChangeSize(size);
         product.ChangeDescription(description);
         product.ChangePrice(price);
-        product.ReplenishStock(stock);
         product.AddProductImages(images);
         product.ChangeStatus(status);
+        product.ChangeColor(color);
         product.ChangeDimensions(dimensions);
-        product.ChangeMaxStockThreshold(maxStockThreshold);
-
-        await product.ChangeCategory(category);
-        await product.ChangeBrand(brand);
-        await product.ChangeSupplier(supplier);
+        product.ChangeCategory(category);
+        product.ChangeBrand(brand);
+        product.ChangeSupplier(supplier);
 
         product.AddDomainEvent(new ProductCreated(product));
 
@@ -114,17 +88,30 @@ public class Product : AggregateRoot<ProductId>
 
     public void ChangeDimensions(Dimensions dimensions)
     {
-        Dimensions = Guard.Against.Null(dimensions, nameof(dimensions));
+        Guard.Against.Null(dimensions, new ProductDomainException("Dimensions cannot be null."));
+
+        Dimensions = dimensions;
+    }
+
+    public void ChangeSize(Size size)
+    {
+        Guard.Against.Null(size, new ProductDomainException("Size cannot be null."));
+
+        Size = size;
+    }
+
+    public void ChangeColor(ProductColor color)
+    {
+        Color = color;
     }
 
     /// <summary>
     /// Sets catalog item name.
     /// </summary>
     /// <param name="name">The name to be changed.</param>
-    public void ChangeName(string name)
+    public void ChangeName(Name name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ProductDomainEventException("The catalog item name cannot be null, empty or whitespace.");
+        Guard.Against.Null(name, new ProductDomainException("Product name cannot be null."));
 
         Name = name;
     }
@@ -145,10 +132,9 @@ public class Product : AggregateRoot<ProductId>
     /// Raise a <see cref="ProductPriceChanged"/>.
     /// </remarks>
     /// <param name="price">The price to be changed.</param>
-    public void ChangePrice(decimal price)
+    public void ChangePrice(Price price)
     {
-        if (price < 0)
-            throw new ProductDomainEventException("The catalog item price cannot have negative value.");
+        Guard.Against.Null(price, new ProductDomainException("Price cannot be null."));
 
         if (Price == price)
             return;
@@ -173,16 +159,16 @@ public class Product : AggregateRoot<ProductId>
 
         if (quantity < 0) quantity *= -1;
 
-        int removed = Math.Min(quantity, AvailableStock);
+        int removed = Math.Min(quantity, Stock.Available);
 
-        AvailableStock -= removed;
+        Stock = new Stock(Stock.Available - removed, Stock.RestockThreshold, Stock.MaxStockThreshold);
 
-        if (AvailableStock <= RestockThreshold)
+        if (Stock.Available <= Stock.RestockThreshold)
         {
-            AddDomainEvent(new ProductRestockThresholdReachedEvent(AvailableStock, quantity));
+            AddDomainEvent(new ProductRestockThresholdReachedEvent(Stock.Available, quantity));
         }
 
-        AddDomainEvent(new ProductStockDebited(AvailableStock, quantity));
+        AddDomainEvent(new ProductStockDebited(Stock.Available, quantity));
 
         return removed;
     }
@@ -192,43 +178,47 @@ public class Product : AggregateRoot<ProductId>
     /// </summary>
     /// <returns>int: Returns the quantity that has been added to stock.</returns>
     /// <param name="quantity">The number of items to Replenish.</param>
-    public int ReplenishStock(int quantity)
+    public Stock ReplenishStock(int quantity)
     {
         // we don't have enough space in the inventory
-        if (AvailableStock + quantity > MaxStockThreshold)
+        if (Stock.Available + quantity > Stock.MaxStockThreshold)
         {
             throw new MaxStockThresholdReachedException(
-                $"Max stock threshold has been reached. Max stock threshold is {MaxStockThreshold}");
+                $"Max stock threshold has been reached. Max stock threshold is {Stock.MaxStockThreshold}");
         }
 
-        AvailableStock += quantity;
+        Stock = new Stock(Stock.Available + quantity, Stock.RestockThreshold, Stock.MaxStockThreshold);
 
-        AddDomainEvent(new ProductStockReplenished(AvailableStock, quantity));
+        AddDomainEvent(new ProductStockReplenished(Stock.Available, quantity));
 
-        return AvailableStock;
+        return Stock;
     }
 
-    public void ChangeMaxStockThreshold(int maxStockThreshold)
+    public Stock ChangeMaxStockThreshold(int maxStockThreshold)
     {
         Guard.Against.NegativeOrZero(maxStockThreshold, nameof(maxStockThreshold));
 
-        MaxStockThreshold = maxStockThreshold;
+        Stock = new Stock(Stock.Available, Stock.RestockThreshold, maxStockThreshold);
 
         AddDomainEvent(new MaxThresholdChanged(maxStockThreshold));
+
+        return Stock;
     }
 
-    public void ChangeRestockThreshold(int restockThreshold)
+    public Stock ChangeRestockThreshold(int restockThreshold)
     {
         Guard.Against.NegativeOrZero(restockThreshold, nameof(restockThreshold));
 
-        RestockThreshold = restockThreshold;
+        Stock = new Stock(Stock.Available, restockThreshold, Stock.MaxStockThreshold);
 
         AddDomainEvent(new RestockThresholdChanged(restockThreshold));
+
+        return Stock;
     }
 
     public bool HasStock(int quantity)
     {
-        return AvailableStock >= quantity;
+        return Stock.Available >= quantity;
     }
 
     public void Activate() => ChangeStatus(ProductStatus.Available);
@@ -239,7 +229,7 @@ public class Product : AggregateRoot<ProductId>
     /// Sets category.
     /// </summary>
     /// <param name="category">The category to be changed.</param>
-    public async Task ChangeCategory(Category? category)
+    public void ChangeCategory(Category? category)
     {
         Guard.Against.Null(category, nameof(category));
         Guard.Against.NullOrEmpty(category.Code, nameof(category.Code));
@@ -247,7 +237,7 @@ public class Product : AggregateRoot<ProductId>
         Guard.Against.NegativeOrZero(category.Id, nameof(category.Id));
 
         // raising domain event immediately for checking some validation rule with some dependencies such as database
-        await RaiseDomainEventAsync(new ChangingProductCategory(category.Id));
+        RaiseDomainEvent(new ChangingProductCategory(category.Id));
 
         Category = category;
         CategoryId = category.Id;
@@ -260,13 +250,13 @@ public class Product : AggregateRoot<ProductId>
     /// Sets supplier.
     /// </summary>
     /// <param name="supplier">The supplier to be changed.</param>
-    public async Task ChangeSupplier(Supplier? supplier)
+    public void ChangeSupplier(Supplier? supplier)
     {
         Guard.Against.Null(supplier, nameof(supplier));
         Guard.Against.NullOrEmpty(supplier.Name, nameof(supplier.Name));
         Guard.Against.NegativeOrZero(supplier.Id, nameof(supplier.Id));
 
-        await RaiseDomainEventAsync(new ChangingProductSupplier(supplier.Id));
+        RaiseDomainEvent(new ChangingProductSupplier(supplier.Id));
 
         Supplier = supplier;
         SupplierId = supplier.Id;
@@ -278,13 +268,13 @@ public class Product : AggregateRoot<ProductId>
     ///  Sets brand.
     /// </summary>
     /// <param name="brand">The brand to be changed.</param>
-    public async Task ChangeBrand(Brand? brand)
+    public void ChangeBrand(Brand? brand)
     {
         Guard.Against.Null(brand, nameof(brand));
         Guard.Against.NullOrEmpty(brand.Name, nameof(brand.Name));
         Guard.Against.NegativeOrZero(brand.Id, nameof(brand.Id));
 
-        await RaiseDomainEventAsync(new ChangingProductBrand(brand.Id));
+        RaiseDomainEvent(new ChangingProductBrand(brand.Id));
 
         Brand = brand;
         BrandId = brand.Id;

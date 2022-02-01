@@ -27,8 +27,22 @@ public class EfUnitOfWork<TDbContext> : IUnitOfWork<TDbContext>
         _repositories = new ConcurrentDictionary<Type, object>();
     }
 
-    public TDbContext DbContext { get; }
+    public TDbContext DbContext => _context;
 
+    public async Task ExecuteAsync(Func<Task> action, CancellationToken cancellationToken = default)
+    {
+        await BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
+        try
+        {
+            await action();
+            await CommitTransactionAsync(cancellationToken);
+        }
+        catch (System.Exception)
+        {
+            await RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
+    }
 
     public DbSet<TEntity> Set<TEntity>()
         where TEntity : class

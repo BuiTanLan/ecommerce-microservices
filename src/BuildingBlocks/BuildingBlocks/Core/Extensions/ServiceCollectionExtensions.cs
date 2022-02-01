@@ -71,9 +71,6 @@ public static class ServiceCollectionExtensions
             .AddClasses(classes => classes.AssignableTo(typeof(IEventMapper)), false)
             .AddClasses(classes => classes.AssignableTo(typeof(IIntegrationEventMapper)), false)
             .AddClasses(classes => classes.AssignableTo(typeof(IIDomainNotificationEventMapper)), false)
-            .AddClasses(classes => classes.AssignableTo(typeof(IEventMapper<>)), false)
-            .AddClasses(classes => classes.AssignableTo(typeof(IIntegrationEventMapper<>)), false)
-            .AddClasses(classes => classes.AssignableTo(typeof(IIDomainNotificationEventMapper<>)), false)
             .AsImplementedInterfaces()
             .WithSingletonLifetime());
     }

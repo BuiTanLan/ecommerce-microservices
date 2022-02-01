@@ -38,6 +38,7 @@ public static class UpdateProductEndpoint
             request.Width,
             request.Height,
             request.Depth,
+            request.Size,
             request.CategoryId,
             request.SupplierId,
             request.BrandId,

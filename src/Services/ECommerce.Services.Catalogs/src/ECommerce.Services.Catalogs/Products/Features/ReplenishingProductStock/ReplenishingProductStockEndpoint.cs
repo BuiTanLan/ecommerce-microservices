@@ -17,8 +17,8 @@ public static class ReplenishingProductStockEndpoint
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
-            .WithName("DebitProductStock")
-            .WithDisplayName("Debit product stock");
+            .WithName("ReplenishProductStock")
+            .WithDisplayName("Replenish product stock");
 
         return endpoints;
     }

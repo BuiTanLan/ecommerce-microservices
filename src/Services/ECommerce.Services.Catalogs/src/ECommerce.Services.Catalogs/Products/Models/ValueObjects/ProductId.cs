@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
 
-namespace ECommerce.Services.Catalogs.Products.Models;
+namespace ECommerce.Services.Catalogs.Products.Models.ValueObjects;
 
 public class ProductId : AggregateId
 {

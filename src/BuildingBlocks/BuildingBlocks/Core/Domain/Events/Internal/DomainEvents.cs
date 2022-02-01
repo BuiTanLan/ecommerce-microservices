@@ -30,4 +30,12 @@ public static class DomainEvents
         var mediator = _mediatorFunc.Invoke();
         await mediator.DispatchDomainEventAsync(domainEvent, cancellationToken: cancellationToken);
     }
+
+    public static void RaiseDomainEvent(
+        IDomainEvent domainEvent,
+        CancellationToken cancellationToken = default)
+    {
+        var mediator = _mediatorFunc.Invoke();
+        mediator.DispatchDomainEventAsync(domainEvent, cancellationToken: cancellationToken).GetAwaiter().GetResult();
+    }
 }

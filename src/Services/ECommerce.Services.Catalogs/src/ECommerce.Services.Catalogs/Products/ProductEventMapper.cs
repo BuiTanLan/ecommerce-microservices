@@ -20,7 +20,7 @@ public class ProductEventMapper : IEventMapper
                     e.Product.Name,
                     e.Product.CategoryId,
                     e.Product.Category.Name,
-                    e.Product.AvailableStock),
+                    e.Product.Stock.Available),
             ProductStockDebited e => new
                 Features.DebitingProductStock.Events.Integration.ProductStockDebited(
                     e.NewStock, e.DebitedQuantity),

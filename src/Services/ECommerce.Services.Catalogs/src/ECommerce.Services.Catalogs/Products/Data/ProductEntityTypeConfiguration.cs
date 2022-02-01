@@ -1,4 +1,5 @@
 using ECommerce.Services.Catalogs.Products.Models;
+using ECommerce.Services.Catalogs.Products.Models.ValueObjects;
 using ECommerce.Services.Catalogs.Shared.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,23 +20,46 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Ignore(c => c.DomainEvents);
 
-        builder.Property(x => x.Name).HasColumnType(Constants.ColumnTypes.NormalText).IsRequired();
+        builder.Property(x => x.Name)
+            .HasColumnType(Constants.ColumnTypes.NormalText)
+            .HasConversion(name => name.Value, name => new Name(name))
+            .IsRequired();
 
         builder.Property(ci => ci.Price)
             .HasColumnType(Constants.ColumnTypes.PriceDecimal)
+            .HasConversion(price => price.Value, price => price)
+            .IsRequired();
+
+        builder.Property(ci => ci.Size)
+            .HasConversion(size => size.Value, size => new Size(size))
             .IsRequired();
 
         builder.Property(x => x.ProductStatus)
             .HasDefaultValue(ProductStatus.Available)
+            .HasMaxLength(Constants.Lenght.Short)
             .HasConversion(
                 x => x.ToString(),
                 x => (ProductStatus)Enum.Parse(typeof(ProductStatus), x));
+
+        builder.Property(x => x.Color)
+            .HasDefaultValue(ProductColor.Black)
+            .HasMaxLength(Constants.Lenght.Short)
+            .HasConversion(
+                x => x.ToString(),
+                x => (ProductColor)Enum.Parse(typeof(ProductColor), x));
 
         builder.OwnsOne(c => c.Dimensions, cm =>
         {
             cm.Property(c => c.Height);
             cm.Property(c => c.Width);
             cm.Property(c => c.Depth);
+        });
+
+        builder.OwnsOne(c => c.Stock, cm =>
+        {
+            cm.Property(c => c.Available);
+            cm.Property(c => c.RestockThreshold);
+            cm.Property(c => c.MaxStockThreshold);
         });
 
         builder.HasOne(c => c.Category)

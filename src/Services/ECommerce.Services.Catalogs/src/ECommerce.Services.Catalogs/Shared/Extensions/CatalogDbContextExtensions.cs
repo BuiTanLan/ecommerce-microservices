@@ -1,6 +1,7 @@
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products.Models;
+using ECommerce.Services.Catalogs.Products.Models.ValueObjects;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Suppliers;
 
@@ -22,10 +23,9 @@ public static class CatalogDbContextExtensions
 
     public static ValueTask<Product?> FindProductByIdAsync(
         this ICatalogDbContext context,
-        ProductId id,
-        CancellationToken cancellationToken = default)
+        ProductId id)
     {
-        return context.Products.FindAsync(id, cancellationToken);
+        return context.Products.FindAsync(id);
     }
 
     public static Task<bool> SupplierExistsAsync(
@@ -38,10 +38,9 @@ public static class CatalogDbContextExtensions
 
     public static ValueTask<Supplier?> FindSupplierByIdAsync(
         this ICatalogDbContext context,
-        SupplierId id,
-        CancellationToken cancellationToken = default)
+        SupplierId id)
     {
-        return context.Suppliers.FindAsync(id, cancellationToken);
+        return context.Suppliers.FindAsync(id);
     }
 
     public static Task<bool> CategoryExistsAsync(
@@ -54,10 +53,9 @@ public static class CatalogDbContextExtensions
 
     public static ValueTask<Category?> FindCategoryAsync(
         this ICatalogDbContext context,
-        CategoryId id,
-        CancellationToken cancellationToken = default)
+        CategoryId id)
     {
-        return context.Categories.FindAsync(id, cancellationToken);
+        return context.Categories.FindAsync(id);
     }
 
     public static Task<bool> BrandExistsAsync(
@@ -70,9 +68,8 @@ public static class CatalogDbContextExtensions
 
     public static ValueTask<Brand?> FindBrandAsync(
         this ICatalogDbContext context,
-        BrandId id,
-        CancellationToken cancellationToken = default)
+        BrandId id)
     {
-        return context.Brands.FindAsync(id, cancellationToken);
+        return context.Brands.FindAsync(id);
     }
 }

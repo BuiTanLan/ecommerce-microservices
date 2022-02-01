@@ -1,11 +1,10 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
+using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
-using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Brands.Exceptions.Application;
-using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Categories.Exceptions.Domain;
 using ECommerce.Services.Catalogs.Products.Dtos;
 using ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Requests;
@@ -13,7 +12,6 @@ using ECommerce.Services.Catalogs.Products.Models;
 using ECommerce.Services.Catalogs.Products.Models.ValueObjects;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Shared.Extensions;
-using ECommerce.Services.Catalogs.Suppliers;
 using ECommerce.Services.Catalogs.Suppliers.Exceptions.Application;
 
 namespace ECommerce.Services.Catalogs.Products.Features.CreatingProduct;
@@ -28,6 +26,8 @@ public record CreateProduct(
     int Width,
     int Height,
     int Depth,
+    string Size,
+    ProductColor Color,
     long CategoryId,
     long SupplierId,
     long BrandId,
@@ -53,6 +53,12 @@ public class CreateProductValidator : AbstractValidator<CreateProduct>
         RuleFor(x => x.Price)
             .NotEmpty()
             .GreaterThan(0).WithMessage("Price must be greater than 0");
+
+        RuleFor(x => x.Status)
+            .IsInEnum().WithMessage("Status is required.");
+
+        RuleFor(x => x.Color)
+            .IsInEnum().WithMessage("Color is required.");
 
         RuleFor(x => x.Stock)
             .NotEmpty()
@@ -82,12 +88,18 @@ public class CreateProductValidator : AbstractValidator<CreateProduct>
 
 public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProductResult>
 {
+    private readonly IDomainEventDispatcher _domainEventDispatcher;
     private readonly ILogger<CreateProductHandler> _logger;
     private readonly IMapper _mapper;
     private readonly ICatalogDbContext _catalogDbContext;
 
-    public CreateProductHandler(ICatalogDbContext catalogDbContext, IMapper mapper, ILogger<CreateProductHandler> logger)
+    public CreateProductHandler(
+        ICatalogDbContext catalogDbContext,
+        IMapper mapper,
+        IDomainEventDispatcher domainEventDispatcher,
+        ILogger<CreateProductHandler> logger)
     {
+        _domainEventDispatcher = domainEventDispatcher;
         _logger = Guard.Against.Null(logger, nameof(logger));
         _mapper = Guard.Against.Null(mapper, nameof(mapper));
         _catalogDbContext = Guard.Against.Null(catalogDbContext, nameof(catalogDbContext));
@@ -102,23 +114,24 @@ public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProduct
         var images = command.Images?.Select(x =>
             new ProductImage(SnowFlakIdGenerator.NewId(), x.ImageUrl, x.IsMain, command.Id)).ToList();
 
-        var category = await _catalogDbContext.FindCategoryAsync(command.CategoryId, cancellationToken);
+        var category = await _catalogDbContext.FindCategoryAsync(command.CategoryId);
         Guard.Against.NotFound(category, new CategoryDomainException(command.CategoryId));
 
-        var brand = await _catalogDbContext.FindBrandAsync(command.BrandId, cancellationToken);
+        var brand = await _catalogDbContext.FindBrandAsync(command.BrandId);
         Guard.Against.NotFound(brand, new BrandNotFoundException(command.BrandId));
 
-        var supplier = await _catalogDbContext.FindSupplierByIdAsync(command.SupplierId, cancellationToken);
+        var supplier = await _catalogDbContext.FindSupplierByIdAsync(command.SupplierId);
         Guard.Against.NotFound(supplier, new SupplierNotFoundException(command.SupplierId));
 
-        var product = await Product.CreateAsync(
+        // await _domainEventDispatcher.DispatchAsync(cancellationToken, new Events.Domain.CreatingProduct());
+        var product = Product.Create(
             command.Id,
             command.Name,
-            command.Stock,
-            command.RestockThreshold,
-            command.MaxStockThreshold,
+            new Stock(command.Stock, command.RestockThreshold, command.MaxStockThreshold),
             command.Status,
             new Dimensions(command.Width, command.Height, command.Depth),
+            command.Size,
+            command.Color,
             command.Description,
             command.Price,
             category,

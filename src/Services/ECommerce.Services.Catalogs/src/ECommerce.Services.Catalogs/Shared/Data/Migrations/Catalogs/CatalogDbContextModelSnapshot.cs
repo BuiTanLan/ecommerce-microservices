@@ -109,10 +109,6 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    b.Property<int>("AvailableStock")
-                        .HasColumnType("integer")
-                        .HasColumnName("available_stock");
-
                     b.Property<long>("BrandId")
                         .HasColumnType("bigint")
                         .HasColumnName("brand_id");
@@ -120,6 +116,14 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                     b.Property<long>("CategoryId")
                         .HasColumnType("bigint")
                         .HasColumnName("category_id");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)")
+                        .HasDefaultValue("Black")
+                        .HasColumnName("color");
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
@@ -135,10 +139,6 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                         .HasColumnType("text")
                         .HasColumnName("description");
 
-                    b.Property<int>("MaxStockThreshold")
-                        .HasColumnType("integer")
-                        .HasColumnName("max_stock_threshold");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(50)")
@@ -151,13 +151,15 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                     b.Property<string>("ProductStatus")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)")
                         .HasDefaultValue("Available")
                         .HasColumnName("product_status");
 
-                    b.Property<int>("RestockThreshold")
-                        .HasColumnType("integer")
-                        .HasColumnName("restock_threshold");
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("size");
 
                     b.Property<long>("SupplierId")
                         .HasColumnType("bigint")
@@ -358,11 +360,41 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                                 .HasConstraintName("fk_products_products_id");
                         });
 
+                    b.OwnsOne("ECommerce.Services.Catalogs.Products.Models.ValueObjects.Stock", "Stock", b1 =>
+                        {
+                            b1.Property<long>("ProductId")
+                                .HasColumnType("bigint")
+                                .HasColumnName("id");
+
+                            b1.Property<int>("Available")
+                                .HasColumnType("integer")
+                                .HasColumnName("stock_available");
+
+                            b1.Property<int>("MaxStockThreshold")
+                                .HasColumnType("integer")
+                                .HasColumnName("stock_max_stock_threshold");
+
+                            b1.Property<int>("RestockThreshold")
+                                .HasColumnType("integer")
+                                .HasColumnName("stock_restock_threshold");
+
+                            b1.HasKey("ProductId");
+
+                            b1.ToTable("products", "catalog");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductId")
+                                .HasConstraintName("fk_products_products_id");
+                        });
+
                     b.Navigation("Brand");
 
                     b.Navigation("Category");
 
                     b.Navigation("Dimensions")
+                        .IsRequired();
+
+                    b.Navigation("Stock")
                         .IsRequired();
 
                     b.Navigation("Supplier");

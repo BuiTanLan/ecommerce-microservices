@@ -13,4 +13,6 @@ public interface IUnitOfWork<out TContext> : IUnitOfWork
     /// </summary>
     /// <returns>The instance of type <typeparamref name="TContext"/>.</returns>
     TContext DbContext { get; }
+
+    Task ExecuteAsync(Func<Task> action, CancellationToken cancellationToken = default);
 }

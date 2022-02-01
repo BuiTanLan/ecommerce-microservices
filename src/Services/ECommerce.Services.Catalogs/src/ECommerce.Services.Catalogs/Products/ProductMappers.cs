@@ -15,6 +15,12 @@ public class ProductMappers : Profile
             .ForMember(x => x.Depth, opt => opt.MapFrom(x => x.Dimensions.Depth))
             .ForMember(x => x.Height, opt => opt.MapFrom(x => x.Dimensions.Height))
             .ForMember(x => x.Width, opt => opt.MapFrom(x => x.Dimensions.Width))
+            .ForMember(x => x.AvailableStock, opt => opt.MapFrom(x => x.Stock.Available))
+            .ForMember(x => x.RestockThreshold, opt => opt.MapFrom(x => x.Stock.RestockThreshold))
+            .ForMember(x => x.MaxStockThreshold, opt => opt.MapFrom(x => x.Stock.MaxStockThreshold))
+            .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Name.Value))
+            .ForMember(x => x.Width, opt => opt.MapFrom(x => x.Dimensions.Width))
+            .ForMember(x => x.Width, opt => opt.MapFrom(x => x.Dimensions.Width))
             .ForMember(x => x.BrandName, opt => opt.MapFrom(x => x.Brand.Name))
             .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category.Name))
             .ForMember(x => x.SupplierName, opt => opt.MapFrom(x => x.Supplier.Name));
@@ -35,6 +41,8 @@ public class ProductMappers : Profile
                 req.Width,
                 req.Height,
                 req.Depth,
+                req.Size,
+                req.Color,
                 req.CategoryId,
                 req.SupplierId,
                 req.BrandId,

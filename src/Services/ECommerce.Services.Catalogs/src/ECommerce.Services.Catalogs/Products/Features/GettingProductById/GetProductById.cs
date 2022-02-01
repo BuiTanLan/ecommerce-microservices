@@ -36,7 +36,7 @@ public class GetProductByIdHandler : IQueryHandler<GetProductById, GetProductByI
     {
         Guard.Against.Null(query, nameof(query));
 
-        var product = await _catalogDbContext.FindProductByIdAsync(query.Id, cancellationToken);
+        var product = await _catalogDbContext.FindProductByIdAsync(query.Id);
         Guard.Against.NotFound(product, new ProductNotFoundException(query.Id));
 
         var productsDto = _mapper.Map<ProductDto>(product);

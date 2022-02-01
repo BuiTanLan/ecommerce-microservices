@@ -26,18 +26,56 @@ public static class GuardExtensions
 
     public static string NullOrEmpty(this IGuardClause guardClause, string input, System.Exception exception)
     {
-        if (input is null)
-        {
-            throw exception;
-        }
-
-        if (input == string.Empty)
+        if (string.IsNullOrEmpty(input))
         {
             throw exception;
         }
 
         return input;
     }
+
+    public static string NullOrWhiteSpace(this IGuardClause guardClause, string input, System.Exception exception)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            throw exception;
+        }
+
+        return input;
+    }
+
+    public static decimal NegativeOrZero(this IGuardClause guardClause, decimal input, System.Exception exception)
+    {
+        return NegativeOrZero<decimal>(guardClause, input, exception);
+    }
+
+
+    public static int NegativeOrZero(this IGuardClause guardClause, int input, System.Exception exception)
+    {
+        return NegativeOrZero<int>(guardClause, input, exception);
+    }
+
+    public static long NegativeOrZero(this IGuardClause guardClause, long input, System.Exception exception)
+    {
+        return NegativeOrZero<long>(guardClause, input, exception);
+    }
+
+    public static double NegativeOrZero(this IGuardClause guardClause, double input, System.Exception exception)
+    {
+        return NegativeOrZero<double>(guardClause, input, exception);
+    }
+
+    private static T NegativeOrZero<T>(this IGuardClause guardClause, T input, System.Exception exception)
+        where T : struct, IComparable
+    {
+        if (input.CompareTo(default(T)) <= 0)
+        {
+            throw exception;
+        }
+
+        return input;
+    }
+
 
     public static T NotFound<T>(this IGuardClause guardClause, T input, System.Exception exception)
     {
