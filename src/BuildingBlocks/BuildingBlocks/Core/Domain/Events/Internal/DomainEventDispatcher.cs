@@ -40,9 +40,11 @@ public class DomainEventDispatcher : IDomainEventDispatcher
         await _mediator.DispatchDomainEventAsync(events, cancellationToken: cancellationToken);
 
         // Save wrapped integration and notification events to outbox for further processing after commit
-        await _outboxService.SaveAsync(
-            cancellationToken, events.GetDomainNotificationEventsFromDomainEvents().ToArray());
-        await _outboxService.SaveAsync(cancellationToken, events.GetIntegrationEventsFromDomainEvents().ToArray());
+        var wrappedNotificationEvents = events.GetWrappedDomainNotificationEvents().ToArray();
+        await _outboxService.SaveAsync(cancellationToken, wrappedNotificationEvents);
+
+        var wrappedIntegrationEvents = events.GetWrappedIntegrationEvents().ToArray();
+        await _outboxService.SaveAsync(cancellationToken, wrappedIntegrationEvents);
 
         var genericEventMappers = _serviceProvider.GetServices<IEventMapper>().ToList();
         if (genericEventMappers.Any())

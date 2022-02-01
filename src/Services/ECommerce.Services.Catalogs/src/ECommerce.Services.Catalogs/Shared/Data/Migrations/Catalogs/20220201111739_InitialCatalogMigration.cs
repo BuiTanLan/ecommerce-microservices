@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -94,7 +95,7 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                     name = table.Column<string>(type: "varchar(50)", nullable: false),
                     description = table.Column<string>(type: "text", nullable: true),
                     price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    product_status = table.Column<string>(type: "text", nullable: false),
+                    product_status = table.Column<string>(type: "text", nullable: false, defaultValue: "Available"),
                     category_id = table.Column<long>(type: "bigint", nullable: false),
                     supplier_id = table.Column<long>(type: "bigint", nullable: false),
                     brand_id = table.Column<long>(type: "bigint", nullable: false),

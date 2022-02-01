@@ -9,10 +9,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace ECommerce.Services.Catalogs.Shared.Infrastructure.Data.Migrations.Outbox
+namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Outbox
 {
     [DbContext(typeof(OutboxDataContext))]
-    [Migration("20220131104658_InitialOutboxMigration")]
+    [Migration("20220201111633_InitialOutboxMigration")]
     partial class InitialOutboxMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

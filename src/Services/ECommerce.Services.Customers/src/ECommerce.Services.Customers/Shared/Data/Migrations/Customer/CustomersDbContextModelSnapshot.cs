@@ -51,6 +51,13 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .HasColumnType("integer")
                         .HasColumnName("created_by");
 
+                    b.Property<string>("CustomerState")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("None")
+                        .HasColumnName("customer_state");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50)

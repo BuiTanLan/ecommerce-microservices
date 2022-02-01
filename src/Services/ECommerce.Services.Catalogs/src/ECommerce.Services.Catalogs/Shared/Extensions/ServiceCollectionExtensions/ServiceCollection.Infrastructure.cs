@@ -8,6 +8,7 @@ using BuildingBlocks.Messaging;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
 using BuildingBlocks.Validation;
+using BuildingBlocks.Web.Extensions;
 
 namespace ECommerce.Services.Catalogs.Shared.Extensions.ServiceCollectionExtensions;
 
@@ -27,18 +28,32 @@ public static class ServiceCollection
         SnowFlakIdGenerator.Configure(1);
         services.AddCore();
 
-        services.AddMonitoring();
         services.AddMessaging(configuration, TxOutboxConstants.EntityFramework);
         services.AddRabbitMqTransport(configuration);
 
         services.AddEmailService(configuration);
-        
+
         services.AddCqrs(doMoreActions: s =>
         {
             s.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));
+        });
+
+        services.AddMonitoring(healthChecksBuilder =>
+        {
+            healthChecksBuilder.AddNpgSql(
+                configuration.GetConnectionString("CatalogServiceConnection"),
+                name: "CatalogsService-Postgres-Check",
+                tags: new[] { "catalogs-postgres" });
+
+            var rabbitMqOptions = configuration.GetOptions<RabbitConfiguration>(nameof(RabbitConfiguration));
+
+            healthChecksBuilder.AddRabbitMQ(
+                $"amqp://{rabbitMqOptions.UserName}:{rabbitMqOptions.Password}@{rabbitMqOptions.HostName}{rabbitMqOptions.VirtualHost}",
+                name: "CatalogsService-RabbitMQ-Check",
+                tags: new[] { "catalogs-rabbitmq" });
         });
 
         services.AddCustomValidators(Assembly.GetExecutingAssembly());

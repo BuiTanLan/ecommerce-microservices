@@ -17,7 +17,8 @@ internal static class CustomersConfigs
     public const string Tag = "Customers";
     public const string CustomersPrefixUri = $"{CustomersModuleConfiguration.CustomerModulePrefixUri}";
 
-    internal static IServiceCollection AddCustomersServices(this IServiceCollection services, IConfiguration configuration)
+    internal static IServiceCollection AddCustomersServices(this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddScoped<IDataSeeder, CustomersDataSeeder>();
         services.AddSingleton<IIntegrationEventMapper, CustomersEventMapper>();

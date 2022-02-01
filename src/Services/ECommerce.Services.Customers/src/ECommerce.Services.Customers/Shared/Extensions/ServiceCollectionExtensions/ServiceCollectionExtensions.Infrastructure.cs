@@ -8,6 +8,7 @@ using BuildingBlocks.Messaging;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
 using BuildingBlocks.Validation;
+using BuildingBlocks.Web.Extensions;
 
 namespace ECommerce.Services.Customers.Shared.Extensions.ServiceCollectionExtensions;
 
@@ -27,8 +28,22 @@ public static partial class ServiceCollectionExtensions
         SnowFlakIdGenerator.Configure(1);
         services.AddCore();
 
-        services.AddMonitoring();
-        services.AddMessaging(configuration, TxOutboxConstants.EntityFramework);
+        services.AddMonitoring(healthChecksBuilder =>
+        {
+            healthChecksBuilder.AddNpgSql(
+                configuration.GetConnectionString("CustomersServiceConnection"),
+                name: "Customers-Postgres-Check",
+                tags: new[] { "customers-postgres" });
+
+            var rabbitMqOptions = configuration.GetOptions<RabbitConfiguration>(nameof(RabbitConfiguration));
+
+            healthChecksBuilder.AddRabbitMQ(
+                $"amqp://{rabbitMqOptions.UserName}:{rabbitMqOptions.Password}@{rabbitMqOptions.HostName}{rabbitMqOptions.VirtualHost}",
+                name: "CustomersService-RabbitMQ-Check",
+                tags: new[] { "customers-rabbitmq" });
+        });
+
+        services.AddMessaging(configuration);
         services.AddRabbitMqTransport(configuration);
 
         services.AddEmailService(configuration);

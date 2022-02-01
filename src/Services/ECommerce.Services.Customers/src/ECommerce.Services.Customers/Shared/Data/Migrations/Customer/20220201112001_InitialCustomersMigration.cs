@@ -36,6 +36,7 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     completed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     verified_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    customer_state = table.Column<string>(type: "text", nullable: false, defaultValue: "None"),
                     created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     created_by = table.Column<int>(type: "integer", nullable: true),
                     version = table.Column<int>(type: "integer", nullable: false)

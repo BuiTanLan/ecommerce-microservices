@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace ECommerce.Services.Catalogs.Shared.Infrastructure.Data.Migrations.Outbox
+namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Outbox
 {
     [DbContext(typeof(OutboxDataContext))]
     partial class OutboxDataContextModelSnapshot : ModelSnapshot

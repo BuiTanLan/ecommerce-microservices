@@ -8,6 +8,7 @@ using BuildingBlocks.Messaging;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
 using BuildingBlocks.Validation;
+using BuildingBlocks.Web.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -42,9 +43,23 @@ public static class ServiceCollection
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));
         });
 
+        services.AddMonitoring(healthChecksBuilder =>
+        {
+            healthChecksBuilder.AddNpgSql(
+                configuration.GetConnectionString("IdentityServiceConnection"),
+                name: "Identity-Postgres-Check",
+                tags: new[] { "identity-postgres" });
+
+            var rabbitMqOptions = configuration.GetOptions<RabbitConfiguration>(nameof(RabbitConfiguration));
+
+            healthChecksBuilder.AddRabbitMQ(
+                $"amqp://{rabbitMqOptions.UserName}:{rabbitMqOptions.Password}@{rabbitMqOptions.HostName}{rabbitMqOptions.VirtualHost}",
+                name: "IdentityService-RabbitMQ-Check",
+                tags: new[] { "identity-rabbitmq" });
+        });
+
         services.AddMessaging(configuration);
         services.AddRabbitMqTransport(configuration);
-        services.AddMonitoring();
 
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));

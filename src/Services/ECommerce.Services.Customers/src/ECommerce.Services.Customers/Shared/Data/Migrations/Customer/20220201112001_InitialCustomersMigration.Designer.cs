@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
 {
     [DbContext(typeof(CustomersDbContext))]
-    [Migration("20220130205743_InitialCustomersMigration")]
+    [Migration("20220201112001_InitialCustomersMigration")]
     partial class InitialCustomersMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,6 +52,13 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("integer")
                         .HasColumnName("created_by");
+
+                    b.Property<string>("CustomerState")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("None")
+                        .HasColumnName("customer_state");
 
                     b.Property<string>("Email")
                         .IsRequired()

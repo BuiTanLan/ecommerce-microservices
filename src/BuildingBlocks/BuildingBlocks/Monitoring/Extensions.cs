@@ -14,12 +14,13 @@ public static class Extensions
 {
     public static IServiceCollection AddMonitoring(
         this IServiceCollection services,
-        Action<IHealthChecksBuilder> configurator = null)
+        Action<IHealthChecksBuilder>? healthChecksBuilder = null)
     {
         using var serviceProvider = services.BuildServiceProvider();
 
         var healCheckBuilder = services.AddHealthChecks().ForwardToPrometheus();
-        configurator?.Invoke(healCheckBuilder);
+
+        healthChecksBuilder?.Invoke(healCheckBuilder);
 
         //// health check ui has problem with .net 6
         services.AddHealthChecksUI(setup =>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ECommerce.Services.Catalogs.Shared.Infrastructure.Data.Migrations.Outbox
+namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Outbox
 {
     public partial class InitialOutboxMigration : Migration
     {

@@ -66,7 +66,7 @@ public static class EventsExtensions
         }
     }
 
-    public static IEnumerable<IDomainNotificationEvent> GetDomainNotificationEventsFromDomainEvents(
+    public static IEnumerable<IDomainNotificationEvent> GetWrappedDomainNotificationEvents(
         this IEnumerable<IDomainEvent> domainEvents)
     {
         foreach (IDomainEvent domainEvent in domainEvents.Where(x =>
@@ -75,14 +75,15 @@ public static class EventsExtensions
             Type genericType = typeof(DomainNotificationEventWrapper<>)
                 .MakeGenericType(domainEvent.GetType());
 
-            IDomainNotificationEvent domainNotificationEvent = (IDomainNotificationEvent)Activator
+            IDomainNotificationEvent? domainNotificationEvent = (IDomainNotificationEvent?)Activator
                 .CreateInstance(genericType, domainEvent);
 
-            yield return domainNotificationEvent;
+            if (domainNotificationEvent is not null)
+                yield return domainNotificationEvent;
         }
     }
 
-    public static IEnumerable<IIntegrationEvent> GetIntegrationEventsFromDomainEvents(
+    public static IEnumerable<IIntegrationEvent> GetWrappedIntegrationEvents(
         this IEnumerable<IDomainEvent> domainEvents)
     {
         foreach (IDomainEvent domainEvent in domainEvents.Where(x =>
@@ -91,10 +92,11 @@ public static class EventsExtensions
             Type genericType = typeof(IntegrationEventWrapper<>)
                 .MakeGenericType(domainEvent.GetType());
 
-            IIntegrationEvent domainNotificationEvent = (IIntegrationEvent)Activator
-                .CreateInstance(genericType, domainEvent);
+            IIntegrationEvent? domainNotificationEvent =
+                (IIntegrationEvent?)Activator.CreateInstance(genericType, domainEvent);
 
-            yield return domainNotificationEvent;
+            if (domainNotificationEvent is not null)
+                yield return domainNotificationEvent;
         }
     }
 }
