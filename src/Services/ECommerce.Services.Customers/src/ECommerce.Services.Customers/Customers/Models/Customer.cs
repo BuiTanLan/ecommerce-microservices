@@ -1,14 +1,17 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Core.ValueObjects;
+using BuildingBlocks.Core.Domain.ValueObjects;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.Exceptions;
+using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Customers.Features.CompletingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
+using ECommerce.Services.Customers.Customers.Features.CreatingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.LockingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.UnlockingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.VerifyingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.ValueObjects;
+using ECommerce.Services.Customers.Shared.ValueObjects;
 
 namespace ECommerce.Services.Customers.Customers.Models;
 
@@ -16,7 +19,7 @@ public class Customer : AggregateRoot<CustomerId>
 {
     public Guid IdentityId { get; private set; }
     public Email Email { get; private set; } = null!;
-    public Name Name { get; private set; } = null!;
+    public CustomerName Name { get; private set; } = null!;
     public Address? Address { get; private set; }
     public Nationality? Nationality { get; private set; }
     public BirthDate? BirthDate { get; private set; }
@@ -28,7 +31,7 @@ public class Customer : AggregateRoot<CustomerId>
     public DateTime? VerifiedAt { get; private set; }
     public CustomerState CustomerState { get; private set; } = CustomerState.None;
 
-    public static Customer Create(CustomerId id, Email email, Name name, Guid identityId)
+    public static Customer Create(CustomerId id, Email email, CustomerName name, Guid identityId)
     {
         var customer = new Customer
         {
@@ -72,9 +75,7 @@ public class Customer : AggregateRoot<CustomerId>
             Id,
             PhoneNumber!,
             CompletedAt.Value,
-            Address?.Country,
-            address?.City,
-            Address?.Detail,
+            Address,
             Nationality));
     }
 

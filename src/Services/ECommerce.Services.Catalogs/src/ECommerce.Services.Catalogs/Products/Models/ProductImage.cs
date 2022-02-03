@@ -1,6 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
-using ECommerce.Services.Catalogs.Products.Models.ValueObjects;
+using ECommerce.Services.Catalogs.Products.ValueObjects;
 
 namespace ECommerce.Services.Catalogs.Products.Models;
 

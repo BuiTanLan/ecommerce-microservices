@@ -1,5 +1,6 @@
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Domain.Events.Internal;
+using BuildingBlocks.CQRS.Command;
 
 namespace BuildingBlocks.Messaging.Outbox;
 
@@ -17,11 +18,12 @@ public interface IOutboxService
         CancellationToken cancellationToken = default);
 
     Task CleanProcessedAsync(CancellationToken cancellationToken = default);
-    Task SaveAsync(CancellationToken cancellationToken = default, params IIntegrationEvent[] integrationEvents);
 
-    Task SaveAsync(
-        CancellationToken cancellationToken = default,
-        params IDomainNotificationEvent[] domainNotificationEvents);
+    Task SaveAsync(IIntegrationEvent integrationEvent, CancellationToken cancellationToken = default);
+
+    Task SaveAsync(IDomainNotificationEvent domainNotificationEvent, CancellationToken cancellationToken = default);
+
+    Task SaveAsync(IInternalCommand internalCommand, CancellationToken cancellationToken = default);
 
     Task PublishUnsentOutboxMessagesAsync(CancellationToken cancellationToken = default);
 }

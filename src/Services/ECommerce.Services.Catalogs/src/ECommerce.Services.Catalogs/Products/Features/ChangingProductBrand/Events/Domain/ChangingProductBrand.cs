@@ -6,7 +6,7 @@ using ECommerce.Services.Catalogs.Shared.Extensions;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ChangingProductBrand.Events.Domain;
 
-internal record ChangingProductBrand(long BrandId) : DomainEvent;
+internal record ChangingProductBrand(BrandId BrandId) : DomainEvent;
 
 internal class ChangingProductBrandValidationHandler :
     IDomainEventHandler<ChangingProductBrand>

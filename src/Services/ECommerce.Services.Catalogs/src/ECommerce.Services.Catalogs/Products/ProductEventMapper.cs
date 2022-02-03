@@ -10,6 +10,11 @@ namespace ECommerce.Services.Catalogs.Products;
 
 public class ProductEventMapper : IEventMapper
 {
+    public ProductEventMapper()
+    {
+
+    }
+
     public IIntegrationEvent? MapToIntegrationEvent(IDomainEvent domainEvent)
     {
         return domainEvent switch
@@ -18,15 +23,15 @@ public class ProductEventMapper : IEventMapper
                 new Features.CreatingProduct.Events.Integration.ProductCreated(
                     e.Product.Id,
                     e.Product.Name,
-                    e.Product.CategoryId,
+                    e.Product.Category.Id,
                     e.Product.Category.Name,
                     e.Product.Stock.Available),
             ProductStockDebited e => new
                 Features.DebitingProductStock.Events.Integration.ProductStockDebited(
-                    e.NewStock, e.DebitedQuantity),
+                    e.ProductId, e.NewStock.Available, e.DebitedQuantity),
             ProductStockReplenished e => new
                 Features.ReplenishingProductStock.Events.Integration.ProductStockReplenished(
-                    e.NewStock, e.ReplenishedQuantity),
+                    e.ProductId, e.NewStock.Available, e.ReplenishedQuantity),
             _ => null
         };
     }

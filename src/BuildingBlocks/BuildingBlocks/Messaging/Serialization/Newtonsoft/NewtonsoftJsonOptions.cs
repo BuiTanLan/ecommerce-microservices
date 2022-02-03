@@ -1,7 +1,7 @@
 ﻿using BuildingBlocks.Core.Objects.Collections;
 using Newtonsoft.Json;
 
-namespace BuildingBlocks.Core.Messaging.Serialization.Newtonsoft
+namespace BuildingBlocks.Messaging.Serialization.Newtonsoft
 {
     public class NewtonsoftJsonOptions
     {

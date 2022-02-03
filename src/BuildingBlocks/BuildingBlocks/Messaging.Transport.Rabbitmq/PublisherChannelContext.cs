@@ -6,7 +6,8 @@ public sealed class PublisherChannelContext : IDisposable
 {
     private readonly IPublisherChannelContextPool _publisherChannelContextPool;
 
-    public PublisherChannelContext(IModel channel,
+    public PublisherChannelContext(
+        IModel channel,
         QueueReferences queueReferences,
         IPublisherChannelContextPool publisherChannelContextPool)
     {

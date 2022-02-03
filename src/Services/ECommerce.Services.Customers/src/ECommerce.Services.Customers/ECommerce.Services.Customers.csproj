@@ -19,7 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Customers\Extensions" />
     <Folder Include="Customers\Features\UpdatingUserState\Events" />
+    <Folder Include="Products\Features" />
+    <Folder Include="Shared\ValueObjects" />
   </ItemGroup>
 
 </Project>

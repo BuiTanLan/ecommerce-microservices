@@ -296,10 +296,6 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                         .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
-                    b.Property<int>("Version")
-                        .HasColumnType("integer")
-                        .HasColumnName("version");
-
                     b.HasKey("Id")
                         .HasName("pk_suppliers");
 
@@ -333,7 +329,7 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                         .IsRequired()
                         .HasConstraintName("fk_products_suppliers_supplier_temp_id");
 
-                    b.OwnsOne("ECommerce.Services.Catalogs.Products.Models.ValueObjects.Dimensions", "Dimensions", b1 =>
+                    b.OwnsOne("ECommerce.Services.Catalogs.Products.ValueObjects.Dimensions", "Dimensions", b1 =>
                         {
                             b1.Property<long>("ProductId")
                                 .HasColumnType("bigint")
@@ -360,7 +356,7 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                                 .HasConstraintName("fk_products_products_id");
                         });
 
-                    b.OwnsOne("ECommerce.Services.Catalogs.Products.Models.ValueObjects.Stock", "Stock", b1 =>
+                    b.OwnsOne("ECommerce.Services.Catalogs.Products.ValueObjects.Stock", "Stock", b1 =>
                         {
                             b1.Property<long>("ProductId")
                                 .HasColumnType("bigint")

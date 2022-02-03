@@ -1,27 +1,13 @@
-using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
-using ECommerce.Services.Catalogs.Suppliers.Exceptions.Domain;
 
 namespace ECommerce.Services.Catalogs.Suppliers;
 
-public class Supplier : AggregateRoot<SupplierId>
+public class Supplier : Entity<SupplierId>
 {
-    public string Name { get; private set; } = default!;
+    public string Name { get; private set; }
 
-    public static Supplier Create(SupplierId id, string name)
+    public Supplier(SupplierId id, string name) : base(id)
     {
-        var supplier = new Supplier { Id = Guard.Against.Null(id, nameof(id)) };
-
-        supplier.ChangeName(name);
-
-        return supplier;
-    }
-
-    public void ChangeName(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new SupplierDomainException("Name can't be white space or null.");
-
         Name = name;
     }
 }

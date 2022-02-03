@@ -112,6 +112,42 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                     b.ToTable("customers", "customer");
                 });
 
+            modelBuilder.Entity("ECommerce.Services.Customers.RestockSubscriptions.Models.RestockSubscription", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("integer")
+                        .HasColumnName("created_by");
+
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("customer_id");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("email");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("integer")
+                        .HasColumnName("version");
+
+                    b.HasKey("Id")
+                        .HasName("pk_restock_subscriptions");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_restock_subscriptions_customer_id");
+
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasDatabaseName("ix_restock_subscriptions_id");
+
+                    b.ToTable("restock_subscriptions", "customer");
+                });
+
             modelBuilder.Entity("ECommerce.Services.Customers.Customers.Models.Customer", b =>
                 {
                     b.OwnsOne("BuildingBlocks.Core.ValueObjects.Address", "Address", b1 =>
@@ -147,7 +183,7 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                                 .HasConstraintName("fk_customers_customers_id");
                         });
 
-                    b.OwnsOne("ECommerce.Services.Customers.Customers.ValueObjects.Name", "Name", b1 =>
+                    b.OwnsOne("ECommerce.Services.Customers.Shared.ValueObjects.CustomerName", "Name", b1 =>
                         {
                             b1.Property<long>("CustomerId")
                                 .HasColumnType("bigint")
@@ -177,6 +213,46 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                     b.Navigation("Address");
 
                     b.Navigation("Name")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ECommerce.Services.Customers.RestockSubscriptions.Models.RestockSubscription", b =>
+                {
+                    b.HasOne("ECommerce.Services.Customers.Customers.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_restock_subscriptions_customers_customer_id1");
+
+                    b.OwnsOne("ECommerce.Services.Customers.RestockSubscriptions.ValueObjects.ProductInformation", "ProductInformation", b1 =>
+                        {
+                            b1.Property<long>("RestockSubscriptionId")
+                                .HasColumnType("bigint")
+                                .HasColumnName("id");
+
+                            b1.Property<long>("Id")
+                                .HasColumnType("bigint")
+                                .HasColumnName("product_information_id");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)")
+                                .HasColumnName("product_information_name");
+
+                            b1.HasKey("RestockSubscriptionId");
+
+                            b1.ToTable("restock_subscriptions", "customer");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RestockSubscriptionId")
+                                .HasConstraintName("fk_restock_subscriptions_restock_subscriptions_id");
+                        });
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("ProductInformation")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

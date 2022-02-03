@@ -1,17 +1,11 @@
 using System.Reflection;
-using BuildingBlocks.Core.Domain;
 using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Extensions;
-using BuildingBlocks.Domain;
-using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Utils;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-
 
 namespace BuildingBlocks.Messaging.Transport.Rabbitmq.Consumers;
 

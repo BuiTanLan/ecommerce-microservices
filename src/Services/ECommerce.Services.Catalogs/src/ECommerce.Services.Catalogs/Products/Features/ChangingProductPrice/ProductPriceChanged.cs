@@ -1,5 +1,6 @@
 using BuildingBlocks.Core.Domain.Events.Internal;
+using ECommerce.Services.Catalogs.Products.ValueObjects;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ChangingProductPrice;
 
-public record ProductPriceChanged(decimal Price) : DomainEvent;
+public record ProductPriceChanged(Price Price) : DomainEvent;

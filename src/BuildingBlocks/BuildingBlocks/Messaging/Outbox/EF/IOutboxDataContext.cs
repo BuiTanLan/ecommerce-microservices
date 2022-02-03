@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace BuildingBlocks.Messaging.Outbox;
+namespace BuildingBlocks.Messaging.Outbox.EF;
 
 public interface IOutboxDataContext
 {

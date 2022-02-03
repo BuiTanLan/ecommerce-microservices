@@ -1,25 +1,27 @@
 using BuildingBlocks.Core.Domain.Model;
 using BuildingBlocks.Exception.Types;
 
-namespace BuildingBlocks.Core.ValueObjects;
+namespace BuildingBlocks.Core.Domain.ValueObjects;
 
 public class Amount : ValueObject
 {
-    public decimal Value { get; }
+    public decimal Value { get; private set; }
 
-    public Amount(decimal value)
+    public static Amount? Null => null;
+
+    public static Amount Create(decimal value)
     {
         if (value is < 0 or > 1000000)
         {
             throw new InvalidAmountException(value);
         }
 
-        Value = value;
+        return new Amount { Value = value };
     }
 
-    public static Amount Zero => new(0);
+    public static Amount Zero => Create(0);
 
-    public static implicit operator Amount?(decimal? value) => value == null ? null : new((decimal)value);
+    public static implicit operator Amount?(decimal? value) => value == null ? null : Create((decimal)value);
 
     public static implicit operator decimal?(Amount? value) => value?.Value;
 

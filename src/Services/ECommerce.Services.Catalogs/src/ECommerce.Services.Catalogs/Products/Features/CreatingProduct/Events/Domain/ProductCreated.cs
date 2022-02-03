@@ -1,19 +1,23 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Domain.Events.Internal;
+using BuildingBlocks.Exception;
 using BuildingBlocks.Messaging.Outbox;
+using ECommerce.Services.Catalogs.Products.Exceptions.Application;
 using ECommerce.Services.Catalogs.Products.Models;
 using ECommerce.Services.Catalogs.Shared.Contracts;
+using ECommerce.Services.Catalogs.Shared.Data;
 
 namespace ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Events.Domain;
 
-public record ProductCreated(Product Product) : DomainEvent, IHaveNotificationEvent, IHaveExternalEvent;
+// , IHaveNotificationEvent, IHaveExternalEvent; --> For automatic integration event creating without creating an explicit integration event class
+public record ProductCreated(Product Product) : DomainEvent;
 
 internal class ProductCreatedHandler : IDomainEventHandler<ProductCreated>
 {
-    private readonly ICatalogDbContext _dbContext;
+    private readonly CatalogDbContext _dbContext;
 
-    public ProductCreatedHandler(ICatalogDbContext dbContext)
+    public ProductCreatedHandler(CatalogDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -22,21 +26,29 @@ internal class ProductCreatedHandler : IDomainEventHandler<ProductCreated>
     {
         Guard.Against.Null(notification, nameof(notification));
 
-        var existed = await _dbContext.Set<ProductView>()
-            .FirstOrDefaultAsync(x => x.ProductId == notification.Product.Id, cancellationToken);
+        var existed = await _dbContext.ProductsView
+            .SingleOrDefaultAsync(x => x.ProductId == notification.Product.Id, cancellationToken);
 
         if (existed is null)
         {
+            var product = await _dbContext.Products
+                .Include(x => x.Brand)
+                .Include(x => x.Category)
+                .Include(x => x.Supplier)
+                .SingleOrDefaultAsync(x => x.Id == notification.Product.Id, cancellationToken);
+
+            Guard.Against.NotFound(product, new ProductNotFoundException(notification.Product.Id));
+
             var productView = new ProductView
             {
-                ProductId = notification.Product.Id,
-                ProductName = notification.Product.Name,
-                CategoryId = notification.Product.Category.Id,
-                CategoryName = notification.Product.Category.Name,
-                SupplierId = notification.Product.Supplier.Id,
-                SupplierName = notification.Product.Supplier.Name,
-                BrandId = notification.Product.Brand.Id,
-                BrandName = notification.Product.Brand.Name,
+                ProductId = product!.Id,
+                ProductName = product.Name,
+                CategoryId = product.CategoryId,
+                CategoryName = product.Category?.Name ?? string.Empty,
+                SupplierId = product.SupplierId,
+                SupplierName = product.Supplier?.Name ?? string.Empty,
+                BrandId = product.BrandId,
+                BrandName = product.Brand?.Name ?? string.Empty,
             };
 
             await _dbContext.Set<ProductView>().AddAsync(productView, cancellationToken);

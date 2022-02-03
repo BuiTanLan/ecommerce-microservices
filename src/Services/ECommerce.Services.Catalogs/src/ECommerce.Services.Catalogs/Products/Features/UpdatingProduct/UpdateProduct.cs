@@ -5,7 +5,7 @@ using ECommerce.Services.Catalogs.Brands.Exceptions.Application;
 using ECommerce.Services.Catalogs.Categories.Exceptions.Application;
 using ECommerce.Services.Catalogs.Products.Exceptions.Application;
 using ECommerce.Services.Catalogs.Products.Models;
-using ECommerce.Services.Catalogs.Products.Models.ValueObjects;
+using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Shared.Extensions;
 using ECommerce.Services.Catalogs.Suppliers.Exceptions.Application;
@@ -62,16 +62,16 @@ internal class UpdateProductCommandHandler : ICommandHandler<UpdateProduct>
         var supplier = await _catalogDbContext.FindSupplierByIdAsync(command.SupplierId);
         Guard.Against.NotFound(supplier, new SupplierNotFoundException(command.SupplierId));
 
-        product!.ChangeCategory(category);
-        product.ChangeBrand(brand);
-        product.ChangeSupplier(supplier);
+        product!.ChangeCategory(command.CategoryId);
+        product.ChangeBrand(command.BrandId);
+        product.ChangeSupplier(command.SupplierId);
 
         product.ChangeDescription(command.Description);
         product.ChangeName(command.Name);
         product.ChangePrice(command.Price);
         product.ChangeSize(command.Size);
         product.ChangeStatus(command.Status);
-        product.ChangeDimensions(new Dimensions(command.Width, command.Height, command.Depth));
+        product.ChangeDimensions(Dimensions.Create(command.Width, command.Height, command.Depth));
         product.ChangeMaxStockThreshold(command.MaxStockThreshold);
         product.ChangeRestockThreshold(command.RestockThreshold);
 

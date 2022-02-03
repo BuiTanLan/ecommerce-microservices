@@ -45,11 +45,16 @@ public class DomainEventDispatcher : IDomainEventDispatcher
 
         // Save wrapped integration and notification events to outbox for further processing after commit
         var wrappedNotificationEvents = eventsToDispatch.GetWrappedDomainNotificationEvents().ToArray();
-        await _outboxService.SaveAsync(cancellationToken, wrappedNotificationEvents);
+        foreach (var wrappedNotificationEvent in wrappedNotificationEvents)
+        {
+            await _outboxService.SaveAsync(wrappedNotificationEvent, cancellationToken);
+        }
 
         var wrappedIntegrationEvents = eventsToDispatch.GetWrappedIntegrationEvents().ToArray();
-        await _outboxService.SaveAsync(cancellationToken, wrappedIntegrationEvents);
-
+        foreach (var wrappedIntegrationEvent in wrappedIntegrationEvents)
+        {
+            await _outboxService.SaveAsync(wrappedIntegrationEvent, cancellationToken);
+        }
 
         // Save event mapper events into outbox for further processing after commit
         IEventMapper? eventMapper = _serviceProvider.GetService<IEventMapper>();
@@ -63,7 +68,12 @@ public class DomainEventDispatcher : IDomainEventDispatcher
         integrationEvents = integrationEvents?.Where(x => x is not null).ToList();
 
         if (integrationEvents is not null && integrationEvents.Any())
-            await _outboxService.SaveAsync(cancellationToken, integrationEvents.ToArray()!);
+        {
+            foreach (var integrationEvent in integrationEvents)
+            {
+                await _outboxService.SaveAsync(integrationEvent, cancellationToken);
+            }
+        }
 
         var notificationEvents =
             eventMapper?.MapToDomainNotificationEvents(eventsToDispatch) ??
@@ -72,6 +82,11 @@ public class DomainEventDispatcher : IDomainEventDispatcher
         notificationEvents = notificationEvents?.Where(x => x is not null).ToList();
 
         if (notificationEvents is not null && notificationEvents.Any())
-            await _outboxService.SaveAsync(cancellationToken, notificationEvents.ToArray()!);
+        {
+            foreach (var domainNotificationEvent in notificationEvents)
+            {
+                await _outboxService.SaveAsync(domainNotificationEvent, cancellationToken);
+            }
+        }
     }
 }

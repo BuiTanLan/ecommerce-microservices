@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.Core.Messaging.Serialization;
+using BuildingBlocks.Messaging.Serialization;
 using MediatR;
 using Serilog;
 

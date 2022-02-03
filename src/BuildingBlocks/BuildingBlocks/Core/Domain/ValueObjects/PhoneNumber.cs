@@ -3,20 +3,26 @@ using BuildingBlocks.Core.Domain.Exceptions;
 using BuildingBlocks.Core.Domain.Model;
 using BuildingBlocks.Exception;
 
-namespace BuildingBlocks.Core.ValueObjects;
+namespace BuildingBlocks.Core.Domain.ValueObjects;
 
 public class PhoneNumber : ValueObject
 {
-    public string Value { get; }
+    public string Value { get; private set; }
 
-    public PhoneNumber(string value)
+    public static PhoneNumber? Null => null;
+
+    public static PhoneNumber Create(string value)
     {
-        Value = Guard.Against.InvalidPhoneNumber(value, new DomainException($"Phone number {value} is invalid."));
+        return new PhoneNumber()
+        {
+            Value = Guard.Against.InvalidPhoneNumber(value,
+                new DomainException($"Phone number {value} is invalid."))
+        };
     }
 
     public static implicit operator string?(PhoneNumber? phoneNumber) => phoneNumber?.Value;
 
-    public static implicit operator PhoneNumber?(string? phoneNumber) => phoneNumber == null ? null : new(phoneNumber);
+    public static implicit operator PhoneNumber?(string? phoneNumber) => phoneNumber == null ? null : Create(phoneNumber);
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

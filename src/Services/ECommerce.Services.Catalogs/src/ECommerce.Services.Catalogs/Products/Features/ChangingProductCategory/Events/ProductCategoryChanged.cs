@@ -1,5 +1,8 @@
 using BuildingBlocks.Core.Domain.Events.Internal;
+using ECommerce.Services.Catalogs.Categories;
+using ECommerce.Services.Catalogs.Products.ValueObjects;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ChangingProductCategory.Events;
 
-public record ProductCategoryChanged(long NewCategoryId, long OldCategoryId) : DomainEvent;
+public record ProductCategoryChanged(CategoryId CategoryId, ProductId ProductId) :
+DomainEvent;

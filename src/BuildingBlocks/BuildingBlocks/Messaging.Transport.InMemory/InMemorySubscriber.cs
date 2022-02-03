@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Domain.Events;
 using BuildingBlocks.Messaging.Transport.InMemory.Channels;
 using BuildingBlocks.Messaging.Transport.InMemory.Diagnostics;
 using MediatR;

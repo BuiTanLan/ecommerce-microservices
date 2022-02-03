@@ -1,4 +1,3 @@
-using BuildingBlocks.Domain.Events;
 using BuildingBlocks.Messaging.Transport.Rabbitmq.Consumers;
 using BuildingBlocks.Messaging.Transport.Rabbitmq.Producers;
 using Microsoft.Extensions.Configuration;

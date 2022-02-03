@@ -28,6 +28,9 @@
     <Folder Include="Suppliers\Events\External\Handlers" />
     <Folder Include="Suppliers\Features\GetSupplierById" />
     <Folder Include="Suppliers\Features\GetSuppliers" />
+    <Folder Include="Suppliers\Features\SupplierCreated\Events" />
+    <Folder Include="Suppliers\Features\SupplierDeleted\Events" />
+    <Folder Include="Suppliers\Features\SupplierUpdated\Events" />
   </ItemGroup>
   
   <ItemGroup>

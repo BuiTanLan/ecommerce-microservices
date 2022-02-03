@@ -1,6 +1,6 @@
 using BuildingBlocks.Core.Domain.Events.External;
 
-namespace BuildingBlocks.Domain.Events;
+namespace BuildingBlocks.Messaging;
 
 /// <summary>
 /// External Message Bus.

@@ -9,7 +9,7 @@ using ECommerce.Services.Catalogs.Categories.Exceptions.Domain;
 using ECommerce.Services.Catalogs.Products.Dtos;
 using ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Requests;
 using ECommerce.Services.Catalogs.Products.Models;
-using ECommerce.Services.Catalogs.Products.Models.ValueObjects;
+using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Shared.Extensions;
 using ECommerce.Services.Catalogs.Suppliers.Exceptions.Application;
@@ -127,20 +127,27 @@ public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProduct
         var product = Product.Create(
             command.Id,
             command.Name,
-            new Stock(command.Stock, command.RestockThreshold, command.MaxStockThreshold),
+            Stock.Create(command.Stock, command.RestockThreshold, command.MaxStockThreshold),
             command.Status,
-            new Dimensions(command.Width, command.Height, command.Depth),
+            Dimensions.Create(command.Width, command.Height, command.Depth),
             command.Size,
             command.Color,
             command.Description,
             command.Price,
-            category,
-            supplier,
-            brand,
+            category!.Id,
+            supplier!.Id,
+            brand!.Id,
             images);
 
-        var created = await _catalogDbContext.Products.AddAsync(product, cancellationToken: cancellationToken);
-        var productDto = _mapper.Map<ProductDto>(created.Entity);
+        await _catalogDbContext.Products.AddAsync(product, cancellationToken: cancellationToken);
+
+        var created = _catalogDbContext.Products
+            .Include(x => x.Brand)
+            .Include(x => x.Category)
+            .Include(x => x.Supplier)
+            .SingleOrDefaultAsync(x => x.Id == product.Id, cancellationToken: cancellationToken);
+
+        var productDto = _mapper.Map<ProductDto>(created);
 
         _logger.LogInformation("Product a with ID: '{ProductId} created.'", command.Id);
 

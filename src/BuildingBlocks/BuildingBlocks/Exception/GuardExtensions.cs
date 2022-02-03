@@ -76,6 +76,15 @@ public static class GuardExtensions
         return input;
     }
 
+    public static bool NotExists(this IGuardClause guardClause, bool input, System.Exception exception)
+    {
+        if (input == false)
+        {
+            throw exception;
+        }
+
+        return input;
+    }
 
     public static T NotFound<T>(this IGuardClause guardClause, T input, System.Exception exception)
     {

@@ -29,6 +29,7 @@
     <PackageReference Include="DynamicExpresso.Core" Version="2.10.0" />
     <PackageReference Include="EasyCaching.Core" Version="1.4.1" />
     <PackageReference Include="EasyCaching.InMemory" Version="1.4.1" />
+    <PackageReference Include="EasyNetQ" Version="6.3.1" />
     <PackageReference Include="EFCore.NamingConventions" Version="6.0.0" />
     <PackageReference Include="ExpressionDebugger" Version="2.2.0" />
     <PackageReference Include="ExpressionTranslator" Version="2.4.3" />
@@ -36,6 +37,9 @@
     <PackageReference Include="FluentValidation" Version="10.3.6" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
     <PackageReference Include="Grpc.HealthCheck" Version="2.43.0" />
+    <PackageReference Include="Hangfire" Version="1.7.28" />
+    <PackageReference Include="Hangfire.InMemory" Version="0.3.4" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.9.5" />
     <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.3.0" />
     <PackageReference Include="Humanizer" Version="2.13.14" />
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
@@ -52,6 +56,10 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MiniValidation" Version="0.4.1-pre.20220107.41" />
     <PackageReference Include="MongoDB.Driver" Version="2.14.1" />
     <PackageReference Include="Moq" Version="4.16.1" />
@@ -124,6 +132,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Messaging.EasyNetQ" />
+    <Folder Include="Messaging.Rebus" />
     <Folder Include="Messaging\Inbox" />
     <Folder Include="ServiceDiscovery" />
   </ItemGroup>

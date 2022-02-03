@@ -1,6 +1,7 @@
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
 using ECommerce.Services.Customers.Customers.Models;
+using ECommerce.Services.Customers.RestockSubscriptions.Models;
 using ECommerce.Services.Customers.Shared.Contracts;
 
 namespace ECommerce.Services.Customers.Shared.Data;
@@ -27,6 +28,7 @@ public class CustomersDbContext : AppDbContextBase, ICustomersDbContext
     }
 
     public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<RestockSubscription> RestockSubscriptions => Set<RestockSubscription>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

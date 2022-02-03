@@ -1,4 +1,4 @@
-namespace BuildingBlocks.Domain.Events;
+namespace BuildingBlocks.Messaging;
 
 public interface IBusSubscriber
 {

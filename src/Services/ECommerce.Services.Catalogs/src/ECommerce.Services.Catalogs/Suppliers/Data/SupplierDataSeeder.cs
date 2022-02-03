@@ -20,7 +20,7 @@ public class SupplierDataSeeder : IDataSeeder
 
         var suppliersFaker = new Faker<Supplier>().CustomInstantiator(faker =>
         {
-            var supplier = Supplier.Create(SnowFlakIdGenerator.NewId(), faker.Person.FullName);
+            var supplier = new Supplier(SnowFlakIdGenerator.NewId(), faker.Person.FullName);
             return supplier;
         });
 

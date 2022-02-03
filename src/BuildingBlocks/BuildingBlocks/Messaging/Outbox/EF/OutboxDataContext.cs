@@ -1,7 +1,7 @@
 using BuildingBlocks.EFCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BuildingBlocks.Messaging.Outbox;
+namespace BuildingBlocks.Messaging.Outbox.EF;
 
 public class OutboxDataContext : AppDbContextBase, IOutboxDataContext
 {

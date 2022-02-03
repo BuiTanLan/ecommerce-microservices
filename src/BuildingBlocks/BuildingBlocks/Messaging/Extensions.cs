@@ -1,13 +1,16 @@
 using System.Reflection;
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Messaging.Serialization;
-using BuildingBlocks.Core.Messaging.Serialization.Newtonsoft;
-using BuildingBlocks.Domain.Events;
+using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Core.Objects;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Messaging.BackgroundServices;
 using BuildingBlocks.Messaging.Message;
 using BuildingBlocks.Messaging.Outbox;
+using BuildingBlocks.Messaging.Outbox.EF;
 using BuildingBlocks.Messaging.Outbox.InMemory;
+using BuildingBlocks.Messaging.Scheduling;
+using BuildingBlocks.Messaging.Serialization;
+using BuildingBlocks.Messaging.Serialization.Newtonsoft;
 using BuildingBlocks.Utils;
 using BuildingBlocks.Utils.Reflections;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +58,7 @@ public static class Extensions
                 services.AddUnitOfWork<OutboxDataContext>();
                 services.AddScoped<IOutboxDataContext>(provider => provider.GetRequiredService<OutboxDataContext>());
                 services.AddScoped<IOutboxService, EfOutboxService<OutboxDataContext>>();
+                services.AddScoped<IMessagesExecutor, MessagesExecutor>();
 
                 break;
             }
@@ -69,7 +73,29 @@ public static class Extensions
         services.AddHostedService<ConsumerBackgroundWorker>();
         services.AddHostedService<OutboxProcessorBackgroundService>();
 
+        var typeResolver = new TypeResolver();
+        services.AddSingleton<ITypeResolver>(typeResolver);
+        RegisterIntegrationMessagesToTypeResolver(typeResolver);
+
         return services;
+    }
+
+    private static void RegisterIntegrationMessagesToTypeResolver(
+        ITypeResolver typeResolver)
+    {
+        Console.WriteLine("preloading all message types...");
+
+        var messageType = typeof(IIntegrationEvent);
+
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var types = assemblies.SelectMany(x => x.GetTypes())
+            .Where(type => messageType.IsAssignableFrom(type) && type.IsInterface == false && type.IsAbstract == false)
+            .Distinct()
+            .ToList();
+
+        typeResolver.Register(types);
+
+        Console.WriteLine("preloading all message types completed!");
     }
 
     public static IEnumerable<Type> GetHandledMessageTypes(params Assembly[] assemblies)

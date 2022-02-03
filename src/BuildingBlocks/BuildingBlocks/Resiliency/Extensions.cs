@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Reflection;
 using BuildingBlocks.Resiliency.Fallback;
 using MediatR;
@@ -9,7 +8,8 @@ namespace BuildingBlocks.Resiliency;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMediaterRetryPolicy(IServiceCollection services,
+    public static IServiceCollection AddMediaterRetryPolicy(
+        IServiceCollection services,
         IReadOnlyList<Assembly> assemblies)
     {
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehavior<,>));
@@ -24,7 +24,8 @@ public static class Extensions
         return services;
     }
 
-    public static IServiceCollection AddMediaterFallbackPolicy(IServiceCollection services,
+    public static IServiceCollection AddMediaterFallbackPolicy(
+        IServiceCollection services,
         IReadOnlyList<Assembly> assemblies)
     {
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FallbackBehavior<,>));

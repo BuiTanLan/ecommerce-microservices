@@ -11,10 +11,8 @@ public class SupplierEntityTypeConfiguration : IEntityTypeConfiguration<Supplier
         builder.HasKey(x => x.Id);
         builder.HasIndex(x => x.Id).IsUnique();
         builder.Property(x => x.Id)
-            .HasConversion(x => x.Value, id => id)
+            .HasConversion(x => x.Value, x => x)
             .ValueGeneratedNever();
-
-        builder.Ignore(x => x.DomainEvents);
 
         builder.Property(x => x.Created).HasDefaultValueSql(Constants.DateAlgorithm);
         builder.Property(x => x.Name).HasColumnType(Constants.ColumnTypes.NormalText).IsRequired();

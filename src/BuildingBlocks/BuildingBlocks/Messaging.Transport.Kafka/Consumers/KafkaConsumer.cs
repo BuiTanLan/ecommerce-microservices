@@ -1,7 +1,6 @@
 using Ardalis.GuardClauses;
 using Avro.Generic;
 using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Domain.Events;
 using BuildingBlocks.Messaging.Transport.Kafka.SchemaRegistry;
 using Confluent.Kafka;
 using Confluent.Kafka.SyncOverAsync;

@@ -13,8 +13,6 @@ namespace BuildingBlocks.Tracing
 {
     public static class Extensions
     {
-        private const string SectionName = "otel";
-
         public static IServiceCollection AddInMemoryMessagingTelemetry(this IServiceCollection services)
         {
             DiagnosticListener.AllListeners.Subscribe(listener =>
@@ -32,11 +30,10 @@ namespace BuildingBlocks.Tracing
         public static IServiceCollection AddOTelIntegration(
             this IServiceCollection services,
             IConfiguration configuration,
-            string sectionName = SectionName,
             Action<OpenTelemetryOptions> openTelemetryOptions = null)
         {
-            var options = configuration.GetSection(sectionName).Get<OpenTelemetryOptions>();
-            services.AddOptions<OpenTelemetryOptions>().Bind(configuration.GetSection(sectionName))
+            var options = configuration.GetSection(nameof(OpenTelemetryOptions)).Get<OpenTelemetryOptions>();
+            services.AddOptions<OpenTelemetryOptions>().Bind(configuration.GetSection(nameof(OpenTelemetryOptions)))
                 .ValidateDataAnnotations();
 
             services.AddOpenTelemetryTracing(builder =>

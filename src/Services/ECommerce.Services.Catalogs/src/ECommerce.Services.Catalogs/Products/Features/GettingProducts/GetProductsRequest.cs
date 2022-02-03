@@ -16,9 +16,7 @@ public record GetProductsRequest(int Page = 1, int PageSize = 20, IList<string>?
         var pageSize = httpContext.Request.Query.Get<int>("PageSize", 20);
         var sorts = httpContext.Request.Query.GetCollection<List<string>>("Sorts");
         var filters = httpContext.Request.Query.GetCollection<List<FilterModel>>("Filters");
-        var includes = httpContext.Request.Query.GetCollection<List<string>>(
-            "Includes",
-            new List<string> { nameof(Product.Supplier), nameof(Product.Category) });
+        var includes = httpContext.Request.Query.GetCollection<List<string>>("Includes");
 
         var request = new GetProductsRequest(page, pageSize, includes, filters, sorts);
 

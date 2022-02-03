@@ -6,7 +6,7 @@ using ECommerce.Services.Catalogs.Suppliers;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ChangingProductSupplier.Events;
 
-public record ChangingProductSupplier(long SupplierId) : DomainEvent;
+public record ChangingProductSupplier(SupplierId SupplierId) : DomainEvent;
 
 internal class ChangingSupplierValidationHandler :
     IDomainEventHandler<ChangingProductSupplier>

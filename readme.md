@@ -21,7 +21,7 @@ Also in this project I used [vertical slice architecture](https://jimmybogard.co
 
 ![](./assets/vsa2.png)
 
-Also here I used cqrs for decompose my features to very small parts that make our application
+Also here I used cqrs for decompose my features to very small parts that makes our application:
 
 - maximize performance, scalability and simplicity.
 - adding new feature to this mechanism is very easy without any breaking change in other part of our codes. New features only add code, we're not changing shared code and worrying about side effects.

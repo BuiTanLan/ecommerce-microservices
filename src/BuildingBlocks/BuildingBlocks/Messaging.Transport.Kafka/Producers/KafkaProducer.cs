@@ -1,6 +1,5 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Domain.Events;
 using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;

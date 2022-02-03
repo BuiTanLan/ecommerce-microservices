@@ -19,11 +19,9 @@ public class ProductMappers : Profile
             .ForMember(x => x.RestockThreshold, opt => opt.MapFrom(x => x.Stock.RestockThreshold))
             .ForMember(x => x.MaxStockThreshold, opt => opt.MapFrom(x => x.Stock.MaxStockThreshold))
             .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Name.Value))
+            .ForMember(x => x.Price, opt => opt.MapFrom(x => x.Price.Value))
             .ForMember(x => x.Width, opt => opt.MapFrom(x => x.Dimensions.Width))
-            .ForMember(x => x.Width, opt => opt.MapFrom(x => x.Dimensions.Width))
-            .ForMember(x => x.BrandName, opt => opt.MapFrom(x => x.Brand.Name))
-            .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category.Name))
-            .ForMember(x => x.SupplierName, opt => opt.MapFrom(x => x.Supplier.Name));
+            .ForMember(x => x.Width, opt => opt.MapFrom(x => x.Dimensions.Width));
 
         CreateMap<ProductImage, ProductImageDto>();
         CreateMap<ProductView, ProductViewDto>();

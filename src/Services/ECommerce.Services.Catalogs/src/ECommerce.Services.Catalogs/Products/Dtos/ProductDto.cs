@@ -9,11 +9,11 @@ public record ProductDto
     public string? Description { get; init; }
     public decimal Price { get; init; }
     public long CategoryId { get; init; }
-    public string CategoryName { get; set; } = default!;
+    public string CategoryName { get; init; } = default!;
     public long SupplierId { get; init; }
-    public string SupplierName { get; set; } = default!;
+    public string SupplierName { get; init; } = default!;
     public long BrandId { get; init; }
-    public string BrandName { get; set; } = default!;
+    public string BrandName { get; init; } = default!;
     public int AvailableStock { get; init; }
     public int RestockThreshold { get; init; }
     public int MaxStockThreshold { get; init; }
@@ -21,5 +21,5 @@ public record ProductDto
     public int Height { get; init; }
     public int Width { get; init; }
     public int Depth { get; init; }
-    public IEnumerable<ProductImageDto>? Images { get; set; }
+    public IEnumerable<ProductImageDto>? Images { get; init; }
 }

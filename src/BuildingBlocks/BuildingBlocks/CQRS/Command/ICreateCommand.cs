@@ -1,5 +1,4 @@
 using BuildingBlocks.Core.Domain;
-using BuildingBlocks.Domain;
 
 namespace BuildingBlocks.CQRS.Command;
 

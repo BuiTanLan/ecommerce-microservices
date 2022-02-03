@@ -1,14 +1,15 @@
 using BuildingBlocks.Core.Domain.Exceptions;
 using BuildingBlocks.Core.Domain.Model;
 
-namespace BuildingBlocks.Core.ValueObjects;
+namespace BuildingBlocks.Core.Domain.ValueObjects;
 
-// BirthDate
 public class BirthDate : ValueObject
 {
-    public DateTime Value { get; }
+    public DateTime Value { get; private set; }
 
-    public BirthDate(DateTime value)
+    public static BirthDate? Null => null;
+
+    public static BirthDate Create(DateTime value)
     {
         if (value == default)
         {
@@ -24,10 +25,10 @@ public class BirthDate : ValueObject
             throw new DomainException("The minimum age has to be 15 years.");
         }
 
-        Value = value;
+        return new BirthDate { Value = value };
     }
 
-    public static implicit operator BirthDate?(DateTime? value) => value == null ? null : new((DateTime)value);
+    public static implicit operator BirthDate?(DateTime? value) => value == null ? null : Create((DateTime)value);
 
     public static implicit operator DateTime?(BirthDate? value) => value?.Value ?? null;
 

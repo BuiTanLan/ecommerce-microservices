@@ -28,7 +28,7 @@ public static class ServiceCollection
         SnowFlakIdGenerator.Configure(1);
         services.AddCore();
 
-        services.AddMessaging(configuration, TxOutboxConstants.EntityFramework);
+        services.AddMessaging(configuration);
         services.AddRabbitMqTransport(configuration);
 
         services.AddEmailService(configuration);

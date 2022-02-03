@@ -1,8 +1,7 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Microsoft.Extensions.Options;
 
-namespace BuildingBlocks.Core.Messaging.Serialization.Newtonsoft
+namespace BuildingBlocks.Messaging.Serialization.Newtonsoft
 {
     public class NewtonsoftJsonUnSupportedTypeMatcher
     {

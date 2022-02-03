@@ -1,5 +1,6 @@
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Messaging.Outbox;
+using BuildingBlocks.Messaging.Outbox.EF;
 
 namespace ECommerce.Services.Identity.Shared.Data;
 

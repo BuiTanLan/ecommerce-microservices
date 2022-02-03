@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace BuildingBlocks.Core.Messaging.Serialization.Newtonsoft;
+namespace BuildingBlocks.Messaging.Serialization.Newtonsoft;
 
 public class NewtonsoftJsonMessageSerializer : IMessageSerializer
 {

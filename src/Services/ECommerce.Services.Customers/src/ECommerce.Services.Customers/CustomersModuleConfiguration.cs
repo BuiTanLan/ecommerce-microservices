@@ -1,4 +1,5 @@
 using ECommerce.Services.Catalogs.Products;
+using ECommerce.Services.Customers.RestockSubscriptions;
 using ECommerce.Services.Customers.Shared.Extensions.ApplicationBuilderExtensions;
 using ECommerce.Services.Customers.Shared.Extensions.ServiceCollectionExtensions;
 
@@ -19,9 +20,12 @@ public static class CustomersModuleConfiguration
     {
         services.AddInfrastructure(configuration);
 
+        services.AddCustomHttpClients(configuration);
+
         services.AddStorage(configuration);
 
         services.AddCustomersServices(configuration);
+        services.RestockSubscriptionsServices(configuration);
 
         return services;
     }
@@ -31,6 +35,7 @@ public static class CustomersModuleConfiguration
         endpoints.MapGet("/", () => "ECommerce.Services.Customers Service Apis").ExcludeFromDescription();
 
         endpoints.MapCustomersEndpoints();
+        endpoints.MapRestockSubscriptionsEndpoints();
 
         return endpoints;
     }

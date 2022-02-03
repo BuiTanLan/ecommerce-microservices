@@ -6,7 +6,7 @@ using ECommerce.Services.Catalogs.Shared.Extensions;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ChangingProductCategory.Events;
 
-public record ChangingProductCategory(long CategoryId) : DomainEvent;
+public record ChangingProductCategory(CategoryId CategoryId) : DomainEvent;
 
 internal class ChangingProductCategoryValidationHandler :
     IDomainEventHandler<ChangingProductCategory>

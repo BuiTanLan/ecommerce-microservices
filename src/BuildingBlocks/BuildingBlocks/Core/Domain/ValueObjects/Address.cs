@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
 
-namespace BuildingBlocks.Core.ValueObjects;
+namespace BuildingBlocks.Core.Domain.ValueObjects;
 
 public class Address : ValueObject
 {

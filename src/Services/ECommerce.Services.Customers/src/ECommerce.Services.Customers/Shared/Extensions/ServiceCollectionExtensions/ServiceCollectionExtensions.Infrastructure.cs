@@ -7,6 +7,7 @@ using BuildingBlocks.Logging;
 using BuildingBlocks.Messaging;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
+using BuildingBlocks.Scheduling.Hangfire;
 using BuildingBlocks.Validation;
 using BuildingBlocks.Web.Extensions;
 
@@ -42,6 +43,8 @@ public static partial class ServiceCollectionExtensions
                 name: "CustomersService-RabbitMQ-Check",
                 tags: new[] { "customers-rabbitmq" });
         });
+
+        services.AddHangfireScheduler(configuration);
 
         services.AddMessaging(configuration);
         services.AddRabbitMqTransport(configuration);

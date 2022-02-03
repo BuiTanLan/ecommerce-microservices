@@ -100,12 +100,14 @@ internal class RegisterUserHandler : ICommandHandler<RegisterUser, RegisterUserR
         if (roleResult.Succeeded == false)
             throw new RegisterIdentityUserException(string.Join(',', roleResult.Errors.Select(e => e.Description)));
 
-        await _outboxService.SaveAsync(cancellationToken, new UserRegistered(
-            applicationUser.Id,
-            applicationUser.Email,
-            applicationUser.FirstName,
-            applicationUser.LastName,
-            request.Roles));
+        await _outboxService.SaveAsync(
+            new UserRegistered(
+                applicationUser.Id,
+                applicationUser.Email,
+                applicationUser.FirstName,
+                applicationUser.LastName,
+                request.Roles),
+            cancellationToken);
 
         return new RegisterUserResult(new IdentityUserDto
         {

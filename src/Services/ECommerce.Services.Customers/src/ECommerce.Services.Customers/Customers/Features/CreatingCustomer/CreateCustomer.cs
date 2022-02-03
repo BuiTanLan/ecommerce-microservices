@@ -1,12 +1,13 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.ValueObjects;
+using BuildingBlocks.Core.Domain.ValueObjects;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.IdsGenerator;
-using ECommerce.Services.Customers.Customers.Clients;
-using ECommerce.Services.Customers.Customers.Clients.Dtos;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Customers.ValueObjects;
+using ECommerce.Services.Customers.Shared.Clients.Identity;
+using ECommerce.Services.Customers.Shared.Clients.Identity.Dtos;
 using ECommerce.Services.Customers.Shared.Data;
+using ECommerce.Services.Customers.Shared.ValueObjects;
 
 namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
 
@@ -92,8 +93,8 @@ internal class CreateCustomerHandler : ICommandHandler<CreateCustomer, CreateCus
 
         var customer = Customer.Create(
             command.Id,
-            new Email(identityUser.Email),
-            new Name(identityUser.FirstName, identityUser.LastName),
+            Email.Create(identityUser.Email),
+            CustomerName.Create(identityUser.FirstName, identityUser.LastName),
             identityUser.Id);
 
         await _customersDbContext.SaveChangesAsync(cancellationToken);

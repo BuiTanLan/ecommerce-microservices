@@ -12,10 +12,10 @@ using ECommerce.Services.Catalogs.Products.Features.ChangingProductSupplier.Even
 using ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Events.Domain;
 using ECommerce.Services.Catalogs.Products.Features.DebitingProductStock.Events.Domain;
 using ECommerce.Services.Catalogs.Products.Features.ReplenishingProductStock.Events.Domain;
-using ECommerce.Services.Catalogs.Products.Models.ValueObjects;
+using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Suppliers;
 using static BuildingBlocks.Core.Domain.Events.Internal.DomainEvents;
-using Size = ECommerce.Services.Catalogs.Products.Models.ValueObjects.Size;
+using Size = ECommerce.Services.Catalogs.Products.ValueObjects.Size;
 
 namespace ECommerce.Services.Catalogs.Products.Models;
 
@@ -31,17 +31,16 @@ public class Product : AggregateRoot<ProductId>
     public Price Price { get; private set; } = null!;
     public ProductColor Color { get; private set; }
     public ProductStatus ProductStatus { get; private set; }
+    public Category? Category { get; private set; }
     public CategoryId CategoryId { get; private set; } = null!;
-    public Category Category { get; private set; } = null!;
     public SupplierId SupplierId { get; private set; } = null!;
-    public Supplier Supplier { get; private set; } = null!;
+    public Supplier? Supplier { get; private set; } = null!;
     public BrandId BrandId { get; private set; } = null!;
-    public Brand Brand { get; private set; } = null!;
+    public Brand? Brand { get; private set; } = null!;
     public Size Size { get; private set; } = null!;
     public Stock Stock { get; set; } = null!;
     public Dimensions Dimensions { get; private set; } = null!;
     public IReadOnlyList<ProductImage> Images => _images;
-
 
     public static Product Create(
         ProductId id,
@@ -53,9 +52,9 @@ public class Product : AggregateRoot<ProductId>
         ProductColor color,
         string? description,
         Price price,
-        Category? category,
-        Supplier? supplier,
-        Brand? brand,
+        CategoryId categoryId,
+        SupplierId supplierId,
+        BrandId brandId,
         IList<ProductImage>? images = null)
     {
         var product = new Product
@@ -72,9 +71,9 @@ public class Product : AggregateRoot<ProductId>
         product.ChangeStatus(status);
         product.ChangeColor(color);
         product.ChangeDimensions(dimensions);
-        product.ChangeCategory(category);
-        product.ChangeBrand(brand);
-        product.ChangeSupplier(supplier);
+        product.ChangeCategory(categoryId);
+        product.ChangeBrand(brandId);
+        product.ChangeSupplier(supplierId);
 
         product.AddDomainEvent(new ProductCreated(product));
 
@@ -161,14 +160,14 @@ public class Product : AggregateRoot<ProductId>
 
         int removed = Math.Min(quantity, Stock.Available);
 
-        Stock = new Stock(Stock.Available - removed, Stock.RestockThreshold, Stock.MaxStockThreshold);
+        Stock = Stock.Create(Stock.Available - removed, Stock.RestockThreshold, Stock.MaxStockThreshold);
 
         if (Stock.Available <= Stock.RestockThreshold)
         {
             AddDomainEvent(new ProductRestockThresholdReachedEvent(Stock.Available, quantity));
         }
 
-        AddDomainEvent(new ProductStockDebited(Stock.Available, quantity));
+        AddDomainEvent(new ProductStockDebited(Id, Stock, quantity));
 
         return removed;
     }
@@ -187,9 +186,9 @@ public class Product : AggregateRoot<ProductId>
                 $"Max stock threshold has been reached. Max stock threshold is {Stock.MaxStockThreshold}");
         }
 
-        Stock = new Stock(Stock.Available + quantity, Stock.RestockThreshold, Stock.MaxStockThreshold);
+        Stock = Stock.Create(Stock.Available + quantity, Stock.RestockThreshold, Stock.MaxStockThreshold);
 
-        AddDomainEvent(new ProductStockReplenished(Stock.Available, quantity));
+        AddDomainEvent(new ProductStockReplenished(Id, Stock, quantity));
 
         return Stock;
     }
@@ -198,7 +197,7 @@ public class Product : AggregateRoot<ProductId>
     {
         Guard.Against.NegativeOrZero(maxStockThreshold, nameof(maxStockThreshold));
 
-        Stock = new Stock(Stock.Available, Stock.RestockThreshold, maxStockThreshold);
+        Stock = Stock.Create(Stock.Available, Stock.RestockThreshold, maxStockThreshold);
 
         AddDomainEvent(new MaxThresholdChanged(maxStockThreshold));
 
@@ -209,7 +208,7 @@ public class Product : AggregateRoot<ProductId>
     {
         Guard.Against.NegativeOrZero(restockThreshold, nameof(restockThreshold));
 
-        Stock = new Stock(Stock.Available, restockThreshold, Stock.MaxStockThreshold);
+        Stock = Stock.Create(Stock.Available, restockThreshold, Stock.MaxStockThreshold);
 
         AddDomainEvent(new RestockThresholdChanged(restockThreshold));
 
@@ -228,58 +227,48 @@ public class Product : AggregateRoot<ProductId>
     /// <summary>
     /// Sets category.
     /// </summary>
-    /// <param name="category">The category to be changed.</param>
-    public void ChangeCategory(Category? category)
+    /// <param name="categoryId">The categoryId to be changed.</param>
+    public void ChangeCategory(CategoryId categoryId)
     {
-        Guard.Against.Null(category, nameof(category));
-        Guard.Against.NullOrEmpty(category.Code, nameof(category.Code));
-        Guard.Against.NullOrEmpty(category.Name, nameof(category.Name));
-        Guard.Against.NegativeOrZero(category.Id, nameof(category.Id));
+        Guard.Against.Null(categoryId, new ProductDomainException("CategoryId cannot be null"));
 
         // raising domain event immediately for checking some validation rule with some dependencies such as database
-        RaiseDomainEvent(new ChangingProductCategory(category.Id));
+        RaiseDomainEvent(new ChangingProductCategory(categoryId));
 
-        Category = category;
-        CategoryId = category.Id;
+        CategoryId = categoryId;
 
         // add event to domain events list that will be raise during commiting transaction
-        AddDomainEvent(new ProductCategoryChanged(category.Id, Id));
+        AddDomainEvent(new ProductCategoryChanged(categoryId, Id));
     }
 
     /// <summary>
     /// Sets supplier.
     /// </summary>
-    /// <param name="supplier">The supplier to be changed.</param>
-    public void ChangeSupplier(Supplier? supplier)
+    /// <param name="supplierId">The supplierId to be changed.</param>
+    public void ChangeSupplier(SupplierId supplierId)
     {
-        Guard.Against.Null(supplier, nameof(supplier));
-        Guard.Against.NullOrEmpty(supplier.Name, nameof(supplier.Name));
-        Guard.Against.NegativeOrZero(supplier.Id, nameof(supplier.Id));
+        Guard.Against.Null(supplierId, new ProductDomainException("SupplierId cannot be null"));
 
-        RaiseDomainEvent(new ChangingProductSupplier(supplier.Id));
+        RaiseDomainEvent(new ChangingProductSupplier(supplierId));
 
-        Supplier = supplier;
-        SupplierId = supplier.Id;
+        SupplierId = supplierId;
 
-        AddDomainEvent(new ProductSupplierChanged(supplier.Id, Id));
+        AddDomainEvent(new ProductSupplierChanged(supplierId, Id));
     }
 
     /// <summary>
     ///  Sets brand.
     /// </summary>
-    /// <param name="brand">The brand to be changed.</param>
-    public void ChangeBrand(Brand? brand)
+    /// <param name="brandId">The brandId to be changed.</param>
+    public void ChangeBrand(BrandId brandId)
     {
-        Guard.Against.Null(brand, nameof(brand));
-        Guard.Against.NullOrEmpty(brand.Name, nameof(brand.Name));
-        Guard.Against.NegativeOrZero(brand.Id, nameof(brand.Id));
+        Guard.Against.Null(brandId, new ProductDomainException("brandId cannot be null"));
 
-        RaiseDomainEvent(new ChangingProductBrand(brand.Id));
+        RaiseDomainEvent(new ChangingProductBrand(brandId));
 
-        Brand = brand;
-        BrandId = brand.Id;
+        BrandId = brandId;
 
-        AddDomainEvent(new ProductBrandChanged(brand.Id, Id));
+        AddDomainEvent(new ProductBrandChanged(brandId, Id));
     }
 
     public void AddProductImages(IList<ProductImage>? productImages)

@@ -1,5 +1,4 @@
 using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore.Specification;
 
 namespace BuildingBlocks.EFCore;

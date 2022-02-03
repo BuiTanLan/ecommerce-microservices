@@ -1,4 +1,5 @@
 using BuildingBlocks.Messaging.Outbox;
+using BuildingBlocks.Messaging.Outbox.EF;
 
 namespace ECommerce.Services.Catalogs.Shared.Data;
 

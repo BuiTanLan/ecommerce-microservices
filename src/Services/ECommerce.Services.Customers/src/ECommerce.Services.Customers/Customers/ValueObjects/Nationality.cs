@@ -1,5 +1,6 @@
 using BuildingBlocks.Core.Domain.Model;
 using ECommerce.Services.Customers.Customers.Exceptions;
+using ECommerce.Services.Customers.Customers.Exceptions.Domain;
 
 namespace ECommerce.Services.Customers.Customers.ValueObjects;
 
@@ -15,11 +16,11 @@ public class Nationality : ValueObject
         "US"
     };
 
-    public string Value { get; }
+    public string Value { get; private set; }
 
     public static Nationality? Null => null;
 
-    public Nationality(string value)
+    public static Nationality Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value) || value.Length != 2)
         {
@@ -32,10 +33,10 @@ public class Nationality : ValueObject
             throw new UnsupportedNationalityException(value);
         }
 
-        Value = value;
+        return new Nationality { Value = value };
     }
 
-    public static implicit operator Nationality?(string? value) => value is null ? null : new(value);
+    public static implicit operator Nationality?(string? value) => value is null ? null : Create(value);
 
     public static implicit operator string?(Nationality? value) => value?.Value;
 

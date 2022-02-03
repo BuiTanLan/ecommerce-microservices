@@ -1,10 +1,11 @@
 using BuildingBlocks.Core.Domain;
 using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Core.ValueObjects;
+using BuildingBlocks.Core.Domain.ValueObjects;
 using BuildingBlocks.IdsGenerator;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Customers.ValueObjects;
 using ECommerce.Services.Customers.Shared.Data;
+using ECommerce.Services.Customers.Shared.ValueObjects;
 
 namespace ECommerce.Services.Customers.Customers.Features.RegisteringUser.Events.External;
 
@@ -36,8 +37,8 @@ internal class UserRegisteredConsumer : IIntegrationEventHandler<UserRegistered>
 
         var customer = Customer.Create(
             new CustomerId(SnowFlakIdGenerator.NewId()),
-            new Email(notification.Email),
-            new Name(notification.FirstName, notification.LastName),
+            Email.Create(notification.Email),
+            CustomerName.Create(notification.FirstName, notification.LastName),
             notification.IdentityId);
 
         await _customersDbContext.AddAsync(customer, cancellationToken);

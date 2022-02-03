@@ -1,12 +1,12 @@
 using BuildingBlocks.Core.Domain.Events.Internal;
+using BuildingBlocks.Core.Domain.ValueObjects;
+using ECommerce.Services.Customers.Customers.ValueObjects;
 
 namespace ECommerce.Services.Customers.Customers.Features.CompletingCustomer.Events.Domain;
 
 public record CustomerCompleted(
-    long CustomerId,
-    string PhoneNumber,
-    DateTime? BirthDate = null,
-    string? Country = null,
-    string? City = null,
-    string? DetailAddress = null,
-    string? Nationality = null) : DomainEvent;
+    CustomerId CustomerId,
+    PhoneNumber PhoneNumber,
+    BirthDate? BirthDate = null,
+    Address? Address = null,
+    Nationality? Nationality = null) : DomainEvent;

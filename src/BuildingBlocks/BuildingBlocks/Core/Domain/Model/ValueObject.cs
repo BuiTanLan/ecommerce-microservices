@@ -4,6 +4,7 @@ namespace BuildingBlocks.Core.Domain.Model;
 // https://enterprisecraftsmanship.com/posts/csharp-records-value-objects/
 // https://enterprisecraftsmanship.com/posts/nulls-in-value-objects/
 // https://enterprisecraftsmanship.com/posts/value-objects-when-to-create-one/
+// https://blog.devgenius.io/3-different-ways-to-implement-value-object-in-csharp-10-d8f43e1fa4dc
 public abstract class ValueObject : IEquatable<ValueObject>
 {
     protected abstract IEnumerable<object> GetEqualityComponents();

@@ -1,4 +1,4 @@
-﻿namespace BuildingBlocks.Core.Messaging.Serialization;
+﻿namespace BuildingBlocks.Messaging.Serialization;
 
 public interface IMessageSerializer
 {

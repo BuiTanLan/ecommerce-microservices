@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.Domain.Events;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace BuildingBlocks.Messaging.BackgroundServices;

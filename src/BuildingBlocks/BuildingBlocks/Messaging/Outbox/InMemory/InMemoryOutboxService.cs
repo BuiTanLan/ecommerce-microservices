@@ -1,8 +1,8 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.Core.Messaging.Serialization;
-using BuildingBlocks.Domain.Events;
+using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.Messaging.Serialization;
 using Humanizer;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -61,9 +61,9 @@ public class InMemoryOutboxService : IOutboxService
         return Task.CompletedTask;
     }
 
-    public Task SaveAsync(CancellationToken cancellationToken = default, params IIntegrationEvent[] integrationEvents)
+    public Task SaveAsync(IIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
     {
-        Guard.Against.Null(integrationEvents, nameof(integrationEvents));
+        Guard.Against.Null(integrationEvent, nameof(integrationEvent));
 
         if (!_options.Enabled)
         {
@@ -71,32 +71,30 @@ public class InMemoryOutboxService : IOutboxService
             return Task.CompletedTask;
         }
 
-        foreach (var integrationEvent in integrationEvents)
-        {
-            string name = integrationEvent.GetType().Name;
+        string name = integrationEvent.GetType().Name;
 
-            var outboxMessages = new OutboxMessage(
-                integrationEvent.EventId,
-                integrationEvent.OccurredOn,
-                integrationEvent.GetType().AssemblyQualifiedName,
-                name.Underscore(),
-                _messageSerializer.Serialize(integrationEvent),
-                EventType.IntegrationEvent,
-                correlationId: null);
+        var outboxMessages = new OutboxMessage(
+            integrationEvent.EventId,
+            integrationEvent.OccurredOn,
+            integrationEvent.EventType,
+            name.Underscore(),
+            _messageSerializer.Serialize(integrationEvent),
+            EventType.IntegrationEvent,
+            correlationId: null);
 
-            _inMemoryOutboxStore.Events.Add(outboxMessages);
-        }
+        _inMemoryOutboxStore.Events.Add(outboxMessages);
 
-        _logger.LogInformation("Saved messages to the outbox");
+
+        _logger.LogInformation("Saved message to the outbox");
 
         return Task.CompletedTask;
     }
 
     public Task SaveAsync(
-        CancellationToken cancellationToken = default,
-        params IDomainNotificationEvent[] domainNotificationEvents)
+        IDomainNotificationEvent domainNotificationEvent,
+        CancellationToken cancellationToken = default)
     {
-        Guard.Against.Null(domainNotificationEvents, nameof(domainNotificationEvents));
+        Guard.Against.Null(domainNotificationEvent, nameof(domainNotificationEvent));
 
         if (!_options.Enabled)
         {
@@ -104,23 +102,48 @@ public class InMemoryOutboxService : IOutboxService
             return Task.CompletedTask;
         }
 
-        foreach (var domainNotificationEvent in domainNotificationEvents)
+        string name = domainNotificationEvent.GetType().Name;
+
+        var outboxMessages = new OutboxMessage(
+            domainNotificationEvent.EventId,
+            domainNotificationEvent.OccurredOn,
+            domainNotificationEvent.EventType,
+            name.Underscore(),
+            _messageSerializer.Serialize(domainNotificationEvent),
+            EventType.DomainNotificationEvent,
+            correlationId: null);
+
+        _inMemoryOutboxStore.Events.Add(outboxMessages);
+
+        _logger.LogInformation("Saved message to the outbox");
+
+        return Task.CompletedTask;
+    }
+
+    public Task SaveAsync(IInternalCommand internalCommand, CancellationToken cancellationToken = default)
+    {
+        Guard.Against.Null(internalCommand, nameof(internalCommand));
+
+        if (!_options.Enabled)
         {
-            string name = domainNotificationEvent.GetType().Name;
-
-            var outboxMessages = new OutboxMessage(
-                domainNotificationEvent.EventId,
-                domainNotificationEvent.OccurredOn,
-                domainNotificationEvent.GetType().AssemblyQualifiedName,
-                name.Underscore(),
-                _messageSerializer.Serialize(domainNotificationEvent),
-                EventType.DomainNotificationEvent,
-                correlationId: null);
-
-            _inMemoryOutboxStore.Events.Add(outboxMessages);
+            _logger.LogWarning("Outbox is disabled, outgoing messages won't be saved");
+            return Task.CompletedTask;
         }
 
-        _logger.LogInformation("Saved messages to the outbox");
+        string name = internalCommand.GetType().Name;
+
+        var outboxMessages = new OutboxMessage(
+            internalCommand.Id,
+            internalCommand.OccurredOn,
+            internalCommand.CommandType,
+            name.Underscore(),
+            _messageSerializer.Serialize(internalCommand),
+            EventType.DomainNotificationEvent,
+            correlationId: null);
+
+        _inMemoryOutboxStore.Events.Add(outboxMessages);
+
+        _logger.LogInformation("Saved message to the outbox");
 
         return Task.CompletedTask;
     }

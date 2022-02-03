@@ -1,9 +1,10 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain;
-using BuildingBlocks.Core.ValueObjects;
+using BuildingBlocks.Core.Domain.ValueObjects;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.Exceptions;
+using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Shared.Data;
 using ECommerce.Services.Customers.Shared.Extensions;
 
@@ -61,7 +62,7 @@ internal class CompleteCustomerHandler : ICommandHandler<CompleteCustomer>
         }
 
         customer!.Complete(
-            new PhoneNumber(command.PhoneNumber),
+            PhoneNumber.Create(command.PhoneNumber),
             DateTime.Now,
             Address.Create(command.Country, command.City, command.DetailAddress),
             command.Nationality,

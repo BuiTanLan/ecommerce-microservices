@@ -16,6 +16,14 @@ public class TypeResolver : ITypeResolver
         _typesByName.TryAdd(type.Name.ToLower(), type);
     }
 
+    public void Register(IList<Type> types)
+    {
+        foreach (var type in types)
+        {
+            Register(type);
+        }
+    }
+
     public Type Resolve(string typeName)
     {
         Type dataType = null;

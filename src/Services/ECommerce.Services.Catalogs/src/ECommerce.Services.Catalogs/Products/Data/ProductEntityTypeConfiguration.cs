@@ -1,6 +1,9 @@
+using ECommerce.Services.Catalogs.Brands;
+using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products.Models;
-using ECommerce.Services.Catalogs.Products.Models.ValueObjects;
+using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Shared.Data;
+using ECommerce.Services.Catalogs.Suppliers;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ECommerce.Services.Catalogs.Products.Data;
@@ -22,7 +25,7 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property(x => x.Name)
             .HasColumnType(Constants.ColumnTypes.NormalText)
-            .HasConversion(name => name.Value, name => new Name(name))
+            .HasConversion(name => name.Value, name => Name.Create(name))
             .IsRequired();
 
         builder.Property(ci => ci.Price)
@@ -31,7 +34,7 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired();
 
         builder.Property(ci => ci.Size)
-            .HasConversion(size => size.Value, size => new Size(size))
+            .HasConversion(size => size.Value, size => Size.Create(size))
             .IsRequired();
 
         builder.Property(x => x.ProductStatus)
@@ -62,15 +65,24 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
             cm.Property(c => c.MaxStockThreshold);
         });
 
-        builder.HasOne(c => c.Category)
-            .WithMany()
-            .HasForeignKey(x => x.CategoryId);
+        builder.Property(x => x.CategoryId)
+            .HasConversion(categoryId => categoryId.Value, categoryId => categoryId);
 
-        builder.HasOne(c => c.Brand)
+        builder.HasOne<Category>(x => x.Category)
+            .WithMany()
+            .HasForeignKey(x => (long)x.CategoryId);
+
+        builder.Property(x => x.BrandId)
+            .HasConversion(brandId => brandId.Value, brandId => brandId);
+
+        builder.HasOne<Brand>(x => x.Brand)
             .WithMany()
             .HasForeignKey(x => x.BrandId);
 
-        builder.HasOne(c => c.Supplier)
+        builder.Property(x => x.SupplierId)
+            .HasConversion(supplierId => supplierId.Value, supplierId => supplierId);
+
+        builder.HasOne<Supplier>(x => x.Supplier)
             .WithMany()
             .HasForeignKey(x => x.SupplierId);
 

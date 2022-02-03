@@ -1,7 +1,6 @@
 using System.Text;
 using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Core.Messaging.Serialization;
-using BuildingBlocks.Domain.Events;
+using BuildingBlocks.Messaging.Serialization;
 using Microsoft.Extensions.Logging;
 using Polly;
 

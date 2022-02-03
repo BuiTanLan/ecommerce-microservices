@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.ValueObjects;
+using BuildingBlocks.Core.Domain.ValueObjects;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Customers.ValueObjects;
 using ECommerce.Services.Customers.Shared.Data;
@@ -18,7 +18,7 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
         builder.HasIndex(x => x.Id).IsUnique();
 
         builder.Property(x => x.Id)
-            .HasConversion(x => x.Value, id => new CustomerId(id))
+            .HasConversion(id => id.Value, id => new CustomerId(id))
             .ValueGeneratedNever();
 
         builder.Property(x => x.CustomerState)
@@ -30,7 +30,7 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
         builder.HasIndex(x => x.Email).IsUnique();
         builder.Property(x => x.Email).IsRequired()
             .HasMaxLength(Constants.Lenght.Medium)
-            .HasConversion(x => x.Value, x => new Email(x)); // converting mandatory value objects
+            .HasConversion(email => email.Value, email => Email.Create(email)); // converting mandatory value objects
 
         builder.HasIndex(x => x.PhoneNumber).IsUnique();
         builder.Property(x => x.PhoneNumber)
@@ -66,7 +66,7 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
             .HasMaxLength(Constants.Lenght.Short)
             .HasConversion(
                 nationality => (string?)nationality,
-                value => (Nationality?)value); // converting optional value objects
+                nationality => (Nationality?)nationality); // converting optional value objects
 
         builder.Property(x => x.BirthDate)
             .IsRequired(false)

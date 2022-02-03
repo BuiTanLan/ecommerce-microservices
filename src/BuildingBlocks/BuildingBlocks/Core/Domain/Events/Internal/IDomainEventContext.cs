@@ -1,7 +1,6 @@
-using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
 
-namespace BuildingBlocks.Core.Domain.Events;
+namespace BuildingBlocks.Core.Domain.Events.Internal;
 
 public interface IDomainEventContext
 {

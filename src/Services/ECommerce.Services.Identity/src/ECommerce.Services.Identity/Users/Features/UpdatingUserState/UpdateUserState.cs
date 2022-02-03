@@ -65,8 +65,8 @@ internal class UpdateUserStateHandler : ICommandHandler<UpdateUserState>
         await _userManager.UpdateAsync(user);
 
         await _outboxService.SaveAsync(
-            cancellationToken,
-            new UserStateUpdated(request.UserId, previousState, request.State));
+            new UserStateUpdated(request.UserId, previousState, request.State),
+            cancellationToken);
 
         _logger.LogInformation(
             "Updated state for user with ID: '{UserId}', '{PreviousState}' -> '{UserState}'",
