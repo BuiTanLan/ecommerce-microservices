@@ -74,6 +74,6 @@ public static class ApplicationBuilderExtensions
 
         var json = Encoding.UTF8.GetString(stream.ToArray());
 
-        return context.Response.WriteAsync(json);
+        return context.Response.WriteAsync(json, default);
     }
 }

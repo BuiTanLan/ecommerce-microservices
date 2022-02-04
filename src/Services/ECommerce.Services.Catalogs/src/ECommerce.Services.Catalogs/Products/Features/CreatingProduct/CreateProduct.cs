@@ -141,7 +141,9 @@ public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProduct
 
         await _catalogDbContext.Products.AddAsync(product, cancellationToken: cancellationToken);
 
-        var created = _catalogDbContext.Products
+        await _catalogDbContext.SaveChangesAsync(cancellationToken);
+
+        var created = await _catalogDbContext.Products
             .Include(x => x.Brand)
             .Include(x => x.Category)
             .Include(x => x.Supplier)

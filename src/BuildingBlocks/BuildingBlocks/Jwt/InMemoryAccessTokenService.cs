@@ -24,9 +24,9 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
         _expires = TimeSpan.FromMinutes(jwtOptions.Value?.ExpiryMinutes ?? 120);
     }
 
-    public async Task<bool> IsCurrentActiveToken()
+    public Task<bool> IsCurrentActiveToken()
     {
-        return await IsActiveAsync(GetCurrent());
+        return IsActiveAsync(GetCurrent());
     }
 
     public Task DeactivateCurrentAsync()

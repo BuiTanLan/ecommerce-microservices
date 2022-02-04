@@ -31,8 +31,6 @@ public class RedisService : IRedisService
     {
         get
         {
-            _connectionLock.Wait();
-
             try
             {
                 return ConnectionMultiplexer.GetDatabase();
@@ -44,9 +42,9 @@ public class RedisService : IRedisService
         }
     }
 
-    public async Task<T> GetOrSetAsync<T>(string key, Func<Task<T>> func)
+    public Task<T> GetOrSetAsync<T>(string key, Func<Task<T>> func)
     {
-        return await GetOrSetAsync(key, func,
+        return GetOrSetAsync(key, func,
             TimeSpan.FromSeconds(_redisCacheOptions.RedisDefaultSlidingExpirationInSecond));
     }
 
@@ -114,15 +112,15 @@ public class RedisService : IRedisService
         return succeed;
     }
 
-    public async Task RemoveAsync(string key)
+    public Task RemoveAsync(string key)
     {
         var keyWithPrefix = $"{_redisCacheOptions.Prefix}:{key}";
-        await Database.KeyDeleteAsync(keyWithPrefix);
+        return Database.KeyDeleteAsync(keyWithPrefix);
     }
 
-    public async Task ResetAsync()
+    public Task ResetAsync()
     {
-        await Database.ScriptEvaluateAsync(
+        return Database.ScriptEvaluateAsync(
             ClearCacheLuaScript,
             values: new RedisValue[] { _redisCacheOptions.Prefix + "*" });
     }
@@ -134,9 +132,9 @@ public class RedisService : IRedisService
             values: new RedisValue[] { pattern });
 
         return ((RedisResult[])result)
-            .Where(x => x.ToString()!.StartsWith(_redisCacheOptions.Prefix))
+            .Where(x => x.ToString()!.StartsWith(_redisCacheOptions.Prefix, StringComparison.OrdinalIgnoreCase))
             .Select(x => x.ToString())
-            .ToArray();
+            .ToArray()!;
     }
 
     public async Task<IEnumerable<T>> GetValuesAsync<T>(string key)

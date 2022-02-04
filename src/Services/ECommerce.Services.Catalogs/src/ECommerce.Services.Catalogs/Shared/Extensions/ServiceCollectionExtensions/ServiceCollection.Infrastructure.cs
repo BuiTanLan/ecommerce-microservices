@@ -5,6 +5,7 @@ using BuildingBlocks.Email;
 using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Messaging;
+using BuildingBlocks.Messaging.Outbox.EF;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
 using BuildingBlocks.Validation;
@@ -28,7 +29,9 @@ public static class ServiceCollection
         SnowFlakIdGenerator.Configure(1);
         services.AddCore();
 
-        services.AddMessaging(configuration);
+        services.AddMessaging(configuration)
+            .AddEntityFrameworkOutbox<OutboxDataContext>(configuration);
+
         services.AddRabbitMqTransport(configuration);
 
         services.AddEmailService(configuration);
@@ -38,7 +41,8 @@ public static class ServiceCollection
             s.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(TxBehavior<,>));
         });
 
         services.AddMonitoring(healthChecksBuilder =>
@@ -63,10 +67,5 @@ public static class ServiceCollection
         services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
 
         return services;
-    }
-
-    public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
-    {
-        return app.UseMonitoring();
     }
 }

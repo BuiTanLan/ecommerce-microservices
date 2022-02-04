@@ -6,8 +6,8 @@ namespace BuildingBlocks.Messaging.Scheduling
 {
     public interface IEnqueueMessages
     {
-        Task Enqueue<T>(T command, string description = null)
+        Task EnqueueAsync<T>(T command, string description = null)
             where T : ICommand;
-        Task Enqueue(MessageSerializedObject messageSerializedObject, string description = null);
+        Task EnqueueAsync(MessageSerializedObject messageSerializedObject, string description = null);
     }
 }

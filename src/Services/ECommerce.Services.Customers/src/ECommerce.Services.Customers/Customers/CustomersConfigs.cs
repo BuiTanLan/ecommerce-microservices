@@ -4,7 +4,7 @@ using ECommerce.Services.Customers;
 using ECommerce.Services.Customers.Customers;
 using ECommerce.Services.Customers.Customers.Data;
 using ECommerce.Services.Customers.Customers.Features.CompletingCustomer;
-using ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
+using ECommerce.Services.Customers.Customers.Features.CreatingCustomerWithIdentity;
 using ECommerce.Services.Customers.Customers.Features.GettingCustomerById;
 using ECommerce.Services.Customers.Customers.Features.LockingCustomer;
 using ECommerce.Services.Customers.Customers.Features.UnlockingCustomer;
@@ -31,6 +31,7 @@ internal static class CustomersConfigs
     internal static IEndpointRouteBuilder MapCustomersEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapCompleteCustomerEndpoint();
+        endpoints.MapCreateCustomerWIthIdentityEndpoint();
         endpoints.MapCreateCustomerEndpoint();
         endpoints.MapLockCustomerEndpoint();
         endpoints.MapUnlockCustomerEndpoint();

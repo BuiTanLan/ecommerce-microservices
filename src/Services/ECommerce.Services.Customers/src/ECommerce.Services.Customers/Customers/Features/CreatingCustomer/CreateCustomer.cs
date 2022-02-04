@@ -1,22 +1,17 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.ValueObjects;
 using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
+using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Customers.Models;
-using ECommerce.Services.Customers.Customers.ValueObjects;
 using ECommerce.Services.Customers.Shared.Clients.Identity;
-using ECommerce.Services.Customers.Shared.Clients.Identity.Dtos;
 using ECommerce.Services.Customers.Shared.Data;
 using ECommerce.Services.Customers.Shared.ValueObjects;
 
-namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
+namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomerWithIdentity;
 
-public record CreateCustomer(
-    string UserName,
-    string Email,
-    string FirstName,
-    string LastName,
-    string Password) : ICreateCommand<CreateCustomerResult>
+public record CreateCustomer(string Email) : ICreateCommand<CreateCustomerResult>
 {
     public long Id { get; init; } = SnowFlakIdGenerator.NewId();
 }
@@ -26,22 +21,6 @@ internal class CreateCustomerValidator : AbstractValidator<CreateCustomer>
     public CreateCustomerValidator()
     {
         CascadeMode = CascadeMode.Stop;
-
-        RuleFor(x => x.FirstName)
-            .NotNull()
-            .NotEmpty();
-
-        RuleFor(x => x.LastName)
-            .NotNull()
-            .NotEmpty();
-
-        RuleFor(x => x.UserName)
-            .NotNull()
-            .NotEmpty();
-
-        RuleFor(x => x.Password)
-            .NotNull()
-            .NotEmpty();
 
         RuleFor(x => x.Email)
             .NotNull()
@@ -72,30 +51,20 @@ internal class CreateCustomerHandler : ICommandHandler<CreateCustomer, CreateCus
     {
         Guard.Against.Null(command, nameof(command));
 
+        if (_customersDbContext.Customers.Any(x => x.Email == command.Email))
+            throw new CustomerAlreadyExistsException($"Customer with email '{command.Email}' already exists.");
+
         var identityUser = (await _identityApiClient.GetUserByEmailAsync(command.Email, cancellationToken))
             ?.UserIdentity;
 
-        if (identityUser is null)
-        {
-            identityUser = (await _identityApiClient.CreateUserIdentityAsync(
-                new CreateUserRequest(
-                    command.UserName,
-                    command.Email,
-                    command.FirstName,
-                    command.LastName,
-                    command.Password,
-                    command.Password),
-                cancellationToken))?.UserIdentity;
-        }
-
-        if (identityUser == null)
-            throw new CreatingUserForCustomerException();
+        Guard.Against.NotFound(
+            identityUser,
+            new CustomerNotFoundException($"Identity user with email '{command.Email}' not found."));
 
         var customer = Customer.Create(
             command.Id,
-            Email.Create(identityUser.Email),
-            CustomerName.Create(identityUser.FirstName, identityUser.LastName),
-            identityUser.Id);
+            Email.Create(identityUser!.Email),
+            CustomerName.Create(identityUser.FirstName, identityUser.LastName), identityUser.Id);
 
         await _customersDbContext.SaveChangesAsync(cancellationToken);
 

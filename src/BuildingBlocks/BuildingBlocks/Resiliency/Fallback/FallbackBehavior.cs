@@ -36,15 +36,14 @@ public class FallbackBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest,
 
         var fallbackPolicy = Policy<TResponse>
             .Handle<System.Exception>()
-            .FallbackAsync(async cancellationToken =>
+            .FallbackAsync(cancellationToken =>
             {
                 _logger.LogDebug(
                     $"Initial handler failed. Falling back to `{fallbackHandler.GetType().FullName}@HandleFallback`");
-                return await fallbackHandler.HandleFallbackAsync(request, cancellationToken)
-                    .ConfigureAwait(false);
+                return fallbackHandler.HandleFallbackAsync(request, cancellationToken);
             });
 
-        var response = await fallbackPolicy.ExecuteAsync(async () => await next());
+        var response = await fallbackPolicy.ExecuteAsync(() => next());
 
         return response;
     }

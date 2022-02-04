@@ -1,4 +1,4 @@
-using BuildingBlocks.Email.Configs;
+using BuildingBlocks.Email.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +11,7 @@ public static class Extensions
         this WebApplicationBuilder builder,
         IConfiguration configuration,
         EmailProvider provider = EmailProvider.MimKit,
-        Action<EmailConfig> configure = null)
+        Action<EmailOptions> configure = null)
     {
         AddEmailService(builder.Services, configuration, provider, configure);
 
@@ -22,7 +22,7 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration,
         EmailProvider provider = EmailProvider.MimKit,
-        Action<EmailConfig> configurator = null)
+        Action<EmailOptions> configurator = null)
     {
         if (provider == EmailProvider.SendGrid)
         {
@@ -33,11 +33,11 @@ public static class Extensions
             services.AddSingleton<IEmailSender, MimeKitEmailSender>();
         }
 
-        var config = configuration.GetSection(nameof(EmailConfig)).Get<EmailConfig>();
+        var config = configuration.GetSection(nameof(EmailOptions)).Get<EmailOptions>();
 
-        services.Configure<EmailConfig>(configuration.GetSection(nameof(EmailConfig)));
+        services.Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)));
         if (configurator is { })
-            services.Configure(nameof(EmailConfig), configurator);
+            services.Configure(nameof(EmailOptions), configurator);
 
         return services;
     }

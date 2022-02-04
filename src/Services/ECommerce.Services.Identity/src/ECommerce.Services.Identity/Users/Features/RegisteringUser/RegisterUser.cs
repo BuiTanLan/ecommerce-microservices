@@ -100,10 +100,12 @@ internal class RegisterUserHandler : ICommandHandler<RegisterUser, RegisterUserR
         if (roleResult.Succeeded == false)
             throw new RegisterIdentityUserException(string.Join(',', roleResult.Errors.Select(e => e.Description)));
 
+        // saving to outbox should do in same traction of our business logic actions. we could use TxBehaviour or ITxDbContextExecutes interface
         await _outboxService.SaveAsync(
             new UserRegistered(
                 applicationUser.Id,
                 applicationUser.Email,
+                applicationUser.UserName,
                 applicationUser.FirstName,
                 applicationUser.LastName,
                 request.Roles),

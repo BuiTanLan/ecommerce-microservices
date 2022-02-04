@@ -16,7 +16,7 @@ public class RabbitMqConsumer : IBusSubscriber
     private readonly ILogger<RabbitMqConsumer> _logger;
     private readonly RabbitConfiguration _rabbitCfg;
     private readonly IServiceProvider _serviceProvider;
-    private IModel _channel;
+    private readonly List<IModel> _channels = new();
 
     public RabbitMqConsumer(
         IBusConnection connection,
@@ -48,8 +48,9 @@ public class RabbitMqConsumer : IBusSubscriber
             var queueReferences =
                 generic.Invoke(fac, new object[] { null }) as QueueReferences;
 
-            InitChannel(queueReferences);
-            InitSubscription(queueReferences);
+            var channel = InitChannel(queueReferences);
+            _channels.Add(channel);
+            InitSubscription(queueReferences, channel);
         }
 
         return Task.CompletedTask;
@@ -57,64 +58,29 @@ public class RabbitMqConsumer : IBusSubscriber
 
     public Task StopAsync(CancellationToken cancellationToken = default)
     {
-        StopChannel();
+        _channels.ForEach(StopChannel);
         return Task.CompletedTask;
     }
 
-    private void InitSubscription(QueueReferences queueReferences)
+    private void InitSubscription(QueueReferences queueReferences, IModel channel)
     {
-        var consumer = new AsyncEventingBasicConsumer(_channel);
+        var consumer = new AsyncEventingBasicConsumer(channel);
 
         consumer.Received += OnMessageReceivedAsync;
 
         _logger.LogInformation($"initializing subscription on queue '{queueReferences.QueueName}' ...");
-        _channel.BasicConsume(queue: queueReferences.QueueName, autoAck: false, consumer: consumer);
+        channel.BasicConsume(queue: queueReferences.QueueName, autoAck: false, consumer: consumer);
     }
 
-    private void InitChannel(QueueReferences queueReferences)
+    private IModel InitChannel(QueueReferences queueReferences)
     {
-        StopChannel();
-
-        _channel = _connection.CreateChannel();
-
-        _logger.LogInformation(
-            $"initializing dead-letter queue '{queueReferences.DeadLetterQueue}' on exchange '{queueReferences.DeadLetterExchangeName}'...");
-
-        _channel.ExchangeDeclare(exchange: queueReferences.DeadLetterExchangeName, type: ExchangeType.Topic);
-        _channel.QueueDeclare(queue: queueReferences.DeadLetterQueue,
-            durable: true,
-            exclusive: false,
-            autoDelete: false,
-            arguments: null);
-        _channel.QueueBind(queueReferences.DeadLetterQueue,
-            queueReferences.DeadLetterExchangeName,
-            routingKey: queueReferences.DeadLetterQueue,
-            arguments: null);
-
-        _logger.LogInformation(
-            $"initializing retry queue '{queueReferences.RetryQueueName}' on exchange '{queueReferences.RetryExchangeName}'...");
-
-        _channel.ExchangeDeclare(exchange: queueReferences.RetryExchangeName, type: ExchangeType.Topic);
-        _channel.QueueDeclare(queue: queueReferences.RetryQueueName,
-            durable: true,
-            exclusive: false,
-            autoDelete: false,
-            arguments: new Dictionary<string, object>()
-            {
-                { Headers.XMessageTTL, (int)_rabbitCfg.RetryDelay.TotalMilliseconds },
-                { Headers.XDeadLetterExchange, queueReferences.ExchangeName },
-                { Headers.XDeadLetterRoutingKey, queueReferences.QueueName }
-            });
-        _channel.QueueBind(queue: queueReferences.RetryQueueName,
-            exchange: queueReferences.RetryExchangeName,
-            routingKey: queueReferences.RoutingKey,
-            arguments: null);
+        var channel = _connection.CreateChannel();
 
         _logger.LogInformation(
             $"initializing queue '{queueReferences.QueueName}' on exchange '{queueReferences.ExchangeName}'...");
 
-        _channel.ExchangeDeclare(exchange: queueReferences.ExchangeName, type: ExchangeType.Topic);
-        _channel.QueueDeclare(queue: queueReferences.QueueName,
+        channel.ExchangeDeclare(exchange: queueReferences.ExchangeName, type: ExchangeType.Topic);
+        channel.QueueDeclare(queue: queueReferences.QueueName,
             durable: true,
             exclusive: false,
             autoDelete: false,
@@ -123,12 +89,14 @@ public class RabbitMqConsumer : IBusSubscriber
                 { Headers.XDeadLetterExchange, queueReferences.DeadLetterExchangeName },
                 { Headers.XDeadLetterRoutingKey, queueReferences.DeadLetterQueue }
             });
-        _channel.QueueBind(queue: queueReferences.QueueName,
+        channel.QueueBind(queue: queueReferences.QueueName,
             exchange: queueReferences.ExchangeName,
             routingKey: queueReferences.RoutingKey,
             arguments: null);
 
-        _channel.CallbackException += OnChannelException;
+        channel.CallbackException += OnChannelException;
+
+        return channel;
     }
 
     private void OnChannelException(object _, CallbackExceptionEventArgs ea)
@@ -141,25 +109,10 @@ public class RabbitMqConsumer : IBusSubscriber
         // InitSubscription();
     }
 
-
-    private void StopChannel()
-    {
-        if (_channel is null)
-            return;
-
-        _channel.CallbackException -= OnChannelException;
-
-        if (_channel.IsOpen)
-            _channel.Close();
-
-        _channel.Dispose();
-        _channel = null;
-    }
-
     private async Task OnMessageReceivedAsync(object sender, BasicDeliverEventArgs eventArgs)
     {
         var consumer = sender as IBasicConsumer;
-        var channel = consumer?.Model ?? _channel;
+        var channel = consumer.Model;
 
         IIntegrationEvent message;
         try
@@ -184,16 +137,17 @@ public class RabbitMqConsumer : IBusSubscriber
             eventArgs.Exchange);
         try
         {
-            var eventProcessor = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IEventProcessor>();
+            using var scope = _serviceProvider.CreateScope();
+            var eventProcessor = scope.ServiceProvider.GetRequiredService<IEventProcessor>();
 
             // Publish to internal event bus
-            await eventProcessor.PublishAsync(message);
+            await eventProcessor.PublishAsync(message, default).ConfigureAwait(false);
 
             channel.BasicAck(eventArgs.DeliveryTag, multiple: false);
         }
         catch (System.Exception ex)
         {
-            HandleConsumerException(ex, eventArgs, channel, message, false);
+            HandleConsumerException(ex, eventArgs, channel, message);
         }
     }
 
@@ -201,30 +155,33 @@ public class RabbitMqConsumer : IBusSubscriber
         System.Exception ex,
         BasicDeliverEventArgs deliveryProps,
         IModel channel,
-        IIntegrationEvent message,
-        bool requeue)
+        IIntegrationEvent message)
     {
-        var errorMsg =
-            "an error has occurred while processing Message '{MessageId}' from Exchange '{ExchangeName}' : {ExceptionMessage} . "
-            + (requeue ? "Re-enqueuing...." : "Rejecting...");
+        _logger.LogWarning(
+            "an error has occurred while processing Message '{MessageId}' from Exchange '{ExchangeName}' : {ExceptionMessage}",
+            message.EventId,
+            deliveryProps.Exchange,
+            ex.Message);
 
-        _logger.LogWarning(ex, errorMsg, message.EventId, deliveryProps.Exchange, ex.Message);
+        channel.BasicReject(deliveryProps.DeliveryTag, requeue: false);
+    }
 
-        if (!requeue)
-            channel.BasicReject(deliveryProps.DeliveryTag, requeue: false);
-        else
-        {
-            channel.BasicAck(deliveryProps.DeliveryTag, false);
-            channel.BasicPublish(
-                exchange: deliveryProps.Exchange + ".retry",
-                routingKey: deliveryProps.RoutingKey,
-                basicProperties: deliveryProps.BasicProperties,
-                body: deliveryProps.Body);
-        }
+    private void StopChannel(IModel channel)
+    {
+        if (channel is null)
+            return;
+
+        channel.CallbackException -= OnChannelException;
+
+        if (channel.IsOpen)
+            channel.Close();
+
+        channel.Dispose();
+        channel = null;
     }
 
     public void Dispose()
     {
-        StopChannel();
+        _channels.ForEach(StopChannel);
     }
 }

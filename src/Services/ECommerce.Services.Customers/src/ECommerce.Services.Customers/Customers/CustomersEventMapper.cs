@@ -20,7 +20,8 @@ public class CustomersEventMapper : IIntegrationEventMapper
     {
         return domainEvent switch
         {
-            CustomerCreated e => new Features.CreatingCustomer.Events.Integration.CustomerCreated(e.Customer.Id),
+            CustomerCreated e => new Features.CreatingCustomer.Events.Integration
+                .CustomerCreated(e.Customer.Id),
             CustomerLocked e => new Features.LockingCustomer.Events.Integration.CustomerLocked(e.CustomerId),
             CustomerUnlocked e => new Features.UnlockingCustomer.Events.Integration.CustomerUnlocked(e.CustomerId),
             CustomerCompleted e =>

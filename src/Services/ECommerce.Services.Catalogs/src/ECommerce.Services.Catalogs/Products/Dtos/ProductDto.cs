@@ -18,6 +18,8 @@ public record ProductDto
     public int RestockThreshold { get; init; }
     public int MaxStockThreshold { get; init; }
     public ProductStatus ProductStatus { get; init; }
+    public ProductColor ProductColor { get; init; }
+    public string Size { get; init; }
     public int Height { get; init; }
     public int Width { get; init; }
     public int Depth { get; init; }

@@ -278,13 +278,13 @@ public static class ReflectionHelpers
     }
 
     // https://stackoverflow.com/a/39679855/581476
-    public static async Task<dynamic> InvokeAsync(
+    public static Task<dynamic> InvokeAsync(
         MethodInfo methodInfo,
         object obj,
         params object[] parameters)
     {
         dynamic awaitable = methodInfo.Invoke(obj, parameters);
-        return await awaitable;
+        return awaitable;
     }
 
     public static T CastTo<T>(this object o) => (T)o;

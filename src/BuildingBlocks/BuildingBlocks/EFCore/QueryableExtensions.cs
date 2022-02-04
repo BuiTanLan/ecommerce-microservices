@@ -12,46 +12,51 @@ namespace BuildingBlocks.EFCore;
 // https://github.com/dynamicexpresso/DynamicExpresso
 public static class QueryableExtensions
 {
-    public static async Task<ListResultModel<T>> PaginateAsync<T>(
+    public static Task<ListResultModel<T>> PaginateAsync<T>(
         this IQueryable<T> collection,
-        IPageList query)
+        IPageList query,
+        CancellationToken cancellationToken = default)
     {
-        return await collection.PaginateAsync(query.Page, query.PageSize);
+        return collection.PaginateAsync(query.Page, query.PageSize, cancellationToken);
     }
 
-    public static async Task<ListResultModel<T>> PaginateAsync<T>(this IQueryable<T> collection, int page = 1, int
-        pageSize = 10)
+    public static async Task<ListResultModel<T>> PaginateAsync<T>(
+        this IQueryable<T> collection,
+        int page = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
     {
         if (page <= 0) page = 1;
 
         if (pageSize <= 0) pageSize = 10;
 
-        var isEmpty = await collection.AnyAsync() == false;
+        var isEmpty = await collection.AnyAsync(cancellationToken: cancellationToken) == false;
         if (isEmpty) return ListResultModel<T>.Empty;
 
-        var totalItems = await collection.CountAsync();
+        var totalItems = await collection.CountAsync(cancellationToken: cancellationToken);
         var totalPages = (int)Math.Ceiling((decimal)totalItems / pageSize);
-        var data = await collection.Limit(page, pageSize).ToListAsync();
+        var data = await collection.Limit(page, pageSize).ToListAsync(cancellationToken: cancellationToken);
 
         return ListResultModel<T>.Create(data, totalItems, page, pageSize);
     }
 
-    public static async Task<ListResultModel<R>> PaginateAsync<T,R>(
+    public static async Task<ListResultModel<R>> PaginateAsync<T, R>(
         this IQueryable<T> collection,
         IConfigurationProvider configuration,
         int page = 1,
-        int pageSize = 10)
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
     {
         if (page <= 0) page = 1;
 
         if (pageSize <= 0) pageSize = 10;
 
-        var isEmpty = await collection.AnyAsync() == false;
+        var isEmpty = await collection.AnyAsync(cancellationToken: cancellationToken) == false;
         if (isEmpty) return ListResultModel<R>.Empty;
 
-        var totalItems = await collection.CountAsync();
+        var totalItems = await collection.CountAsync(cancellationToken: cancellationToken);
         var totalPages = (int)Math.Ceiling((decimal)totalItems / pageSize);
-        var data = await collection.Limit(page, pageSize).ProjectTo<R>(configuration).ToListAsync();
+        var data = await collection.Limit(page, pageSize).ProjectTo<R>(configuration).ToListAsync(cancellationToken: cancellationToken);
 
         return ListResultModel<R>.Create(data, totalItems, page, pageSize);
     }

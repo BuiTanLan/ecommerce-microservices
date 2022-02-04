@@ -63,22 +63,22 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
         return AuthenticateResult.NoResult();
     }
 
-    protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
+    protected override Task HandleChallengeAsync(AuthenticationProperties properties)
     {
         Response.StatusCode = 401;
         Response.ContentType = ProblemDetailsContentType;
         var problemDetails = new UnauthorizedProblemDetails();
 
-        await Response.WriteAsync(JsonSerializer.Serialize(problemDetails));
+        return Response.WriteAsync(JsonSerializer.Serialize(problemDetails));
     }
 
-    protected override async Task HandleForbiddenAsync(AuthenticationProperties properties)
+    protected override Task HandleForbiddenAsync(AuthenticationProperties properties)
     {
         Response.StatusCode = 403;
         Response.ContentType = ProblemDetailsContentType;
         var problemDetails = new ForbiddenProblemDetails();
 
-        await Response.WriteAsync(JsonSerializer.Serialize(problemDetails, DefaultJsonSerializerOptions.Options));
+        return Response.WriteAsync(JsonSerializer.Serialize(problemDetails, DefaultJsonSerializerOptions.Options));
     }
 
     public static class DefaultJsonSerializerOptions

@@ -1,4 +1,4 @@
-using BuildingBlocks.Email.Configs;
+using BuildingBlocks.Email.Options;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -8,10 +8,10 @@ namespace BuildingBlocks.Email;
 
 public class MimeKitEmailSender : IEmailSender
 {
-    private readonly EmailConfig _config;
+    private readonly EmailOptions _config;
     private readonly ILogger<MimeKitEmailSender> _logger;
 
-    public MimeKitEmailSender(IOptions<EmailConfig> config, ILogger<MimeKitEmailSender> logger)
+    public MimeKitEmailSender(IOptions<EmailOptions> config, ILogger<MimeKitEmailSender> logger)
     {
         _config = config.Value;
         _logger = logger;
@@ -27,8 +27,8 @@ public class MimeKitEmailSender : IEmailSender
             var builder = new BodyBuilder { HtmlBody = emailObject.MailBody };
             email.Body = builder.ToMessageBody();
             using var smtp = new MailKit.Net.Smtp.SmtpClient();
-            await smtp.ConnectAsync(_config.MimeKitConfig.Host, _config.MimeKitConfig.Port, SecureSocketOptions.StartTls);
-            await smtp.AuthenticateAsync(_config.MimeKitConfig.UserName, _config.MimeKitConfig.Password);
+            await smtp.ConnectAsync(_config.MimeKitOptions.Host, _config.MimeKitOptions.Port, SecureSocketOptions.StartTls);
+            await smtp.AuthenticateAsync(_config.MimeKitOptions.UserName, _config.MimeKitOptions.Password);
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
 

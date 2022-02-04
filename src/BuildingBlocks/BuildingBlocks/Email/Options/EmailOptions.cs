@@ -1,15 +1,15 @@
-namespace BuildingBlocks.Email.Configs;
+namespace BuildingBlocks.Email.Options;
 
-public class EmailConfig
+public class EmailOptions
 {
-    public MimeKitConfig MimeKitConfig { get; set; }
-    public SendGridConfig SendGridConfig { get; set; }
+    public MimeKitOptions MimeKitOptions { get; set; }
+    public SendGridOptions SendGridOptions { get; set; }
     public string From { get; set; }
     public string DisplayName { get; set; }
     public bool Enable { get; set; }
 }
 
-public class MimeKitConfig
+public class MimeKitOptions
 {
     public string Host { get; set; }
     public int Port { get; set; }
@@ -17,7 +17,7 @@ public class MimeKitConfig
     public string Password { get; set; }
 }
 
-public class SendGridConfig
+public class SendGridOptions
 {
     public string ApiKey { get; set; }
 }

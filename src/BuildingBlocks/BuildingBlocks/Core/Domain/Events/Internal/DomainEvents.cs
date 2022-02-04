@@ -1,4 +1,5 @@
-﻿using BuildingBlocks.Core.Extensions;
+﻿using System.Diagnostics.CodeAnalysis;
+using BuildingBlocks.Core.Extensions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,20 +16,20 @@ public static class DomainEvents
     private static readonly Func<IMediator> _mediatorFunc =
         ServiceActivator.GetScope().ServiceProvider.GetRequiredService<IMediator>;
 
-    public static async Task RaiseDomainEventAsync(
+    public static Task RaiseDomainEventAsync(
         IDomainEvent[] domainEvents,
         CancellationToken cancellationToken = default)
     {
         var mediator = _mediatorFunc.Invoke();
-        await mediator.DispatchDomainEventAsync(domainEvents, cancellationToken: cancellationToken);
+        return mediator.DispatchDomainEventAsync(domainEvents, cancellationToken: cancellationToken);
     }
 
-    public static async Task RaiseDomainEventAsync(
+    public static Task RaiseDomainEventAsync(
         IDomainEvent domainEvent,
         CancellationToken cancellationToken = default)
     {
         var mediator = _mediatorFunc.Invoke();
-        await mediator.DispatchDomainEventAsync(domainEvent, cancellationToken: cancellationToken);
+        return mediator.DispatchDomainEventAsync(domainEvent, cancellationToken: cancellationToken);
     }
 
     public static void RaiseDomainEvent(

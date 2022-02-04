@@ -9,7 +9,7 @@ namespace BuildingBlocks.Core.Extensions;
 
 public static class MediatorExtensions
 {
-    public static async Task DispatchDomainEventAsync(
+    public static Task DispatchDomainEventAsync(
         this IMediator mediator,
         IList<IDomainEvent> domainEvents,
         CancellationToken cancellationToken = default)
@@ -22,7 +22,7 @@ public static class MediatorExtensions
                 await DispatchDomainEventAsync(mediator, domainEvent, cancellationToken);
             });
 
-        await Task.WhenAll(tasks).ConfigureAwait(false);
+        return Task.WhenAll(tasks);
     }
 
     public static async Task DispatchDomainEventAsync(
@@ -40,7 +40,7 @@ public static class MediatorExtensions
             serializer.Serialize(domainEvent));
     }
 
-    public static async Task DispatchDomainNotificationEventAsync(
+    public static Task DispatchDomainNotificationEventAsync(
         this IMediator mediator,
         IList<IDomainNotificationEvent> domainNotificationEvents,
         CancellationToken cancellationToken = default)
@@ -52,7 +52,7 @@ public static class MediatorExtensions
             {
                 await DispatchDomainNotificationEventAsync(mediator, domainNotificationEvent, cancellationToken);
             });
-        await Task.WhenAll(tasks).ConfigureAwait(false);
+        return Task.WhenAll(tasks);
     }
 
     public static async Task DispatchDomainNotificationEventAsync(
@@ -70,7 +70,7 @@ public static class MediatorExtensions
             serializer.Serialize(domainNotificationEvent));
     }
 
-    public static async Task DispatchIntegrationEventAsync(
+    public static Task DispatchIntegrationEventAsync(
         this IMediator mediator,
         IList<IIntegrationEvent> integrationEvents,
         CancellationToken cancellationToken = default)
@@ -83,7 +83,7 @@ public static class MediatorExtensions
                 await DispatchIntegrationEventAsync(mediator, integrationEvent, cancellationToken);
             });
 
-        await Task.WhenAll(tasks).ConfigureAwait(false);
+        return Task.WhenAll(tasks);
     }
 
     public static async Task DispatchIntegrationEventAsync(

@@ -14,18 +14,20 @@ public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
     private readonly IServiceProvider _serviceProvider;
     private IValidator<TRequest> _validator;
 
-    public RequestValidationBehavior(IServiceProvider serviceProvider,
+    public RequestValidationBehavior(
+        IServiceProvider serviceProvider,
         ILogger<RequestValidationBehavior<TRequest, TResponse>> logger)
     {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<TResponse> Handle(TRequest request,
+    public async Task<TResponse> Handle(
+        TRequest request,
         CancellationToken cancellationToken,
         RequestHandlerDelegate<TResponse> next)
     {
-        _validator = _serviceProvider.GetService<IValidator<TRequest>>();
+        _validator = _serviceProvider.GetService<IValidator<TRequest>>()!;
         if (_validator is null)
             return await next();
 
@@ -39,7 +41,7 @@ public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
             typeof(TRequest).FullName,
             JsonSerializer.Serialize(request));
 
-        await _validator.HandleValidationAsync(request);
+        await _validator.HandleValidationAsync(request, cancellationToken);
 
         var response = await next();
 

@@ -16,7 +16,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
             _commandProcessor = commandProcessor;
         }
 
-        public Task Enqueue<T>(T command, string description = null)
+        public Task EnqueueAsync<T>(T command, string description = null)
             where T : ICommand
         {
             _commandProcessor.Enqueue(command, description);
@@ -24,7 +24,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
             return Task.CompletedTask;
         }
 
-        public Task Enqueue(MessageSerializedObject messageSerializedObject, string description = null)
+        public Task EnqueueAsync(MessageSerializedObject messageSerializedObject, string description = null)
         {
             return Task.FromResult(
                 BackgroundJob.Enqueue(() => _messagesExecutor.ExecuteCommand(messageSerializedObject)));
@@ -57,7 +57,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
                 continuationOption);
         }
 
-        public Task Schedule<T>(T command, DateTimeOffset scheduleAt, string description = null)
+        public Task ScheduleAsync<T>(T command, DateTimeOffset scheduleAt, string description = null)
             where T : ICommand
         {
             var mediatorSerializedObject = SerializeObject(command, description);
@@ -66,7 +66,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
             return Task.CompletedTask;
         }
 
-        public Task Schedule(
+        public Task ScheduleAsync(
             MessageSerializedObject messageSerializedObject,
             DateTimeOffset scheduleAt,
             string description = null)
@@ -76,7 +76,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
             return Task.CompletedTask;
         }
 
-        public Task Schedule<T>(T command, TimeSpan delay, string description = null)
+        public Task ScheduleAsync<T>(T command, TimeSpan delay, string description = null)
             where T : ICommand
         {
             var mediatorSerializedObject = SerializeObject(command, description);
@@ -86,7 +86,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
             return Task.CompletedTask;
         }
 
-        public Task Schedule(
+        public Task ScheduleAsync(
             MessageSerializedObject messageSerializedObject,
             TimeSpan delay,
             string description = null)
@@ -97,7 +97,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
             return Task.CompletedTask;
         }
 
-        public Task ScheduleRecurring<T>(T command, string name, string cronExpression, string description = null)
+        public Task ScheduleRecurringAsync<T>(T command, string name, string cronExpression, string description = null)
             where T : ICommand
         {
             var mediatorSerializedObject = SerializeObject(command, description);
@@ -107,7 +107,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
             return Task.CompletedTask;
         }
 
-        public Task ScheduleRecurring(
+        public Task ScheduleRecurringAsync(
             MessageSerializedObject messageSerializedObject,
             string name,
             string cronExpression,

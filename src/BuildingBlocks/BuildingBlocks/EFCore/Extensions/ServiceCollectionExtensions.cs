@@ -20,8 +20,10 @@ public static class ServiceCollectionExtensions
         string connString,
         Action<DbContextOptionsBuilder> doMoreDbContextOptionsConfigure = null,
         Action<IServiceCollection> doMoreActions = null)
-        where TDbContext : AppDbContextBase, IDbFacadeResolver, IDomainEventContext
+        where TDbContext : DbContext, IDbFacadeResolver, IDomainEventContext
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         services.AddDbContext<TDbContext>(options =>
         {
             options.UseNpgsql(connString, sqlOptions =>
@@ -33,11 +35,8 @@ public static class ServiceCollectionExtensions
             doMoreDbContextOptionsConfigure?.Invoke(options);
         });
 
-        services.AddScoped<IDbContext>(provider => provider.GetService<TDbContext>());
-        services.AddScoped<IDbFacadeResolver>(provider => provider.GetService<TDbContext>());
-        services.AddScoped<IDomainEventContext>(provider => provider.GetService<TDbContext>());
-
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TxBehavior<,>));
+        services.AddScoped<IDbFacadeResolver>(provider => provider.GetService<TDbContext>()!);
+        services.AddScoped<IDomainEventContext>(provider => provider.GetService<TDbContext>()!);
 
         doMoreActions?.Invoke(services);
 
@@ -103,7 +102,10 @@ public static class ServiceCollectionExtensions
         }
     }
 
-    public static async Task DoDbMigrationAsync(this IApplicationBuilder app, ILogger logger)
+    public static async Task DoDbMigrationAsync(
+        this IApplicationBuilder app,
+        ILogger logger,
+        CancellationToken cancellationToken = default)
     {
         var scope = app.ApplicationServices.CreateAsyncScope();
         var dbFacadeResolver = scope.ServiceProvider.GetService<IDbFacadeResolver>();
@@ -111,16 +113,17 @@ public static class ServiceCollectionExtensions
         var policy = CreatePolicy(3, logger, nameof(WebApplication));
         await policy.ExecuteAsync(async () =>
         {
-            if (!await dbFacadeResolver?.Database.CanConnectAsync()!)
+            if (!await dbFacadeResolver?.Database.CanConnectAsync(cancellationToken)!)
             {
                 Console.WriteLine($"Connection String: {dbFacadeResolver?.Database.GetConnectionString()}");
                 throw new System.Exception("Couldn't connect database.");
             }
 
-            var migrations = await dbFacadeResolver?.Database.GetPendingMigrationsAsync()!;
+            var migrations =
+                await dbFacadeResolver?.Database.GetPendingMigrationsAsync(cancellationToken: cancellationToken)!;
             if (migrations.Any())
             {
-                await dbFacadeResolver?.Database.MigrateAsync()!;
+                await dbFacadeResolver?.Database.MigrateAsync(cancellationToken: cancellationToken)!;
                 logger?.LogInformation("Migration database schema. Done!!!");
             }
         });

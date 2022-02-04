@@ -5,7 +5,6 @@ using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.Exceptions;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Customers.Features.CompletingCustomer.Events.Domain;
-using ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
 using ECommerce.Services.Customers.Customers.Features.CreatingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.LockingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.UnlockingCustomer.Events.Domain;

@@ -120,14 +120,15 @@ csharp_space_between_method_declaration_parameter_list_parentheses = false
 csharp_space_between_parentheses = false
 csharp_space_between_square_brackets = false
 
-
+##################################################################################
 ## https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/categories
 ## Microsoft Rules
 ##
 
-#CA1305
+## CA1305
 dotnet_diagnostic.CA1305.severity = None
 
+##################################################################################
 ## https://github.com/DotNetAnalyzers/StyleCopAnalyzers/tree/master/documentation
 ## StyleCop.Analyzers
 ##
@@ -227,7 +228,7 @@ dotnet_diagnostic.SA1601.severity = None
 # A C# element is missing documentation for its return value.
 dotnet_diagnostic.SA1615.severity = None
 
-
+##################################################################################
 ##
 ## SonarAnalyzers.CSharp
 ##
@@ -258,11 +259,12 @@ dotnet_diagnostic.S112.severity = None
 
 dotnet_diagnostic.S3903.severity = None
 
-
+##################################################################################
 ## https://github.com/meziantou/Meziantou.Analyzer/tree/main/docs
 ## Meziantou.Analyzer
 ##
 
+#
 # MA0004: Use Task.ConfigureAwait(false)
 dotnet_diagnostic.MA0004.severity = Suggestion
 
@@ -285,6 +287,23 @@ dotnet_diagnostic.MA0002.severity = Suggestion
 # MA0001 - StringComparison is missing
 dotnet_diagnostic.MA0001.severity = Suggestion
 
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#13-pass-cancellation-token
+# MA0040: Specify a cancellation token
+dotnet_diagnostic.MA0032.severity = Suggestion
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#13-pass-cancellation-token
+# MA0040: Flow the cancellation token when available
+dotnet_diagnostic.MA0040.severity = Suggestion
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#14-using-cancellation-token-with-iasyncenumerable
+# MA0079: Use a cancellation token using .WithCancellation()
+dotnet_diagnostic.MA0079.severity = Suggestion
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#14-using-cancellation-token-with-iasyncenumerable
+# MA0080: Use a cancellation token using .WithCancellation()
+dotnet_diagnostic.MA0080.severity = Suggestion
+
+##################################################################################
 ## http://pihrt.net/Roslynator/Analyzers
 ## http://pihrt.net/Roslynator/Refactorings
 ## Roslynator
@@ -299,4 +318,104 @@ dotnet_diagnostic.RCS1037.severity = None
 # RCS1194: Implement exception constructors
 dotnet_diagnostic.RCS1194.severity = None
 
+# https://cezarypiatek.github.io/post/async-analyzers-p1/#1-redundant-asyncawait
+# RCS1174: Remove redundant async/await.
+dotnet_diagnostic.RCS1174.severity = error
 
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#10-returning-null-from-a-task-returning-method
+# RCS1210: Return Task.FromResult instead of returning null.
+dotnet_diagnostic.RCS1210.severity = error
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#9-missing-configureawaitbool
+# RCS1090: Call 'ConfigureAwait(false)'.
+dotnet_diagnostic.RCS1090.severity = Suggestion
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#11-asynchronous-method-names-should-end-with-async
+#RCS1046: Asynchronous method name should end with 'Async'.
+dotnet_diagnostic.RCS1046.severity = Suggestion
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#12-non-asynchronous-method-names-shouldnt-end-with-async
+# RCS1047: Non-asynchronous method name should not end with 'Async'.
+dotnet_diagnostic.RCS1047.severity = error
+
+##################################################################################
+## https://github.com/semihokur/asyncfixer
+## AsyncFixer01
+##
+
+# https://cezarypiatek.github.io/post/async-analyzers-p1/#1-redundant-asyncawait
+# AsyncFixer01: Unnecessary async/await usage
+dotnet_diagnostic.AsyncFixer01.severity = error
+
+# https://cezarypiatek.github.io/post/async-analyzers-p1/#2-calling-synchronous-method-inside-the-async-method
+# AsyncFixer02: Long-running or blocking operations inside an async method
+dotnet_diagnostic.AsyncFixer02.severity = error
+
+# https://cezarypiatek.github.io/post/async-analyzers-p1/#3-async-void-method
+# AsyncFixer03: Fire & forget async void methods
+dotnet_diagnostic.AsyncFixer03.severity = error
+
+# https://cezarypiatek.github.io/post/async-analyzers-p1/#6-not-awaited-task-inside-the-using-block
+# AsyncFixer04: Fire & forget async call inside a using block
+dotnet_diagnostic.AsyncFixer04.severity = error
+
+
+##################################################################################
+## https://github.com/microsoft/vs-threading
+## Microsoft.VisualStudio.Threading.Analyzers
+##
+
+# https://cezarypiatek.github.io/post/async-analyzers-p1/#2-calling-synchronous-method-inside-the-async-method
+# VSTHRD103: Call async methods when in an async method
+dotnet_diagnostic.VSTHRD103.severity = error
+
+
+# https://cezarypiatek.github.io/post/async-analyzers-p1/#3-async-void-method
+# VSTHRD100: Avoid async void methods
+dotnet_diagnostic.VSTHRD100.severity = error
+
+# https://cezarypiatek.github.io/post/async-analyzers-p1/#4-unsupported-async-delegates
+# VSTHRD101: Avoid unsupported async delegates
+dotnet_diagnostic.VSTHRD101.severity = error
+
+# https://cezarypiatek.github.io/post/async-analyzers-p1/#5-not-awaited-task-within-using-expression
+# VSTHRD107: Await Task within using expression
+dotnet_diagnostic.VSTHRD107.severity = error
+
+# https://cezarypiatek.github.io/post/async-analyzers-p1/#7-unobserved-result-of-asynchronous-method
+# VSTHRD110: Observe result of async calls
+dotnet_diagnostic.VSTHRD110.severity = error
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#8-synchronous-waits
+# VSTHRD002: Avoid problematic synchronous waits
+dotnet_diagnostic.VSTHRD002.severity = Suggestion
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#9-missing-configureawaitbool
+# VSTHRD111: Use ConfigureAwait(bool)
+dotnet_diagnostic.VSTHRD111.severity = Suggestion
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#10-returning-null-from-a-task-returning-method
+# VSTHRD114: Avoid returning a null Task
+dotnet_diagnostic.VSTHRD114.severity = error
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#11-asynchronous-method-names-should-end-with-async
+# VSTHRD200: Use "Async" suffix for async methods
+dotnet_diagnostic.VSTHRD200.severity = Suggestion
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#12-non-asynchronous-method-names-shouldnt-end-with-async
+# VSTHRD200: Use "Async" suffix for async methods
+dotnet_diagnostic.VSTHRD200.severity = Suggestion
+
+
+##################################################################################
+## https://github.com/hvanbakel/Asyncify-CSharp
+## Asyncify
+##
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#8-synchronous-waits
+# AsyncifyInvocation: Use Task Async
+dotnet_diagnostic.AsyncifyInvocation.severity = error
+
+# https://cezarypiatek.github.io/post/async-analyzers-p2/#8-synchronous-waits
+# AsyncifyVariable: Use Task Async
+dotnet_diagnostic.AsyncifyVariable.severity = error

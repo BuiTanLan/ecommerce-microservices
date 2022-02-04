@@ -13,7 +13,8 @@ public abstract class AppDbContextBase :
     DbContext,
     IDomainEventContext,
     IDbFacadeResolver,
-    IDbContext
+    IDbContext,
+    ITxDbContextExecutes
 {
     private readonly IDomainEventDispatcher _domainEventDispatcher;
     private IDbContextTransaction _currentTransaction;
@@ -87,23 +88,21 @@ public abstract class AppDbContextBase :
         return true;
     }
 
-    public async Task RetryOnExceptionAsync(Func<Task> operation)
+    public Task RetryOnExceptionAsync(Func<Task> operation)
     {
-        await Database.CreateExecutionStrategy().ExecuteAsync(operation);
+        return Database.CreateExecutionStrategy().ExecuteAsync(operation);
     }
 
-    public async Task<TResult> RetryOnExceptionAsync<TResult>(Func<Task<TResult>> operation)
+    public Task<TResult> RetryOnExceptionAsync<TResult>(Func<Task<TResult>> operation)
     {
-        return await Database.CreateExecutionStrategy().ExecuteAsync(operation);
+        return Database.CreateExecutionStrategy().ExecuteAsync(operation);
     }
 
     public IReadOnlyList<IDomainEvent> GetDomainEvents()
     {
         var domainEntities = ChangeTracker
             .Entries<IHaveAggregate>()
-            .Where(x =>
-                x.Entity.DomainEvents != null &&
-                x.Entity.DomainEvents.Any())
+            .Where(x => x.Entity.DomainEvents.Any())
             .Select(x => x.Entity)
             .ToList();
 
@@ -121,9 +120,7 @@ public abstract class AppDbContextBase :
     {
         var domainEntities = ChangeTracker
             .Entries<IHaveAggregate>()
-            .Where(x =>
-                x.Entity.DomainEvents != null &&
-                x.Entity.DomainEvents.Any())
+            .Where(x => x.Entity.DomainEvents.Any())
             .Select(x => x.Entity)
             .ToList();
 
@@ -136,5 +133,49 @@ public abstract class AppDbContextBase :
         domainEntities.ForEach(entity => entity.ClearDomainEvents());
 
         return aggregates;
+    }
+
+    public Task ExecuteTransactionalAsync(Func<Task> action, CancellationToken cancellationToken = default)
+    {
+        var strategy = Database.CreateExecutionStrategy();
+        return strategy.ExecuteAsync(async () =>
+        {
+            await using var transaction = await Database
+                .BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
+            try
+            {
+                await action();
+
+                await transaction.CommitAsync(cancellationToken);
+            }
+            catch
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                throw;
+            }
+        });
+    }
+
+    public Task<T> ExecuteTransactionalAsync<T>(Func<Task<T>> action, CancellationToken cancellationToken = default)
+    {
+        var strategy = Database.CreateExecutionStrategy();
+        return strategy.ExecuteAsync(async () =>
+        {
+            await using var transaction = await Database
+                .BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
+            try
+            {
+                var result = await action();
+
+                await transaction.CommitAsync(cancellationToken);
+
+                return result;
+            }
+            catch
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                throw;
+            }
+        });
     }
 }

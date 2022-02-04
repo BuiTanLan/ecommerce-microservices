@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.CQRS.Command;
@@ -18,23 +19,26 @@ public class EfOutboxService<TContext> : IOutboxService
     private readonly OutboxOptions _options;
     private readonly ILogger<EfOutboxService<TContext>> _logger;
     private readonly IMessageSerializer _messageSerializer;
-    private readonly IMediator _mediator;
     private readonly IBusPublisher _busPublisher;
-    private readonly IOutboxDataContext _outboxDataContext;
+    private readonly ICommandProcessor _commandProcessor;
+    private readonly IEventProcessor _eventProcessor;
+    private readonly OutboxDataContext _outboxDataContext;
 
     public EfOutboxService(
         IOptions<OutboxOptions> options,
         ILogger<EfOutboxService<TContext>> logger,
         IMessageSerializer messageSerializer,
-        IMediator mediator,
         IBusPublisher busPublisher,
-        IOutboxDataContext outboxDataContext)
+        ICommandProcessor commandProcessor,
+        IEventProcessor eventProcessor,
+        OutboxDataContext outboxDataContext)
     {
         _options = options.Value;
         _logger = logger;
         _messageSerializer = messageSerializer;
-        _mediator = mediator;
         _busPublisher = busPublisher;
+        _commandProcessor = commandProcessor;
+        _eventProcessor = eventProcessor;
         _outboxDataContext = outboxDataContext;
     }
 
@@ -72,6 +76,8 @@ public class EfOutboxService<TContext> : IOutboxService
     {
         Guard.Against.Null(integrationEvent, nameof(integrationEvent));
 
+        _ = _outboxDataContext.Database.GetConnectionString();
+
         if (!_options.Enabled)
         {
             _logger.LogWarning("Outbox is disabled, outgoing messages won't be saved");
@@ -95,7 +101,8 @@ public class EfOutboxService<TContext> : IOutboxService
         _logger.LogInformation("Saved message to the outbox");
     }
 
-    public async Task SaveAsync(IDomainNotificationEvent domainNotificationEvent,
+    public async Task SaveAsync(
+        IDomainNotificationEvent domainNotificationEvent,
         CancellationToken cancellationToken = default)
     {
         Guard.Against.Null(domainNotificationEvent, nameof(domainNotificationEvent));
@@ -117,13 +124,13 @@ public class EfOutboxService<TContext> : IOutboxService
             EventType.DomainNotificationEvent,
             correlationId: null);
 
-        await _outboxDataContext.OutboxMessages.AddAsync(outboxMessages);
+        await _outboxDataContext.OutboxMessages.AddAsync(outboxMessages, cancellationToken);
         await _outboxDataContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Saved message to the outbox");
     }
 
-    public async Task SaveAsync(IInternalCommand internalCommand, CancellationToken cancellationToken)
+    public async Task SaveAsync(IInternalCommand internalCommand, CancellationToken cancellationToken = default)
     {
         Guard.Against.Null(internalCommand, nameof(internalCommand));
 
@@ -141,10 +148,10 @@ public class EfOutboxService<TContext> : IOutboxService
             internalCommand.CommandType,
             name.Underscore(),
             _messageSerializer.Serialize(internalCommand),
-            EventType.DomainNotificationEvent,
+            EventType.InternalCommand,
             correlationId: null);
 
-        await _outboxDataContext.OutboxMessages.AddAsync(outboxMessages);
+        await _outboxDataContext.OutboxMessages.AddAsync(outboxMessages, cancellationToken);
         await _outboxDataContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Saved message to the outbox");
@@ -169,6 +176,13 @@ public class EfOutboxService<TContext> : IOutboxService
         {
             var type = Type.GetType(outboxMessage.Type);
 
+            // if (type is null)
+            // {
+            //     _outboxDataContext.OutboxMessages.Remove(outboxMessage);
+            //     await _outboxDataContext.SaveChangesAsync(cancellationToken);
+            //     continue;
+            // }
+
             dynamic data = _messageSerializer.Deserialize(outboxMessage.Data, type);
             if (data is null)
             {
@@ -181,7 +195,7 @@ public class EfOutboxService<TContext> : IOutboxService
                 var domainNotificationEvent = data as IDomainNotificationEvent;
 
                 // domain event notification
-                await _mediator.Publish(domainNotificationEvent, cancellationToken);
+                await _eventProcessor.PublishAsync(domainNotificationEvent, cancellationToken);
 
                 _logger.LogInformation(
                     "Published a notification: '{Name}' with ID: '{Id} (outbox)'",
@@ -200,6 +214,20 @@ public class EfOutboxService<TContext> : IOutboxService
                     "Published a message: '{Name}' with ID: '{Id} (outbox)'",
                     outboxMessage.Name,
                     integrationEvent?.EventId);
+            }
+
+
+            if (outboxMessage.EventType == EventType.InternalCommand)
+            {
+                var internalCommand = data as IInternalCommand;
+
+                // integration event
+                await _commandProcessor.SendAsync(internalCommand, cancellationToken);
+
+                _logger.LogInformation(
+                    "Sent a internal command: '{Name}' with ID: '{Id} (outbox)'",
+                    outboxMessage.Name,
+                    internalCommand.Id);
             }
 
             outboxMessage.MarkAsProcessed();

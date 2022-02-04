@@ -13,15 +13,15 @@ namespace BuildingBlocks.Scheduling.Hangfire
         }
 
         [DisplayName("{1}")]
-        public async Task Send(ICommand command, string description = "")
+        public Task Send(ICommand command, string description = "")
         {
-            await _commandProcessor.SendAsync(command);
+            return _commandProcessor.SendAsync(command);
         }
 
         [DisplayName("{0}")]
-        public async Task Send(string jobName, ICommand command)
+        public Task Send(string jobName, ICommand command)
         {
-            await _commandProcessor.SendAsync(command);
+            return _commandProcessor.SendAsync(command);
         }
     }
 }

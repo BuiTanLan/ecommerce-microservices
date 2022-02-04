@@ -26,9 +26,9 @@ public class InMemorySubscriber : IBusSubscriber
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken = default)
+    public Task StartAsync(CancellationToken cancellationToken = default)
     {
-        await ListenToMessagesAsync(cancellationToken);
+        return ListenToMessagesAsync(cancellationToken);
     }
 
     public Task StopAsync(CancellationToken cancellationToken = default)

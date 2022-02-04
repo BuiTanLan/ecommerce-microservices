@@ -18,6 +18,8 @@ public static partial class ServiceCollectionExtensions
         {
             services.AddDbContext<CustomersDbContext>(options =>
                 options.UseInMemoryDatabase("ECommerce.Services.ECommerce.Services.Customers"));
+
+            services.AddScoped<IDbFacadeResolver>(provider => provider.GetService<CustomersDbContext>()!);
         }
         else
         {

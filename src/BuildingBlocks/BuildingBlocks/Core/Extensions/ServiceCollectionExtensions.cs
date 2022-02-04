@@ -14,7 +14,7 @@ public static class ServiceCollectionExtensions
         var systemInfo = SystemInfo.New();
         services.AddSingleton<ISystemInfo>(systemInfo);
         services.AddSingleton(systemInfo);
-        services.AddTransient<IEventProcessor, EventProcessor>();
+        services.AddScoped<IEventProcessor, EventProcessor>();
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
         RegisterEventMappers(services);

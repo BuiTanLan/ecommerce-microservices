@@ -29,31 +29,31 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
             await specificationResult.LongCountAsync(cancellationToken));
     }
 
-    public async Task<List<TEntity>> FindAsync(
+    public Task<List<TEntity>> FindAsync(
         IPageSpecification<TEntity> spec,
         CancellationToken cancellationToken = default)
     {
         var specificationResult = GetQuery(DbSet, spec);
-        return await specificationResult.ToListAsync(cancellationToken);
+        return specificationResult.ToListAsync(cancellationToken);
     }
 
-    public async Task<TEntity> FindByIdAsync(IIdentity<TKey> id, CancellationToken cancellationToken = default)
+    public Task<TEntity?> FindByIdAsync(IIdentity<TKey> id, CancellationToken cancellationToken = default)
     {
-        return await DbSet.SingleOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
+        return DbSet.SingleOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
     }
 
 
-    public async Task<TEntity> FindOneAsync(
+    public Task<TEntity?> FindOneAsync(
         Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken = default)
     {
-        return await DbSet.SingleOrDefaultAsync(predicate, cancellationToken);
+        return DbSet.SingleOrDefaultAsync(predicate, cancellationToken);
     }
 
-    public async Task<TEntity> FindOneAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default)
+    public Task<TEntity?> FindOneAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default)
     {
         var specificationResult = GetQuery(DbSet, spec);
-        return await specificationResult.FirstOrDefaultAsync(cancellationToken);
+        return specificationResult.FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IList<TEntity>> FindAsync(
@@ -83,12 +83,12 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         return entity;
     }
 
-    public async Task<TEntity> EditAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public Task<TEntity> EditAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         var entry = DbContext.Entry(entity);
         entry.State = EntityState.Modified;
 
-        return await Task.FromResult(entry.Entity);
+        return Task.FromResult(entry.Entity);
     }
 
     public void Delete(TEntity entity)
@@ -103,7 +103,6 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
 
     public void Dispose()
     {
-        throw new NotImplementedException();
     }
 
     private static IQueryable<TEntity> GetQuery(

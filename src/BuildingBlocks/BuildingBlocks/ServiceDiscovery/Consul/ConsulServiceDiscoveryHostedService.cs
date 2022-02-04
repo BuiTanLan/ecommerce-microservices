@@ -63,11 +63,11 @@ public class ConsulServiceDiscoveryHostedService : IHostedService
     }
 
     // If the service is shutting down it de-registers service from Consul registry
-    public async Task StopAsync(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("De-registering service with registration Id {RegistrationId} from Consul",
             _registrationId);
 
-        await _consulClient.Agent.ServiceDeregister(_registrationId, cancellationToken);
+        return _consulClient.Agent.ServiceDeregister(_registrationId, cancellationToken);
     }
 }

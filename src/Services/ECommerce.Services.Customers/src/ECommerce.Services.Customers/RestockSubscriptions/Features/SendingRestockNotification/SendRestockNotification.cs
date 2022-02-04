@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Email;
-using BuildingBlocks.Email.Configs;
+using BuildingBlocks.Email.Options;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
 using ECommerce.Services.Customers.Shared.Data;
@@ -27,13 +27,13 @@ internal class SendRestockNotificationHandler : ICommandHandler<SendRestockNotif
 {
     private readonly CustomersDbContext _customersDbContext;
     private readonly IEmailSender _emailSender;
-    private readonly EmailConfig _emailConfig;
+    private readonly EmailOptions _emailConfig;
     private readonly ILogger<SendRestockNotificationHandler> _logger;
 
     public SendRestockNotificationHandler(
         CustomersDbContext customersDbContext,
         IEmailSender emailSender,
-        IOptions<EmailConfig> emailConfig,
+        IOptions<EmailOptions> emailConfig,
         ILogger<SendRestockNotificationHandler> logger)
     {
         _customersDbContext = customersDbContext;

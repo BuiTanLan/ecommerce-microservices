@@ -86,12 +86,12 @@ public class
     }
 
 
-    private async Task RemoveOldRefreshTokens(Guid userId, long? ttlRefreshToken = null)
+    private Task RemoveOldRefreshTokens(Guid userId, long? ttlRefreshToken = null)
     {
         var refreshTokens = _context.Set<global::ECommerce.Services.Identity.Shared.Models.RefreshToken>().Where(rt => rt.UserId == userId);
 
         refreshTokens.ToList().RemoveAll(x => !x.IsRefreshTokenValid(ttlRefreshToken));
 
-        await _context.SaveChangesAsync();
+        return _context.SaveChangesAsync();
     }
 }

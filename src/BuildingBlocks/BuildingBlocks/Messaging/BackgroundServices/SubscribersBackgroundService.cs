@@ -20,10 +20,10 @@ public class SubscribersBackgroundService : BackgroundService
         await base.StopAsync(cancellationToken);
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var subscribers = _serviceProvider.GetServices<IBusSubscriber>();
 
-        await Task.WhenAll(subscribers.Select(s => s.StartAsync(stoppingToken)));
+        return Task.WhenAll(subscribers.Select(s => s.StartAsync(stoppingToken)));
     }
 }

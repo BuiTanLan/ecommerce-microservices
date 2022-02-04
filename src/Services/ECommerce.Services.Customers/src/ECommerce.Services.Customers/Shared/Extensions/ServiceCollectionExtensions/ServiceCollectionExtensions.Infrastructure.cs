@@ -5,6 +5,7 @@ using BuildingBlocks.Email;
 using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Messaging;
+using BuildingBlocks.Messaging.Outbox.EF;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
 using BuildingBlocks.Scheduling.Hangfire;
@@ -46,7 +47,9 @@ public static partial class ServiceCollectionExtensions
 
         services.AddHangfireScheduler(configuration);
 
-        services.AddMessaging(configuration);
+        services.AddMessaging(configuration)
+            .AddEntityFrameworkOutbox<OutboxDataContext>(configuration);
+
         services.AddRabbitMqTransport(configuration);
 
         services.AddEmailService(configuration);
@@ -55,7 +58,8 @@ public static partial class ServiceCollectionExtensions
             s.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(TxBehavior<,>));
         });
         services.AddCustomValidators(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
@@ -64,10 +68,5 @@ public static partial class ServiceCollectionExtensions
         services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
 
         return services;
-    }
-
-    public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
-    {
-       return app.UseMonitoring();
     }
 }

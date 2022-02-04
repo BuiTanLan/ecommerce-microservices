@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Email.Configs;
+using BuildingBlocks.Email.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SendGrid;
@@ -11,15 +11,15 @@ namespace BuildingBlocks.Email;
 public class SendGridEmailSender : IEmailSender
 {
     private readonly ILogger<SendGridEmailSender> _logger;
-    private readonly EmailConfig _config;
+    private readonly EmailOptions _config;
 
-    public SendGridEmailSender(IOptions<EmailConfig> emailConfig, ILogger<SendGridEmailSender> logger)
+    public SendGridEmailSender(IOptions<EmailOptions> emailConfig, ILogger<SendGridEmailSender> logger)
     {
         _logger = logger;
-        _config = Guard.Against.Null(emailConfig?.Value, nameof(EmailConfig));
+        _config = Guard.Against.Null(emailConfig?.Value, nameof(EmailOptions));
     }
 
-    private SendGridClient SendGridClient => new(_config.SendGridConfig.ApiKey);
+    private SendGridClient SendGridClient => new(_config.SendGridOptions.ApiKey);
 
     public async Task SendAsync(EmailObject emailObject)
     {

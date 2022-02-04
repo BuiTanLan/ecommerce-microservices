@@ -1,5 +1,4 @@
 using System.Reflection;
-using Ben.Diagnostics;
 using BuildingBlocks.Core;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Logging;
@@ -68,8 +67,6 @@ if (environment.IsDevelopment() || environment.IsEnvironment("docker"))
 ServiceActivator.Configure(app.Services);
 
 app.UseHttpsRedirection();
-
-app.UseBlockingDetection();
 
 app.UseProblemDetails();
 

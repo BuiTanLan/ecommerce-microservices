@@ -1,8 +1,3 @@
-namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
+namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomerWithIdentity;
 
-public record CreateCustomerRequest(
-    string UserName,
-    string Email,
-    string FirstName,
-    string LastName,
-    string Password);
+public record CreateCustomerRequest(string Email);

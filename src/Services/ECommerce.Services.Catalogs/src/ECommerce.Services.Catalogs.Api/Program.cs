@@ -1,12 +1,10 @@
 using System.Reflection;
-using Ben.Diagnostics;
 using BuildingBlocks.Core;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Web;
 using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
 using BuildingBlocks.Web.Extensions.ServiceCollectionExtensions;
-using Catalogs;
 using Catalogs.Api.Extensions.ApplicationBuilderExtensions;
 using Catalogs.Api.Extensions.ServiceCollectionExtensions;
 using ECommerce.Services.Catalogs;
@@ -67,8 +65,6 @@ if (environment.IsDevelopment() || environment.IsEnvironment("docker"))
 ServiceActivator.Configure(app.Services);
 
 app.UseHttpsRedirection();
-
-app.UseBlockingDetection();
 
 app.UseProblemDetails();
 

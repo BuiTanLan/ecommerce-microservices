@@ -27,10 +27,15 @@ public static class Extensions
         Assembly[]? assemblies = null,
         Action<IServiceCollection>? doMoreActions = null)
     {
-        services.AddMediatR(assemblies ?? new[] { Assembly.GetCallingAssembly() });
+        services.AddMediatR(
+            assemblies ?? new[] { Assembly.GetCallingAssembly() },
+            x =>
+            {
+                x.AsScoped();
+            });
 
-        services.AddTransient<ICommandProcessor, CommandProcessor>()
-            .AddTransient<IQueryProcessor, QueryProcessor>();
+        services.AddScoped<ICommandProcessor, CommandProcessor>()
+            .AddScoped<IQueryProcessor, QueryProcessor>();
 
         doMoreActions?.Invoke(services);
 

@@ -20,8 +20,19 @@ public class ProductMappers : Profile
             .ForMember(x => x.MaxStockThreshold, opt => opt.MapFrom(x => x.Stock.MaxStockThreshold))
             .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Name.Value))
             .ForMember(x => x.Price, opt => opt.MapFrom(x => x.Price.Value))
-            .ForMember(x => x.Width, opt => opt.MapFrom(x => x.Dimensions.Width))
-            .ForMember(x => x.Width, opt => opt.MapFrom(x => x.Dimensions.Width));
+            .ForMember(x => x.BrandId, opt => opt.MapFrom(x => x.BrandId.Value))
+            .ForMember(x => x.BrandName, opt => opt.MapFrom(x => x.Brand == null ? "" : x.Brand.Name))
+            .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category == null ? "" : x.Category.Name))
+            .ForMember(x => x.CategoryId, opt => opt.MapFrom(x => x.CategoryId.Value))
+            .ForMember(x => x.SupplierName, opt => opt.MapFrom(x => x.Supplier == null ? "" : x.Supplier.Name))
+            .ForMember(x => x.SupplierId, opt => opt.MapFrom(x => x.SupplierId.Value))
+            .ForMember(x => x.Id, opt => opt.MapFrom(x => x.Id.Value))
+            .ForMember(x => x.ProductStatus, opt => opt.MapFrom(x => x.ProductStatus))
+            .ForMember(x => x.Size, opt => opt.MapFrom(x => x.Size.Value))
+            .ForMember(x => x.ProductColor, opt => opt.MapFrom(x => x.Color))
+            .ForMember(x => x.Description, opt => opt.MapFrom(x => x.Description))
+            .ForMember(x => x.Images, opt => opt.MapFrom(x => x.Images))
+            ;
 
         CreateMap<ProductImage, ProductImageDto>();
         CreateMap<ProductView, ProductViewDto>();

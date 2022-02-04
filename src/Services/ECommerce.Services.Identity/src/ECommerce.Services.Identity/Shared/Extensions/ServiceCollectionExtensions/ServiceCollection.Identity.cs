@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.EFCore;
 using ECommerce.Services.Identity.Shared.Data;
 using ECommerce.Services.Identity.Shared.Models;
 using Microsoft.AspNetCore.Builder;
@@ -34,23 +35,16 @@ public static partial class ServiceCollectionExtensions
         {
             services.AddDbContext<IdentityContext>(options =>
                 options.UseInMemoryDatabase("Shop.Services.ECommerce.Services.Identity"));
+
+            services.AddScoped<IDbFacadeResolver>(provider => provider.GetService<IdentityContext>()!);
         }
         else
         {
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
             var connString = configuration.GetConnectionString("IdentityServiceConnection");
             Guard.Against.NullOrEmpty(connString, nameof(connString));
 
             // Postgres
-            services.AddDbContext<IdentityContext>(options =>
-            {
-                options.UseNpgsql(connString, sqlOptions =>
-                {
-                    sqlOptions.MigrationsAssembly(typeof(IdentityContext).Assembly.GetName().Name);
-                    sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-                }).UseSnakeCaseNamingConvention();
-            });
+            services.AddPostgresDbContext<IdentityContext>(connString);
         }
 
         // https://github.com/IdentityServer/IdentityServer4/issues/1525

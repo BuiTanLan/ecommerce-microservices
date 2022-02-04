@@ -11,7 +11,6 @@ using BuildingBlocks.Messaging.Outbox.InMemory;
 using BuildingBlocks.Messaging.Scheduling;
 using BuildingBlocks.Messaging.Serialization;
 using BuildingBlocks.Messaging.Serialization.Newtonsoft;
-using BuildingBlocks.Utils;
 using BuildingBlocks.Utils.Reflections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,51 +18,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.Messaging;
 
-public enum TxOutboxConstants
-{
-    InMemory = 1,
-    EntityFramework = 2
-}
-
 public static class Extensions
 {
     public static IServiceCollection AddMessaging(
         this IServiceCollection services,
-        IConfiguration configuration,
-        TxOutboxConstants outboxProvider = TxOutboxConstants.EntityFramework)
+        IConfiguration configuration)
     {
-        switch (outboxProvider)
-        {
-            case TxOutboxConstants.InMemory:
-            {
-                services.AddSingleton<IInMemoryOutboxStore, InMemoryOutboxStore>();
-                services.AddScoped<IOutboxService, InMemoryOutboxService>();
-                break;
-            }
-
-            case TxOutboxConstants.EntityFramework:
-            {
-                var outboxOption = Guard.Against.Null(configuration.GetOutboxOptions(), nameof(OutboxOptions));
-                AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
-                services.AddDbContext<OutboxDataContext>(options =>
-                {
-                    options.UseNpgsql(outboxOption.ConnectionString, sqlOptions =>
-                    {
-                        sqlOptions.MigrationsAssembly(typeof(OutboxDataContext).Assembly.GetName().Name);
-                        sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-                    }).UseSnakeCaseNamingConvention();
-                });
-
-                services.AddUnitOfWork<OutboxDataContext>();
-                services.AddScoped<IOutboxDataContext>(provider => provider.GetRequiredService<OutboxDataContext>());
-                services.AddScoped<IOutboxService, EfOutboxService<OutboxDataContext>>();
-                services.AddScoped<IMessagesExecutor, MessagesExecutor>();
-
-                break;
-            }
-        }
-
         services.AddSingleton<NewtonsoftJsonUnSupportedTypeMatcher>();
         services.AddSingleton<IMessageSerializer, NewtonsoftJsonMessageSerializer>();
 
@@ -80,6 +40,39 @@ public static class Extensions
         return services;
     }
 
+    public static IServiceCollection AddEntityFrameworkOutbox<TContext>(
+        this IServiceCollection services,
+        IConfiguration configuration)
+        where TContext : AppDbContextBase
+    {
+        var outboxOption = Guard.Against.Null(configuration.GetOutboxOptions(), nameof(OutboxOptions));
+
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+        services.AddDbContext<TContext>(options =>
+        {
+            options.UseNpgsql(outboxOption.ConnectionString, sqlOptions =>
+            {
+                sqlOptions.MigrationsAssembly(typeof(TContext).Assembly.GetName().Name);
+                sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+            }).UseSnakeCaseNamingConvention();
+        });
+
+        services.AddUnitOfWork<TContext>();
+        services.AddScoped<IOutboxService, EfOutboxService<TContext>>();
+        services.AddScoped<IMessagesExecutor, MessagesExecutor>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddInMemoryOutbox(this IServiceCollection services)
+    {
+        services.AddSingleton<IInMemoryOutboxStore, InMemoryOutboxStore>();
+        services.AddScoped<IOutboxService, InMemoryOutboxService>();
+
+        return services;
+    }
+
     private static void RegisterIntegrationMessagesToTypeResolver(
         ITypeResolver typeResolver)
     {
@@ -89,7 +82,8 @@ public static class Extensions
 
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         var types = assemblies.SelectMany(x => x.GetTypes())
-            .Where(type => messageType.IsAssignableFrom(type) && type.IsInterface == false && type.IsAbstract == false)
+                .Where(type =>
+                    messageType.IsAssignableFrom(type) && type.IsInterface == false && type.IsAbstract == false)
             .Distinct()
             .ToList();
 

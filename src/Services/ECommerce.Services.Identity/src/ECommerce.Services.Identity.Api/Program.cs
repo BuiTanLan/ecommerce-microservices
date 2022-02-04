@@ -1,5 +1,4 @@
 using System.Reflection;
-using Ben.Diagnostics;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Web;
 using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
@@ -54,8 +53,6 @@ if (environment.IsDevelopment() || environment.IsEnvironment("docker"))
 }
 
 app.UseHttpsRedirection();
-
-app.UseBlockingDetection();
 
 app.UseProblemDetails();
 

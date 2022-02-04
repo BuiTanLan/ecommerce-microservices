@@ -35,6 +35,19 @@
       PrivateAssets="all"
       Condition="$(MSBuildProjectExtension) == '.csproj'"
     />
+   <PackageReference
+      Include="Microsoft.VisualStudio.Threading.Analyzers"
+      Version="17.0.64"
+      PrivateAssets="all"
+      Condition="$(MSBuildProjectExtension) == '.csproj'"
+    />
+   <PackageReference
+      Include="AsyncFixer"
+      Version="1.5.1"
+      PrivateAssets="all"
+      Condition="$(MSBuildProjectExtension) == '.csproj'"
+    />
+	
   </ItemGroup>
 
   <ItemGroup>

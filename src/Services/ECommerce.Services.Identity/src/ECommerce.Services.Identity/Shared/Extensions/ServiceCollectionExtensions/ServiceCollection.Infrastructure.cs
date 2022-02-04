@@ -2,9 +2,11 @@ using System.Reflection;
 using BuildingBlocks.Caching;
 using BuildingBlocks.Core.Extensions;
 using BuildingBlocks.CQRS;
+using BuildingBlocks.EFCore;
 using BuildingBlocks.Email;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Messaging;
+using BuildingBlocks.Messaging.Outbox.EF;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
 using BuildingBlocks.Validation;
@@ -40,7 +42,8 @@ public static class ServiceCollection
             s.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(TxBehavior<,>));
         });
 
         services.AddMonitoring(healthChecksBuilder =>
@@ -58,25 +61,14 @@ public static class ServiceCollection
                 tags: new[] { "identity-rabbitmq" });
         });
 
-        services.AddMessaging(configuration);
+        services.AddMessaging(configuration)
+            .AddEntityFrameworkOutbox<OutboxDataContext>(configuration);
+
         services.AddRabbitMqTransport(configuration);
-
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));
 
         services.AddCachingRequestPolicies(new List<Assembly> { Assembly.GetExecutingAssembly() });
         services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
 
         return services;
-    }
-
-    public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
-    {
-        app.UseMonitoring();
-
-        return app;
     }
 }

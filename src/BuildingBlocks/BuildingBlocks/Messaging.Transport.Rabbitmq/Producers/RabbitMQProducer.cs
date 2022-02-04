@@ -40,7 +40,9 @@ public class RabbitMqProducer : IBusPublisher
         {
             {
                 HeaderNames.MessageType,
-                integrationEvent.GetType().FullName
+
+                // Just pass type name instead of full type name for easy deserialize in target service
+                integrationEvent.GetType().Name
             },
         };
 

@@ -7,13 +7,12 @@ namespace BuildingBlocks.EFCore;
 public interface IRepository<TEntity, TId> : IDisposable
     where TEntity : IAggregateRoot<TId>
 {
-    Task<TEntity> FindByIdAsync(IIdentity<TId> id, CancellationToken cancellationToken = default);
+    Task<TEntity?> FindByIdAsync(IIdentity<TId> id, CancellationToken cancellationToken = default);
 
-    Task<TEntity> FindOneAsync(
-        Expression<Func<TEntity, bool>> predicate,
+    Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken = default);
 
-    Task<TEntity> FindOneAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
+    Task<TEntity?> FindOneAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
     Task<IList<TEntity>> FindAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
 
     Task<IList<TEntity>> FindAsync(

@@ -24,7 +24,7 @@ namespace BuildingBlocks.Messaging.Scheduling
                 return _commandProcessor.SendAsync(req as ICommand);
             }
 
-            return null;
+            return Task.CompletedTask;
         }
     }
 }
