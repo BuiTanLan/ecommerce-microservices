@@ -16,7 +16,8 @@ public class CatalogDbContext : AppDbContextBase, ICatalogDbContext
     {
     }
 
-    public CatalogDbContext(DbContextOptions options, IDomainEventDispatcher domainEventDispatcher) : base(options, domainEventDispatcher)
+    public CatalogDbContext(DbContextOptions options, IDomainEventPublisher domainEventPublisher)
+        : base(options, domainEventPublisher)
     {
     }
 

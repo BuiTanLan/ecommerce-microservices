@@ -77,7 +77,7 @@ public class KafkaConsumer : IBusSubscriber
                     if (@event is IEvent)
                     {
                         // Publish to internal event bus
-                        await eventProcessor.PublishAsync(@event as IEvent, cancellationToken);
+                        await eventProcessor.DispatchAsync(@event as IEvent, cancellationToken);
                         _logger.LogInformation($"Dispatched {@event.GetType()?.FullName} event to internal handler.");
                     }
 

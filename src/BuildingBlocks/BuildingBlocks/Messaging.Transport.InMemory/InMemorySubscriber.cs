@@ -55,7 +55,7 @@ public class InMemorySubscriber : IBusSubscriber
                 _consumerDiagnostics.StartActivity(@event);
 
                 // Publish to internal event bus
-                await eventProcessor.PublishAsync(@event, cancellationToken);
+                await eventProcessor.DispatchAsync(@event, cancellationToken);
                 _consumerDiagnostics.StopActivity(@event);
             }
             catch (System.Exception e)

@@ -20,8 +20,8 @@ public class EfOutboxService<TContext> : IOutboxService
     private readonly ILogger<EfOutboxService<TContext>> _logger;
     private readonly IMessageSerializer _messageSerializer;
     private readonly IBusPublisher _busPublisher;
+    private readonly IMediator _mediator;
     private readonly ICommandProcessor _commandProcessor;
-    private readonly IEventProcessor _eventProcessor;
     private readonly OutboxDataContext _outboxDataContext;
 
     public EfOutboxService(
@@ -29,16 +29,16 @@ public class EfOutboxService<TContext> : IOutboxService
         ILogger<EfOutboxService<TContext>> logger,
         IMessageSerializer messageSerializer,
         IBusPublisher busPublisher,
+        IMediator mediator,
         ICommandProcessor commandProcessor,
-        IEventProcessor eventProcessor,
         OutboxDataContext outboxDataContext)
     {
         _options = options.Value;
         _logger = logger;
         _messageSerializer = messageSerializer;
         _busPublisher = busPublisher;
+        _mediator = mediator;
         _commandProcessor = commandProcessor;
-        _eventProcessor = eventProcessor;
         _outboxDataContext = outboxDataContext;
     }
 
@@ -195,10 +195,10 @@ public class EfOutboxService<TContext> : IOutboxService
                 var domainNotificationEvent = data as IDomainNotificationEvent;
 
                 // domain event notification
-                await _eventProcessor.PublishAsync(domainNotificationEvent, cancellationToken);
+                await _mediator.Publish(domainNotificationEvent, cancellationToken);
 
                 _logger.LogInformation(
-                    "Published a notification: '{Name}' with ID: '{Id} (outbox)'",
+                    "Dispatched a notification: '{Name}' with ID: '{Id} (outbox)'",
                     outboxMessage.Name,
                     domainNotificationEvent?.EventId);
             }
@@ -211,7 +211,7 @@ public class EfOutboxService<TContext> : IOutboxService
                 await _busPublisher.PublishAsync(integrationEvent, cancellationToken);
 
                 _logger.LogInformation(
-                    "Published a message: '{Name}' with ID: '{Id} (outbox)'",
+                    "Publish a message: '{Name}' with ID: '{Id} (outbox)'",
                     outboxMessage.Name,
                     integrationEvent?.EventId);
             }

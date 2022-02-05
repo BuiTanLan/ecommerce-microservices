@@ -141,7 +141,7 @@ public class RabbitMqConsumer : IBusSubscriber
             var eventProcessor = scope.ServiceProvider.GetRequiredService<IEventProcessor>();
 
             // Publish to internal event bus
-            await eventProcessor.PublishAsync(message, default).ConfigureAwait(false);
+            await eventProcessor.DispatchAsync(message, default).ConfigureAwait(false);
 
             channel.BasicAck(eventArgs.DeliveryTag, multiple: false);
         }

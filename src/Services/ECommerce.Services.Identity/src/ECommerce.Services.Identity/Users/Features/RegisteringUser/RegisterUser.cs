@@ -1,8 +1,10 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Messaging.Outbox;
 using ECommerce.Services.Identity.Shared.Models;
 using ECommerce.Services.Identity.Users.Dtos;
+using ECommerce.Services.Identity.Users.Features.RegisteringUser.Events.Integration;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
@@ -68,13 +70,13 @@ internal class RegisterUserValidator : AbstractValidator<RegisterUser>
 // https://www.youtube.com/watch?v=PrJIMTZsbDw
 internal class RegisterUserHandler : ICommandHandler<RegisterUser, RegisterUserResult>
 {
+    private readonly IEventProcessor _eventProcessor;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IOutboxService _outboxService;
 
-    public RegisterUserHandler(UserManager<ApplicationUser> userManager, IOutboxService outboxService)
+    public RegisterUserHandler(UserManager<ApplicationUser> userManager, IEventProcessor eventProcessor)
     {
         _userManager = Guard.Against.Null(userManager, nameof(userManager));
-        _outboxService = Guard.Against.Null(outboxService, nameof(outboxService));
+        _eventProcessor = Guard.Against.Null(eventProcessor, nameof(eventProcessor));
     }
 
     public async Task<RegisterUserResult> Handle(RegisterUser request, CancellationToken cancellationToken)
@@ -100,8 +102,9 @@ internal class RegisterUserHandler : ICommandHandler<RegisterUser, RegisterUserR
         if (roleResult.Succeeded == false)
             throw new RegisterIdentityUserException(string.Join(',', roleResult.Errors.Select(e => e.Description)));
 
-        // saving to outbox should do in same traction of our business logic actions. we could use TxBehaviour or ITxDbContextExecutes interface
-        await _outboxService.SaveAsync(
+        // publish our integration event and save to outbox should do in same transaction of our business logic actions. we could use TxBehaviour or ITxDbContextExecutes interface
+        // This service is not DDD, so we couldn't use DomainEventPublisher to publish mapped integration events
+        await _eventProcessor.PublishAsync(
             new UserRegistered(
                 applicationUser.Id,
                 applicationUser.Email,

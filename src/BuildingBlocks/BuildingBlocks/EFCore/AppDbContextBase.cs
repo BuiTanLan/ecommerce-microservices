@@ -1,7 +1,6 @@
 using System.Collections.Immutable;
 using System.Data;
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
 using Microsoft.EntityFrameworkCore;
@@ -16,16 +15,18 @@ public abstract class AppDbContextBase :
     IDbContext,
     ITxDbContextExecutes
 {
-    private readonly IDomainEventDispatcher _domainEventDispatcher;
+    private readonly IDomainEventPublisher _domainEventPublisher;
+
     private IDbContextTransaction _currentTransaction;
 
     protected AppDbContextBase(DbContextOptions options) : base(options)
     {
     }
 
-    protected AppDbContextBase(DbContextOptions options, IDomainEventDispatcher domainEventDispatcher) : base(options)
+    protected AppDbContextBase(DbContextOptions options, IDomainEventPublisher domainEventPublisher) : base(options)
     {
-        _domainEventDispatcher = Guard.Against.Null(domainEventDispatcher, nameof(domainEventDispatcher));
+        _domainEventPublisher = domainEventPublisher;
+        _domainEventPublisher = Guard.Against.Null(domainEventPublisher, nameof(domainEventPublisher));
         System.Diagnostics.Debug.WriteLine($"{GetType().Name}::ctor");
     }
 
@@ -79,7 +80,7 @@ public abstract class AppDbContextBase :
         // https://lostechies.com/jimmybogard/2014/05/13/a-better-domain-events-pattern/
         // https://www.ledjonbehluli.com/posts/domain_to_integration_event/
         // https://ardalis.com/immediate-domain-event-salvation-with-mediatr/
-        await _domainEventDispatcher.DispatchAsync(cancellationToken);
+        await _domainEventPublisher.PublishAsync(GetDomainEvents().ToArray(), cancellationToken);
 
         // After executing this line all the changes (from the Command Handler and Domain Event Handlers)
         // performed through the DbContext will be committed

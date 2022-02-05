@@ -16,12 +16,15 @@ public static class DomainEvents
     private static readonly Func<IMediator> _mediatorFunc =
         ServiceActivator.GetScope().ServiceProvider.GetRequiredService<IMediator>;
 
-    public static Task RaiseDomainEventAsync(
+    public static async Task RaiseDomainEventAsync(
         IDomainEvent[] domainEvents,
         CancellationToken cancellationToken = default)
     {
         var mediator = _mediatorFunc.Invoke();
-        return mediator.DispatchDomainEventAsync(domainEvents, cancellationToken: cancellationToken);
+        foreach (var domainEvent in domainEvents)
+        {
+            await mediator.DispatchDomainEventAsync(domainEvent, cancellationToken: cancellationToken);
+        }
     }
 
     public static Task RaiseDomainEventAsync(

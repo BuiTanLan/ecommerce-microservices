@@ -1,29 +1,43 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Extensions;
-using BuildingBlocks.Messaging.Outbox;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.Core.Domain.Events.Internal;
 
-public class DomainEventDispatcher : IDomainEventDispatcher
+public class DomainEventPublisher : IDomainEventPublisher
 {
-    private readonly IOutboxService _outboxService;
+    private readonly IIntegrationEventPublisher _integrationEventPublisher;
+    private readonly IDomainNotificationEventPublisher _domainNotificationEventPublisher;
     private readonly IMediator _mediator;
     private readonly IServiceProvider _serviceProvider;
 
-    public DomainEventDispatcher(
-        IOutboxService outboxService,
+    public DomainEventPublisher(
         IMediator mediator,
+        IIntegrationEventPublisher integrationEventPublisher,
+        IDomainNotificationEventPublisher domainNotificationEventPublisher,
         IServiceProvider serviceProvider)
     {
-        _outboxService = Guard.Against.Null(outboxService, nameof(outboxService));
+        _domainNotificationEventPublisher =
+            Guard.Against.Null(domainNotificationEventPublisher, nameof(domainNotificationEventPublisher));
+        _integrationEventPublisher = Guard.Against.Null(integrationEventPublisher, nameof(integrationEventPublisher));
         _mediator = Guard.Against.Null(mediator, nameof(mediator));
         _serviceProvider = Guard.Against.Null(serviceProvider, nameof(serviceProvider));
     }
 
-    public async Task DispatchAsync(CancellationToken cancellationToken, params IDomainEvent[] domainEvents)
+    public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default)
     {
+        return PublishAsync(new[] { domainEvent }, cancellationToken);
+    }
+
+    public async Task PublishAsync(IDomainEvent[] domainEvents, CancellationToken cancellationToken = default)
+    {
+        Guard.Against.Null(domainEvents, nameof(domainEvents));
+
+        if (domainEvents.Any() == false)
+            return;
+
         var domainEventContext = _serviceProvider.GetRequiredService<IDomainEventContext>();
 
         // https://github.com/dotnet-architecture/eShopOnContainers/issues/700#issuecomment-461807560
@@ -45,16 +59,10 @@ public class DomainEventDispatcher : IDomainEventDispatcher
 
         // Save wrapped integration and notification events to outbox for further processing after commit
         var wrappedNotificationEvents = eventsToDispatch.GetWrappedDomainNotificationEvents().ToArray();
-        foreach (var wrappedNotificationEvent in wrappedNotificationEvents)
-        {
-            await _outboxService.SaveAsync(wrappedNotificationEvent, cancellationToken);
-        }
+        await _domainNotificationEventPublisher.PublishAsync(wrappedNotificationEvents.ToArray(), cancellationToken);
 
         var wrappedIntegrationEvents = eventsToDispatch.GetWrappedIntegrationEvents().ToArray();
-        foreach (var wrappedIntegrationEvent in wrappedIntegrationEvents)
-        {
-            await _outboxService.SaveAsync(wrappedIntegrationEvent, cancellationToken);
-        }
+        await _integrationEventPublisher.PublishAsync(wrappedIntegrationEvents.ToArray(), cancellationToken);
 
         // Save event mapper events into outbox for further processing after commit
         IEventMapper? eventMapper = _serviceProvider.GetService<IEventMapper>();
@@ -69,10 +77,7 @@ public class DomainEventDispatcher : IDomainEventDispatcher
 
         if (integrationEvents is not null && integrationEvents.Any())
         {
-            foreach (var integrationEvent in integrationEvents)
-            {
-                await _outboxService.SaveAsync(integrationEvent, cancellationToken);
-            }
+            await _integrationEventPublisher.PublishAsync(integrationEvents.ToArray()!, cancellationToken);
         }
 
         var notificationEvents =
@@ -83,10 +88,7 @@ public class DomainEventDispatcher : IDomainEventDispatcher
 
         if (notificationEvents is not null && notificationEvents.Any())
         {
-            foreach (var domainNotificationEvent in notificationEvents)
-            {
-                await _outboxService.SaveAsync(domainNotificationEvent, cancellationToken);
-            }
+            await _domainNotificationEventPublisher.PublishAsync(notificationEvents.ToArray()!, cancellationToken);
         }
     }
 }

@@ -14,8 +14,8 @@ public class CustomersDbContext : AppDbContextBase, ICustomersDbContext
     {
     }
 
-    public CustomersDbContext(DbContextOptions options, IDomainEventDispatcher domainEventDispatcher) :
-        base(options, domainEventDispatcher)
+    public CustomersDbContext(DbContextOptions options, IDomainEventPublisher domainEventPublisher) :
+        base(options, domainEventPublisher)
     {
     }
 

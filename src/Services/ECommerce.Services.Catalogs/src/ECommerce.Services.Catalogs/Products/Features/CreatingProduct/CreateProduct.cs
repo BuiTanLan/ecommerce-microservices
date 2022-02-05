@@ -88,7 +88,6 @@ public class CreateProductValidator : AbstractValidator<CreateProduct>
 
 public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProductResult>
 {
-    private readonly IDomainEventDispatcher _domainEventDispatcher;
     private readonly ILogger<CreateProductHandler> _logger;
     private readonly IMapper _mapper;
     private readonly ICatalogDbContext _catalogDbContext;
@@ -96,10 +95,8 @@ public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProduct
     public CreateProductHandler(
         ICatalogDbContext catalogDbContext,
         IMapper mapper,
-        IDomainEventDispatcher domainEventDispatcher,
         ILogger<CreateProductHandler> logger)
     {
-        _domainEventDispatcher = domainEventDispatcher;
         _logger = Guard.Against.Null(logger, nameof(logger));
         _mapper = Guard.Against.Null(mapper, nameof(mapper));
         _catalogDbContext = Guard.Against.Null(catalogDbContext, nameof(catalogDbContext));

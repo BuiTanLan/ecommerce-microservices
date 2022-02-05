@@ -9,21 +9,23 @@ namespace BuildingBlocks.Core.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddCore(this IServiceCollection services, params Assembly[] assembliesToScan)
+    public static IServiceCollection AddCore(this IServiceCollection services, params Assembly[]? assembliesToScan)
     {
         var systemInfo = SystemInfo.New();
         services.AddSingleton<ISystemInfo>(systemInfo);
         services.AddSingleton(systemInfo);
         services.AddScoped<IEventProcessor, EventProcessor>();
-        services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+        services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
+        services.AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
+        services.AddScoped<IDomainNotificationEventPublisher, DomainNotificationEventPublisher>();
 
-        RegisterEventMappers(services);
+        RegisterEventMappers(services, assembliesToScan);
 
         return services;
     }
 
 
-    private static void RegisterEventMappers(IServiceCollection services, params Assembly[] assembliesToScan)
+    private static void RegisterEventMappers(IServiceCollection services, params Assembly[]? assembliesToScan)
     {
         services.Scan(scan => scan
             .FromAssemblies(assembliesToScan ?? AppDomain.CurrentDomain.GetAssemblies())

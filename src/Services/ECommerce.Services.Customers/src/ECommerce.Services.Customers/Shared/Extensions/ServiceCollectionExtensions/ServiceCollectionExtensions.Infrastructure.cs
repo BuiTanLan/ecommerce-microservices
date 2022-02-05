@@ -38,7 +38,6 @@ public static partial class ServiceCollectionExtensions
                 tags: new[] { "customers-postgres" });
 
             var rabbitMqOptions = configuration.GetOptions<RabbitConfiguration>(nameof(RabbitConfiguration));
-
             healthChecksBuilder.AddRabbitMQ(
                 $"amqp://{rabbitMqOptions.UserName}:{rabbitMqOptions.Password}@{rabbitMqOptions.HostName}{rabbitMqOptions.VirtualHost}",
                 name: "CustomersService-RabbitMQ-Check",

@@ -1,6 +1,6 @@
 using BuildingBlocks.Core.Domain.Events.External;
 
-namespace ECommerce.Services.Identity.Users.Features.RegisteringUser;
+namespace ECommerce.Services.Identity.Users.Features.RegisteringUser.Events.Integration;
 
 public record UserRegistered(
     Guid IdentityId,

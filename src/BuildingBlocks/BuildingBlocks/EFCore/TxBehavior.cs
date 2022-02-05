@@ -16,16 +16,19 @@ public class TxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResp
 {
     private readonly IDbFacadeResolver _dbFacadeResolver;
     private readonly ILogger<TxBehavior<TRequest, TResponse>> _logger;
-    private readonly IDomainEventDispatcher _domainEventDispatcher;
+    private readonly IDomainEventContext _domainEventContext;
+    private readonly IDomainEventPublisher _domainEventPublisher;
 
     public TxBehavior(
         IDbFacadeResolver dbFacadeResolver,
         ILogger<TxBehavior<TRequest, TResponse>> logger,
-        IDomainEventDispatcher domainEventDispatcher)
+        IDomainEventContext domainEventContext,
+        IDomainEventPublisher domainEventPublisher)
     {
         _dbFacadeResolver = dbFacadeResolver;
         _logger = logger;
-        _domainEventDispatcher = domainEventDispatcher;
+        _domainEventContext = domainEventContext;
+        _domainEventPublisher = domainEventPublisher;
     }
 
     public Task<TResponse> Handle(
@@ -68,7 +71,8 @@ public class TxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResp
                     nameof(TxBehavior<TRequest, TResponse>),
                     typeof(TRequest).FullName);
 
-                await _domainEventDispatcher.DispatchAsync(cancellationToken);
+                var domainEvents = _domainEventContext.GetDomainEvents();
+                await _domainEventPublisher.PublishAsync(domainEvents.ToArray(), cancellationToken);
 
                 await transaction.CommitAsync(cancellationToken);
                 return response;
