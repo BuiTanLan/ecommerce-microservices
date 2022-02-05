@@ -3,8 +3,10 @@ using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
 using BuildingBlocks.EFCore;
 using ECommerce.Services.Identity.Shared.Models;
+using Humanizer;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ECommerce.Services.Identity.Shared.Data;
 
@@ -21,6 +23,36 @@ public class IdentityContext : IdentityDbContext<ApplicationUser, ApplicationRol
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+
+        // https://andrewlock.net/customising-asp-net-core-identity-ef-core-naming-conventions-for-postgresql/
+        foreach (var entity in builder.Model.GetEntityTypes())
+        {
+            // Replace table names
+            entity.SetTableName(entity.GetTableName()?.Underscore());
+
+            var storeObjectIdentifier =
+                StoreObjectIdentifier.Table(entity.GetTableName()?.Underscore()!, entity.GetSchema());
+
+            // Replace column names
+            foreach (var property in entity.GetProperties())
+            {
+                property.SetColumnName(property.GetColumnName(storeObjectIdentifier)?.Underscore());
+            }
+
+            foreach (var key in entity.GetKeys())
+            {
+                key.SetName(key.GetName()?.Underscore());
+            }
+
+            foreach (var key in entity.GetForeignKeys())
+            {
+                key.SetConstraintName(key.GetConstraintName()?.Underscore());
+            }
+
+            foreach (var index in entity.GetIndexes())
+            {
+            }
+        }
     }
 
     public IReadOnlyList<IDomainEvent> GetDomainEvents()

@@ -52,7 +52,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("asp_net_roles", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Services.Identity.Shared.Models.ApplicationUser", b =>
@@ -172,7 +172,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("asp_net_users", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Services.Identity.Shared.Models.EmailVerificationCode", b =>
@@ -206,7 +206,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     b.HasKey("Id")
                         .HasName("pk_email_verification_codes");
 
-                    b.ToTable("EmailVerificationCodes", (string)null);
+                    b.ToTable("email_verification_codes", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Services.Identity.Shared.Models.PasswordResetCode", b =>
@@ -240,7 +240,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     b.HasKey("Id")
                         .HasName("pk_password_reset_codes");
 
-                    b.ToTable("PasswordResetCodes", (string)null);
+                    b.ToTable("password_reset_codes", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Services.Identity.Shared.Models.RefreshToken", b =>
@@ -256,6 +256,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedByIp")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("created_by_ip");
 
@@ -268,6 +269,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                         .HasColumnName("revoked_at");
 
                     b.Property<string>("Token")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("token");
@@ -286,7 +288,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                         .IsUnique()
                         .HasDatabaseName("ix_refresh_tokens_token_user_id");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("refresh_tokens", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Services.Identity.Shared.Models.UserOldPassword", b =>
@@ -316,7 +318,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_user_old_passwords_user_id");
 
-                    b.ToTable("UserOldPasswords", (string)null);
+                    b.ToTable("user_old_passwords", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -346,7 +348,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     b.HasIndex("RoleId")
                         .HasDatabaseName("ix_asp_net_role_claims_role_id");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("asp_net_role_claims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
@@ -376,7 +378,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_asp_net_user_claims_user_id");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("asp_net_user_claims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -403,7 +405,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_asp_net_user_logins_user_id");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("asp_net_user_logins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -422,7 +424,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     b.HasIndex("RoleId")
                         .HasDatabaseName("ix_asp_net_user_roles_role_id");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("asp_net_user_roles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -446,7 +448,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     b.HasKey("UserId", "LoginProvider", "Name")
                         .HasName("pk_asp_net_user_tokens");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("asp_net_user_tokens", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Services.Identity.Shared.Models.RefreshToken", b =>
@@ -456,7 +458,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_refresh_tokens_asp_net_users_application_user_id");
+                        .HasConstraintName("fk_refresh_tokens_asp_net_users_user_id");
 
                     b.Navigation("ApplicationUser");
                 });

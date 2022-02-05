@@ -11,7 +11,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AspNetRoles",
+                name: "asp_net_roles",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -25,7 +25,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
+                name: "asp_net_users",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -55,7 +55,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmailVerificationCodes",
+                name: "email_verification_codes",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -70,7 +70,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                 });
 
             migrationBuilder.CreateTable(
-                name: "PasswordResetCodes",
+                name: "password_reset_codes",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -85,7 +85,7 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
+                name: "asp_net_role_claims",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -100,13 +100,13 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     table.ForeignKey(
                         name: "fk_asp_net_role_claims_asp_net_roles_role_id",
                         column: x => x.role_id,
-                        principalTable: "AspNetRoles",
+                        principalTable: "asp_net_roles",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
+                name: "asp_net_user_claims",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -121,13 +121,13 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     table.ForeignKey(
                         name: "fk_asp_net_user_claims_asp_net_users_user_id",
                         column: x => x.user_id,
-                        principalTable: "AspNetUsers",
+                        principalTable: "asp_net_users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
+                name: "asp_net_user_logins",
                 columns: table => new
                 {
                     login_provider = table.Column<string>(type: "text", nullable: false),
@@ -141,13 +141,13 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     table.ForeignKey(
                         name: "fk_asp_net_user_logins_asp_net_users_user_id",
                         column: x => x.user_id,
-                        principalTable: "AspNetUsers",
+                        principalTable: "asp_net_users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
+                name: "asp_net_user_roles",
                 columns: table => new
                 {
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -159,19 +159,19 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     table.ForeignKey(
                         name: "fk_asp_net_user_roles_asp_net_roles_role_id",
                         column: x => x.role_id,
-                        principalTable: "AspNetRoles",
+                        principalTable: "asp_net_roles",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_asp_net_user_roles_asp_net_users_user_id",
                         column: x => x.user_id,
-                        principalTable: "AspNetUsers",
+                        principalTable: "asp_net_users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
+                name: "asp_net_user_tokens",
                 columns: table => new
                 {
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -185,36 +185,36 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     table.ForeignKey(
                         name: "fk_asp_net_user_tokens_asp_net_users_user_id",
                         column: x => x.user_id,
-                        principalTable: "AspNetUsers",
+                        principalTable: "asp_net_users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RefreshTokens",
+                name: "refresh_tokens",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    token = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    token = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     expired_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    created_by_ip = table.Column<string>(type: "text", nullable: true),
+                    created_by_ip = table.Column<string>(type: "text", nullable: false),
                     revoked_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_refresh_tokens", x => x.id);
                     table.ForeignKey(
-                        name: "fk_refresh_tokens_asp_net_users_application_user_id",
+                        name: "fk_refresh_tokens_asp_net_users_user_id",
                         column: x => x.user_id,
-                        principalTable: "AspNetUsers",
+                        principalTable: "asp_net_users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserOldPasswords",
+                name: "user_old_passwords",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -228,106 +228,106 @@ namespace ECommerce.Services.Identity.Shared.Data.Migrations.Identity
                     table.ForeignKey(
                         name: "fk_user_old_passwords_asp_net_users_user_id",
                         column: x => x.user_id,
-                        principalTable: "AspNetUsers",
+                        principalTable: "asp_net_users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "ix_asp_net_role_claims_role_id",
-                table: "AspNetRoleClaims",
+                table: "asp_net_role_claims",
                 column: "role_id");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
-                table: "AspNetRoles",
+                table: "asp_net_roles",
                 column: "normalized_name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_asp_net_user_claims_user_id",
-                table: "AspNetUserClaims",
+                table: "asp_net_user_claims",
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_asp_net_user_logins_user_id",
-                table: "AspNetUserLogins",
+                table: "asp_net_user_logins",
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_asp_net_user_roles_role_id",
-                table: "AspNetUserRoles",
+                table: "asp_net_user_roles",
                 column: "role_id");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
-                table: "AspNetUsers",
+                table: "asp_net_users",
                 column: "normalized_email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_asp_net_users_email",
-                table: "AspNetUsers",
+                table: "asp_net_users",
                 column: "email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
-                table: "AspNetUsers",
+                table: "asp_net_users",
                 column: "normalized_user_name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_refresh_tokens_token_user_id",
-                table: "RefreshTokens",
+                table: "refresh_tokens",
                 columns: new[] { "token", "user_id" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_refresh_tokens_user_id",
-                table: "RefreshTokens",
+                table: "refresh_tokens",
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_user_old_passwords_user_id",
-                table: "UserOldPasswords",
+                table: "user_old_passwords",
                 column: "user_id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
+                name: "asp_net_role_claims");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
+                name: "asp_net_user_claims");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
+                name: "asp_net_user_logins");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
+                name: "asp_net_user_roles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
+                name: "asp_net_user_tokens");
 
             migrationBuilder.DropTable(
-                name: "EmailVerificationCodes");
+                name: "email_verification_codes");
 
             migrationBuilder.DropTable(
-                name: "PasswordResetCodes");
+                name: "password_reset_codes");
 
             migrationBuilder.DropTable(
-                name: "RefreshTokens");
+                name: "refresh_tokens");
 
             migrationBuilder.DropTable(
-                name: "UserOldPasswords");
+                name: "user_old_passwords");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "asp_net_roles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "asp_net_users");
         }
     }
 }
