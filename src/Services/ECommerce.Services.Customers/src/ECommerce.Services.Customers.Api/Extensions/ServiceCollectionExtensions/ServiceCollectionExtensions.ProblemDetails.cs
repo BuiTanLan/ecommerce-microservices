@@ -50,6 +50,13 @@ public static partial class ServiceCollectionExtensions
                 Detail = JsonConvert.SerializeObject(ex.ValidationResultModel.Errors),
                 Type = "https://somedomain/input-validation-rules-error"
             });
+            x.Map<DomainException>(ex => new ProblemDetails
+            {
+                Title = "domain rules broken",
+                Status = (int)ex.StatusCode,
+                Detail = ex.Message,
+                Type = "https://somedomain/domain-rules-error"
+            });
             x.Map<BadRequestException>(ex => new ProblemDetails
             {
                 Title = "bad request exception",
@@ -60,30 +67,23 @@ public static partial class ServiceCollectionExtensions
             x.Map<NotFoundException>(ex => new ProblemDetails
             {
                 Title = "not found exception",
-                Status = StatusCodes.Status404NotFound,
+                Status = (int)ex.StatusCode,
                 Detail = ex.Message,
                 Type = "https://somedomain/not-found-error"
             });
             x.Map<ApiException>(ex => new ProblemDetails
             {
                 Title = "api server exception",
-                Status = StatusCodes.Status500InternalServerError,
+                Status = (int)ex.StatusCode,
                 Detail = ex.Message,
                 Type = "https://somedomain/api-server-error"
             });
             x.Map<AppException>(ex => new ProblemDetails
             {
                 Title = "application exception",
-                Status = StatusCodes.Status500InternalServerError,
+                Status = (int)ex.StatusCode,
                 Detail = ex.Message,
                 Type = "https://somedomain/application-error"
-            });
-            x.Map<DomainException>(ex => new ProblemDetails
-            {
-                Title = "domain exception",
-                Status = StatusCodes.Status400BadRequest,
-                Detail = ex.Message,
-                Type = "https://somedomain/domain-error"
             });
             x.Map<IdentityException>(ex =>
             {
@@ -97,8 +97,6 @@ public static partial class ServiceCollectionExtensions
 
                 return pd;
             });
-
-            // Handling Guards exceptions
             x.MapToStatusCode<ArgumentNullException>(StatusCodes.Status400BadRequest);
         });
         return services;

@@ -17,8 +17,13 @@ public class RestockSubscription : AggregateRoot<RestockSubscriptionId>
     public Email Email { get; private set; } = null!;
     public ProductInformation ProductInformation { get; private set; } = null!;
 
-    public static RestockSubscription Create(CustomerId customerId, ProductInformation productInformation, Email email)
+    public static RestockSubscription Create(
+        RestockSubscriptionId id,
+        CustomerId customerId,
+        ProductInformation productInformation,
+        Email email)
     {
+        Guard.Against.Null(id, new RestockSubscriptionDomainException("Id cannot be null"));
         Guard.Against.Null(customerId, new RestockSubscriptionDomainException("CustomerId cannot be null"));
         Guard.Against.Null(email, new RestockSubscriptionDomainException("Email cannot be null"));
         Guard.Against.Null(
@@ -27,7 +32,10 @@ public class RestockSubscription : AggregateRoot<RestockSubscriptionId>
 
         var restockSubscription = new RestockSubscription
         {
-            Email = email, CustomerId = customerId, ProductInformation = productInformation
+            Id = id,
+            Email = email,
+            CustomerId = customerId,
+            ProductInformation = productInformation
         };
 
         restockSubscription.AddDomainEvent(new RestockSubscriptionCreated(restockSubscription));

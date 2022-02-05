@@ -31,13 +31,16 @@ internal class VerifyCustomerHandler : ICommandHandler<VerifyCustomer>
     public async Task<Unit> Handle(VerifyCustomer command, CancellationToken cancellationToken)
     {
         var customer =
-            await _customersDbContext.FindCustomerByIdAsync(command.CustomerId, cancellationToken: cancellationToken);
+            await _customersDbContext.FindCustomerByIdAsync(command.CustomerId);
         if (customer is null)
         {
             throw new CustomerNotFoundException(command.CustomerId);
         }
 
         customer.Verify(DateTime.Now);
+
+        await _customersDbContext.SaveChangesAsync(cancellationToken);
+
         _logger.LogInformation("Verified a customer with ID: '{CustomerId}'", command.CustomerId);
 
         return Unit.Value;

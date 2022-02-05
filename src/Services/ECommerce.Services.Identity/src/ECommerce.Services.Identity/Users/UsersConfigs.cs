@@ -1,5 +1,6 @@
 using ECommerce.Services.Identity.Users.Features.GettingUerByEmail;
 using ECommerce.Services.Identity.Users.Features.GettingUserById;
+using ECommerce.Services.Identity.Users.Features.GettingUsers;
 using ECommerce.Services.Identity.Users.Features.RegisteringUser;
 using ECommerce.Services.Identity.Users.Features.UpdatingUserState;
 using Microsoft.AspNetCore.Routing;
@@ -27,6 +28,7 @@ internal static class UsersConfigs
         endpoints.MapUpdateUserStateEndpoint();
         endpoints.MapGetUserByIdEndpoint();
         endpoints.MapGetUserByEmailEndpoint();
+        endpoints.MapGetUsersEndpoint();
 
         return endpoints;
     }

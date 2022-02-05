@@ -51,7 +51,7 @@ internal class CompleteCustomerHandler : ICommandHandler<CompleteCustomer>
     {
         Guard.Against.Null(command, nameof(command));
 
-        var customer = await _customersDbContext.FindCustomerByIdAsync(command.CustomerId, cancellationToken);
+        var customer = await _customersDbContext.FindCustomerByIdAsync(command.CustomerId);
 
         Guard.Against.NotFound(customer, new CustomerNotFoundException(command.CustomerId));
 

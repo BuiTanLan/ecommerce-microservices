@@ -7,14 +7,7 @@ using ECommerce.Services.Catalogs.Shared.Contracts;
 
 namespace ECommerce.Services.Catalogs.Products.Features.GettingProducts;
 
-public record GetProducts : IListQuery<GetProductsResult>
-{
-    public IList<string>? Includes { get; init; }
-    public IList<FilterModel>? Filters { get; init; }
-    public IList<string>? Sorts { get; init; }
-    public int Page { get; init; }
-    public int PageSize { get; init; }
-}
+public record GetProducts : ListQuery<GetProductsResult>;
 
 public class GetProductsValidator : AbstractValidator<GetProducts>
 {
@@ -48,7 +41,7 @@ public class GetProductsHandler : IQueryHandler<GetProducts, GetProductsResult>
             .ApplyIncludeList(request.Includes)
             .ApplyFilterList(request.Filters)
             .AsNoTracking()
-            .PaginateAsync<Product, ProductDto>(_mapper.ConfigurationProvider, request.Page, request.PageSize);
+            .PaginateAsync<Product, ProductDto>(_mapper.ConfigurationProvider, request.Page, request.PageSize, cancellationToken: cancellationToken);
 
         return new GetProductsResult(products);
     }

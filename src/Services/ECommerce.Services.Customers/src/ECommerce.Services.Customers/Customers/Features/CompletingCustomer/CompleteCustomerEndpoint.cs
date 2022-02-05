@@ -29,7 +29,9 @@ public static class CompleteCustomerEndpoint
             request.CustomerId,
             request.PhoneNumber,
             request.BirthDate,
-            request.Address,
+            request.Country,
+            request.City,
+            request.DetailAddress,
             request.Nationality);
 
         await commandProcessor.SendAsync(command, cancellationToken);

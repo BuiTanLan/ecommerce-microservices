@@ -43,10 +43,6 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .HasColumnName("created")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("integer")
                         .HasColumnName("created_by");
@@ -105,6 +101,10 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .IsUnique()
                         .HasDatabaseName("ix_customers_id");
 
+                    b.HasIndex("IdentityId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_customers_identity_id");
+
                     b.HasIndex("PhoneNumber")
                         .IsUnique()
                         .HasDatabaseName("ix_customers_phone_number");
@@ -150,7 +150,7 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
 
             modelBuilder.Entity("ECommerce.Services.Customers.Customers.Models.Customer", b =>
                 {
-                    b.OwnsOne("BuildingBlocks.Core.ValueObjects.Address", "Address", b1 =>
+                    b.OwnsOne("BuildingBlocks.Core.Domain.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<long>("CustomerId")
                                 .HasColumnType("bigint")
@@ -223,7 +223,7 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_restock_subscriptions_customers_customer_id1");
+                        .HasConstraintName("fk_restock_subscriptions_customers_customer_temp_id");
 
                     b.OwnsOne("ECommerce.Services.Customers.RestockSubscriptions.ValueObjects.ProductInformation", "ProductInformation", b1 =>
                         {

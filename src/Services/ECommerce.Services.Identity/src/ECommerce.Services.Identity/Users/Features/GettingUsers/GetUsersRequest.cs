@@ -1,15 +1,14 @@
+using System.Reflection;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Web;
 using BuildingBlocks.Web.Extensions;
-using ECommerce.Services.Catalogs.Products.Models;
+using Microsoft.AspNetCore.Http;
 
-namespace ECommerce.Services.Catalogs.Products.Features.GettingProducts;
+namespace ECommerce.Services.Identity.Users.Features.GettingUsers;
 
-// https://blog.codingmilitia.com/2022/01/03/getting-complex-type-as-simple-type-query-string-aspnet-core-api-controller/
-// https://benfoster.io/blog/minimal-apis-custom-model-binding-aspnet-6/
-public record GetProductsRequest : PageRequest
+public record GetUsersRequest : PageRequest
 {
-    public static ValueTask<GetProductsRequest?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
+    public static ValueTask<GetUsersRequest?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
     {
         var page = httpContext.Request.Query.Get<int>("Page", 1);
         var pageSize = httpContext.Request.Query.Get<int>("PageSize", 20);
@@ -17,7 +16,7 @@ public record GetProductsRequest : PageRequest
         var filters = httpContext.Request.Query.GetCollection<List<FilterModel>>("Filters");
         var includes = httpContext.Request.Query.GetCollection<List<string>>("Includes");
 
-        var request = new GetProductsRequest
+        var request = new GetUsersRequest
         {
             Page = page,
             PageSize = pageSize,
@@ -26,6 +25,6 @@ public record GetProductsRequest : PageRequest
             Includes = includes
         };
 
-        return ValueTask.FromResult<GetProductsRequest?>(request);
+        return ValueTask.FromResult<GetUsersRequest?>(request);
     }
 }

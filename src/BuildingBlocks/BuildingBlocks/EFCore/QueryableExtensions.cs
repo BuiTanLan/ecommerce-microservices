@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BuildingBlocks.CQRS;
+using BuildingBlocks.CQRS.Query;
 using BuildingBlocks.EFCore.Specification;
 using Microsoft.EntityFrameworkCore;
 using FilterModel = BuildingBlocks.CQRS.FilterModel;
@@ -12,14 +13,6 @@ namespace BuildingBlocks.EFCore;
 // https://github.com/dynamicexpresso/DynamicExpresso
 public static class QueryableExtensions
 {
-    public static Task<ListResultModel<T>> PaginateAsync<T>(
-        this IQueryable<T> collection,
-        IPageList query,
-        CancellationToken cancellationToken = default)
-    {
-        return collection.PaginateAsync(query.Page, query.PageSize, cancellationToken);
-    }
-
     public static async Task<ListResultModel<T>> PaginateAsync<T>(
         this IQueryable<T> collection,
         int page = 1,
@@ -56,14 +49,10 @@ public static class QueryableExtensions
 
         var totalItems = await collection.CountAsync(cancellationToken: cancellationToken);
         var totalPages = (int)Math.Ceiling((decimal)totalItems / pageSize);
-        var data = await collection.Limit(page, pageSize).ProjectTo<R>(configuration).ToListAsync(cancellationToken: cancellationToken);
+        var data = await collection.Limit(page, pageSize).ProjectTo<R>(configuration)
+            .ToListAsync(cancellationToken: cancellationToken);
 
         return ListResultModel<R>.Create(data, totalItems, page, pageSize);
-    }
-
-    public static IQueryable<T> Limit<T>(this IQueryable<T> collection, IPageList query)
-    {
-        return collection.Limit(query.Page, query.PageSize);
     }
 
     public static IQueryable<T> Limit<T>(

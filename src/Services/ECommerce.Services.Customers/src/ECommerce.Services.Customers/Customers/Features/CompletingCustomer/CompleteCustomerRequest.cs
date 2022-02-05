@@ -4,5 +4,7 @@ public record CompleteCustomerRequest(
     long CustomerId,
     string PhoneNumber,
     DateTime? BirthDate = null,
-    string? Address = null,
+    string? Country = null,
+    string? City = null,
+    string? DetailAddress = null,
     string? Nationality = null);

@@ -7,9 +7,10 @@ using ECommerce.Services.Customers.Shared.Data;
 
 namespace ECommerce.Services.Catalogs.Customers.Features.GettingCustomers;
 
-public record GetCustomers(int Page, int PageSize, CustomerState CustomerState, IList<string>? Includes,
-    IList<FilterModel>?
-        Filters, IList<string>? Sorts) : IListQuery<GetCustomersResult>;
+public record GetCustomers : ListQuery<GetCustomersResult>
+{
+    public CustomerState CustomerState { get; init; }
+}
 
 public class GetCustomersValidator : AbstractValidator<GetCustomers>
 {
@@ -40,11 +41,11 @@ public class GetCustomersHandler : IQueryHandler<GetCustomers, GetCustomersResul
     {
         var customer = await _customersDbContext.Customers
             .Where(x => request.CustomerState == CustomerState.None || x.CustomerState == request.CustomerState)
-            .OrderByDescending(x => x.CreatedAt)
+            .OrderByDescending(x => x.Created)
             .ApplyIncludeList(request.Includes)
             .ApplyFilterList(request.Filters)
             .AsNoTracking()
-            .PaginateAsync<Customer, CustomerDto>(_mapper.ConfigurationProvider, request.Page, request.PageSize);
+            .PaginateAsync<Customer, CustomerDto>(_mapper.ConfigurationProvider, request.Page, request.PageSize, cancellationToken: cancellationToken);
 
         return new GetCustomersResult(customer);
     }

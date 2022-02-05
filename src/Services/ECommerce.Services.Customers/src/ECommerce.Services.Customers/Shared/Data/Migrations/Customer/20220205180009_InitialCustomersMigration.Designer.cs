@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
 {
     [DbContext(typeof(CustomersDbContext))]
-    [Migration("20220203114858_InitialCustomersMigration")]
+    [Migration("20220205180009_InitialCustomersMigration")]
     partial class InitialCustomersMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,10 +44,6 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created")
                         .HasDefaultValueSql("now()");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("integer")
@@ -107,6 +103,10 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .IsUnique()
                         .HasDatabaseName("ix_customers_id");
 
+                    b.HasIndex("IdentityId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_customers_identity_id");
+
                     b.HasIndex("PhoneNumber")
                         .IsUnique()
                         .HasDatabaseName("ix_customers_phone_number");
@@ -152,7 +152,7 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
 
             modelBuilder.Entity("ECommerce.Services.Customers.Customers.Models.Customer", b =>
                 {
-                    b.OwnsOne("BuildingBlocks.Core.ValueObjects.Address", "Address", b1 =>
+                    b.OwnsOne("BuildingBlocks.Core.Domain.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<long>("CustomerId")
                                 .HasColumnType("bigint")
@@ -225,7 +225,7 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_restock_subscriptions_customers_customer_id1");
+                        .HasConstraintName("fk_restock_subscriptions_customers_customer_temp_id");
 
                     b.OwnsOne("ECommerce.Services.Customers.RestockSubscriptions.ValueObjects.ProductInformation", "ProductInformation", b1 =>
                         {

@@ -25,7 +25,6 @@ public class Customer : AggregateRoot<CustomerId>
     public PhoneNumber? PhoneNumber { get; private set; }
     public string? Notes { get; private set; }
     public bool IsActive { get; private set; }
-    public DateTime CreatedAt { get; private set; }
     public DateTime? CompletedAt { get; private set; }
     public DateTime? VerifiedAt { get; private set; }
     public CustomerState CustomerState { get; private set; } = CustomerState.None;
@@ -38,7 +37,8 @@ public class Customer : AggregateRoot<CustomerId>
             Email = Guard.Against.Null(email, nameof(email)),
             Name = Guard.Against.Null(name, nameof(name)),
             IdentityId = Guard.Against.NullOrEmpty(identityId, nameof(IdentityId)),
-            CustomerState = CustomerState.New
+            CustomerState = CustomerState.New,
+            IsActive = true
         };
 
         customer.AddDomainEvent(new CustomerCreated(customer));
@@ -73,7 +73,7 @@ public class Customer : AggregateRoot<CustomerId>
         AddDomainEvent(new CustomerCompleted(
             Id,
             PhoneNumber!,
-            CompletedAt.Value,
+            birthDate,
             Address,
             Nationality));
     }

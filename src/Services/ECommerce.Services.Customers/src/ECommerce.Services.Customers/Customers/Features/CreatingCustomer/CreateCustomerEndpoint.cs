@@ -11,7 +11,7 @@ public static class CreateCustomerEndpoint
         endpoints.MapPost(CustomersConfigs.CustomersPrefixUri, CreateCustomer)
             .AllowAnonymous()
             .WithTags(CustomersConfigs.Tag)
-            .Produces<CreateCustomerWithIdentityResult>(StatusCodes.Status201Created)
+            .Produces<CreateCustomerResult>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .WithName("CreateCustomer")
             .WithDisplayName("Register New Customer.");

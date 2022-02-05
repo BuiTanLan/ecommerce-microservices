@@ -1,41 +1,41 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
-using ECommerce.Services.Catalogs.Customers.Features.GettingCustomers;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
-namespace ECommerce.Services.Catalogs.Products.Features.GettingProducts;
+namespace ECommerce.Services.Identity.Users.Features.GettingUsers;
 
-// GET api/v1/catalog/products
-public static class GetCustomersEndpoint
+public static class GetUsersEndpoint
 {
-    internal static IEndpointRouteBuilder MapGetCustomersEndpoint(this IEndpointRouteBuilder endpoints)
+    internal static IEndpointRouteBuilder MapGetUsersEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet($"{CustomersConfigs.CustomersPrefixUri}", GetCustomers)
-            .WithTags(CustomersConfigs.Tag)
+        endpoints.MapGet($"{UsersConfigs.UsersPrefixUri}", GetUsers)
+            .WithTags(UsersConfigs.Tag)
             // .RequireAuthorization()
-            .Produces<GetCustomersResult>()
+            .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithName("GetCustomers")
-            .WithDisplayName("Get customers.");
+            .WithName("GetUsers")
+            .WithDisplayName("Get users.");
 
         return endpoints;
     }
 
-    private static async Task<IResult> GetCustomers(
-        GetCustomersRequest? request,
+    private static async Task<IResult> GetUsers(
+        GetUsersRequest? request,
         IQueryProcessor queryProcessor,
         CancellationToken cancellationToken)
     {
         Guard.Against.Null(request, nameof(request));
 
         var result = await queryProcessor.SendAsync(
-            new GetCustomers
+            new GetUsers
             {
                 Filters = request.Filters,
                 Includes = request.Includes,
                 Page = request.Page,
                 Sorts = request.Sorts,
-                CustomerState = request.CustomerState,
                 PageSize = request.PageSize
             },
             cancellationToken);

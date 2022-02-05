@@ -2,6 +2,7 @@ using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.ValueObjects;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Exception;
+using BuildingBlocks.IdsGenerator;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
 using ECommerce.Services.Customers.RestockSubscriptions.Models;
@@ -14,7 +15,10 @@ using ECommerce.Services.Customers.Shared.Extensions;
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription;
 
 public record CreateRestockSubscription(long CustomerId, long ProductId, string Email)
-    : ICreateCommand<CreateRestockSubscriptionResult>;
+    : ICreateCommand<CreateRestockSubscriptionResult>
+{
+    public long Id { get; init; } = SnowFlakIdGenerator.NewId();
+};
 
 internal class CreateRestockSubscriptionValidator : AbstractValidator<CreateRestockSubscription>
 {
@@ -57,7 +61,7 @@ internal class CreateRestockSubscriptionHandler
     {
         Guard.Against.Null(request, nameof(request));
 
-        var existsCustomer = await _customersDbContext.ExistsCustomerByIdAsync(request.CustomerId, cancellationToken);
+        var existsCustomer = await _customersDbContext.ExistsCustomerByIdAsync(request.CustomerId);
         Guard.Against.NotExists(existsCustomer, new CustomerNotFoundException(request.CustomerId));
 
         var product = (await _catalogApiClient.GetProductByIdAsync(request.ProductId, cancellationToken))?.Product;
@@ -65,6 +69,7 @@ internal class CreateRestockSubscriptionHandler
 
         var restockSubscription =
             RestockSubscription.Create(
+                request.Id,
                 request.CustomerId,
                 ProductInformation.Create(product!.Id, product.Name),
                 Email.Create(request.Email));

@@ -31,7 +31,6 @@ internal static class CustomersConfigs
     internal static IEndpointRouteBuilder MapCustomersEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapCompleteCustomerEndpoint();
-        endpoints.MapCreateCustomerWIthIdentityEndpoint();
         endpoints.MapCreateCustomerEndpoint();
         endpoints.MapLockCustomerEndpoint();
         endpoints.MapUnlockCustomerEndpoint();

@@ -31,7 +31,7 @@ internal class LockCustomerHandler : ICommandHandler<LockCustomer>
 
     public async Task<Unit> Handle(LockCustomer command, CancellationToken cancellationToken)
     {
-        var customer = await _customersDbContext.FindCustomerByIdAsync(command.CustomerId, cancellationToken);
+        var customer = await _customersDbContext.FindCustomerByIdAsync(command.CustomerId);
         if (customer is null)
         {
             throw new CustomerNotFoundException(command.CustomerId);

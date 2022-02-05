@@ -27,6 +27,8 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
                 x => x.ToString(),
                 x => (CustomerState)Enum.Parse(typeof(CustomerState), x));
 
+        builder.HasIndex(x => x.IdentityId).IsUnique();
+
         builder.HasIndex(x => x.Email).IsUnique();
         builder.Property(x => x.Email).IsRequired()
             .HasMaxLength(Constants.Lenght.Medium)

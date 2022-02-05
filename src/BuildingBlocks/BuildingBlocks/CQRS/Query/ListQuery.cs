@@ -1,6 +1,6 @@
 namespace BuildingBlocks.CQRS.Query;
 
-public interface IListQuery<out TResponse> : IQuery<TResponse>
+public record ListQuery<TResponse> : IListQuery<TResponse>
     where TResponse : notnull
 {
     public IList<string>? Includes { get; init; }

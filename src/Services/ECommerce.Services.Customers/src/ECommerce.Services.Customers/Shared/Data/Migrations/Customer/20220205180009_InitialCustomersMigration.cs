@@ -33,7 +33,6 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                     phone_number = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
                     notes = table.Column<string>(type: "text", nullable: true),
                     is_active = table.Column<bool>(type: "boolean", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     completed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     verified_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     customer_state = table.Column<string>(type: "text", nullable: false, defaultValue: "None"),
@@ -63,7 +62,7 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                 {
                     table.PrimaryKey("pk_restock_subscriptions", x => x.id);
                     table.ForeignKey(
-                        name: "fk_restock_subscriptions_customers_customer_id1",
+                        name: "fk_restock_subscriptions_customers_customer_temp_id",
                         column: x => x.customer_id,
                         principalSchema: "customer",
                         principalTable: "customers",
@@ -83,6 +82,13 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                 schema: "customer",
                 table: "customers",
                 column: "id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_customers_identity_id",
+                schema: "customer",
+                table: "customers",
+                column: "identity_id",
                 unique: true);
 
             migrationBuilder.CreateIndex(

@@ -66,7 +66,11 @@ internal class CreateCustomerHandler : ICommandHandler<CreateCustomer, CreateCus
             Email.Create(identityUser!.Email),
             CustomerName.Create(identityUser.FirstName, identityUser.LastName), identityUser.Id);
 
+        await _customersDbContext.AddAsync(customer, cancellationToken);
+
         await _customersDbContext.SaveChangesAsync(cancellationToken);
+
+        var _ = await _customersDbContext.Customers.FindAsync(customer.Id);
 
         _logger.LogInformation("Created a customer with ID: '{@CustomerId}'", customer.Id);
 

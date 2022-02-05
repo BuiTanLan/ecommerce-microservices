@@ -3,6 +3,7 @@ using BuildingBlocks.CQRS.Query;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Application;
+using ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
 using ECommerce.Services.Customers.Shared.Data;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptionById;
@@ -34,7 +35,8 @@ internal class GetRestockSubscriptionByIdHandler
     {
         Guard.Against.Null(query, nameof(query));
 
-        var restockSubscription = await _customersDbContext.RestockSubscriptions.FindAsync(query.Id);
+        var restockSubscription =
+            await _customersDbContext.RestockSubscriptions.FindAsync(new RestockSubscriptionId(query.Id));
         Guard.Against.NotFound(restockSubscription, new RestockSubscriptionNotFound(query.Id));
 
         return new GetRestockSubscriptionByIdResult(new RestockSubscriptionDto(
