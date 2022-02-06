@@ -1,4 +1,4 @@
-using ECommerce.Services.Catalogs.Products;
+using ECommerce.Services.Customers.Customers;
 using ECommerce.Services.Customers.RestockSubscriptions;
 using ECommerce.Services.Customers.Shared.Extensions.ApplicationBuilderExtensions;
 using ECommerce.Services.Customers.Shared.Extensions.ServiceCollectionExtensions;

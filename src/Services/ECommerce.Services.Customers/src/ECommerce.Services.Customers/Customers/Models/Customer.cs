@@ -10,7 +10,6 @@ using ECommerce.Services.Customers.Customers.Features.LockingCustomer.Events.Dom
 using ECommerce.Services.Customers.Customers.Features.UnlockingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.VerifyingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.ValueObjects;
-using ECommerce.Services.Customers.Shared.ValueObjects;
 
 namespace ECommerce.Services.Customers.Customers.Models;
 

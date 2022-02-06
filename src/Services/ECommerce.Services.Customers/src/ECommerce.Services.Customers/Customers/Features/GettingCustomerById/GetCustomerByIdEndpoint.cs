@@ -1,6 +1,5 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
-using ECommerce.Services.Catalogs.Products;
 
 namespace ECommerce.Services.Customers.Customers.Features.GettingCustomerById;
 

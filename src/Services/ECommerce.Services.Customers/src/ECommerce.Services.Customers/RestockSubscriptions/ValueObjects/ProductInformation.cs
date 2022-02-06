@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Model;
 using BuildingBlocks.Exception;
+using ECommerce.Services.Customers.Products;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;

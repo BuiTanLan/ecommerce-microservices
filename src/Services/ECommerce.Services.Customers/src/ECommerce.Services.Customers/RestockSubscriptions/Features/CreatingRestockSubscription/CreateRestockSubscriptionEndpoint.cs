@@ -1,6 +1,5 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
-using ECommerce.Services.Catalogs.Products;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription;
 

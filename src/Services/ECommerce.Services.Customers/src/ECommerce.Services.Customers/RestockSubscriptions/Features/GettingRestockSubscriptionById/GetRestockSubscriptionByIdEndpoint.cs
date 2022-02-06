@@ -1,9 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
-using ECommerce.Services.Customers.RestockSubscriptions;
-using ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptionById;
 
-namespace ECommerce.Services.Catalogs.Products.Features.GettingProductById;
+namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptionById;
 
 public static class GetRestockSubscriptionByIdEndpoint
 {

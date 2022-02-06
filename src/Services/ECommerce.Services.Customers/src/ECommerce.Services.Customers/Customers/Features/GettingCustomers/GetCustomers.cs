@@ -5,7 +5,7 @@ using ECommerce.Services.Customers.Customers.Dtos;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Shared.Data;
 
-namespace ECommerce.Services.Catalogs.Customers.Features.GettingCustomers;
+namespace ECommerce.Services.Customers.Customers.Features.GettingCustomers;
 
 public record GetCustomers : ListQuery<GetCustomersResult>
 {

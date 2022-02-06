@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Core.Domain;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Email;
 using BuildingBlocks.Email.Options;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Options;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.SendingRestockNotification;
 
-public record SendRestockNotification(long ProductId, int CurrentStock) : InternalCommand;
+public record SendRestockNotification(long ProductId, int CurrentStock) : InternalCommand, ITxRequest;
 
 internal class SendRestockNotificationValidator : AbstractValidator<SendRestockNotification>
 {

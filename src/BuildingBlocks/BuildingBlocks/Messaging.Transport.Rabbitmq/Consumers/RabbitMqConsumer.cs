@@ -45,8 +45,7 @@ public class RabbitMqConsumer : IBusSubscriber
             MethodInfo generic = methodInfo.MakeGenericMethod(messageType);
 
             // Or --> fac.Create((dynamic)Activator.CreateInstance(messageType));
-            var queueReferences =
-                generic.Invoke(fac, new object[] { null }) as QueueReferences;
+            var queueReferences = generic.Invoke(fac, new object[] { null }) as QueueReferences;
 
             var channel = InitChannel(queueReferences);
             _channels.Add(channel);

@@ -1,5 +1,6 @@
-using ECommerce.Services.Catalogs.Products.Features.GettingProductById;
+using BuildingBlocks.Core.Domain.Events;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription;
+using ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptionById;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions;
 
@@ -14,6 +15,8 @@ public static class RestockSubscriptionsConfigs
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddSingleton<IIntegrationEventMapper, RestockSubscriptionsEventMapper>();
+        
         return services;
     }
 

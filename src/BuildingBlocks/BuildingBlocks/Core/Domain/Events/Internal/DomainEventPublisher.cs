@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Extensions;
@@ -64,31 +65,95 @@ public class DomainEventPublisher : IDomainEventPublisher
         var wrappedIntegrationEvents = eventsToDispatch.GetWrappedIntegrationEvents().ToArray();
         await _integrationEventPublisher.PublishAsync(wrappedIntegrationEvents.ToArray(), cancellationToken);
 
+        IReadOnlyList<IEventMapper> eventMappers = _serviceProvider.GetServices<IEventMapper>().ToImmutableList();
+
         // Save event mapper events into outbox for further processing after commit
-        IEventMapper? eventMapper = _serviceProvider.GetService<IEventMapper>();
-        IIntegrationEventMapper? integrationEventMapper = _serviceProvider.GetService<IIntegrationEventMapper>();
-        IIDomainNotificationEventMapper? notificationMapper =
-            _serviceProvider.GetService<IIDomainNotificationEventMapper>();
-
-        var integrationEvents = eventMapper?.MapToIntegrationEvents(eventsToDispatch) ??
-                                integrationEventMapper?.MapToIntegrationEvents(eventsToDispatch);
-
-        integrationEvents = integrationEvents?.Where(x => x is not null).ToList();
-
-        if (integrationEvents is not null && integrationEvents.Any())
+        var integrationEvents =
+            GetIntegrationEvents(_serviceProvider, eventMappers, eventsToDispatch);
+        if (integrationEvents.Any())
         {
-            await _integrationEventPublisher.PublishAsync(integrationEvents.ToArray()!, cancellationToken);
+            await _integrationEventPublisher.PublishAsync(integrationEvents.ToArray(), cancellationToken);
         }
 
         var notificationEvents =
-            eventMapper?.MapToDomainNotificationEvents(eventsToDispatch) ??
-            notificationMapper?.MapToDomainNotificationEvents(eventsToDispatch);
+            GetNotificationEvents(_serviceProvider, eventMappers, eventsToDispatch);
 
-        notificationEvents = notificationEvents?.Where(x => x is not null).ToList();
-
-        if (notificationEvents is not null && notificationEvents.Any())
+        if (notificationEvents.Any())
         {
             await _domainNotificationEventPublisher.PublishAsync(notificationEvents.ToArray()!, cancellationToken);
         }
+    }
+
+
+    private IReadOnlyList<IDomainNotificationEvent> GetNotificationEvents(
+        IServiceProvider serviceProvider,
+        IReadOnlyList<IEventMapper> eventMappers,
+        IReadOnlyList<IDomainEvent> eventsToDispatch)
+    {
+        IReadOnlyList<IIDomainNotificationEventMapper> notificationEventMappers =
+            serviceProvider.GetServices<IIDomainNotificationEventMapper>().ToImmutableList();
+
+        List<IDomainNotificationEvent> notificationEvents = new List<IDomainNotificationEvent>();
+
+        if (eventMappers.Any())
+        {
+            foreach (var eventMapper in eventMappers)
+            {
+                var items = eventMapper.MapToDomainNotificationEvents(eventsToDispatch)?.ToList();
+                if (items is not null && items.Any())
+                {
+                    notificationEvents.AddRange(items.Where(x => x is not null)!);
+                }
+            }
+        }
+        else if (notificationEventMappers.Any())
+        {
+            foreach (var notificationEventMapper in notificationEventMappers)
+            {
+                var items = notificationEventMapper.MapToDomainNotificationEvents(eventsToDispatch)?.ToList();
+                if (items is not null && items.Any())
+                {
+                    notificationEvents.AddRange(items.Where(x => x is not null)!);
+                }
+            }
+        }
+
+        return notificationEvents.ToImmutableList();
+    }
+
+    private static IReadOnlyList<IIntegrationEvent> GetIntegrationEvents(
+        IServiceProvider serviceProvider,
+        IReadOnlyList<IEventMapper> eventMappers,
+        IReadOnlyList<IDomainEvent> eventsToDispatch)
+    {
+        IReadOnlyList<IIntegrationEventMapper> integrationEventMappers =
+            serviceProvider.GetServices<IIntegrationEventMapper>().ToImmutableList();
+
+        List<IIntegrationEvent> integrationEvents = new List<IIntegrationEvent>();
+
+        if (eventMappers.Any())
+        {
+            foreach (var eventMapper in eventMappers)
+            {
+                var items = eventMapper.MapToIntegrationEvents(eventsToDispatch)?.ToList();
+                if (items is not null && items.Any())
+                {
+                    integrationEvents.AddRange(items.Where(x => x is not null)!);
+                }
+            }
+        }
+        else if (integrationEventMappers.Any())
+        {
+            foreach (var integrationEventMapper in integrationEventMappers)
+            {
+                var items = integrationEventMapper.MapToIntegrationEvents(eventsToDispatch)?.ToList();
+                if (items is not null && items.Any())
+                {
+                    integrationEvents.AddRange(items.Where(x => x is not null)!);
+                }
+            }
+        }
+
+        return integrationEvents.ToImmutableList();
     }
 }

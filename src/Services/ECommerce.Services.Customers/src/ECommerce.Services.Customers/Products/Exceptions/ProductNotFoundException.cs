@@ -1,6 +1,6 @@
 using BuildingBlocks.Exception.Types;
 
-namespace ECommerce.Services.Customers.RestockSubscriptions.ValueObjects.Exceptions;
+namespace ECommerce.Services.Customers.Products.Exceptions;
 
 public class ProductNotFoundException : NotFoundException
 {

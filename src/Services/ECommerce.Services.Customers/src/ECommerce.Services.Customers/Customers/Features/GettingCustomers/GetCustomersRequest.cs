@@ -3,7 +3,7 @@ using BuildingBlocks.Web;
 using BuildingBlocks.Web.Extensions;
 using ECommerce.Services.Customers.Customers.Models;
 
-namespace ECommerce.Services.Catalogs.Products.Features.GettingProducts;
+namespace ECommerce.Services.Customers.Customers.Features.GettingCustomers;
 
 // https://blog.codingmilitia.com/2022/01/03/getting-complex-type-as-simple-type-query-string-aspnet-core-api-controller/
 // https://benfoster.io/blog/minimal-apis-custom-model-binding-aspnet-6/

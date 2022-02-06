@@ -7,9 +7,8 @@ using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Shared.Clients.Identity;
 using ECommerce.Services.Customers.Shared.Data;
-using ECommerce.Services.Customers.Shared.ValueObjects;
 
-namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomerWithIdentity;
+namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
 
 public record CreateCustomer(string Email) : ICreateCommand<CreateCustomerResult>
 {

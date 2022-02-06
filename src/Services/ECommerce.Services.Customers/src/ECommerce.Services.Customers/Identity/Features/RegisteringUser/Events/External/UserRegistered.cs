@@ -1,7 +1,7 @@
 using BuildingBlocks.Core.Domain;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.CQRS.Command;
-using ECommerce.Services.Customers.Customers.Features.CreatingCustomerWithIdentity;
+using ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
 
 namespace ECommerce.Services.Customers.Identity.Features.RegisteringUser.Events.External;
 

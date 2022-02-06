@@ -1,17 +1,14 @@
 using BuildingBlocks.Core.Domain.Events;
-using ECommerce.Services.Catalogs.Products.Features.GettingProducts;
-using ECommerce.Services.Customers;
-using ECommerce.Services.Customers.Customers;
 using ECommerce.Services.Customers.Customers.Data;
 using ECommerce.Services.Customers.Customers.Features.CompletingCustomer;
-using ECommerce.Services.Customers.Customers.Features.CreatingCustomerWithIdentity;
+using ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
 using ECommerce.Services.Customers.Customers.Features.GettingCustomerById;
+using ECommerce.Services.Customers.Customers.Features.GettingCustomers;
 using ECommerce.Services.Customers.Customers.Features.LockingCustomer;
 using ECommerce.Services.Customers.Customers.Features.UnlockingCustomer;
 using ECommerce.Services.Customers.Customers.Features.VerifyingCustomer;
-using ECommerce.Services.Customers.Shared.Extensions.ServiceCollectionExtensions;
 
-namespace ECommerce.Services.Catalogs.Products;
+namespace ECommerce.Services.Customers.Customers;
 
 internal static class CustomersConfigs
 {

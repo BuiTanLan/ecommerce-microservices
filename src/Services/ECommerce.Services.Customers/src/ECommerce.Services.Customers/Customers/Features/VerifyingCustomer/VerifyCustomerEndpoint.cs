@@ -1,5 +1,4 @@
 using BuildingBlocks.CQRS.Command;
-using ECommerce.Services.Catalogs.Products;
 
 namespace ECommerce.Services.Customers.Customers.Features.VerifyingCustomer;
 

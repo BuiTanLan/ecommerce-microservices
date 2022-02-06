@@ -1,8 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
-using ECommerce.Services.Catalogs.Customers.Features.GettingCustomers;
 
-namespace ECommerce.Services.Catalogs.Products.Features.GettingProducts;
+namespace ECommerce.Services.Customers.Customers.Features.GettingCustomers;
 
 // GET api/v1/catalog/products
 public static class GetCustomersEndpoint

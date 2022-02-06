@@ -1,8 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
-using ECommerce.Services.Catalogs.Products;
 
-namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomerWithIdentity;
+namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
 
 public static class CreateCustomerEndpoint
 {

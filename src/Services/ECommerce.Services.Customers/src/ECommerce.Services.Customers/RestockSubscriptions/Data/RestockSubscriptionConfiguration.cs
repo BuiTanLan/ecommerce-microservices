@@ -3,7 +3,7 @@ using ECommerce.Services.Customers.RestockSubscriptions.Models;
 using ECommerce.Services.Customers.Shared.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ECommerce.Services.Customers.Customers.Data;
+namespace ECommerce.Services.Customers.RestockSubscriptions.Data;
 
 public class RestockSubscriptionConfiguration : IEntityTypeConfiguration<RestockSubscription>
 {

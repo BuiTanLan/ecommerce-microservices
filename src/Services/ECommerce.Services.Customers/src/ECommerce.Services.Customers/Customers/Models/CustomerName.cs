@@ -1,7 +1,7 @@
 using BuildingBlocks.Core.Domain.Model;
 using ECommerce.Services.Customers.Customers.Exceptions.Domain;
 
-namespace ECommerce.Services.Customers.Shared.ValueObjects;
+namespace ECommerce.Services.Customers.Customers.Models;
 
 public class CustomerName : ValueObject
 {

@@ -52,7 +52,8 @@ public static partial class ServiceCollectionExtensions
         services.AddRabbitMqTransport(configuration);
 
         services.AddEmailService(configuration);
-        services.AddCqrs(doMoreActions: s =>
+
+        services.AddCqrs(new[] { typeof(CustomersRoot).Assembly }, s =>
         {
             s.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
@@ -60,6 +61,7 @@ public static partial class ServiceCollectionExtensions
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(TxBehavior<,>));
         });
+
         services.AddCustomValidators(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
