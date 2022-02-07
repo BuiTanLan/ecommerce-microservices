@@ -3,7 +3,7 @@ using BuildingBlocks.Core.Domain.Model;
 
 namespace BuildingBlocks.Core.Domain.ValueObjects;
 
-public class Address : ValueObject
+public record Address
 {
     public string Country { get; private set; } = null!;
     public string City { get; private set; } = null!;
@@ -11,8 +11,6 @@ public class Address : ValueObject
 
     public static Address Empty => new();
     public static Address? Null => null;
-
-    private Address() { }
 
     public static Address? Create(string? country, string? city, string? detail)
     {
@@ -26,12 +24,5 @@ public class Address : ValueObject
         var address = new Address { Country = country, City = city, Detail = detail };
 
         return address;
-    }
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Country;
-        yield return City;
-        yield return Detail;
     }
 }

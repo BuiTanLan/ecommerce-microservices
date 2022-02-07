@@ -6,7 +6,7 @@ using ECommerce.Services.Catalogs.Products.Exceptions.Domain;
 namespace ECommerce.Services.Catalogs.Products.ValueObjects;
 
 // https://github.com/NimblePros/ValueObjects
-public class Dimensions : ValueObject
+public record Dimensions
 {
     public int Height { get; private set; }
     public int Width { get; private set; }
@@ -31,12 +31,5 @@ public class Dimensions : ValueObject
     public override string ToString()
     {
         return FormattedDescription();
-    }
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Width;
-        yield return Height;
-        yield return Depth;
     }
 }

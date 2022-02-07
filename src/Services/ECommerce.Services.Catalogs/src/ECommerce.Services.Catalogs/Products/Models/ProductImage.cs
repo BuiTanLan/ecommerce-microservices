@@ -10,13 +10,12 @@ public class ProductImage : Entity<EntityId>
     {
         SetImageUrl(imageUrl);
         SetIsMain(isMain);
-        Id = Guard.Against.NegativeOrZero(id, nameof(id));
-        ProductId = Guard.Against.NegativeOrZero(productId, nameof(productId));
-        Guard.Against.NegativeOrZero(productId, nameof(productId));
+        Id = Guard.Against.Null(id, nameof(id));
+        ProductId = Guard.Against.Null(productId, nameof(productId));
     }
 
     // Just for EF
-    private ProductImage(){}
+    private ProductImage() { }
 
     public string ImageUrl { get; private set; } = default!;
     public bool IsMain { get; private set; }

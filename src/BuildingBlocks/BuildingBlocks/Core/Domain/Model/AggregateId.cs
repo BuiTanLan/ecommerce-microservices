@@ -2,7 +2,7 @@ using Ardalis.GuardClauses;
 
 namespace BuildingBlocks.Core.Domain.Model;
 
-public class AggregateId<T> : Identity<T>
+public record AggregateId<T> : Identity<T>
 {
     public AggregateId(T value) : base(value)
     {
@@ -12,7 +12,7 @@ public class AggregateId<T> : Identity<T>
     public static implicit operator AggregateId<T>(T id) => new(id);
 }
 
-public class AggregateId : AggregateId<long>
+public record AggregateId : AggregateId<long>
 {
     public AggregateId(long value) : base(value)
     {

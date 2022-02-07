@@ -2,7 +2,7 @@ using BuildingBlocks.Core.Domain.Model;
 
 namespace ECommerce.Services.Catalogs.Brands;
 
-public class BrandId : AggregateId
+public record BrandId : AggregateId
 {
     public BrandId(long value) : base(value)
     {

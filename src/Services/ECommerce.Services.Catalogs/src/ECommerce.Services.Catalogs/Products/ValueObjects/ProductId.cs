@@ -3,7 +3,7 @@ using BuildingBlocks.Core.Domain.Model;
 
 namespace ECommerce.Services.Catalogs.Products.ValueObjects;
 
-public class ProductId : AggregateId
+public record ProductId : AggregateId
 {
     public ProductId(long value) : base(value)
     {

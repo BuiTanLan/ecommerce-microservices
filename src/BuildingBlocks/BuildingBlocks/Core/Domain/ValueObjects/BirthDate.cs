@@ -3,7 +3,7 @@ using BuildingBlocks.Core.Domain.Model;
 
 namespace BuildingBlocks.Core.Domain.ValueObjects;
 
-public class BirthDate : ValueObject
+public record BirthDate
 {
     public DateTime Value { get; private set; }
 
@@ -31,9 +31,4 @@ public class BirthDate : ValueObject
     public static implicit operator BirthDate?(DateTime? value) => value == null ? null : Create((DateTime)value);
 
     public static implicit operator DateTime?(BirthDate? value) => value?.Value ?? null;
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
-    }
 }

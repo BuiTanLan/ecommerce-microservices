@@ -3,7 +3,7 @@ using BuildingBlocks.Core.Domain.Model;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
 
-public class RestockSubscriptionId : AggregateId<long>
+public record RestockSubscriptionId : AggregateId<long>
 {
     public RestockSubscriptionId(long value) : base(value)
     {

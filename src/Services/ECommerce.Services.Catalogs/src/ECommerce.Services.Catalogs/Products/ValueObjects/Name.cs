@@ -5,7 +5,7 @@ using ECommerce.Services.Catalogs.Products.Exceptions.Domain;
 
 namespace ECommerce.Services.Catalogs.Products.ValueObjects;
 
-public class Name : ValueObject
+public record Name
 {
     public string Value { get; private set; }
 
@@ -23,9 +23,4 @@ public class Name : ValueObject
 
     public static implicit operator string(Name value) =>
         Guard.Against.Null(value.Value, new ProductDomainException("Name can't be null."));
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
-    }
 }

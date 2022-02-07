@@ -7,7 +7,7 @@ using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
 namespace ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
 
 // Here versioning Name is not important for us so we can save it on DB
-public class ProductInformation : ValueObject
+public record ProductInformation
 {
     public string Name { get; private set; } = null!;
     public ProductId Id { get; private set; } = null!;
@@ -21,11 +21,5 @@ public class ProductInformation : ValueObject
             Name = Guard.Against.NullOrWhiteSpace(name, new RestockSubscriptionDomainException("Product name can't be null.")),
             Id = Guard.Against.Null(id, new RestockSubscriptionDomainException("Product Id can't be  null.")),
         };
-    }
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Id;
-        yield return Name;
     }
 }

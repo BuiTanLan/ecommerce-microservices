@@ -2,18 +2,17 @@ using Ardalis.GuardClauses;
 
 namespace BuildingBlocks.Core.Domain.Model;
 
-public class EntityId : Identity
+public record EntityId : EntityId<long>
 {
-    public EntityId(long value) : base(value)
+    public EntityId(long id) : base(id)
     {
-        Guard.Against.NegativeOrZero(value, nameof(value));
     }
 
     public static implicit operator long(EntityId id) => Guard.Against.Null(id.Value, nameof(id.Value));
     public static implicit operator EntityId(long id) => new(id);
 }
 
-public class EntityId<T> : Identity<T>
+public record EntityId<T> : Identity<T>
 {
     public EntityId(T id) : base(id)
     {

@@ -10,6 +10,6 @@ public interface IEntity<out TIdentity, in TId> : IEntity<TIdentity>
 {
 }
 
-public interface IEntity : IEntity<EntityId, long>
+public interface IEntity : IEntity<EntityId>
 {
 }

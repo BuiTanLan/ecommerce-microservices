@@ -1,9 +1,9 @@
-using BuildingBlocks.Core.Domain.Model;
+using Ardalis.GuardClauses;
 using BuildingBlocks.Exception.Types;
 
 namespace BuildingBlocks.Core.Domain.ValueObjects;
 
-public class Amount : ValueObject
+public record Amount
 {
     public decimal Value { get; private set; }
 
@@ -25,37 +25,21 @@ public class Amount : ValueObject
 
     public static implicit operator decimal?(Amount? value) => value?.Value;
 
-    public static bool operator ==(Amount? a, Amount? b)
-    {
-        if (ReferenceEquals(a, b))
-        {
-            return true;
-        }
+    public static bool operator >(Amount a, Amount b) =>
+        Guard.Against.Null(a?.Value, nameof(a)) > Guard.Against.Null(b?.Value, nameof(b));
 
-        if (a is not null && b is not null)
-        {
-            return a.Value.Equals(b.Value);
-        }
+    public static bool operator <(Amount a, Amount b) =>
+        Guard.Against.Null(a?.Value, nameof(a)) < Guard.Against.Null(b?.Value, nameof(b));
 
-        return false;
-    }
+    public static bool operator >=(Amount a, Amount b) =>
+        Guard.Against.Null(a?.Value, nameof(a)) >= Guard.Against.Null(b?.Value, nameof(b));
 
-    public static bool operator !=(Amount? a, Amount? b) => !(a == b);
+    public static bool operator <=(Amount a, Amount b) =>
+        Guard.Against.Null(a?.Value, nameof(a)) <= Guard.Against.Null(b?.Value, nameof(b));
 
-    public static bool operator >(Amount? a, Amount? b) => a?.Value > b?.Value;
+    public static Amount operator +(Amount a, Amount b) =>
+        (Guard.Against.Null(a?.Value, nameof(a)) + Guard.Against.Null(b?.Value, nameof(b)))!;
 
-    public static bool operator <(Amount? a, Amount? b) => a?.Value < b?.Value;
-
-    public static bool operator >=(Amount? a, Amount? b) => a?.Value >= b?.Value;
-
-    public static bool operator <=(Amount? a, Amount? b) => a?.Value <= b?.Value;
-
-    public static Amount? operator +(Amount? a, Amount? b) => a?.Value + b?.Value;
-
-    public static Amount? operator -(Amount? a, Amount? b) => a?.Value - b?.Value;
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
-    }
+    public static Amount operator -(Amount a, Amount b) =>
+        (Guard.Against.Null(a?.Value, nameof(a)) - Guard.Against.Null(b?.Value, nameof(b)))!;
 }

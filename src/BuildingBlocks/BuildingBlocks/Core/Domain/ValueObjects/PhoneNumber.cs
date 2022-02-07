@@ -5,7 +5,7 @@ using BuildingBlocks.Exception;
 
 namespace BuildingBlocks.Core.Domain.ValueObjects;
 
-public class PhoneNumber : ValueObject
+public record PhoneNumber
 {
     public string Value { get; private set; }
 
@@ -13,19 +13,16 @@ public class PhoneNumber : ValueObject
 
     public static PhoneNumber Create(string value)
     {
-        return new PhoneNumber()
+        return new PhoneNumber
         {
-            Value = Guard.Against.InvalidPhoneNumber(value,
+            Value = Guard.Against.InvalidPhoneNumber(
+                value,
                 new DomainException($"Phone number {value} is invalid."))
         };
     }
 
     public static implicit operator string?(PhoneNumber? phoneNumber) => phoneNumber?.Value;
 
-    public static implicit operator PhoneNumber?(string? phoneNumber) => phoneNumber == null ? null : Create(phoneNumber);
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
-    }
+    public static implicit operator PhoneNumber?(string? phoneNumber) =>
+        phoneNumber == null ? null : Create(phoneNumber);
 }

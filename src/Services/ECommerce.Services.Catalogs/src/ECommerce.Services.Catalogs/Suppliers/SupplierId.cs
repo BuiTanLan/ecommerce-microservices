@@ -2,7 +2,7 @@ using BuildingBlocks.Core.Domain.Model;
 
 namespace ECommerce.Services.Catalogs.Suppliers;
 
-public class SupplierId : AggregateId
+public record SupplierId : AggregateId
 {
     public SupplierId(long value) : base(value)
     {

@@ -5,7 +5,7 @@ using ECommerce.Services.Catalogs.Products.Exceptions.Domain;
 
 namespace ECommerce.Services.Catalogs.Products.ValueObjects;
 
-public class Price : ValueObject
+public record Price
 {
     public decimal Value { get; private set; }
 
@@ -25,9 +25,4 @@ public class Price : ValueObject
 
     public static implicit operator decimal(Price value) =>
         Guard.Against.Null(value.Value, new ProductDomainException("Price can't be null."));
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
-    }
 }

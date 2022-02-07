@@ -3,7 +3,7 @@ using BuildingBlocks.Core.Domain.Model;
 
 namespace ECommerce.Services.Customers.Customers.ValueObjects;
 
-public class CustomerId : AggregateId
+public record CustomerId : AggregateId
 {
     public CustomerId(long value) : base(value)
     {

@@ -5,7 +5,7 @@ using ECommerce.Services.Catalogs.Products.Exceptions.Domain;
 
 namespace ECommerce.Services.Catalogs.Products.ValueObjects;
 
-public class Stock : ValueObject
+public record Stock
 {
     public Stock? Null => null;
 
@@ -43,12 +43,5 @@ public class Stock : ValueObject
             throw new MaxStockThresholdReachedException("Available stock cannot be greater than max stock threshold.");
 
         return stock;
-    }
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Available;
-        yield return RestockThreshold;
-        yield return MaxStockThreshold;
     }
 }

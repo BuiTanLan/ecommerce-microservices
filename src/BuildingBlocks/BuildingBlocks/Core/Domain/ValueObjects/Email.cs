@@ -5,7 +5,7 @@ using BuildingBlocks.Exception;
 
 namespace BuildingBlocks.Core.Domain.ValueObjects;
 
-public class Email : ValueObject
+public record Email
 {
     public string Value { get; private set; }
 
@@ -22,9 +22,4 @@ public class Email : ValueObject
     public static implicit operator Email?(string? value) => value is null ? null : Create(value);
 
     public static implicit operator string?(Email? value) => value?.Value;
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
-    }
 }

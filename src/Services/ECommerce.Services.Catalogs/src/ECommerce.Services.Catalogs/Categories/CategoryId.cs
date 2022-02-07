@@ -2,7 +2,7 @@ using BuildingBlocks.Core.Domain.Model;
 
 namespace ECommerce.Services.Catalogs.Categories;
 
-public class CategoryId : AggregateId
+public record CategoryId : AggregateId
 {
     public CategoryId(long value) : base(value)
     {

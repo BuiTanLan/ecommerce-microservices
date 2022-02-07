@@ -4,7 +4,7 @@ using ECommerce.Services.Customers.Customers.Exceptions.Domain;
 
 namespace ECommerce.Services.Customers.Customers.ValueObjects;
 
-public class Nationality : ValueObject
+public record Nationality
 {
     private static readonly HashSet<string> _allowedNationality = new()
     {
@@ -39,9 +39,4 @@ public class Nationality : ValueObject
     public static implicit operator Nationality?(string? value) => value is null ? null : Create(value);
 
     public static implicit operator string?(Nationality? value) => value?.Value;
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
-    }
 }

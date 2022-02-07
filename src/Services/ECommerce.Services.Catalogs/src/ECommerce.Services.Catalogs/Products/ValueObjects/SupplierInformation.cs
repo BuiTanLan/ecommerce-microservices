@@ -6,7 +6,7 @@ using ECommerce.Services.Catalogs.Suppliers;
 
 namespace ECommerce.Services.Catalogs.Products.ValueObjects;
 
-public class SupplierInformation : ValueObject
+public record SupplierInformation
 {
     public SupplierInformation Null => null;
 
@@ -17,11 +17,5 @@ public class SupplierInformation : ValueObject
     {
         Id = Guard.Against.Null(id, new ProductDomainException("SupplierId can not be null."));
         Name = Guard.Against.Null(name, new ProductDomainException("Name cannot be null."));
-    }
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Id;
-        yield return Name;
     }
 }
