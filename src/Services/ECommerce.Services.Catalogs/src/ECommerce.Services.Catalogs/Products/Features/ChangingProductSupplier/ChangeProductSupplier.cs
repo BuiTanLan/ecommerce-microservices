@@ -2,7 +2,7 @@ using BuildingBlocks.CQRS.Command;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ChangingProductSupplier;
 
-internal record ChangeProductSupplier : ICommand<ChangeProductSupplierResult>;
+internal record ChangeProductSupplier : ITxCommand<ChangeProductSupplierResult>;
 
 internal record ChangeProductSupplierResult;
 

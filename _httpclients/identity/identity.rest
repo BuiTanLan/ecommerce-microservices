@@ -1,0 +1,42 @@
+# https://www.josephguadagno.net/2021/07/05/testing-web-apis-or-services-with-jetbrains-rider
+# https://www.jetbrains.com/help/rider/Http_client_in__product__code_editor.html
+
+###
+# @name ApiRoot
+GET {{identity-api}}
+###
+
+# @name = OpenId Configuration
+GET {{identity-api}}/.well-known/openid-configuration
+
+###
+# @name = Get oauthClient Token
+POST {{identity-api}}/connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&scope=shop-api&client_id=oauthClient&client_secret=SuperSecretPassword
+
+###
+# @name = Get frontend-client Token
+POST {{identity-api}}/connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&scope=shop-api&client_id=frontend-client&username=mehdi&password=123456
+
+###
+# @name = Authorize
+POST {{identity-api}}/connect/authorize
+Content-Type: application/x-www-form-urlencoded
+
+scope=shop-api&client_id=frontend-client
+
+###
+# @name = Login
+POST {{identity-api}}/api/v1/identity/login
+Content-Type: application/json
+
+{
+  "userNameOrEmail": "mehdi",
+  "password": "123456",
+  "remember": true
+}

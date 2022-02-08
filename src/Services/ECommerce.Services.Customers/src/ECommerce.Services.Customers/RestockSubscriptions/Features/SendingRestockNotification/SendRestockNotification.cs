@@ -5,6 +5,7 @@ using BuildingBlocks.Email;
 using BuildingBlocks.Email.Options;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
+using ECommerce.Services.Customers.RestockSubscriptions.Features.MarkingRestockSubscriptionAsProcessed;
 using ECommerce.Services.Customers.Shared.Data;
 using Microsoft.Extensions.Options;
 
@@ -28,17 +29,20 @@ internal class SendRestockNotificationHandler : ICommandHandler<SendRestockNotif
 {
     private readonly CustomersDbContext _customersDbContext;
     private readonly IEmailSender _emailSender;
+    private readonly ICommandProcessor _commandProcessor;
     private readonly EmailOptions _emailConfig;
     private readonly ILogger<SendRestockNotificationHandler> _logger;
 
     public SendRestockNotificationHandler(
         CustomersDbContext customersDbContext,
         IEmailSender emailSender,
+        ICommandProcessor commandProcessor,
         IOptions<EmailOptions> emailConfig,
         ILogger<SendRestockNotificationHandler> logger)
     {
         _customersDbContext = customersDbContext;
         _emailSender = emailSender;
+        _commandProcessor = commandProcessor;
         _emailConfig = emailConfig.Value;
         _logger = logger;
     }
@@ -48,7 +52,8 @@ internal class SendRestockNotificationHandler : ICommandHandler<SendRestockNotif
         Guard.Against.Null(command, new RestockSubscriptionDomainException("Command cannot be null"));
 
         var subscribedCustomers =
-            _customersDbContext.RestockSubscriptions.Where(x => x.ProductInformation.Id == command.ProductId);
+            _customersDbContext.RestockSubscriptions.Where(x =>
+                x.ProductInformation.Id == command.ProductId && x.Processed == false);
 
         foreach (var restockSubscription in subscribedCustomers)
         {
@@ -61,12 +66,13 @@ internal class SendRestockNotificationHandler : ICommandHandler<SendRestockNotif
                         "Restock Notification",
                         $"Your product {restockSubscription.ProductInformation.Name} is back in stock. Current stock is {command.CurrentStock}"));
 
-                _customersDbContext.RestockSubscriptions.Remove(restockSubscription);
-                await _customersDbContext.SaveChangesAsync(cancellationToken);
+                await _commandProcessor.SendAsync(
+                    new MarkRestockSubscriptionAsProcessed(restockSubscription.Id),
+                    cancellationToken);
+
+                _logger.LogInformation("Restock notification sent to email {Email}", restockSubscription.Email);
             }
         }
-
-        _logger.LogInformation("Restock notifications sent");
 
         return Unit.Value;
     }

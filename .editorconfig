@@ -367,7 +367,7 @@ dotnet_diagnostic.AsyncFixer04.severity = error
 
 # https://cezarypiatek.github.io/post/async-analyzers-p1/#2-calling-synchronous-method-inside-the-async-method
 # VSTHRD103: Call async methods when in an async method
-dotnet_diagnostic.VSTHRD103.severity = error
+dotnet_diagnostic.VSTHRD103.severity = Suggestion
 
 
 # https://cezarypiatek.github.io/post/async-analyzers-p1/#3-async-void-method

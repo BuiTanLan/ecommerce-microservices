@@ -49,7 +49,6 @@ public static class GuardExtensions
         return NegativeOrZero<decimal>(guardClause, input, exception);
     }
 
-
     public static int NegativeOrZero(this IGuardClause guardClause, int input, System.Exception exception)
     {
         return NegativeOrZero<int>(guardClause, input, exception);
@@ -69,6 +68,37 @@ public static class GuardExtensions
         where T : struct, IComparable
     {
         if (input.CompareTo(default(T)) <= 0)
+        {
+            throw exception;
+        }
+
+        return input;
+    }
+
+    public static decimal Negative(this IGuardClause guardClause, decimal input, System.Exception exception)
+    {
+        return Negative<decimal>(guardClause, input, exception);
+    }
+
+    public static int Negative(this IGuardClause guardClause, int input, System.Exception exception)
+    {
+        return Negative<int>(guardClause, input, exception);
+    }
+
+    public static long Negative(this IGuardClause guardClause, long input, System.Exception exception)
+    {
+        return Negative<long>(guardClause, input, exception);
+    }
+
+    public static double Negative(this IGuardClause guardClause, double input, System.Exception exception)
+    {
+        return Negative<double>(guardClause, input, exception);
+    }
+
+    private static T Negative<T>(this IGuardClause guardClause, T input, System.Exception exception)
+        where T : struct, IComparable
+    {
+        if (input.CompareTo(default(T)) < 0)
         {
             throw exception;
         }

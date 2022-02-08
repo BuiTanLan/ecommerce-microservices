@@ -1,8 +1,6 @@
 using BuildingBlocks.CQRS.Command;
-using ECommerce.Services.Catalogs.Products.Features.CreatingProduct;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ReplenishingProductStock;
-
 
 // POST api/v1/catalog/products/{productId}/replenish-stock
 public static class ReplenishingProductStockEndpoint
@@ -13,7 +11,7 @@ public static class ReplenishingProductStockEndpoint
                 $"{ProductsConfigs.ProductsPrefixUri}/{{productId}}/replenish-stock",
                 ReplenishProductStock)
             .WithTags(ProductsConfigs.Tag)
-            .Produces<CreateProductResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
@@ -29,8 +27,8 @@ public static class ReplenishingProductStockEndpoint
         ICommandProcessor commandProcessor,
         CancellationToken cancellationToken)
     {
-        var result = await commandProcessor.SendAsync(new ReplenishingProductStock(productId, quantity), cancellationToken);
+        await commandProcessor.SendAsync(new ReplenishingProductStock(productId, quantity), cancellationToken);
 
-        return Results.Ok(result);
+        return Results.NoContent();
     }
 }

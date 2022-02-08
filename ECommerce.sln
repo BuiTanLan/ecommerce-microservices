@@ -51,6 +51,31 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.Orders",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.Orders.Api", "src\Services\ECommerce.Services.Orders\src\ECommerce.Services.Orders.Api\ECommerce.Services.Orders.Api.csproj", "{CADC6C4D-7663-4F3F-9D06-8BF7B9B5D258}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_clients", "_clients", "{4A09493C-0999-474F-AC85-71398BCD69F9}"
+	ProjectSection(SolutionItems) = preProject
+		_httpclients\http-client.env.json = _httpclients\http-client.env.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{B3B8C461-226D-4EFA-905E-E1BDC4CAA678}"
+	ProjectSection(SolutionItems) = preProject
+		_httpclients\identity\identity.rest = _httpclients\identity\identity.rest
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "catalog", "catalog", "{99CDE343-6150-4E78-B395-FAD076E9603D}"
+	ProjectSection(SolutionItems) = preProject
+		_httpclients\catalogs\catalogs.rest = _httpclients\catalogs\catalogs.rest
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "customers", "customers", "{538D1306-49AF-43C0-8D06-72437B44BB65}"
+	ProjectSection(SolutionItems) = preProject
+		_httpclients\customers\customers.rest = _httpclients\customers\customers.rest
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rabbitmq", "rabbitmq", "{3E4781A4-44AD-4298-B627-50C8F8BC478A}"
+	ProjectSection(SolutionItems) = preProject
+		_httpclients\rabbitmq\rabbitmq.rest = _httpclients\rabbitmq\rabbitmq.rest
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +107,10 @@ Global
 		{2C11A090-5BA7-4FA5-B2B9-F2B9938A8016} = {B183EDBD-0CC1-4867-8D4D-0F5AF3BD799C}
 		{42CC1064-1F83-4522-AFB3-FFEA78C71069} = {DD7A6407-D8DB-4F4E-8DF8-DBE55C7235AE}
 		{CADC6C4D-7663-4F3F-9D06-8BF7B9B5D258} = {DD7A6407-D8DB-4F4E-8DF8-DBE55C7235AE}
+		{B3B8C461-226D-4EFA-905E-E1BDC4CAA678} = {4A09493C-0999-474F-AC85-71398BCD69F9}
+		{99CDE343-6150-4E78-B395-FAD076E9603D} = {4A09493C-0999-474F-AC85-71398BCD69F9}
+		{538D1306-49AF-43C0-8D06-72437B44BB65} = {4A09493C-0999-474F-AC85-71398BCD69F9}
+		{3E4781A4-44AD-4298-B627-50C8F8BC478A} = {4A09493C-0999-474F-AC85-71398BCD69F9}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E945FBF8-A033-4937-AFDC-74A2F74F425B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

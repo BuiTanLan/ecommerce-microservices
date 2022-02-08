@@ -7,8 +7,8 @@ public abstract class Entity<TId> : IEntity<TId>
 
     public TId Id { get; protected set; }
 
-    public DateTime Created { get; } = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Local);
-    public int? CreatedBy { get; set; }
+    public DateTime Created { get; protected set; }
+    public int? CreatedBy { get; protected set; }
 }
 
 public abstract class Entity<TIdentity, TId> : Entity<TIdentity>

@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using AutoMapper;
 using BuildingBlocks.CQRS.Query;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
@@ -23,10 +24,12 @@ internal class GetRestockSubscriptionByIdHandler
     : IQueryHandler<GetRestockSubscriptionById, GetRestockSubscriptionByIdResult>
 {
     private readonly CustomersDbContext _customersDbContext;
+    private readonly IMapper _mapper;
 
-    public GetRestockSubscriptionByIdHandler(CustomersDbContext customersDbContext)
+    public GetRestockSubscriptionByIdHandler(CustomersDbContext customersDbContext, IMapper mapper)
     {
         _customersDbContext = customersDbContext;
+        _mapper = mapper;
     }
 
     public async Task<GetRestockSubscriptionByIdResult> Handle(
@@ -37,14 +40,11 @@ internal class GetRestockSubscriptionByIdHandler
 
         var restockSubscription =
             await _customersDbContext.RestockSubscriptions.FindAsync(new RestockSubscriptionId(query.Id));
-        Guard.Against.NotFound(restockSubscription, new RestockSubscriptionNotFound(query.Id));
+        Guard.Against.NotFound(restockSubscription, new RestockSubscriptionNotFoundException(query.Id));
 
-        return new GetRestockSubscriptionByIdResult(new RestockSubscriptionDto(
-            restockSubscription!.Id,
-            restockSubscription.CustomerId,
-            restockSubscription.Email!,
-            restockSubscription.ProductInformation.Id,
-            restockSubscription.ProductInformation.Name));
+        var subscriptionDto = _mapper.Map<RestockSubscriptionDto>(restockSubscription);
+
+        return new GetRestockSubscriptionByIdResult(subscriptionDto);
     }
 }
 

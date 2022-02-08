@@ -21,7 +21,6 @@ public class EfOutboxService<TContext> : IOutboxService
     private readonly IMessageSerializer _messageSerializer;
     private readonly IBusPublisher _busPublisher;
     private readonly IMediator _mediator;
-    private readonly ICommandProcessor _commandProcessor;
     private readonly OutboxDataContext _outboxDataContext;
 
     public EfOutboxService(
@@ -30,7 +29,6 @@ public class EfOutboxService<TContext> : IOutboxService
         IMessageSerializer messageSerializer,
         IBusPublisher busPublisher,
         IMediator mediator,
-        ICommandProcessor commandProcessor,
         OutboxDataContext outboxDataContext)
     {
         _options = options.Value;
@@ -38,7 +36,6 @@ public class EfOutboxService<TContext> : IOutboxService
         _messageSerializer = messageSerializer;
         _busPublisher = busPublisher;
         _mediator = mediator;
-        _commandProcessor = commandProcessor;
         _outboxDataContext = outboxDataContext;
     }
 
@@ -221,8 +218,7 @@ public class EfOutboxService<TContext> : IOutboxService
             {
                 var internalCommand = data as IInternalCommand;
 
-                // integration event
-                await _commandProcessor.SendAsync(internalCommand, cancellationToken);
+                await _mediator.Send(internalCommand, cancellationToken);
 
                 _logger.LogInformation(
                     "Sent a internal command: '{Name}' with ID: '{Id} (outbox)'",

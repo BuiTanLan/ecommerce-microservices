@@ -1,5 +1,4 @@
 using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.Core.Domain.Model;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.RestockSubscriptions.Models;
 using ECommerce.Services.Customers.Shared.Contracts;
@@ -14,8 +13,8 @@ public class CustomersDbContext : AppDbContextBase, ICustomersDbContext
     {
     }
 
-    public CustomersDbContext(DbContextOptions options, IDomainEventPublisher domainEventPublisher) :
-        base(options, domainEventPublisher)
+    public CustomersDbContext(DbContextOptions options, IDomainEventPublisher domainEventPublisher)
+        : base(options, domainEventPublisher)
     {
     }
 
@@ -29,32 +28,4 @@ public class CustomersDbContext : AppDbContextBase, ICustomersDbContext
 
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<RestockSubscription> RestockSubscriptions => Set<RestockSubscription>();
-
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        foreach (var entry in ChangeTracker.Entries<IHaveAudit>())
-        {
-            switch (entry.State)
-            {
-                case EntityState.Modified:
-                    entry.Entity.LastModifiedBy = 1;
-                    break;
-                case EntityState.Added:
-                    entry.Entity.CreatedBy = 1;
-                    break;
-            }
-        }
-
-        foreach (var entry in ChangeTracker.Entries<IHaveEntity>())
-        {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.CreatedBy = 1;
-            }
-        }
-
-        var result = await base.SaveChangesAsync(cancellationToken);
-
-        return result;
-    }
 }

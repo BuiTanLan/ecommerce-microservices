@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Data;
+using System.Linq.Expressions;
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
@@ -28,6 +29,39 @@ public abstract class AppDbContextBase :
         _domainEventPublisher = domainEventPublisher;
         _domainEventPublisher = Guard.Against.Null(domainEventPublisher, nameof(domainEventPublisher));
         System.Diagnostics.Debug.WriteLine($"{GetType().Name}::ctor");
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        AddingSofDeletes(modelBuilder);
+    }
+
+    private static void AddingSofDeletes(ModelBuilder builder)
+    {
+        var types = builder.Model.GetEntityTypes().Where(x => x.ClrType.IsAssignableTo(typeof(IHaveSoftDelete)));
+        foreach (var entityType in types)
+        {
+            // 1. Add the IsDeleted property
+            entityType.AddProperty("IsDeleted", typeof(bool));
+
+            // 2. Create the query filter
+            var parameter = Expression.Parameter(entityType.ClrType);
+
+            // EF.Property<bool>(TEntity, "IsDeleted")
+            var propertyMethodInfo = typeof(EF).GetMethod("Property").MakeGenericMethod(typeof(bool));
+            var isDeletedProperty = Expression.Call(propertyMethodInfo, parameter, Expression.Constant("IsDeleted"));
+
+            // EF.Property<bool>(TEntity, "IsDeleted") == false
+            BinaryExpression compareExpression =
+                Expression.MakeBinary(ExpressionType.Equal, isDeletedProperty, Expression.Constant(false));
+
+            // TEntity => EF.Property<bool>(TEntity, "IsDeleted") == false
+            var lambda = Expression.Lambda(compareExpression, parameter);
+
+            builder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+        }
     }
 
     public async Task BeginTransactionAsync(
@@ -87,6 +121,84 @@ public abstract class AppDbContextBase :
         var result = await SaveChangesAsync(cancellationToken);
 
         return true;
+    }
+
+    public override int SaveChanges()
+    {
+        OnBeforeSaving();
+
+        return base.SaveChanges();
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        OnBeforeSaving();
+
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        OnBeforeSaving();
+
+        var result = await base.SaveChangesAsync(cancellationToken);
+
+        return result;
+    }
+
+    public override Task<int> SaveChangesAsync(
+        bool acceptAllChangesOnSuccess,
+        CancellationToken cancellationToken = default)
+    {
+        OnBeforeSaving();
+
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    // https://www.meziantou.net/entity-framework-core-generate-tracking-columns.htm
+    // https://www.meziantou.net/entity-framework-core-soft-delete-using-query-filters.htm
+    private void OnBeforeSaving()
+    {
+        var now = DateTime.Now;
+        // var userId = GetCurrentUser(); // TODO: Get current user
+        foreach (var entry in ChangeTracker.Entries<IHaveAudit>())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Modified:
+                    entry.CurrentValues["LastModified"] = now;
+                    entry.CurrentValues["LastModifiedBy"] = 1;
+                    break;
+
+                case EntityState.Added:
+                    entry.CurrentValues["Created"] = now;
+                    entry.CurrentValues["CreatedBy"] = 1;
+                    break;
+            }
+        }
+
+        foreach (var entry in ChangeTracker.Entries<IHaveEntity>())
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.CurrentValues["Created"] = now;
+                entry.CurrentValues["CreatedBy"] = 1;
+            }
+        }
+
+        foreach (var entry in ChangeTracker.Entries<IHaveSoftDelete>())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.CurrentValues["IsDeleted"] = false;
+                    break;
+                case EntityState.Deleted:
+                    entry.State = EntityState.Modified;
+                    entry.CurrentValues["IsDeleted"] = true;
+                    break;
+            }
+        }
     }
 
     public Task RetryOnExceptionAsync(Func<Task> operation)

@@ -1,5 +1,4 @@
 using BuildingBlocks.CQRS.Command;
-using ECommerce.Services.Catalogs.Products.Features.CreatingProduct;
 
 namespace ECommerce.Services.Catalogs.Products.Features.DebitingProductStock;
 
@@ -12,7 +11,7 @@ public static class DebitProductStockEndpoint
                 $"{ProductsConfigs.ProductsPrefixUri}/{{productId}}/debit-stock",
                 DebitProductStock)
             .WithTags(ProductsConfigs.Tag)
-            .Produces<CreateProductResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
@@ -28,8 +27,8 @@ public static class DebitProductStockEndpoint
         ICommandProcessor commandProcessor,
         CancellationToken cancellationToken)
     {
-        var result = await commandProcessor.SendAsync(new DebitProductStock(productId, quantity), cancellationToken);
+        await commandProcessor.SendAsync(new DebitProductStock(productId, quantity), cancellationToken);
 
-        return Results.Ok(result);
+        return Results.NoContent();
     }
 }

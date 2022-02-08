@@ -118,6 +118,12 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created")
+                        .HasDefaultValueSql("now()");
+
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("integer")
                         .HasColumnName("created_by");
@@ -130,6 +136,20 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("email");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<bool>("Processed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("processed");
+
+                    b.Property<DateTime?>("ProcessedTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_time");
 
                     b.Property<int>("Version")
                         .HasColumnType("integer")
@@ -183,7 +203,7 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                                 .HasConstraintName("fk_customers_customers_id");
                         });
 
-                    b.OwnsOne("ECommerce.Services.Customers.Shared.ValueObjects.CustomerName", "Name", b1 =>
+                    b.OwnsOne("ECommerce.Services.Customers.Customers.Models.CustomerName", "Name", b1 =>
                         {
                             b1.Property<long>("CustomerId")
                                 .HasColumnType("bigint")

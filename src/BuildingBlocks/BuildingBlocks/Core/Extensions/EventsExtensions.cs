@@ -4,6 +4,7 @@ using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Utils;
 using BuildingBlocks.Utils.Reflections;
+using MediatR;
 
 namespace BuildingBlocks.Core.Extensions;
 
@@ -11,12 +12,12 @@ public static class EventsExtensions
 {
     public static IEnumerable<Type> GetHandledIntegrationEventTypes(this Assembly[] assemblies)
     {
-        var messageHandlerTypes = typeof(IEventHandler<>).GetAllTypesImplementingOpenGenericInterface(assemblies)
+        var messageHandlerTypes = typeof(IIntegrationEventHandler<>).GetAllTypesImplementingOpenGenericInterface(assemblies)
             .ToList();
 
         var inheritsTypes = messageHandlerTypes.SelectMany(x => x.GetInterfaces())
             .Where(x => x.GetInterfaces().Any(i => i.IsGenericType) &&
-                        x.GetGenericTypeDefinition() == typeof(IEventHandler<>));
+                        x.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>));
 
         foreach (var inheritsType in inheritsTypes)
         {
@@ -30,12 +31,12 @@ public static class EventsExtensions
 
     public static IEnumerable<Type> GetHandledDomainNotificationEventTypes(this Assembly[] assemblies)
     {
-        var messageHandlerTypes = typeof(IEventHandler<>).GetAllTypesImplementingOpenGenericInterface(assemblies)
+        var messageHandlerTypes = typeof(IDomainNotificationEventHandler<>).GetAllTypesImplementingOpenGenericInterface(assemblies)
             .ToList();
 
         var inheritsTypes = messageHandlerTypes.SelectMany(x => x.GetInterfaces())
             .Where(x => x.GetInterfaces().Any(i => i.IsGenericType) &&
-                        x.GetGenericTypeDefinition() == typeof(IEventHandler<>));
+                        x.GetGenericTypeDefinition() == typeof(IDomainNotificationEventHandler<>));
 
         foreach (var inheritsType in inheritsTypes)
         {
@@ -49,12 +50,12 @@ public static class EventsExtensions
 
     public static IEnumerable<Type> GetHandledDomainEventTypes(this Assembly[] assemblies)
     {
-        var messageHandlerTypes = typeof(IEventHandler<>).GetAllTypesImplementingOpenGenericInterface(assemblies)
+        var messageHandlerTypes = typeof(IDomainEventHandler<>).GetAllTypesImplementingOpenGenericInterface(assemblies)
             .ToList();
 
         var inheritsTypes = messageHandlerTypes.SelectMany(x => x.GetInterfaces())
             .Where(x => x.GetInterfaces().Any(i => i.IsGenericType) &&
-                        x.GetGenericTypeDefinition() == typeof(IEventHandler<>));
+                        x.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>));
 
         foreach (var inheritsType in inheritsTypes)
         {

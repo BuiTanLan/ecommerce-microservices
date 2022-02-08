@@ -28,9 +28,9 @@ public record Stock
     {
         var stock = new Stock
         {
-            Available = Guard.Against.NegativeOrZero(
+            Available = Guard.Against.Negative(
                 available,
-                new ProductDomainException("Available stock cannot be negative or zero.")),
+                new ProductDomainException("Available stock cannot be negative.")),
             RestockThreshold = Guard.Against.NegativeOrZero(
                 restockThreshold,
                 new ProductDomainException("Restock threshold cannot be negative or zero.")),

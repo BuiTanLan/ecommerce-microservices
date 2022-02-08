@@ -61,6 +61,13 @@ public static class ServiceCollectionExtensions
                 Detail = ex.Message,
                 Type = "https://somedomain/bad-request-error"
             });
+            x.Map<ArgumentException>(ex => new ProblemDetails
+            {
+                Title = "argument is invalid",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = ex.Message,
+                Type = "https://somedomain/argument-error"
+            });
             x.Map<NotFoundException>(ex => new ProblemDetails
             {
                 Title = "not found exception",

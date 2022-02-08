@@ -50,6 +50,13 @@ public static partial class ServiceCollectionExtensions
                 Detail = JsonConvert.SerializeObject(ex.ValidationResultModel.Errors),
                 Type = "https://somedomain/input-validation-rules-error"
             });
+            x.Map<ArgumentException>(ex => new ProblemDetails
+            {
+                Title = "argument is invalid",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = ex.Message,
+                Type = "https://somedomain/argument-error"
+            });
             x.Map<DomainException>(ex => new ProblemDetails
             {
                 Title = "domain rules broken",

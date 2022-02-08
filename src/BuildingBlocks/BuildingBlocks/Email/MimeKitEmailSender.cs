@@ -1,4 +1,5 @@
 using BuildingBlocks.Email.Options;
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -29,7 +30,8 @@ public class MimeKitEmailSender : IEmailSender
             using var smtp = new MailKit.Net.Smtp.SmtpClient();
             await smtp.ConnectAsync(_config.MimeKitOptions.Host, _config.MimeKitOptions.Port, SecureSocketOptions.StartTls);
             await smtp.AuthenticateAsync(_config.MimeKitOptions.UserName, _config.MimeKitOptions.Password);
-            await smtp.SendAsync(email);
+            smtp.DeliveryStatusNotificationType = DeliveryStatusNotificationType.Full;
+            var response = await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
 
             _logger.LogInformation(

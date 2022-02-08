@@ -7,7 +7,7 @@ using ECommerce.Services.Catalogs.Shared.Extensions;
 
 namespace ECommerce.Services.Catalogs.Products.Features.DebitingProductStock;
 
-public record DebitProductStock(long ProductId, int Quantity) : ICommand<bool>;
+public record DebitProductStock(long ProductId, int Quantity) : ITxCommand;
 
 internal class DebitProductStockValidator : AbstractValidator<DebitProductStock>
 {
@@ -25,7 +25,7 @@ internal class DebitProductStockValidator : AbstractValidator<DebitProductStock>
     }
 }
 
-internal class DebitProductStockHandler : ICommandHandler<DebitProductStock, bool>
+internal class DebitProductStockHandler : ICommandHandler<DebitProductStock>
 {
     private readonly ICatalogDbContext _catalogDbContext;
 
@@ -34,7 +34,7 @@ internal class DebitProductStockHandler : ICommandHandler<DebitProductStock, boo
         _catalogDbContext = Guard.Against.Null(catalogDbContext, nameof(catalogDbContext));
     }
 
-    public async Task<bool> Handle(DebitProductStock command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DebitProductStock command, CancellationToken cancellationToken)
     {
         Guard.Against.Null(command, nameof(command));
 
@@ -44,6 +44,6 @@ internal class DebitProductStockHandler : ICommandHandler<DebitProductStock, boo
 
         await _catalogDbContext.SaveChangesAsync(cancellationToken);
 
-        return true;
+        return Unit.Value;
     }
 }

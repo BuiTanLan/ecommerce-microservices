@@ -60,3 +60,60 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         return response;
     }
 }
+
+public class StreamCachingBehavior<TRequest, TResponse> : IStreamPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull, IStreamRequest<TResponse>
+    where TResponse : notnull
+{
+    private readonly IEnumerable<IStreamCachePolicy<TRequest, TResponse>> _cachePolicies;
+    private readonly IEasyCachingProvider _cachingProvider;
+    private readonly ILogger<StreamCachingBehavior<TRequest, TResponse>> _logger;
+    private readonly int defaultCacheExpirationInHours = 1;
+
+    public StreamCachingBehavior(
+        IEasyCachingProviderFactory cachingFactory,
+        ILogger<StreamCachingBehavior<TRequest, TResponse>> logger,
+        IEnumerable<IStreamCachePolicy<TRequest, TResponse>> cachePolicies)
+    {
+        _logger = logger;
+        _cachingProvider = cachingFactory.GetCachingProvider("mem");
+        _cachePolicies = cachePolicies;
+    }
+
+    public IAsyncEnumerable<TResponse> Handle(
+        TRequest request,
+        CancellationToken cancellationToken,
+        StreamHandlerDelegate<TResponse> next)
+    {
+        var cachePolicy = _cachePolicies.FirstOrDefault();
+        if (cachePolicy == null)
+        {
+            // No cache policy found, so just continue through the pipeline
+            return next();
+        }
+
+        var cacheKey = cachePolicy.GetCacheKey(request);
+        var cachedResponse = _cachingProvider.Get<IAsyncEnumerable<TResponse>>(cacheKey);
+        if (cachedResponse.Value != null)
+        {
+            _logger.LogDebug(
+                "Response retrieved {TRequest} from cache. CacheKey: {CacheKey}",
+                typeof(TRequest).FullName,
+                cacheKey);
+            return cachedResponse.Value;
+        }
+
+        var response = next();
+
+        var time = cachePolicy.AbsoluteExpirationRelativeToNow ??
+                   DateTime.Now.AddHours(defaultCacheExpirationInHours);
+        _cachingProvider.Set(cacheKey, response, time.TimeOfDay);
+
+        _logger.LogDebug(
+            "Caching response for {TRequest} with cache key: {CacheKey}",
+            typeof(TRequest).FullName,
+            cacheKey);
+
+        return response;
+    }
+}

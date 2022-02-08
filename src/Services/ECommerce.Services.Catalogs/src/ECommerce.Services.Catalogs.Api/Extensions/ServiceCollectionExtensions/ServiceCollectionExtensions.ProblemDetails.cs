@@ -17,7 +17,7 @@ public static partial class ServiceCollectionExtensions
         return builder;
     }
 
-   public static IServiceCollection AddCustomProblemDetails(this IServiceCollection services)
+    public static IServiceCollection AddCustomProblemDetails(this IServiceCollection services)
     {
         services.AddProblemDetails(x =>
         {
@@ -56,6 +56,13 @@ public static partial class ServiceCollectionExtensions
                 Status = (int)ex.StatusCode,
                 Detail = ex.Message,
                 Type = "https://somedomain/domain-rules-error"
+            });
+            x.Map<ArgumentException>(ex => new ProblemDetails
+            {
+                Title = "argument is invalid",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = ex.Message,
+                Type = "https://somedomain/argument-error"
             });
             x.Map<BadRequestException>(ex => new ProblemDetails
             {

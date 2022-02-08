@@ -5,7 +5,7 @@ using ECommerce.Services.Catalogs.Shared.Contracts;
 
 namespace ECommerce.Services.Catalogs.Products.Features.DebitingProductStock.Events.Domain;
 
-public record ProductRestockThresholdReachedEvent(ProductId ProductId, int Quantity) : DomainEvent;
+public record ProductRestockThresholdReachedEvent(ProductId ProductId, Stock Stock, int Quantity) : DomainEvent;
 
 internal class ProductRestockThresholdReachedEventHandler : IDomainEventHandler<ProductRestockThresholdReachedEvent>
 {

@@ -31,8 +31,7 @@ public class ProductMappers : Profile
             .ForMember(x => x.Size, opt => opt.MapFrom(x => x.Size.Value))
             .ForMember(x => x.ProductColor, opt => opt.MapFrom(x => x.Color))
             .ForMember(x => x.Description, opt => opt.MapFrom(x => x.Description))
-            .ForMember(x => x.Images, opt => opt.MapFrom(x => x.Images))
-            ;
+            .ForMember(x => x.Images, opt => opt.MapFrom(x => x.Images));
 
         CreateMap<ProductImage, ProductImageDto>();
         CreateMap<ProductView, ProductViewDto>();

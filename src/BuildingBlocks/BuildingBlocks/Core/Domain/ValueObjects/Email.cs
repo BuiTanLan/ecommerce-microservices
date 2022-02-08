@@ -11,6 +11,10 @@ public record Email
 
     public static Email? Null => null;
 
+    private Email()
+    {
+    }
+
     public static Email Create(string value)
     {
         return new Email

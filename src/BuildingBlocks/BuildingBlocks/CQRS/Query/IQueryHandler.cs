@@ -6,3 +6,9 @@ public interface IQueryHandler<in TQuery, TResponse> : IRequestHandler<TQuery, T
     where TQuery : IQuery<TResponse>
 {
 }
+
+// https://jimmybogard.com/mediatr-10-0-released/
+public interface IStreamQueryHandler<in TQuery, TResponse> : IStreamRequestHandler<TQuery, TResponse>
+    where TQuery : IStreamQuery<TResponse>
+{
+}

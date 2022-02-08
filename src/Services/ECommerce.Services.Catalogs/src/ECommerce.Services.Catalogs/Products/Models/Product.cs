@@ -3,12 +3,13 @@ using BuildingBlocks.Core.Domain.Model;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
-using ECommerce.Services.Catalogs.Products.Events.Domain;
 using ECommerce.Services.Catalogs.Products.Exceptions.Domain;
+using ECommerce.Services.Catalogs.Products.Features.ChangingMaxThreshold;
 using ECommerce.Services.Catalogs.Products.Features.ChangingProductBrand.Events.Domain;
 using ECommerce.Services.Catalogs.Products.Features.ChangingProductCategory.Events;
 using ECommerce.Services.Catalogs.Products.Features.ChangingProductPrice;
 using ECommerce.Services.Catalogs.Products.Features.ChangingProductSupplier.Events;
+using ECommerce.Services.Catalogs.Products.Features.ChangingRestockThreshold;
 using ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Events.Domain;
 using ECommerce.Services.Catalogs.Products.Features.DebitingProductStock.Events.Domain;
 using ECommerce.Services.Catalogs.Products.Features.ReplenishingProductStock.Events.Domain;
@@ -151,12 +152,13 @@ public class Product : AggregateRoot<ProductId>
     /// <returns>int: Returns the number actually removed from stock. </returns>
     public int DebitStock(int quantity)
     {
+        if (quantity < 0) quantity *= -1;
+
         if (HasStock(quantity) == false)
         {
-            throw new InsufficientStockException($"Empty stock, product item {Name} is sold out");
+            throw new InsufficientStockException(
+                $"Empty stock, product item '{Name}' with quantity '{quantity}' is not available.");
         }
-
-        if (quantity < 0) quantity *= -1;
 
         int removed = Math.Min(quantity, Stock.Available);
 
@@ -164,7 +166,7 @@ public class Product : AggregateRoot<ProductId>
 
         if (Stock.Available <= Stock.RestockThreshold)
         {
-            AddDomainEvent(new ProductRestockThresholdReachedEvent(Stock.Available, quantity));
+            AddDomainEvent(new ProductRestockThresholdReachedEvent(Id, Stock, quantity));
         }
 
         AddDomainEvent(new ProductStockDebited(Id, Stock, quantity));
@@ -199,7 +201,7 @@ public class Product : AggregateRoot<ProductId>
 
         Stock = Stock.Create(Stock.Available, Stock.RestockThreshold, maxStockThreshold);
 
-        AddDomainEvent(new MaxThresholdChanged(maxStockThreshold));
+        AddDomainEvent(new MaxThresholdChanged(Id, maxStockThreshold));
 
         return Stock;
     }
@@ -210,7 +212,7 @@ public class Product : AggregateRoot<ProductId>
 
         Stock = Stock.Create(Stock.Available, restockThreshold, Stock.MaxStockThreshold);
 
-        AddDomainEvent(new RestockThresholdChanged(restockThreshold));
+        AddDomainEvent(new RestockThresholdChanged(Id, restockThreshold));
 
         return Stock;
     }

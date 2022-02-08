@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.DependencyInjection;
+using Scrutor;
 
 namespace BuildingBlocks.Validation;
 
@@ -13,9 +14,7 @@ public static class Extensions
         return new ValidationResultModel(validationResult);
     }
 
-    /// <summary>
-    ///     Ref https://www.jerriepelser.com/blog/validation-response-aspnet-core-webapi.
-    /// </summary>
+    // https://www.jerriepelser.com/blog/validation-response-aspnet-core-webapi
     public static async Task HandleValidationAsync<TRequest>(
         this IValidator<TRequest> validator,
         TRequest request,
@@ -25,9 +24,26 @@ public static class Extensions
         if (!validationResult.IsValid) throw new ValidationException(validationResult.ToValidationResultModel());
     }
 
+    public static void HandleValidation<TRequest>(
+        this IValidator<TRequest> validator,
+        TRequest request)
+    {
+        var validationResult = validator.Validate(request);
+        if (!validationResult.IsValid) throw new ValidationException(validationResult.ToValidationResultModel());
+    }
+
     public static IServiceCollection AddCustomValidators(this IServiceCollection services, Assembly assembly)
     {
-        // https://codewithmukesh.com/blog/mediatr-pipeline-behaviour/
-        return services.AddValidatorsFromAssembly(assembly);
+        // https://docs.fluentvalidation.net/en/latest/di.html
+        // I have some problem with registering IQuery validators with this
+        // services.AddValidatorsFromAssembly(assembly);
+        services.Scan(scan => scan
+            .FromAssemblies(assembly)
+            .AddClasses(classes => classes.AssignableTo(typeof(IValidator<>)))
+            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
+        return services;
     }
 }

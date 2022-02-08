@@ -6,16 +6,19 @@ using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Customers.ValueObjects;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription;
+using ECommerce.Services.Customers.RestockSubscriptions.Features.MarkingRestockSubscriptionAsProcessed;
 using ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Models;
 
-public class RestockSubscription : AggregateRoot<RestockSubscriptionId>
+public class RestockSubscription : AggregateRoot<RestockSubscriptionId>, IHaveSoftDelete
 {
     public CustomerId CustomerId { get; private set; } = null!;
     public Customer? Customer { get; private set; } = null!;
     public Email Email { get; private set; } = null!;
     public ProductInformation ProductInformation { get; private set; } = null!;
+    public bool Processed { get; private set; }
+    public DateTime? ProcessedTime { get; private set; }
 
     public static RestockSubscription Create(
         RestockSubscriptionId id,
@@ -32,14 +35,19 @@ public class RestockSubscription : AggregateRoot<RestockSubscriptionId>
 
         var restockSubscription = new RestockSubscription
         {
-            Id = id,
-            Email = email,
-            CustomerId = customerId,
-            ProductInformation = productInformation
+            Id = id, Email = email, CustomerId = customerId, ProductInformation = productInformation
         };
 
         restockSubscription.AddDomainEvent(new RestockSubscriptionCreated(restockSubscription));
 
         return restockSubscription;
+    }
+
+    public void MarkAsProcessed(DateTime processedTime)
+    {
+        Processed = true;
+        ProcessedTime = processedTime;
+
+        AddDomainEvent(new RestockSubscriptionMarkedAsProcessed(Id, processedTime));
     }
 }

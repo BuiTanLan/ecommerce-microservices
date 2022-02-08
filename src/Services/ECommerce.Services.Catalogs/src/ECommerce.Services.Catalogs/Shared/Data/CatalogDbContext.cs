@@ -34,32 +34,4 @@ public class CatalogDbContext : AppDbContextBase, ICatalogDbContext
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<Brand> Brands => Set<Brand>();
-
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        foreach (var entry in ChangeTracker.Entries<IHaveAudit>())
-        {
-            switch (entry.State)
-            {
-                case EntityState.Modified:
-                    entry.Entity.LastModifiedBy = 1;
-                    break;
-                case EntityState.Added:
-                    entry.Entity.CreatedBy = 1;
-                    break;
-            }
-        }
-
-        foreach (var entry in ChangeTracker.Entries<IHaveEntity>())
-        {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.CreatedBy = 1;
-            }
-        }
-
-        var result = await base.SaveChangesAsync(cancellationToken);
-
-        return result;
-    }
 }
