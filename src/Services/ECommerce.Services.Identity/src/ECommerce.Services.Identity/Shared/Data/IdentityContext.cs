@@ -1,6 +1,7 @@
 using System.Data;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Core.Persistence;
 using BuildingBlocks.EFCore;
 using ECommerce.Services.Identity.Shared.Models;
 using Humanizer;

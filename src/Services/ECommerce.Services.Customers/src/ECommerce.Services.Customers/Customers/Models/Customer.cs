@@ -69,12 +69,7 @@ public class Customer : AggregateRoot<CustomerId>
         PhoneNumber = Guard.Against.Null(phoneNumber, nameof(phoneNumber))!;
         CustomerState = CustomerState.Completed;
 
-        AddDomainEvent(new CustomerCompleted(
-            Id,
-            PhoneNumber!,
-            birthDate,
-            Address,
-            Nationality));
+        AddDomainEvent(new CustomerCompleted(this));
     }
 
     public void Verify(DateTime verifiedAt)

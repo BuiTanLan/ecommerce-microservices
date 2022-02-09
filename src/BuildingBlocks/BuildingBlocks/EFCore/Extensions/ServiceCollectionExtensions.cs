@@ -1,11 +1,14 @@
 using System.Reflection;
+using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Core.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -17,28 +20,34 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddPostgresDbContext<TDbContext>(
         this IServiceCollection services,
-        string connString,
-        Action<DbContextOptionsBuilder> doMoreDbContextOptionsConfigure = null,
-        Action<IServiceCollection> doMoreActions = null)
+        IConfiguration configuration,
+        Action<PostgresOptions>? configurator = null,
+        Action<DbContextOptionsBuilder>? builder = null)
         where TDbContext : DbContext, IDbFacadeResolver, IDomainEventContext
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+        var config = configuration.GetSection(nameof(PostgresOptions)).Get<PostgresOptions>();
+
+        services.Configure<PostgresOptions>(configuration.GetSection(nameof(PostgresOptions)));
+        if (configurator is { })
+            services.Configure(nameof(PostgresOptions), configurator);
+
+        Guard.Against.NullOrEmpty(config.ConnectionString, nameof(config.ConnectionString));
+        
         services.AddDbContext<TDbContext>(options =>
         {
-            options.UseNpgsql(connString, sqlOptions =>
+            options.UseNpgsql(config.ConnectionString, sqlOptions =>
             {
                 sqlOptions.MigrationsAssembly(typeof(TDbContext).Assembly.GetName().Name);
                 sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             }).UseSnakeCaseNamingConvention();
 
-            doMoreDbContextOptionsConfigure?.Invoke(options);
+            builder?.Invoke(options);
         });
 
         services.AddScoped<IDbFacadeResolver>(provider => provider.GetService<TDbContext>()!);
         services.AddScoped<IDomainEventContext>(provider => provider.GetService<TDbContext>()!);
-
-        doMoreActions?.Invoke(services);
 
         return services;
     }

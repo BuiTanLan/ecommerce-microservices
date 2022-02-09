@@ -1,4 +1,4 @@
-using Ardalis.GuardClauses;
+using BuildingBlocks.Core.Persistence;
 using BuildingBlocks.EFCore;
 using ECommerce.Services.Identity.Shared.Data;
 using ECommerce.Services.Identity.Shared.Models;
@@ -15,7 +15,7 @@ public static partial class ServiceCollectionExtensions
     public static WebApplicationBuilder AddCustomIdentity(
         this WebApplicationBuilder builder,
         IConfiguration configuration,
-        Action<IdentityOptions> configure = null)
+        Action<IdentityOptions>? configure = null)
     {
         AddCustomIdentity(builder.Services, configuration, configure);
 
@@ -25,13 +25,13 @@ public static partial class ServiceCollectionExtensions
     public static IServiceCollection AddCustomIdentity(
         this IServiceCollection services,
         IConfiguration configuration,
-        Action<IdentityOptions> configure = null)
+        Action<IdentityOptions>? configure = null)
     {
         // Problem with .net core identity - will override our default authentication scheme `JwtBearerDefaults.AuthenticationScheme` to unwanted `ECommerce.Services.Identity.Application` in `AddIdentity()` method .net identity
         // https://github.com/IdentityServer/IdentityServer4/issues/1525
 
 
-        if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+        if (configuration.GetValue<bool>("PostgresOptions.UseInMemory"))
         {
             services.AddDbContext<IdentityContext>(options =>
                 options.UseInMemoryDatabase("Shop.Services.ECommerce.Services.Identity"));
@@ -40,11 +40,8 @@ public static partial class ServiceCollectionExtensions
         }
         else
         {
-            var connString = configuration.GetConnectionString("IdentityServiceConnection");
-            Guard.Against.NullOrEmpty(connString, nameof(connString));
-
             // Postgres
-            services.AddPostgresDbContext<IdentityContext>(connString);
+            services.AddPostgresDbContext<IdentityContext>(configuration);
         }
 
         // https://github.com/IdentityServer/IdentityServer4/issues/1525

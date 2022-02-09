@@ -1,5 +1,7 @@
 using BuildingBlocks.Core.Domain.ValueObjects;
+using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.RestockSubscriptions.Models;
+using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 using ECommerce.Services.Customers.Shared.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,7 +26,7 @@ public class RestockSubscriptionEntityConfiguration : IEntityTypeConfiguration<R
         builder.Property(c => c.CustomerId)
             .HasConversion(id => id.Value, id => id);
 
-        builder.HasOne(x => x.Customer)
+        builder.HasOne<Customer>()
             .WithMany()
             .HasForeignKey(x => x.CustomerId);
 

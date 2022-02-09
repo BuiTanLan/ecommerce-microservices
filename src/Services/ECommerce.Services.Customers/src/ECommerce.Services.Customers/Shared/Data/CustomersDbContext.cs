@@ -1,6 +1,7 @@
 using BuildingBlocks.Core.Domain.Events.Internal;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.RestockSubscriptions.Models;
+using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 using ECommerce.Services.Customers.Shared.Contracts;
 
 namespace ECommerce.Services.Customers.Shared.Data;

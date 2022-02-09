@@ -9,6 +9,7 @@ using ECommerce.Services.Customers.Products.Exceptions;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription.Exceptions;
 using ECommerce.Services.Customers.RestockSubscriptions.Models;
+using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 using ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
 using ECommerce.Services.Customers.Shared.Clients.Catalogs;
 using ECommerce.Services.Customers.Shared.Data;
@@ -17,7 +18,7 @@ using ECommerce.Services.Customers.Shared.Extensions;
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription;
 
 public record CreateRestockSubscription(long CustomerId, long ProductId, string Email)
-    : ICreateCommand<CreateRestockSubscriptionResult>
+    : ITxCreateCommand<CreateRestockSubscriptionResult>
 {
     public long Id { get; init; } = SnowFlakIdGenerator.NewId();
 }

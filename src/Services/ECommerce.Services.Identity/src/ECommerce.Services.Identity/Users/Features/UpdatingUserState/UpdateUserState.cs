@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ECommerce.Services.Identity.Users.Features.UpdatingUserState;
 
-public record UpdateUserState(Guid UserId, UserState State) : ICommand;
+public record UpdateUserState(Guid UserId, UserState State) : ITxUpdateCommand;
 
 internal class UpdateUserStateValidator : AbstractValidator<UpdateUserState>
 {

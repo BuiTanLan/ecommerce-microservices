@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -18,7 +19,7 @@ public abstract class AppDbContextBase :
 {
     private readonly IDomainEventPublisher _domainEventPublisher;
 
-    private IDbContextTransaction _currentTransaction;
+    private IDbContextTransaction? _currentTransaction;
 
     protected AppDbContextBase(DbContextOptions options) : base(options)
     {
@@ -76,7 +77,7 @@ public abstract class AppDbContextBase :
         try
         {
             await SaveChangesAsync(cancellationToken);
-            await _currentTransaction.CommitAsync(cancellationToken);
+            await _currentTransaction?.CommitAsync(cancellationToken)!;
         }
         catch
         {

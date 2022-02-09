@@ -194,6 +194,10 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
+
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("integer")
                         .HasColumnName("created_by");

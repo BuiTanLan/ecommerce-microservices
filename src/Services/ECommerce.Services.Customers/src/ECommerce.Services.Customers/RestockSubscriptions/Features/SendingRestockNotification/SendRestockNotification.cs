@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain;
+using BuildingBlocks.Core.Persistence;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Email;
 using BuildingBlocks.Email.Options;

@@ -1,5 +1,6 @@
 using BuildingBlocks.Core.Domain;
 using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Core.Persistence;
 using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
 

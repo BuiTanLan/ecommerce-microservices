@@ -3,11 +3,17 @@ using BuildingBlocks.CQRS;
 using BuildingBlocks.CQRS.Query;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
 using ECommerce.Services.Customers.RestockSubscriptions.Models;
+using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 using ECommerce.Services.Customers.Shared.Data;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptions;
 
-public record GetRestockSubscriptions : ListQuery<GetRestockSubscriptionsResult>;
+public record GetRestockSubscriptions : ListQuery<GetRestockSubscriptionsResult>
+{
+    public IList<string>? Emails { get; init; }
+    public DateTime? From { get; init; }
+    public DateTime? To { get; init; }
+}
 
 internal class GetRestockSubscriptionsValidator : AbstractValidator<GetRestockSubscriptions>
 {
@@ -34,14 +40,24 @@ public class GetProductsHandler : IQueryHandler<GetRestockSubscriptions, GetRest
         _mapper = mapper;
     }
 
-    public async Task<GetRestockSubscriptionsResult> Handle(GetRestockSubscriptions request, CancellationToken cancellationToken)
+    public async Task<GetRestockSubscriptionsResult> Handle(
+        GetRestockSubscriptions query,
+        CancellationToken cancellationToken)
     {
         var restockSubscriptions = await _customersDbContext.RestockSubscriptions
             .OrderByDescending(x => x.Created)
-            .ApplyIncludeList(request.Includes)
-            .ApplyFilterList(request.Filters)
+            .ApplyIncludeList(query.Includes)
+            .ApplyFilterList(query.Filters)
             .AsNoTracking()
-            .PaginateAsync<RestockSubscription, RestockSubscriptionDto>(_mapper.ConfigurationProvider, request.Page, request.PageSize, cancellationToken: cancellationToken);
+            .Where(x => query.Emails == null || query.Emails.Any() == false || query.Emails.Contains(x.Email!))
+            .Where(x => (query.From == null && query.To == null) || (query.From == null && x.Created <= query.To) ||
+                        (query.To == null && x.Created >= query.From) ||
+                        (x.Created >= query.From && x.Created <= query.To))
+            .PaginateAsync<RestockSubscription, RestockSubscriptionDto>(
+                _mapper.ConfigurationProvider,
+                query.Page,
+                query.PageSize,
+                cancellationToken: cancellationToken);
 
         return new GetRestockSubscriptionsResult(restockSubscriptions);
     }

@@ -62,7 +62,7 @@ public static partial class ServiceCollectionExtensions
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>))
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(TxBehavior<,>));
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(EfTxBehavior<,>));
         });
 
         services.AddCustomValidators(Assembly.GetExecutingAssembly());

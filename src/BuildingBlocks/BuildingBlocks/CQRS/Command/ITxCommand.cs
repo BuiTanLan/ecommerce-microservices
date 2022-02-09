@@ -1,4 +1,5 @@
 using BuildingBlocks.Core.Domain;
+using BuildingBlocks.Core.Persistence;
 using MediatR;
 
 namespace BuildingBlocks.CQRS.Command;

@@ -27,9 +27,9 @@ public class CustomersEventMapper : IIntegrationEventMapper
             CustomerUnlocked e => new Features.UnlockingCustomer.Events.Integration.CustomerUnlocked(e.CustomerId),
             CustomerCompleted e =>
                 new Features.CompletingCustomer.Events.Integration.CustomerCompleted(
-                    e.CustomerId,
-                    e.PhoneNumber.Value,
-                    e.Nationality),
+                    e.Customer.Id,
+                    e.Customer.PhoneNumber!.Value,
+                    e.Customer.Nationality),
             CustomerVerified e => new Features.VerifyingCustomer.Events.Integration.CustomerVerified(e.CustomerId),
             _ => null
         };

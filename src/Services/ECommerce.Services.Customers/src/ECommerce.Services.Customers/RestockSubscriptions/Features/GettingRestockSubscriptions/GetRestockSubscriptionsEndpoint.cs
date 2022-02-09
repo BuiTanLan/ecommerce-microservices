@@ -20,9 +20,9 @@ public static class GetRestockSubscriptionsEndpoint
     }
 
     private static async Task<IResult> GetRestockSubscriptions(
-            GetRestockSubscriptionsRequest? request,
-            IQueryProcessor queryProcessor,
-            CancellationToken cancellationToken)
+        GetRestockSubscriptionsRequest? request,
+        IQueryProcessor queryProcessor,
+        CancellationToken cancellationToken)
     {
         Guard.Against.Null(request, nameof(request));
 
@@ -34,6 +34,9 @@ public static class GetRestockSubscriptionsEndpoint
                 PageSize = request.PageSize,
                 Filters = request.Filters,
                 Includes = request.Includes,
+                Emails = request.Emails,
+                From = request.From,
+                To = request.To
             },
             cancellationToken);
 

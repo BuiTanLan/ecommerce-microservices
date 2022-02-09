@@ -27,7 +27,7 @@ internal class ProductCreatedHandler : IDomainEventHandler<ProductCreated>
         Guard.Against.Null(notification, nameof(notification));
 
         var existed = await _dbContext.ProductsView
-            .SingleOrDefaultAsync(x => x.ProductId == notification.Product.Id, cancellationToken);
+            .SingleOrDefaultAsync(x => x.ProductId == notification.Product.Id.Value, cancellationToken);
 
         if (existed is null)
         {
@@ -35,7 +35,7 @@ internal class ProductCreatedHandler : IDomainEventHandler<ProductCreated>
                 .Include(x => x.Brand)
                 .Include(x => x.Category)
                 .Include(x => x.Supplier)
-                .SingleOrDefaultAsync(x => x.Id == notification.Product.Id, cancellationToken);
+                .SingleOrDefaultAsync(x => x.Id == notification.Product.Id.Value, cancellationToken);
 
             Guard.Against.NotFound(product, new ProductNotFoundException(notification.Product.Id));
 

@@ -10,7 +10,7 @@ using ECommerce.Services.Customers.Shared.Data;
 
 namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
 
-public record CreateCustomer(string Email) : ICreateCommand<CreateCustomerResult>
+public record CreateCustomer(string Email) : ITxCreateCommand<CreateCustomerResult>
 {
     public long Id { get; init; } = SnowFlakIdGenerator.NewId();
 }
@@ -63,13 +63,12 @@ internal class CreateCustomerHandler : ICommandHandler<CreateCustomer, CreateCus
         var customer = Customer.Create(
             command.Id,
             Email.Create(identityUser!.Email),
-            CustomerName.Create(identityUser.FirstName, identityUser.LastName), identityUser.Id);
+            CustomerName.Create(identityUser.FirstName, identityUser.LastName),
+            identityUser.Id);
 
         await _customersDbContext.AddAsync(customer, cancellationToken);
 
         await _customersDbContext.SaveChangesAsync(cancellationToken);
-
-        var _ = await _customersDbContext.Customers.FindAsync(customer.Id);
 
         _logger.LogInformation("Created a customer with ID: '{@CustomerId}'", customer.Id);
 

@@ -1,0 +1,77 @@
+services:
+
+  # catalogs-api:
+    # image: catalogs:${TAG:-latest}
+    # build:
+      # args:
+        # Version: "1"
+      # context: ../../src
+      # dockerfile: Services/ECommerce.Services.Catalogs/Dockerfile
+    # depends_on:
+      # - postgres
+      # - rabbitmq
+      # - mongo
+      # - elasticsearch
+    # container_name: catalogs-api
+
+  # customers-api:
+    # image: customers:${TAG:-latest}
+    # build:
+      # args:
+        # Version: "1"
+      # context: ../../src
+      # dockerfile: Services/ECommerce.Services.Customers/Dockerfile
+    # depends_on:
+      # - postgres
+      # - rabbitmq
+      # - mongo
+      # - elasticsearch
+    # container_name: customers-api
+
+  # identity-api:
+    # image: identity:${TAG:-latest}
+    # build:
+      # args:
+        # Version: "1"
+      # context: ../../src
+      # dockerfile: Services/ECommerce.Services.Identity/Dockerfile
+    # depends_on:
+      # - postgres
+      # - rabbitmq
+    # container_name: identity-api
+
+  postgres:
+    image: postgres:11.1-alpine
+    ports:
+      - '5432:5432'
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+      # volumes:
+      #   - rabbitmq:/var/lib/rabbitmq
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: unless-stopped
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=root
+    #   - MONGO_INITDB_ROOT_PASSWORD=secret
+    ports:
+      - 27017:27017
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.1.4
+    container_name: elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.1.4

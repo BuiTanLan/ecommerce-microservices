@@ -1,3 +1,5 @@
+using BuildingBlocks.Core.Persistence;
+
 namespace ECommerce.Services.Catalogs.Products.Data;
 
 public class ProductDataSeeder : IDataSeeder

@@ -1,3 +1,5 @@
+using BuildingBlocks.Core.Persistence;
+
 namespace ECommerce.Services.Customers.Shared.Extensions.ApplicationBuilderExtensions;
 
 public static partial class ApplicationBuilderExtensions

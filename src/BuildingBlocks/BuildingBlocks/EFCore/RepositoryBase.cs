@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.EFCore.Specification;
+using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Core.Persistence.Specification;
 using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.EFCore;
@@ -83,7 +84,7 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         return entity;
     }
 
-    public Task<TEntity> EditAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         var entry = DbContext.Entry(entity);
         entry.State = EntityState.Modified;
@@ -91,18 +92,25 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         return Task.FromResult(entry.Entity);
     }
 
-    public void Delete(TEntity entity)
-    {
-        DbSet.Remove(entity);
-    }
-
-    public void DeleteRange(IEnumerable<TEntity> entities)
+    public Task DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
     {
         DbSet.RemoveRange(entities);
+
+        return Task.CompletedTask;
     }
 
-    public void Dispose()
+    public Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
+        DbSet.RemoveRange(DbSet.Where(predicate));
+
+        return Task.CompletedTask;
+    }
+
+    public Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        DbSet.Remove(entity);
+
+        return Task.CompletedTask;
     }
 
     private static IQueryable<TEntity> GetQuery(
@@ -181,5 +189,9 @@ public abstract class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TE
         query = query.AsSplitQuery();
 
         return query;
+    }
+
+    public void Dispose()
+    {
     }
 }

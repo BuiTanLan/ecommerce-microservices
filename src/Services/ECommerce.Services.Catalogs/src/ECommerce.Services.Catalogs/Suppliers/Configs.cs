@@ -1,3 +1,4 @@
+using BuildingBlocks.Core.Persistence;
 using ECommerce.Services.Catalogs.Suppliers.Data;
 
 namespace ECommerce.Services.Catalogs.Suppliers;

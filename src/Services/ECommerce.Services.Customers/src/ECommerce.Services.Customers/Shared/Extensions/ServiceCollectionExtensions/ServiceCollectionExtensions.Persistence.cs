@@ -1,3 +1,5 @@
+using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Mongo;
 using ECommerce.Services.Customers.Shared.Contracts;
 using ECommerce.Services.Customers.Shared.Data;
 
@@ -14,7 +16,15 @@ public static partial class ServiceCollectionExtensions
 
     public static IServiceCollection AddStorage(this IServiceCollection services, IConfiguration configuration)
     {
-        if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+        AddPostgresWriteStorage(services, configuration);
+        AddMongoReadStorage(services, configuration);
+
+        return services;
+    }
+
+    private static void AddPostgresWriteStorage(IServiceCollection services, IConfiguration configuration)
+    {
+        if (configuration.GetValue<bool>("PostgresOptions.UseInMemory"))
         {
             services.AddDbContext<CustomersDbContext>(options =>
                 options.UseInMemoryDatabase("ECommerce.Services.ECommerce.Services.Customers"));
@@ -23,12 +33,14 @@ public static partial class ServiceCollectionExtensions
         }
         else
         {
-            services.AddPostgresDbContext<CustomersDbContext>(
-                configuration.GetConnectionString("CustomersServiceConnection"));
+            services.AddPostgresDbContext<CustomersDbContext>(configuration);
         }
 
         services.AddScoped<ICustomersDbContext>(provider => provider.GetRequiredService<CustomersDbContext>());
+    }
 
-        return services;
+    private static void AddMongoReadStorage(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddMongoDbContext<CustomersReadDbContext>(configuration);
     }
 }

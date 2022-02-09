@@ -32,7 +32,7 @@ public record CreateProduct(
     long SupplierId,
     long BrandId,
     string? Description = null,
-    IEnumerable<CreateProductImageRequest>? Images = null) : ICreateCommand<CreateProductResult>
+    IEnumerable<CreateProductImageRequest>? Images = null) : ITxCreateCommand<CreateProductResult>
 {
     public long Id { get; init; } = SnowFlakIdGenerator.NewId();
 }

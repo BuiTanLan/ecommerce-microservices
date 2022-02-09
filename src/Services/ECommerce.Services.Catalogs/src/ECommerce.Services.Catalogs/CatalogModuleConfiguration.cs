@@ -1,3 +1,4 @@
+using BuildingBlocks.Mongo;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products;

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using BuildingBlocks.Core.Persistence;
 using BuildingBlocks.EFCore;
 
 namespace BuildingBlocks.IntegrationTests.Mock;

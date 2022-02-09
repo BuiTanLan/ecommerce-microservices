@@ -17,7 +17,7 @@ public record RegisterUser(
     string Email,
     string Password,
     string ConfirmPassword,
-    List<string>? Roles = null) : ICreateCommand<RegisterUserResult>
+    List<string>? Roles = null) : ITxCreateCommand<RegisterUserResult>
 {
     public DateTime CreatedAt { get; init; } = DateTime.Now;
 }

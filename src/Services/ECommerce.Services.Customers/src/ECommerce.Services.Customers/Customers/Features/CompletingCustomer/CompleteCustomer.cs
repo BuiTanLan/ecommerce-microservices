@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain;
 using BuildingBlocks.Core.Domain.ValueObjects;
+using BuildingBlocks.Core.Persistence;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.Exceptions;
@@ -30,9 +31,7 @@ internal class CompleteCustomerValidator : AbstractValidator<CompleteCustomer>
             .GreaterThan(0).WithMessage("CustomerId must be greater than 0");
 
         RuleFor(x => x.PhoneNumber)
-            .NotEmpty()
-            .Matches(@"^\+[0-9]{11}$")
-            .WithMessage("PhoneNumber must be a valid phone number");
+            .NotEmpty();
     }
 }
 

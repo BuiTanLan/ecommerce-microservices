@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using IsolationLevel = System.Data.IsolationLevel;
@@ -29,21 +30,6 @@ public class EfUnitOfWork<TDbContext> : IUnitOfWork<TDbContext>
 
     public TDbContext DbContext => _context;
 
-    public async Task ExecuteAsync(Func<Task> action, CancellationToken cancellationToken = default)
-    {
-        await BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
-        try
-        {
-            await action();
-            await CommitTransactionAsync(cancellationToken);
-        }
-        catch (System.Exception)
-        {
-            await RollbackTransactionAsync(cancellationToken);
-            throw;
-        }
-    }
-
     public DbSet<TEntity> Set<TEntity>()
         where TEntity : class
     {
@@ -55,6 +41,11 @@ public class EfUnitOfWork<TDbContext> : IUnitOfWork<TDbContext>
         CancellationToken cancellationToken = default)
     {
         return _context.BeginTransactionAsync(isolationLevel, cancellationToken);
+    }
+
+    public Task BeginTransactionAsync(CancellationToken cancellationToken = default)
+    {
+        return _context.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
     }
 
     public Task CommitTransactionAsync(CancellationToken cancellationToken = default)
@@ -123,5 +114,15 @@ public class EfUnitOfWork<TDbContext> : IUnitOfWork<TDbContext>
     public void Dispose()
     {
         _context.Dispose();
+    }
+
+    public Task ExecuteTransactionalAsync(Func<Task> action, CancellationToken cancellationToken = default)
+    {
+        return _context.ExecuteTransactionalAsync(action, cancellationToken);
+    }
+
+    public Task<T> ExecuteTransactionalAsync<T>(Func<Task<T>> action, CancellationToken cancellationToken = default)
+    {
+        return _context.ExecuteTransactionalAsync(action, cancellationToken);
     }
 }

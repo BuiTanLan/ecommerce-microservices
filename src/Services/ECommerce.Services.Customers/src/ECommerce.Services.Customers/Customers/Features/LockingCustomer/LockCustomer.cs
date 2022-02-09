@@ -1,4 +1,5 @@
 using BuildingBlocks.Core.Domain;
+using BuildingBlocks.Core.Persistence;
 using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.Customers.Exceptions;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;

@@ -8,6 +8,10 @@ namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRest
 // https://benfoster.io/blog/minimal-apis-custom-model-binding-aspnet-6/
 public record GetRestockSubscriptionsRequest : PageRequest
 {
+    public IList<string>? Emails { get; init; }
+    public DateTime? From { get; init; }
+    public DateTime? To { get; init; }
+
     public static ValueTask<GetRestockSubscriptionsRequest?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
     {
         var page = httpContext.Request.Query.Get<int>("Page", 1);
@@ -15,6 +19,9 @@ public record GetRestockSubscriptionsRequest : PageRequest
         var sorts = httpContext.Request.Query.GetCollection<List<string>>("Sorts");
         var filters = httpContext.Request.Query.GetCollection<List<FilterModel>>("Filters");
         var includes = httpContext.Request.Query.GetCollection<List<string>>("Includes");
+        var emails = httpContext.Request.Query.GetCollection<List<string>>("Emails");
+        var from = httpContext.Request.Query.Get<DateTime?>("From", null);
+        var to = httpContext.Request.Query.Get<DateTime?>("To", null);
 
         var request = new GetRestockSubscriptionsRequest
         {
@@ -22,7 +29,10 @@ public record GetRestockSubscriptionsRequest : PageRequest
             PageSize = pageSize,
             Sorts = sorts,
             Filters = filters,
-            Includes = includes
+            Includes = includes,
+            Emails = emails,
+            From = from,
+            To = to,
         };
 
         return ValueTask.FromResult<GetRestockSubscriptionsRequest?>(request);

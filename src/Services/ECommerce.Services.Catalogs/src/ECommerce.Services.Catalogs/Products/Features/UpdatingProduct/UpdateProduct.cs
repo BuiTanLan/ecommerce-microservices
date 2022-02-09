@@ -26,7 +26,7 @@ public record UpdateProduct(
     long CategoryId,
     long SupplierId,
     long BrandId,
-    string? Description = null) : IUpdateCommand;
+    string? Description = null) : ITxUpdateCommand;
 
 internal class UpdateProductValidator : AbstractValidator<UpdateProduct>
 {

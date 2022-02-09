@@ -1,4 +1,5 @@
 using BuildingBlocks.Core.Domain.Events;
+using BuildingBlocks.Core.Persistence;
 using ECommerce.Services.Customers.Customers.Data;
 using ECommerce.Services.Customers.Customers.Features.CompletingCustomer;
 using ECommerce.Services.Customers.Customers.Features.CreatingCustomer;

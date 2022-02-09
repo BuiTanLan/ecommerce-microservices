@@ -112,7 +112,7 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                     b.ToTable("customers", "customer");
                 });
 
-            modelBuilder.Entity("ECommerce.Services.Customers.RestockSubscriptions.Models.RestockSubscription", b =>
+            modelBuilder.Entity("ECommerce.Services.Customers.RestockSubscriptions.Models.Write.RestockSubscription", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint")
@@ -236,14 +236,14 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ECommerce.Services.Customers.RestockSubscriptions.Models.RestockSubscription", b =>
+            modelBuilder.Entity("ECommerce.Services.Customers.RestockSubscriptions.Models.Write.RestockSubscription", b =>
                 {
-                    b.HasOne("ECommerce.Services.Customers.Customers.Models.Customer", "Customer")
+                    b.HasOne("ECommerce.Services.Customers.Customers.Models.Customer", null)
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_restock_subscriptions_customers_customer_temp_id");
+                        .HasConstraintName("fk_restock_subscriptions_customers_customer_id");
 
                     b.OwnsOne("ECommerce.Services.Customers.RestockSubscriptions.ValueObjects.ProductInformation", "ProductInformation", b1 =>
                         {
@@ -269,8 +269,6 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                                 .HasForeignKey("RestockSubscriptionId")
                                 .HasConstraintName("fk_restock_subscriptions_restock_subscriptions_id");
                         });
-
-                    b.Navigation("Customer");
 
                     b.Navigation("ProductInformation")
                         .IsRequired();

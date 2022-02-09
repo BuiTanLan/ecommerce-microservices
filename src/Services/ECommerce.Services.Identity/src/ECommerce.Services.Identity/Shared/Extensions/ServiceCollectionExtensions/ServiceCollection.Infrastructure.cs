@@ -46,7 +46,7 @@ public static class ServiceCollection
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>))
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(TxBehavior<,>));
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(EfTxBehavior<,>));
         });
 
         services.AddMonitoring(healthChecksBuilder =>

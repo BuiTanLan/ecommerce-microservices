@@ -11,7 +11,7 @@ public static class Extensions
         this WebApplicationBuilder builder,
         IConfiguration configuration,
         EmailProvider provider = EmailProvider.MimKit,
-        Action<EmailOptions> configure = null)
+        Action<EmailOptions>? configure = null)
     {
         AddEmailService(builder.Services, configuration, provider, configure);
 
@@ -22,7 +22,7 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration,
         EmailProvider provider = EmailProvider.MimKit,
-        Action<EmailOptions> configurator = null)
+        Action<EmailOptions>? configurator = null)
     {
         if (provider == EmailProvider.SendGrid)
         {
