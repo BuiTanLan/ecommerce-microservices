@@ -1,5 +1,30 @@
 # ECommerce Microservices
 
+## Prerequisites
+
+1. Install git - [https://git-scm.com/downloads](https://git-scm.com/downloads).
+2. Install .NET Core 6.0 - [https://dotnet.microsoft.com/download/dotnet/6.0](https://dotnet.microsoft.com/download/dotnet/6.0).
+3. Install Visual Studio 2022, Rider or VSCode.
+4. Install docker - [https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/).
+5. Make sure that you have ~10GB disk space.
+7. Clone Project [https://github.com/mehdihadeli/e-commerce-microservices](https://github.com/mehdihadeli/e-commerce-microservices), make sure that's compiling
+8. Open `ECommerce.sln` solution.
+9. Docker useful commands
+
+    - `docker-compose up` - start dockers
+    - `docker-compose kill` - to stop running dockers.
+    - `docker-compose down -v` - to clean stopped dockers.
+    - `docker ps` - for showing running dockers
+    - `docker ps -a` - to show all dockers (also stopped)
+
+10. Go to [deployments/docker-compose](./deployments/docker-compose) and run: `docker-compose up`.
+11. Wait until all dockers got are downloaded and running.
+12. You should automatically get:
+    - Postgres running
+    - RabbitMQ running
+    - MongoDB running
+    - Microservies Api Gateway, Available at: http://localhost:8000
+
 ## Application Structure
 
 In this application I used a [mediator pattern](https://dotnetcoretutorials.com/2019/04/30/the-mediator-pattern-in-net-core-part-1-whats-a-mediator/) with using [MediatR](https://github.com/jbogard/MediatR) library in my controllers for a clean and [thin controller](https://codeopinion.com/thin-controllers-cqrs-mediatr/), also instead of using and injecting a `application service` class in our controller, we just inject a mediator class, because after some times our controller will depends to different services and this breaks single responsibility principle.
