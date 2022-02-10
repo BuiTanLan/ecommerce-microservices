@@ -1,13 +1,14 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription;
 
-public static class CreateRestockSubscriptionEndpoint
+public class CreateRestockSubscriptionEndpoint : IMinimalEndpointDefinition
 {
-    internal static IEndpointRouteBuilder MapCreateRestockSubscriptionEndpoint(this IEndpointRouteBuilder endpoints)
+    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        endpoints.MapPost(RestockSubscriptionsConfigs.RestockSubscriptionsUrl, CreateRestockSubscription)
+        builder.MapPost(RestockSubscriptionsConfigs.RestockSubscriptionsUrl, CreateRestockSubscription)
             .AllowAnonymous()
             .WithTags(RestockSubscriptionsConfigs.Tag)
             .Produces<CreateRestockSubscriptionResult>(StatusCodes.Status201Created)
@@ -16,7 +17,7 @@ public static class CreateRestockSubscriptionEndpoint
             .WithName("CreateRestockSubscription")
             .WithDisplayName("Register New RestockSubscription for Customer.");
 
-        return endpoints;
+        return builder;
     }
 
     private static async Task<IResult> CreateRestockSubscription(
@@ -30,6 +31,8 @@ public static class CreateRestockSubscriptionEndpoint
 
         var result = await commandProcessor.SendAsync(command, cancellationToken);
 
-        return Results.Created($"{RestockSubscriptionsConfigs.RestockSubscriptionsUrl}/{result.RestockSubscription.Id}", result);
+        return Results.Created(
+            $"{RestockSubscriptionsConfigs.RestockSubscriptionsUrl}/{result.RestockSubscription.Id}",
+            result);
     }
 }

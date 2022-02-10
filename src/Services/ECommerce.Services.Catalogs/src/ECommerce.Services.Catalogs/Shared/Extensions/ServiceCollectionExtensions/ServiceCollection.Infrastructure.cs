@@ -50,8 +50,9 @@ public static class ServiceCollection
 
         services.AddMonitoring(healthChecksBuilder =>
         {
+            var postgresOptions = configuration.GetOptions<PostgresOptions>(nameof(PostgresOptions));
             healthChecksBuilder.AddNpgSql(
-                configuration.GetConnectionString("CatalogServiceConnection"),
+                postgresOptions.ConnectionString,
                 name: "CatalogsService-Postgres-Check",
                 tags: new[] { "catalogs-postgres" });
 

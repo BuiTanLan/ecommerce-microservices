@@ -3,6 +3,7 @@ using BuildingBlocks.Core;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Web;
+using BuildingBlocks.Web.Extensions;
 using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
 using BuildingBlocks.Web.Extensions.ServiceCollectionExtensions;
 using Customers;
@@ -49,7 +50,7 @@ builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 
 builder.Services.AddCustomAuthorization();
 
-builder.AddCustomersModuleServices();
+builder.AddModulesServices();
 
 var app = builder.Build();
 
@@ -78,13 +79,16 @@ app.UseSerilogRequestLogging();
 
 app.UseCustomHealthCheck();
 
-await app.ConfigureCustomersModule(environment, app.Logger);
+await app.ConfigureModules();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapCustomersModuleEndpoints();
+app.MapModulesEndpoints();
+
+// automatic discover minimal endpoints
+app.MapEndpoints();
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()

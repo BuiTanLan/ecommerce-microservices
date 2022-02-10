@@ -1,13 +1,14 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
+using BuildingBlocks.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptions;
 
-public static class GetRestockSubscriptionsEndpoint
+public class GetRestockSubscriptionsEndpoint : IMinimalEndpointDefinition
 {
-    internal static IEndpointRouteBuilder MapGetRestockSubscriptionsEndpoint(this IEndpointRouteBuilder endpoints)
+    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        endpoints.MapGet($"{RestockSubscriptionsConfigs.RestockSubscriptionsUrl}", GetRestockSubscriptions)
+        builder.MapGet($"{RestockSubscriptionsConfigs.RestockSubscriptionsUrl}", GetRestockSubscriptions)
             .WithTags(RestockSubscriptionsConfigs.Tag)
             // .RequireAuthorization()
             .Produces<GetRestockSubscriptionsResult>(StatusCodes.Status200OK)
@@ -16,7 +17,7 @@ public static class GetRestockSubscriptionsEndpoint
             .WithName("GetRestockSubscriptions")
             .WithDisplayName("Get Restock Subscriptions.");
 
-        return endpoints;
+        return builder;
     }
 
     private static async Task<IResult> GetRestockSubscriptions(

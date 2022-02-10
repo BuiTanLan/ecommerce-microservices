@@ -1,14 +1,14 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
+using BuildingBlocks.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.Customers.Features.GettingCustomers;
 
-// GET api/v1/catalog/products
-public static class GetCustomersEndpoint
+public class GetCustomersEndpoint : IMinimalEndpointDefinition
 {
-    internal static IEndpointRouteBuilder MapGetCustomersEndpoint(this IEndpointRouteBuilder endpoints)
+    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        endpoints.MapGet($"{CustomersConfigs.CustomersPrefixUri}", GetCustomers)
+        builder.MapGet($"{CustomersConfigs.CustomersPrefixUri}", GetCustomers)
             .WithTags(CustomersConfigs.Tag)
             // .RequireAuthorization()
             .Produces<GetCustomersResult>()
@@ -17,7 +17,7 @@ public static class GetCustomersEndpoint
             .WithName("GetCustomers")
             .WithDisplayName("Get customers.");
 
-        return endpoints;
+        return builder;
     }
 
     private static async Task<IResult> GetCustomers(

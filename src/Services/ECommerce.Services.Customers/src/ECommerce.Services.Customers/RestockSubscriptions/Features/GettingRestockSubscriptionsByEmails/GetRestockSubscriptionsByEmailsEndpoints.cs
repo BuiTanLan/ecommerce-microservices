@@ -1,15 +1,15 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
+using BuildingBlocks.Web.MinimalApi;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptionsByEmails;
 
-public static class GetRestockSubscriptionsByEmailsEndpoints
+public class GetRestockSubscriptionsByEmailsEndpoints : IMinimalEndpointDefinition
 {
-    internal static IEndpointRouteBuilder MapGetRestockSubscriptionsByEmailsEndpoints(
-        this IEndpointRouteBuilder endpoints)
+    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        endpoints.MapGet(
+        builder.MapGet(
                 $"{RestockSubscriptionsConfigs.RestockSubscriptionsUrl}/by-emails",
                 GetRestockSubscriptionsByEmails)
             .WithTags(RestockSubscriptionsConfigs.Tag)
@@ -20,7 +20,7 @@ public static class GetRestockSubscriptionsByEmailsEndpoints
             .WithName("GetRestockSubscriptionsByEmails")
             .WithDisplayName("Get Restock Subscriptions by emails.");
 
-        return endpoints;
+        return builder;
     }
 
     private static IAsyncEnumerable<RestockSubscriptionDto> GetRestockSubscriptionsByEmails(

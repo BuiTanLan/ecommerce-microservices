@@ -1,14 +1,14 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
+using BuildingBlocks.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.Customers.Features.GettingCustomerById;
 
-
-public static class GetCustomerByIdEndpointEndpoint
+public class GetCustomerByIdEndpointEndpoint : IMinimalEndpointDefinition
 {
-    internal static IEndpointRouteBuilder MapGetCustomerByIdEndpoint(this IEndpointRouteBuilder endpoints)
+    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        endpoints.MapGet(
+        builder.MapGet(
                 $"{CustomersConfigs.CustomersPrefixUri}/{{id}}",
                 GetCustomerById)
             .WithTags(CustomersConfigs.Tag)
@@ -20,7 +20,7 @@ public static class GetCustomerByIdEndpointEndpoint
             .WithName("GetCustomerById")
             .WithDisplayName("Get Customer By Id.");
 
-        return endpoints;
+        return builder;
     }
 
     private static async Task<IResult> GetCustomerById(

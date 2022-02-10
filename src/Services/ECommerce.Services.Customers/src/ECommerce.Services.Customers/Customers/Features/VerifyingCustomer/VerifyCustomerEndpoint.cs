@@ -1,12 +1,13 @@
 using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.Customers.Features.VerifyingCustomer;
 
-public static class VerifyCustomerEndpoint
+public class VerifyCustomerEndpoint : IMinimalEndpointDefinition
 {
-    internal static IEndpointRouteBuilder MapVerifyCustomerEndpoint(this IEndpointRouteBuilder endpoints)
+    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        endpoints.MapPost($"{CustomersConfigs.CustomersPrefixUri}/{{customerId}}/verify", VerifyCustomer)
+        builder.MapPost($"{CustomersConfigs.CustomersPrefixUri}/{{customerId}}/verify", VerifyCustomer)
             .AllowAnonymous()
             .WithTags(CustomersConfigs.Tag)
             .Produces(StatusCodes.Status204NoContent)
@@ -14,7 +15,7 @@ public static class VerifyCustomerEndpoint
             .Produces(StatusCodes.Status404NotFound)
             .WithDisplayName("Verify Customer.");
 
-        return endpoints;
+        return builder;
     }
 
     private static async Task<IResult> VerifyCustomer(

@@ -51,8 +51,9 @@ public static class ServiceCollection
 
         services.AddMonitoring(healthChecksBuilder =>
         {
+            var postgresOptions = configuration.GetOptions<PostgresOptions>(nameof(PostgresOptions));
             healthChecksBuilder.AddNpgSql(
-                configuration.GetConnectionString("IdentityServiceConnection"),
+                postgresOptions.ConnectionString,
                 name: "Identity-Postgres-Check",
                 tags: new[] { "identity-postgres" });
 

@@ -1,20 +1,21 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.Customers.Features.CompletingCustomer;
 
-public static class CompleteCustomerEndpoint
+public class CompleteCustomerEndpoint : IMinimalEndpointDefinition
 {
-    internal static IEndpointRouteBuilder MapCompleteCustomerEndpoint(this IEndpointRouteBuilder endpoints)
+    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        endpoints.MapPost($"{CustomersConfigs.CustomersPrefixUri}/complete-profile", CompleteCustomer)
+        builder.MapPost($"{CustomersConfigs.CustomersPrefixUri}/complete-profile", CompleteCustomer)
             .AllowAnonymous()
             .WithTags(CustomersConfigs.Tag)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
             .WithDisplayName("Complete customer profile.");
 
-        return endpoints;
+        return builder;
     }
 
     private static async Task<IResult> CompleteCustomer(

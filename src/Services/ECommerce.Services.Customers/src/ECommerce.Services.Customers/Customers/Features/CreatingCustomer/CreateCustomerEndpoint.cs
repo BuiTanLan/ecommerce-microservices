@@ -1,13 +1,14 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
 
-public static class CreateCustomerEndpoint
+public class CreateCustomerEndpoint : IMinimalEndpointDefinition
 {
-    internal static IEndpointRouteBuilder MapCreateCustomerEndpoint(this IEndpointRouteBuilder endpoints)
+    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        endpoints.MapPost(CustomersConfigs.CustomersPrefixUri, CreateCustomer)
+        builder.MapPost(CustomersConfigs.CustomersPrefixUri, CreateCustomer)
             .AllowAnonymous()
             .WithTags(CustomersConfigs.Tag)
             .Produces<CreateCustomerResult>(StatusCodes.Status201Created)
@@ -15,7 +16,7 @@ public static class CreateCustomerEndpoint
             .WithName("CreateCustomer")
             .WithDisplayName("Register New Customer.");
 
-        return endpoints;
+        return builder;
     }
 
     private static async Task<IResult> CreateCustomer(

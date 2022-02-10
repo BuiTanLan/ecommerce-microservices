@@ -1,24 +1,16 @@
 using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Web.Module;
 using ECommerce.Services.Customers.Customers.Data;
-using ECommerce.Services.Customers.Customers.Features.CompletingCustomer;
-using ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
-using ECommerce.Services.Customers.Customers.Features.GettingCustomerById;
-using ECommerce.Services.Customers.Customers.Features.GettingCustomers;
-using ECommerce.Services.Customers.Customers.Features.LockingCustomer;
-using ECommerce.Services.Customers.Customers.Features.UnlockingCustomer;
-using ECommerce.Services.Customers.Customers.Features.VerifyingCustomer;
 
 namespace ECommerce.Services.Customers.Customers;
 
-internal static class CustomersConfigs
+internal class CustomersConfigs : IModuleDefinition
 {
     public const string Tag = "Customers";
     public const string CustomersPrefixUri = $"{CustomersModuleConfiguration.CustomerModulePrefixUri}";
 
-    internal static IServiceCollection AddCustomersServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public IServiceCollection AddModuleServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IDataSeeder, CustomersDataSeeder>();
         services.AddSingleton<IIntegrationEventMapper, CustomersEventMapper>();
@@ -26,16 +18,13 @@ internal static class CustomersConfigs
         return services;
     }
 
-    internal static IEndpointRouteBuilder MapCustomersEndpoints(this IEndpointRouteBuilder endpoints)
+    public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapCompleteCustomerEndpoint();
-        endpoints.MapCreateCustomerEndpoint();
-        endpoints.MapLockCustomerEndpoint();
-        endpoints.MapUnlockCustomerEndpoint();
-        endpoints.MapVerifyCustomerEndpoint();
-        endpoints.MapGetCustomersEndpoint();
-        endpoints.MapGetCustomerByIdEndpoint();
-
         return endpoints;
+    }
+
+    public Task<WebApplication> ConfigureModule(WebApplication app)
+    {
+        return Task.FromResult(app);
     }
 }

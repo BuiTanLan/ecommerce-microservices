@@ -1,13 +1,14 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.Customers.Features.LockingCustomer;
 
-public static class LockCustomerEndpoint
+public class LockCustomerEndpoint : IMinimalEndpointDefinition
 {
-    internal static IEndpointRouteBuilder MapLockCustomerEndpoint(this IEndpointRouteBuilder endpoints)
+    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        endpoints.MapPost($"{CustomersConfigs.CustomersPrefixUri}/{{customerId}}/lock", LockCustomer)
+        builder.MapPost($"{CustomersConfigs.CustomersPrefixUri}/{{customerId}}/lock", LockCustomer)
             .AllowAnonymous()
             .WithTags(CustomersConfigs.Tag)
             .Produces(StatusCodes.Status204NoContent)
@@ -15,7 +16,7 @@ public static class LockCustomerEndpoint
             .Produces(StatusCodes.Status404NotFound)
             .WithDisplayName("Lock Customer.");
 
-        return endpoints;
+        return builder;
     }
 
     private static async Task<IResult> LockCustomer(

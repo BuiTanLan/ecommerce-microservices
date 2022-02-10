@@ -1,13 +1,14 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.Customers.Features.UnlockingCustomer;
 
-public static class UnlockCustomerEndpoint
+public class UnlockCustomerEndpoint : IMinimalEndpointDefinition
 {
-    internal static IEndpointRouteBuilder MapUnlockCustomerEndpoint(this IEndpointRouteBuilder endpoints)
+    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        endpoints.MapPost($"{CustomersConfigs.CustomersPrefixUri}/{{customerId}}/unlock", UnlockCustomer)
+        builder.MapPost($"{CustomersConfigs.CustomersPrefixUri}/{{customerId}}/unlock", UnlockCustomer)
             .AllowAnonymous()
             .WithTags(CustomersConfigs.Tag)
             .Produces(StatusCodes.Status204NoContent)
@@ -15,7 +16,7 @@ public static class UnlockCustomerEndpoint
             .Produces(StatusCodes.Status404NotFound)
             .WithDisplayName("Unlock Customer.");
 
-        return endpoints;
+        return builder;
     }
 
     private static async Task<IResult> UnlockCustomer(
