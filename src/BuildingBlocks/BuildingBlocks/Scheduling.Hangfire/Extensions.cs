@@ -15,8 +15,8 @@ namespace BuildingBlocks.Scheduling.Hangfire
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            var options = configuration.GetSection(nameof(HangfireOptions)).Get<HangfireOptions>();
-            services.AddOptions<HangfireOptions>().Bind(configuration.GetSection(nameof(HangfireOptions)))
+            var options = configuration.GetSection(nameof(HangfireMessageSchedulerOptions)).Get<HangfireMessageSchedulerOptions>();
+            services.AddOptions<HangfireMessageSchedulerOptions>().Bind(configuration.GetSection(nameof(HangfireMessageSchedulerOptions)))
                 .ValidateDataAnnotations();
 
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };

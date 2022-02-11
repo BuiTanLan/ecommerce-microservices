@@ -8,7 +8,7 @@ using ECommerce.Services.Customers.Shared.Extensions;
 
 namespace ECommerce.Services.Customers.Customers.Features.LockingCustomer;
 
-public record LockCustomer(long CustomerId, string? Notes = null) : ICommand, ITxRequest;
+public record LockCustomer(long CustomerId, string? Notes = null) : ITxCommand;
 
 internal class LockCustomerValidator : AbstractValidator<LockCustomer>
 {

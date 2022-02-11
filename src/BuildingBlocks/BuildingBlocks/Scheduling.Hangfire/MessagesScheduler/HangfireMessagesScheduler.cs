@@ -8,18 +8,20 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
     public class HangfireMessagesScheduler : IHangfireMessagesScheduler
     {
         private readonly IMessagesExecutor _messagesExecutor;
-        private readonly ICommandProcessor _commandProcessor;
 
-        public HangfireMessagesScheduler(IMessagesExecutor messagesExecutor, ICommandProcessor commandProcessor)
+        public HangfireMessagesScheduler(IMessagesExecutor messagesExecutor)
         {
             _messagesExecutor = messagesExecutor;
-            _commandProcessor = commandProcessor;
         }
 
         public Task EnqueueAsync<T>(T command, string description = null)
-            where T : ICommand
+            where T : IInternalCommand
         {
-            _commandProcessor.Enqueue(command, description);
+            var client = new BackgroundJobClient();
+
+            // https://codeopinion.com/using-hangfire-and-mediatr-as-a-message-dispatcher/
+            // client.Enqueue<IMediator>(x => x.Send(request, default)); // we could use our mediator directly but because we want to use some hangfire attribute we will wap it in a bridge
+            client.Enqueue<CommandProcessorHangfireBridge>(bridge => bridge.Send(command, description));
 
             return Task.CompletedTask;
         }
@@ -35,7 +37,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
             string parentJobId,
             JobContinuationOptions continuationOption,
             string description = null)
-            where T : ICommand
+            where T : IInternalCommand
         {
             var messageSerializedObject = SerializeObject(command, description);
 
@@ -58,7 +60,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
         }
 
         public Task ScheduleAsync<T>(T command, DateTimeOffset scheduleAt, string description = null)
-            where T : ICommand
+            where T : IInternalCommand
         {
             var mediatorSerializedObject = SerializeObject(command, description);
             BackgroundJob.Schedule(() => _messagesExecutor.ExecuteCommand(mediatorSerializedObject), scheduleAt);
@@ -77,7 +79,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
         }
 
         public Task ScheduleAsync<T>(T command, TimeSpan delay, string description = null)
-            where T : ICommand
+            where T : IInternalCommand
         {
             var mediatorSerializedObject = SerializeObject(command, description);
             var newTime = DateTime.Now + delay;
@@ -98,7 +100,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
         }
 
         public Task ScheduleRecurringAsync<T>(T command, string name, string cronExpression, string description = null)
-            where T : ICommand
+            where T : IInternalCommand
         {
             var mediatorSerializedObject = SerializeObject(command, description);
             RecurringJob.AddOrUpdate(name, () => _messagesExecutor.ExecuteCommand(mediatorSerializedObject),
@@ -122,10 +124,8 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
         private MessageSerializedObject SerializeObject(object messageObject, string description)
         {
             string fullTypeName = messageObject.GetType().FullName;
-            string data = JsonConvert.SerializeObject(messageObject, new JsonSerializerSettings
-            {
-                Formatting = Formatting.None,
-            });
+            string data = JsonConvert.SerializeObject(messageObject,
+                new JsonSerializerSettings { Formatting = Formatting.None, });
 
             return new MessageSerializedObject(fullTypeName, data, description,
                 messageObject.GetType().Assembly.GetName().FullName);

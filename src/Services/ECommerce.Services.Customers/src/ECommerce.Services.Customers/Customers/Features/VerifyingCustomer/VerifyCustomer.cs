@@ -6,7 +6,7 @@ using ECommerce.Services.Customers.Shared.Extensions;
 
 namespace ECommerce.Services.Customers.Customers.Features.VerifyingCustomer;
 
-public record VerifyCustomer(long CustomerId) : ICommand;
+public record VerifyCustomer(long CustomerId) : ITxCommand;
 
 internal class VerifyCustomerValidator : AbstractValidator<VerifyCustomer>
 {

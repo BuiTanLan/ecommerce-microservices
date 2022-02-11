@@ -1,37 +1,40 @@
+using Ardalis.ApiEndpoints;
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.Web.MinimalApi;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptionsByEmails;
 
-public class GetRestockSubscriptionsByEmailsEndpoints : IMinimalEndpointDefinition
+public class GetRestockSubscriptionsByEmailsEndpoints : EndpointBaseSync
+    .WithRequest<GetRestockSubscriptionsByEmailsRequest?>
+    .WithActionResult<IAsyncEnumerable<RestockSubscriptionDto>>
 {
-    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
-    {
-        builder.MapGet(
-                $"{RestockSubscriptionsConfigs.RestockSubscriptionsUrl}/by-emails",
-                GetRestockSubscriptionsByEmails)
-            .WithTags(RestockSubscriptionsConfigs.Tag)
-            // .RequireAuthorization()
-            .Produces(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status401Unauthorized)
-            .Produces(StatusCodes.Status400BadRequest)
-            .WithName("GetRestockSubscriptionsByEmails")
-            .WithDisplayName("Get Restock Subscriptions by emails.");
+    private readonly IQueryProcessor _queryProcessor;
 
-        return builder;
+    public GetRestockSubscriptionsByEmailsEndpoints(IQueryProcessor queryProcessor)
+    {
+        _queryProcessor = queryProcessor;
     }
 
-    private static IAsyncEnumerable<RestockSubscriptionDto> GetRestockSubscriptionsByEmails(
-        GetRestockSubscriptionsByEmailsRequest? request,
-        IQueryProcessor queryProcessor,
-        CancellationToken cancellationToken)
+    [HttpGet(
+        $"{RestockSubscriptionsConfigs.RestockSubscriptionsUrl}/by-emails",
+        Name = "GetRestockSubscriptionsByEmails")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(
+        Summary = "Get Restock Subscriptions by emails.",
+        Description = "Get Restock Subscriptions by emails.",
+        OperationId = "GetRestockSubscriptionsByEmails",
+        Tags = new[] { RestockSubscriptionsConfigs.Tag })]
+    public override ActionResult<IAsyncEnumerable<RestockSubscriptionDto>> Handle(
+        [FromQuery] GetRestockSubscriptionsByEmailsRequest? request)
     {
         Guard.Against.Null(request, nameof(request));
 
-        var result = queryProcessor.SendAsync(new GetRestockSubscriptionsByEmails(request.Emails), cancellationToken);
+        var result = _queryProcessor.SendAsync(new GetRestockSubscriptionsByEmails(request.Emails));
 
-        return result;
+        return Ok(result);
     }
 }

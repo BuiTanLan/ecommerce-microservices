@@ -1,5 +1,6 @@
 using BuildingBlocks.Messaging.Outbox;
 using BuildingBlocks.Messaging.Outbox.EF;
+using BuildingBlocks.Scheduling.Internal;
 
 namespace ECommerce.Services.Catalogs.Shared.Data;
 
@@ -13,6 +14,13 @@ public class CatalogDbContextDesignFactory : DbContextDesignFactoryBase<CatalogD
 public class OutboxDbContextDesignFactory : DbContextDesignFactoryBase<OutboxDataContext>
 {
     public OutboxDbContextDesignFactory() : base("CatalogServiceConnection")
+    {
+    }
+}
+
+public class InternalMessageDbContextDesignFactory : DbContextDesignFactoryBase<InternalMessageDbContext>
+{
+    public InternalMessageDbContextDesignFactory() : base("CatalogServiceConnection")
     {
     }
 }

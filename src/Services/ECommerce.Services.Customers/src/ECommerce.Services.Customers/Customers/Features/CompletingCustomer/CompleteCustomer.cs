@@ -18,7 +18,7 @@ public record CompleteCustomer(
     string? Country = null,
     string? City = null,
     string? DetailAddress = null,
-    string? Nationality = null) : ICommand, ITxRequest;
+    string? Nationality = null) : ITxCommand;
 
 internal class CompleteCustomerValidator : AbstractValidator<CompleteCustomer>
 {

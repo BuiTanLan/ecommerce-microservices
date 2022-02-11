@@ -1,26 +1,23 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using BuildingBlocks.Security.ApiKey;
 using BuildingBlocks.Swagger;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Microsoft.AspNetCore.Builder;
 
-// https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/master/README.md
-public static class ServiceCollectionExtensions
+public static class Extensions
 {
+    // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/master/README.md
     public static WebApplicationBuilder AddCustomSwagger(
         this WebApplicationBuilder builder,
         IConfiguration configuration,
@@ -33,9 +30,9 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddCustomSwagger(
         this IServiceCollection services,
-        IConfiguration configuration, Assembly assembly,
-        bool useApiVersioning = false,
-        bool tagByActionName = false)
+        IConfiguration configuration,
+        Assembly assembly,
+        bool useApiVersioning = false)
     {
         if (useApiVersioning)
         {
@@ -127,7 +124,7 @@ public static class ServiceCollectionExtensions
                         var apiExplorerSettingsAttribute =
                             (ApiExplorerSettingsAttribute)apiDescription.ActionDescriptor
                                 .EndpointMetadata.FirstOrDefault(x =>
-                                    x.GetType() == typeof(ApiExplorerSettingsAttribute));
+                                    x.GetType() == typeof(ApiExplorerSettingsAttribute))!;
 
                         if (apiExplorerSettingsAttribute == null) return true;
 
@@ -164,21 +161,7 @@ public static class ServiceCollectionExtensions
                     }
                 }
 
-                if (tagByActionName)
-                {
-                    // https://rimdev.io/swagger-grouping-with-controller-name-fallback-using-swashbuckle-aspnetcore/
-                    options.TagActionsBy(api =>
-                    {
-                        if (api.GroupName != null) return new[] { api.GroupName };
-
-                        if (api.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
-                            return new[] { controllerActionDescriptor.ControllerName };
-
-                        return new List<string>();
-                    });
-                }
-
-                // Adding swagger data annotation support with Swagger Operation.
+                // Adding swagger data annotation support with [SwaggerOperation] attribute.
                 options.EnableAnnotations();
             });
 
@@ -191,5 +174,36 @@ public static class ServiceCollectionExtensions
             var fileName = assembly.GetName().Name + ".xml";
             return Path.Combine(basePath, fileName);
         }
+    }
+
+    /// <summary>
+    ///     Register Swagger endpoints.
+    ///     Hint: Minimal Api not supported api versioning in .Net6.
+    /// </summary>
+    public static IApplicationBuilder UseCustomSwagger(
+        this IApplicationBuilder app,
+        IApiVersionDescriptionProvider provider = null)
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(
+            options =>
+            {
+                options.DocExpansion(DocExpansion.None);
+                if (provider is null)
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
+                }
+                else
+                {
+                    foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerEndpoint(
+                            $"/swagger/{description.GroupName}/swagger.json",
+                            description.GroupName.ToUpperInvariant());
+                    }
+                }
+            });
+
+        return app;
     }
 }

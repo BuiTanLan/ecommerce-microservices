@@ -8,7 +8,7 @@ using ECommerce.Services.Customers.Shared.Extensions;
 
 namespace ECommerce.Services.Customers.Customers.Features.UnlockingCustomer;
 
-public record UnlockCustomer(long CustomerId, string? Notes = null) : ICommand, ITxRequest;
+public record UnlockCustomer(long CustomerId, string? Notes = null) : ITxCommand;
 
 internal class UnlockCustomerValidator : AbstractValidator<UnlockCustomer>
 {

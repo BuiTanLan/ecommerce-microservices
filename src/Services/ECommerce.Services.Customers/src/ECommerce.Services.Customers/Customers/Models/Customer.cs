@@ -87,7 +87,7 @@ public class Customer : AggregateRoot<CustomerId>
         VerifiedAt = verifiedAt;
         CustomerState = CustomerState.Verified;
 
-        AddDomainEvent(new CustomerVerified(Id));
+        AddDomainEvent(new CustomerVerified(this));
     }
 
     public void Lock(string? notes = null)
@@ -96,13 +96,13 @@ public class Customer : AggregateRoot<CustomerId>
         Notes = notes?.Trim();
         CustomerState = CustomerState.Locked;
 
-        AddDomainEvent(new CustomerLocked(Id, notes));
+        AddDomainEvent(new CustomerLocked(this));
     }
 
     public void Unlock(string? notes = null)
     {
         IsActive = true;
         Notes = notes?.Trim();
-        AddDomainEvent(new CustomerUnlocked(Id));
+        AddDomainEvent(new CustomerUnlocked(this));
     }
 }

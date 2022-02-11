@@ -1,27 +1,27 @@
 ﻿using System.ComponentModel;
 using BuildingBlocks.CQRS.Command;
+using MediatR;
 
-namespace BuildingBlocks.Scheduling.Hangfire
+namespace BuildingBlocks.Scheduling.Hangfire;
+
+public class CommandProcessorHangfireBridge
 {
-    public class CommandProcessorHangfireBridge
+    private readonly IMediator _mediator;
+
+    public CommandProcessorHangfireBridge(IMediator mediator)
     {
-        private readonly ICommandProcessor _commandProcessor;
+        _mediator = mediator;
+    }
 
-        public CommandProcessorHangfireBridge(ICommandProcessor commandProcessor)
-        {
-            _commandProcessor = commandProcessor;
-        }
+    [DisplayName("{1}")]
+    public Task Send(IInternalCommand command, string description = "")
+    {
+        return _mediator.Send(command);
+    }
 
-        [DisplayName("{1}")]
-        public Task Send(ICommand command, string description = "")
-        {
-            return _commandProcessor.SendAsync(command);
-        }
-
-        [DisplayName("{0}")]
-        public Task Send(string jobName, ICommand command)
-        {
-            return _commandProcessor.SendAsync(command);
-        }
+    [DisplayName("{0}")]
+    public Task Send(string jobName, IInternalCommand command)
+    {
+        return _mediator.Send(command);
     }
 }

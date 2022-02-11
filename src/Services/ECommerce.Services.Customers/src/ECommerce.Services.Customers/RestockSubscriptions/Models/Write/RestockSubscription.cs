@@ -5,6 +5,8 @@ using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.ValueObjects;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription.Events.Domain;
+using ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscription;
+using ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscriptionsByTime;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.MarkingRestockSubscriptionAsProcessed;
 using ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
 
@@ -26,19 +28,37 @@ public class RestockSubscription : AggregateRoot<RestockSubscriptionId>, IHaveSo
     {
         Guard.Against.Null(id, new RestockSubscriptionDomainException("Id cannot be null"));
         Guard.Against.Null(customerId, new RestockSubscriptionDomainException("CustomerId cannot be null"));
-        Guard.Against.Null(email, new RestockSubscriptionDomainException("Email cannot be null"));
         Guard.Against.Null(
             productInformation,
             new RestockSubscriptionDomainException("ProductInformation cannot be null"));
 
         var restockSubscription = new RestockSubscription
         {
-            Id = id, Email = email, CustomerId = customerId, ProductInformation = productInformation
+            Id = id, CustomerId = customerId, ProductInformation = productInformation
         };
+
+        restockSubscription.ChangeEmail(email);
 
         restockSubscription.AddDomainEvent(new RestockSubscriptionCreated(restockSubscription));
 
         return restockSubscription;
+    }
+
+    public void ChangeEmail(Email email)
+    {
+        Email = Guard.Against.Null(email, new RestockSubscriptionDomainException("Email can't be null."));
+    }
+
+    public void Delete()
+    {
+        AddDomainEvent(new RestockSubscriptionDeleted(this));
+    }
+
+    public void DeleteMultiple(IList<RestockSubscription> subscriptions)
+    {
+        Guard.Against.Null(subscriptions, new RestockSubscriptionDomainException("Subscriptions can't be null or "));
+
+        AddDomainEvent(new MultipleRestockSubscriptionDeleted(subscriptions));
     }
 
     public void MarkAsProcessed(DateTime processedTime)

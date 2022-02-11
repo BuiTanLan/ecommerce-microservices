@@ -1,16 +1,18 @@
 using AutoMapper;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.CQRS.Query;
+using BuildingBlocks.Mongo;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
-using ECommerce.Services.Customers.RestockSubscriptions.Models;
-using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
+using ECommerce.Services.Customers.RestockSubscriptions.Models.Read;
 using ECommerce.Services.Customers.Shared.Data;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptions;
 
 public record GetRestockSubscriptions : ListQuery<GetRestockSubscriptionsResult>
 {
-    public IList<string>? Emails { get; init; }
+    public IList<string> Emails { get; init; } = null!;
     public DateTime? From { get; init; }
     public DateTime? To { get; init; }
 }
@@ -31,12 +33,12 @@ internal class GetRestockSubscriptionsValidator : AbstractValidator<GetRestockSu
 
 public class GetProductsHandler : IQueryHandler<GetRestockSubscriptions, GetRestockSubscriptionsResult>
 {
-    private readonly CustomersDbContext _customersDbContext;
+    private readonly CustomersReadDbContext _customersReadDbContext;
     private readonly IMapper _mapper;
 
-    public GetProductsHandler(CustomersDbContext customersDbContext, IMapper mapper)
+    public GetProductsHandler(CustomersReadDbContext customersReadDbContext, IMapper mapper)
     {
-        _customersDbContext = customersDbContext;
+        _customersReadDbContext = customersReadDbContext;
         _mapper = mapper;
     }
 
@@ -44,16 +46,16 @@ public class GetProductsHandler : IQueryHandler<GetRestockSubscriptions, GetRest
         GetRestockSubscriptions query,
         CancellationToken cancellationToken)
     {
-        var restockSubscriptions = await _customersDbContext.RestockSubscriptions
-            .OrderByDescending(x => x.Created)
-            .ApplyIncludeList(query.Includes)
+        var filtering = _customersReadDbContext.RestockSubscriptions.AsQueryable()
             .ApplyFilterList(query.Filters)
-            .AsNoTracking()
-            .Where(x => query.Emails == null || query.Emails.Any() == false || query.Emails.Contains(x.Email!))
+            .Where(e => query.Emails.Any() == false || query.Emails.Contains(e.Email))
             .Where(x => (query.From == null && query.To == null) || (query.From == null && x.Created <= query.To) ||
                         (query.To == null && x.Created >= query.From) ||
                         (x.Created >= query.From && x.Created <= query.To))
-            .PaginateAsync<RestockSubscription, RestockSubscriptionDto>(
+            .OrderByDescending(x => x.Created);
+
+        var restockSubscriptions =
+            await filtering.PaginateAsync<RestockSubscriptionReadModel, RestockSubscriptionDto>(
                 _mapper.ConfigurationProvider,
                 query.Page,
                 query.PageSize,

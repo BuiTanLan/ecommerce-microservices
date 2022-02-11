@@ -6,11 +6,12 @@ using ECommerce.Services.Customers.Customers.Models.Reads;
 using ECommerce.Services.Customers.Shared.Data;
 using MongoDB.Driver;
 
-namespace ECommerce.Services.Customers.Customers.Features.UpdatingCustomerReadsModel;
+namespace ECommerce.Services.Customers.Customers.Features.UpdatingMongoCustomerReadsModel;
 
-public record UpdateCustomerReadsModel : ITxUpdateCommand
+public record UpdateMongoCustomerReadsModel : InternalCommand
 {
-    public long Id { get; init; }
+    public Guid Id { get; init; }
+    public long CustomerId { get; init; }
     public Guid IdentityId { get; init; }
     public string Email { get; init; } = null!;
     public string FirstName { get; init; } = null!;
@@ -29,25 +30,25 @@ public record UpdateCustomerReadsModel : ITxUpdateCommand
     public CustomerState CustomerState { get; init; } = CustomerState.None;
 }
 
-internal class UpdateCustomerReadsModelHandler : ICommandHandler<UpdateCustomerReadsModel>
+internal class UpdateMongoCustomerReadsModelHandler : ICommandHandler<UpdateMongoCustomerReadsModel>
 {
     private readonly CustomersReadDbContext _customersReadDbContext;
     private readonly IMapper _mapper;
 
-    public UpdateCustomerReadsModelHandler(CustomersReadDbContext customersReadDbContext, IMapper mapper)
+    public UpdateMongoCustomerReadsModelHandler(CustomersReadDbContext customersReadDbContext, IMapper mapper)
     {
         _customersReadDbContext = customersReadDbContext;
         _mapper = mapper;
     }
 
-    public async Task<Unit> Handle(UpdateCustomerReadsModel command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateMongoCustomerReadsModel command, CancellationToken cancellationToken)
     {
         Guard.Against.Null(command, nameof(command));
 
         var updatedEntity = _mapper.Map<CustomerReadModel>(command);
 
         await _customersReadDbContext.Customers.ReplaceOneAsync(
-            x => x.Id == command.Id,
+            x => x.CustomerId == command.CustomerId,
             updatedEntity,
             new ReplaceOptions(),
             cancellationToken);

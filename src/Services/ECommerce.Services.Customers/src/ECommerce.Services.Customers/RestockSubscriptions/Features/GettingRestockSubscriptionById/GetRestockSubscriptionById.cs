@@ -4,8 +4,9 @@ using BuildingBlocks.CQRS.Query;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Application;
-using ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
 using ECommerce.Services.Customers.Shared.Data;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptionById;
 
@@ -23,12 +24,12 @@ internal class GetRestockSubscriptionByIdValidator : AbstractValidator<GetRestoc
 internal class GetRestockSubscriptionByIdHandler
     : IQueryHandler<GetRestockSubscriptionById, GetRestockSubscriptionByIdResult>
 {
-    private readonly CustomersDbContext _customersDbContext;
+    private readonly CustomersReadDbContext _customersReadDbContext;
     private readonly IMapper _mapper;
 
-    public GetRestockSubscriptionByIdHandler(CustomersDbContext customersDbContext, IMapper mapper)
+    public GetRestockSubscriptionByIdHandler(CustomersReadDbContext customersReadDbContext, IMapper mapper)
     {
-        _customersDbContext = customersDbContext;
+        _customersReadDbContext = customersReadDbContext;
         _mapper = mapper;
     }
 
@@ -39,7 +40,9 @@ internal class GetRestockSubscriptionByIdHandler
         Guard.Against.Null(query, nameof(query));
 
         var restockSubscription =
-            await _customersDbContext.RestockSubscriptions.FindAsync(new RestockSubscriptionId(query.Id));
+            await _customersReadDbContext.RestockSubscriptions.AsQueryable()
+                .SingleOrDefaultAsync(x => x.RestockSubscriptionId == query.Id, cancellationToken: cancellationToken);
+
         Guard.Against.NotFound(restockSubscription, new RestockSubscriptionNotFoundException(query.Id));
 
         var subscriptionDto = _mapper.Map<RestockSubscriptionDto>(restockSubscription);

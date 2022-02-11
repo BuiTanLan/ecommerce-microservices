@@ -18,6 +18,7 @@ public static class ConfigurationExtensions
         where TModel : new()
     {
         var model = configuration.GetSection(section).Get<TModel>();
+        
         return model;
     }
 }

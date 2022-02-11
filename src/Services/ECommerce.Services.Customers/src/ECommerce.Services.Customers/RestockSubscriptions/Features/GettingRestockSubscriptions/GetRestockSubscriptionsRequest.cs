@@ -8,7 +8,7 @@ namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRest
 // https://benfoster.io/blog/minimal-apis-custom-model-binding-aspnet-6/
 public record GetRestockSubscriptionsRequest : PageRequest
 {
-    public IList<string>? Emails { get; init; }
+    public IList<string> Emails { get; init; } = new List<string>();
     public DateTime? From { get; init; }
     public DateTime? To { get; init; }
 

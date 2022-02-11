@@ -5,11 +5,12 @@ using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Customers.Models.Reads;
 using ECommerce.Services.Customers.Shared.Data;
 
-namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomersReadModels;
+namespace ECommerce.Services.Customers.Customers.Features.CreatingMongoCustomersReadModels;
 
-public record CreateCustomerReadModels : ITxCommand
+public record CreateMongoCustomerReadModels : InternalCommand
 {
-    public long Id { get; init; }
+    public long CustomerId { get; init; }
+    public Guid Id { get; init; }
     public Guid IdentityId { get; init; }
     public string Email { get; init; } = null!;
     public string FirstName { get; init; } = null!;
@@ -23,23 +24,24 @@ public record CreateCustomerReadModels : ITxCommand
     public string? PhoneNumber { get; init; }
     public string? Notes { get; init; }
     public bool IsActive { get; init; }
+    public DateTime Created { get; init; }
     public DateTime? CompletedAt { get; init; }
     public DateTime? VerifiedAt { get; init; }
     public CustomerState CustomerState { get; init; } = CustomerState.None;
 }
 
-internal class CreateCustomerReadModelsHandler : ICommandHandler<CreateCustomerReadModels>
+internal class CreateMongoCustomerReadModelsHandler : ICommandHandler<CreateMongoCustomerReadModels>
 {
     private readonly CustomersReadDbContext _customersReadDbContext;
     private readonly IMapper _mapper;
 
-    public CreateCustomerReadModelsHandler(CustomersReadDbContext customersReadDbContext, IMapper mapper)
+    public CreateMongoCustomerReadModelsHandler(CustomersReadDbContext customersReadDbContext, IMapper mapper)
     {
         _customersReadDbContext = customersReadDbContext;
         _mapper = mapper;
     }
 
-    public async Task<Unit> Handle(CreateCustomerReadModels command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CreateMongoCustomerReadModels command, CancellationToken cancellationToken)
     {
         Guard.Against.Null(command, nameof(command));
 

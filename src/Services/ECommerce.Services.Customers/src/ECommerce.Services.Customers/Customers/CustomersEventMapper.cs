@@ -23,14 +23,14 @@ public class CustomersEventMapper : IIntegrationEventMapper
             TestDomainEvent e => new TestIntegration(e.Data),
             CustomerCreated e => new Features.CreatingCustomer.Events.Integration
                 .CustomerCreated(e.Customer.Id),
-            CustomerLocked e => new Features.LockingCustomer.Events.Integration.CustomerLocked(e.CustomerId),
-            CustomerUnlocked e => new Features.UnlockingCustomer.Events.Integration.CustomerUnlocked(e.CustomerId),
+            CustomerLocked e => new Features.LockingCustomer.Events.Integration.CustomerLocked(e.Customer.Id),
+            CustomerUnlocked e => new Features.UnlockingCustomer.Events.Integration.CustomerUnlocked(e.Customer.Id),
             CustomerCompleted e =>
                 new Features.CompletingCustomer.Events.Integration.CustomerCompleted(
                     e.Customer.Id,
                     e.Customer.PhoneNumber!.Value,
                     e.Customer.Nationality),
-            CustomerVerified e => new Features.VerifyingCustomer.Events.Integration.CustomerVerified(e.CustomerId),
+            CustomerVerified e => new Features.VerifyingCustomer.Events.Integration.CustomerVerified(e.Customer.Id),
             _ => null
         };
     }

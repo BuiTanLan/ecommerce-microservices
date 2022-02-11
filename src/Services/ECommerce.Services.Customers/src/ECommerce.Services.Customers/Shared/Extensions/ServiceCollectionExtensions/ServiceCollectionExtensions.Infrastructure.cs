@@ -9,6 +9,8 @@ using BuildingBlocks.Messaging.Outbox.EF;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
 using BuildingBlocks.Scheduling.Hangfire;
+using BuildingBlocks.Scheduling.Internal;
+using BuildingBlocks.Scheduling.Internal.MessagesScheduler;
 using BuildingBlocks.Validation;
 using BuildingBlocks.Web.Extensions;
 
@@ -27,7 +29,7 @@ public static partial class ServiceCollectionExtensions
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        SnowFlakIdGenerator.Configure(1);
+        SnowFlakIdGenerator.Configure(2);
         services.AddCore();
 
         services.AddMonitoring(healthChecksBuilder =>
@@ -45,10 +47,11 @@ public static partial class ServiceCollectionExtensions
                 tags: new[] { "customers-rabbitmq" });
         });
 
-        services.AddHangfireScheduler(configuration);
-
         services.AddMessaging(configuration)
             .AddEntityFrameworkOutbox<OutboxDataContext>(configuration);
+
+        // Or --> Hangfire
+        services.AddInternalScheduler<InternalMessageDbContext>(configuration);
 
         services.AddRabbitMqTransport(configuration);
 

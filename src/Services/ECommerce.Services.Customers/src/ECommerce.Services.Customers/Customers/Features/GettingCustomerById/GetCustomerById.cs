@@ -5,12 +5,14 @@ using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.Dtos;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Shared.Data;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace ECommerce.Services.Customers.Customers.Features.GettingCustomerById;
 
 public record GetCustomerById(long Id) : IQuery<GetCustomerByIdResult>;
 
-public record GetCustomerByIdResult(CustomerDto Customer);
+public record GetCustomerByIdResult(CustomerReadDto Customer);
 
 internal class GetCustomerByIdValidator : AbstractValidator<GetCustomerById>
 {
@@ -24,12 +26,12 @@ internal class GetCustomerByIdValidator : AbstractValidator<GetCustomerById>
 internal class GetRestockSubscriptionByIdHandler
     : IQueryHandler<GetCustomerById, GetCustomerByIdResult>
 {
-    private readonly CustomersDbContext _customersDbContext;
+    private readonly CustomersReadDbContext _customersReadDbContext;
     private readonly IMapper _mapper;
 
-    public GetRestockSubscriptionByIdHandler(CustomersDbContext customersDbContext, IMapper mapper)
+    public GetRestockSubscriptionByIdHandler(CustomersReadDbContext customersReadDbContext, IMapper mapper)
     {
-        _customersDbContext = customersDbContext;
+        _customersReadDbContext = customersReadDbContext;
         _mapper = mapper;
     }
 
@@ -39,10 +41,12 @@ internal class GetRestockSubscriptionByIdHandler
     {
         Guard.Against.Null(query, nameof(query));
 
-        var customer = await _customersDbContext.Customers.FindAsync(query.Id);
+        var customer = await _customersReadDbContext.Customers.AsQueryable()
+            .SingleOrDefaultAsync(x => x.CustomerId == query.Id, cancellationToken: cancellationToken);
+
         Guard.Against.NotFound(customer, new CustomerNotFoundException(query.Id));
 
-        var customerDto = _mapper.Map<CustomerDto>(customer);
+        var customerDto = _mapper.Map<CustomerReadDto>(customer);
 
         return new GetCustomerByIdResult(customerDto);
     }

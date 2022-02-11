@@ -1,7 +1,6 @@
-﻿namespace BuildingBlocks.Messaging.Scheduling
+﻿namespace BuildingBlocks.Messaging.Scheduling;
+
+public interface IMessagesExecutor
 {
-    public interface IMessagesExecutor
-    {
-        Task ExecuteCommand(MessageSerializedObject messageSerializedObject);
-    }
+    Task ExecuteCommand(MessageSerializedObject messageSerializedObject);
 }

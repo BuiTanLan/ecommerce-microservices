@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Configuration;
+using Serilog.Enrichers.Span;
 using Serilog.Events;
 using Serilog.Filters;
 using Serilog.Sinks.SpectreConsole;
@@ -15,7 +16,7 @@ public static class HostBuilderExtensions
 {
     public static WebApplicationBuilder AddCustomSerilog(
         this WebApplicationBuilder builder,
-        Action<LoggerConfiguration> extraConfigure = null)
+        Action<LoggerConfiguration>? extraConfigure = null)
     {
         AddCustomSerilog(builder.Host, extraConfigure);
 
@@ -24,7 +25,7 @@ public static class HostBuilderExtensions
 
     public static IHostBuilder AddCustomSerilog(
         this IHostBuilder builder,
-        Action<LoggerConfiguration> extraConfigure = null)
+        Action<LoggerConfiguration>? extraConfigure = null)
     {
         return builder.UseSerilog((context, serviceProvider, loggerConfiguration) =>
         {
@@ -34,6 +35,7 @@ public static class HostBuilderExtensions
                 .ReadFrom.Services(serviceProvider)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                 .Enrich.WithTraceId(httpContext)
+                .Enrich.WithSpan()
                 .Enrich.FromLogContext();
 
             var loggerOptions = context.Configuration.GetSection(nameof(LoggerOptions)).Get<LoggerOptions>();

@@ -1,33 +1,39 @@
+using Ardalis.ApiEndpoints;
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.Web.MinimalApi;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ECommerce.Services.Customers.Customers.Features.GettingCustomers;
 
-public class GetCustomersEndpoint : IMinimalEndpointDefinition
+// https://www.youtube.com/watch?v=SDu0MA6TmuM
+// https://github.com/ardalis/ApiEndpoints
+public class GetCustomersEndpoint : EndpointBaseAsync
+    .WithRequest<GetCustomersRequest?>
+    .WithActionResult<GetCustomersResult>
 {
-    public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
-    {
-        builder.MapGet($"{CustomersConfigs.CustomersPrefixUri}", GetCustomers)
-            .WithTags(CustomersConfigs.Tag)
-            // .RequireAuthorization()
-            .Produces<GetCustomersResult>()
-            .Produces(StatusCodes.Status401Unauthorized)
-            .Produces(StatusCodes.Status400BadRequest)
-            .WithName("GetCustomers")
-            .WithDisplayName("Get customers.");
+    private readonly IQueryProcessor _queryProcessor;
 
-        return builder;
+    public GetCustomersEndpoint(IQueryProcessor queryProcessor)
+    {
+        _queryProcessor = queryProcessor;
     }
 
-    private static async Task<IResult> GetCustomers(
-        GetCustomersRequest? request,
-        IQueryProcessor queryProcessor,
-        CancellationToken cancellationToken)
+    [HttpGet(CustomersConfigs.CustomersPrefixUri, Name = "GetCustomers")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(
+        Summary = "Get all customers",
+        Description = "Get all customers",
+        OperationId = "GetCustomers",
+        Tags = new[] { CustomersConfigs.Tag })]
+    public override async Task<ActionResult<GetCustomersResult>> HandleAsync(
+        [FromQuery] GetCustomersRequest? request,
+        CancellationToken cancellationToken = default)
     {
         Guard.Against.Null(request, nameof(request));
 
-        var result = await queryProcessor.SendAsync(
+        var result = await _queryProcessor.SendAsync(
             new GetCustomers
             {
                 Filters = request.Filters,
@@ -39,6 +45,6 @@ public class GetCustomersEndpoint : IMinimalEndpointDefinition
             },
             cancellationToken);
 
-        return Results.Ok(result);
+        return Ok(result);
     }
 }

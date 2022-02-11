@@ -1,4 +1,5 @@
 using BuildingBlocks.Email.Options;
+using BuildingBlocks.Web.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +34,7 @@ public static class Extensions
             services.AddSingleton<IEmailSender, MimeKitEmailSender>();
         }
 
-        var config = configuration.GetSection(nameof(EmailOptions)).Get<EmailOptions>();
+        var config = configuration.GetOptions<EmailOptions>(nameof(EmailOptions));
 
         services.Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)));
         if (configurator is { })

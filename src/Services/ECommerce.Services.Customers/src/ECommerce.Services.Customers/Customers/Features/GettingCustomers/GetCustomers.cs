@@ -1,9 +1,13 @@
 using AutoMapper;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.CQRS.Query;
+using BuildingBlocks.Mongo;
 using ECommerce.Services.Customers.Customers.Dtos;
 using ECommerce.Services.Customers.Customers.Models;
+using ECommerce.Services.Customers.Customers.Models.Reads;
 using ECommerce.Services.Customers.Shared.Data;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace ECommerce.Services.Customers.Customers.Features.GettingCustomers;
 
@@ -28,27 +32,29 @@ public class GetCustomersValidator : AbstractValidator<GetCustomers>
 
 public class GetCustomersHandler : IQueryHandler<GetCustomers, GetCustomersResult>
 {
-    private readonly CustomersDbContext _customersDbContext;
+    private readonly CustomersReadDbContext _customersReadDbContext;
     private readonly IMapper _mapper;
 
-    public GetCustomersHandler(CustomersDbContext customersDbContext, IMapper mapper)
+    public GetCustomersHandler(CustomersReadDbContext customersReadDbContext, IMapper mapper)
     {
-        _customersDbContext = customersDbContext;
+        _customersReadDbContext = customersReadDbContext;
         _mapper = mapper;
     }
 
     public async Task<GetCustomersResult> Handle(GetCustomers request, CancellationToken cancellationToken)
     {
-        var customer = await _customersDbContext.Customers
+        var customer = await _customersReadDbContext.Customers.AsQueryable()
             .Where(x => request.CustomerState == CustomerState.None || x.CustomerState == request.CustomerState)
-            .OrderByDescending(x => x.Created)
-            .ApplyIncludeList(request.Includes)
+            .OrderByDescending(x => x.City)
             .ApplyFilterList(request.Filters)
-            .AsNoTracking()
-            .PaginateAsync<Customer, CustomerDto>(_mapper.ConfigurationProvider, request.Page, request.PageSize, cancellationToken: cancellationToken);
+            .PaginateAsync<CustomerReadModel, CustomerReadDto>(
+                _mapper.ConfigurationProvider,
+                request.Page,
+                request.PageSize,
+                cancellationToken: cancellationToken);
 
         return new GetCustomersResult(customer);
     }
 }
 
-public record GetCustomersResult(ListResultModel<CustomerDto> Customers);
+public record GetCustomersResult(ListResultModel<CustomerReadDto> Customers);

@@ -5,6 +5,7 @@ using MongoDB.Driver;
 
 namespace BuildingBlocks.Mongo;
 
+// https://www.thecodebuzz.com/mongodb-repository-implementation-unit-testing-net-core-example/
 public class MongoDbContext : IMongoDbContext, ITxDbContextExecutes
 {
     public IClientSessionHandle? Session { get; set; }

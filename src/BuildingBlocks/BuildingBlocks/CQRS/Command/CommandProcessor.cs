@@ -1,4 +1,4 @@
-using BuildingBlocks.Messaging.Outbox;
+using BuildingBlocks.Messaging.Scheduling;
 using MediatR;
 
 namespace BuildingBlocks.CQRS.Command;
@@ -6,18 +6,15 @@ namespace BuildingBlocks.CQRS.Command;
 public class CommandProcessor : ICommandProcessor
 {
     private readonly IMediator _mediator;
-    private readonly IOutboxService _outboxService;
-    // private readonly IMessageScheduler _messageScheduler;
+    private readonly IMessagesScheduler _messagesScheduler;
 
     public CommandProcessor(
         IMediator mediator,
-        IOutboxService outboxService
-        // IMessageScheduler messageScheduler
+        IMessagesScheduler messagesScheduler
     )
     {
         _mediator = mediator;
-        _outboxService = outboxService;
-        // _messageScheduler = messageScheduler;
+        _messagesScheduler = messagesScheduler;
     }
 
     public async Task<TResult> SendAsync<TResult>(
@@ -26,10 +23,8 @@ public class CommandProcessor : ICommandProcessor
     {
         if (command is IInternalCommand internalCommand)
         {
-            await _outboxService.SaveAsync(internalCommand, cancellationToken);
+            await _messagesScheduler.EnqueueAsync(internalCommand);
 
-            // Or
-            // await _messagesScheduler.Enqueue(new SendRestockNotification(notification.ProductId, notification.NewStock));
             return default!;
         }
 

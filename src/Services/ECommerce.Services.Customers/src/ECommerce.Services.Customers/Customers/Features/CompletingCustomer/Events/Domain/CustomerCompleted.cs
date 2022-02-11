@@ -2,7 +2,7 @@ using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.CQRS.Command;
-using ECommerce.Services.Customers.Customers.Features.UpdatingCustomerReadsModel;
+using ECommerce.Services.Customers.Customers.Features.UpdatingMongoCustomerReadsModel;
 using ECommerce.Services.Customers.Customers.Models;
 
 namespace ECommerce.Services.Customers.Customers.Features.CompletingCustomer.Events.Domain;
@@ -24,7 +24,7 @@ internal class CustomerCompletedHandler : IDomainEventHandler<CustomerCompleted>
     {
         Guard.Against.Null(notification, nameof(notification));
 
-        var command = _mapper.Map<UpdateCustomerReadsModel>(notification.Customer);
+        var command = _mapper.Map<UpdateMongoCustomerReadsModel>(notification.Customer);
 
         return _commandProcessor.SendAsync(command, cancellationToken);
     }

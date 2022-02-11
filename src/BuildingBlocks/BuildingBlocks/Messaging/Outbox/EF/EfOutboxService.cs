@@ -73,8 +73,6 @@ public class EfOutboxService<TContext> : IOutboxService
     {
         Guard.Against.Null(integrationEvent, nameof(integrationEvent));
 
-        _ = _outboxDataContext.Database.GetConnectionString();
-
         if (!_options.Enabled)
         {
             _logger.LogWarning("Outbox is disabled, outgoing messages won't be saved");
@@ -172,13 +170,6 @@ public class EfOutboxService<TContext> : IOutboxService
         foreach (var outboxMessage in unsentMessages)
         {
             var type = Type.GetType(outboxMessage.Type);
-
-            // if (type is null)
-            // {
-            //     _outboxDataContext.OutboxMessages.Remove(outboxMessage);
-            //     await _outboxDataContext.SaveChangesAsync(cancellationToken);
-            //     continue;
-            // }
 
             dynamic data = _messageSerializer.Deserialize(outboxMessage.Data, type);
             if (data is null)

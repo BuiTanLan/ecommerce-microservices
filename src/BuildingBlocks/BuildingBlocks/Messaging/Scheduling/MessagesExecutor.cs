@@ -1,30 +1,25 @@
 ﻿using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Messaging.Scheduling.Helpers;
+using MediatR;
 using Newtonsoft.Json;
 
-namespace BuildingBlocks.Messaging.Scheduling
+namespace BuildingBlocks.Messaging.Scheduling;
+
+public class MessagesExecutor : IMessagesExecutor
 {
-    public class MessagesExecutor : IMessagesExecutor
+    private readonly IMediator _mediator;
+
+    public MessagesExecutor(IMediator mediator)
     {
-        private readonly ICommandProcessor _commandProcessor;
+        _mediator = mediator;
+    }
 
-        public MessagesExecutor(ICommandProcessor commandProcessor)
-        {
-            _commandProcessor = commandProcessor;
-        }
+    public Task ExecuteCommand(MessageSerializedObject messageSerializedObject)
+    {
+        var type = messageSerializedObject.GetPayloadType();
 
-        public Task ExecuteCommand(MessageSerializedObject messageSerializedObject)
-        {
-            var type = messageSerializedObject.GetPayloadType();
+        dynamic req = JsonConvert.DeserializeObject(messageSerializedObject.Data, type);
 
-            if (type != null)
-            {
-                dynamic req = JsonConvert.DeserializeObject(messageSerializedObject.Data, type);
-
-                return _commandProcessor.SendAsync(req as ICommand);
-            }
-
-            return Task.CompletedTask;
-        }
+        return _mediator.Send(req as InternalCommand);
     }
 }

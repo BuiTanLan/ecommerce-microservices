@@ -11,7 +11,7 @@ namespace BuildingBlocks.Scheduling.Hangfire.MessagesScheduler
             string parentJobId,
             JobContinuationOptions continuationOption,
             string description = null)
-            where T : ICommand;
+            where T : IInternalCommand;
 
         string Enqueue(
             MessageSerializedObject messageSerializedObject,

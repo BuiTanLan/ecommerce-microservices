@@ -124,35 +124,17 @@ public abstract class AppDbContextBase :
         return true;
     }
 
-    public override int SaveChanges()
-    {
-        OnBeforeSaving();
-
-        return base.SaveChanges();
-    }
-
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
         OnBeforeSaving();
-
         return base.SaveChanges(acceptAllChangesOnSuccess);
-    }
-
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        OnBeforeSaving();
-
-        var result = await base.SaveChangesAsync(cancellationToken);
-
-        return result;
     }
 
     public override Task<int> SaveChangesAsync(
         bool acceptAllChangesOnSuccess,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default(CancellationToken))
     {
         OnBeforeSaving();
-
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
@@ -161,6 +143,7 @@ public abstract class AppDbContextBase :
     private void OnBeforeSaving()
     {
         var now = DateTime.Now;
+
         // var userId = GetCurrentUser(); // TODO: Get current user
         foreach (var entry in ChangeTracker.Entries<IHaveAudit>())
         {
@@ -170,7 +153,6 @@ public abstract class AppDbContextBase :
                     entry.CurrentValues["LastModified"] = now;
                     entry.CurrentValues["LastModifiedBy"] = 1;
                     break;
-
                 case EntityState.Added:
                     entry.CurrentValues["Created"] = now;
                     entry.CurrentValues["CreatedBy"] = 1;
@@ -187,16 +169,18 @@ public abstract class AppDbContextBase :
             }
         }
 
-        foreach (var entry in ChangeTracker.Entries<IHaveSoftDelete>())
+        foreach (var entry in ChangeTracker.Entries())
         {
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.CurrentValues["IsDeleted"] = false;
+                    if (entry.Entity is IHaveSoftDelete)
+                        entry.CurrentValues["IsDeleted"] = false;
                     break;
                 case EntityState.Deleted:
                     entry.State = EntityState.Modified;
-                    entry.CurrentValues["IsDeleted"] = true;
+                    if (entry.Entity is IHaveSoftDelete)
+                        Entry(entry.Entity).CurrentValues["IsDeleted"] = true;
                     break;
             }
         }

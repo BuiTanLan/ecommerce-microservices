@@ -9,8 +9,9 @@ namespace ECommerce.Services.Customers.Customers.Features.GettingCustomers;
 // https://benfoster.io/blog/minimal-apis-custom-model-binding-aspnet-6/
 public record GetCustomersRequest : PageRequest
 {
-    public CustomerState CustomerState { get; init; }
+    public CustomerState CustomerState { get; init; } = CustomerState.None;
 
+    // For handling in minimal api
     public static ValueTask<GetCustomersRequest?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
     {
         var page = httpContext.Request.Query.Get<int>("Page", 1);

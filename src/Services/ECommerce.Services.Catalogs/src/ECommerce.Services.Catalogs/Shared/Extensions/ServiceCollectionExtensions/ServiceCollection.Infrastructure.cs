@@ -8,6 +8,7 @@ using BuildingBlocks.Messaging;
 using BuildingBlocks.Messaging.Outbox.EF;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
+using BuildingBlocks.Scheduling.Internal;
 using BuildingBlocks.Validation;
 using BuildingBlocks.Web.Extensions;
 
@@ -31,6 +32,8 @@ public static class ServiceCollection
 
         services.AddMessaging(configuration)
             .AddEntityFrameworkOutbox<OutboxDataContext>(configuration);
+
+        services.AddInternalScheduler<InternalMessageDbContext>(configuration);
 
         services.AddRabbitMqTransport(configuration);
 

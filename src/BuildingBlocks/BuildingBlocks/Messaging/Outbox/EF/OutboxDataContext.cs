@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Messaging.Outbox.EF;
 
-public class OutboxDataContext : AppDbContextBase, IOutboxDataContext
+public class OutboxDataContext : AppDbContextBase
 {
     /// <summary>
     /// The default database schema.

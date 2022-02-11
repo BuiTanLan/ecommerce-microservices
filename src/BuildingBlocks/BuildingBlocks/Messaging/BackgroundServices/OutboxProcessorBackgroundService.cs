@@ -21,7 +21,7 @@ internal class OutboxProcessorBackgroundService : BackgroundService
     {
         _serviceScopeFactory = serviceScopeFactory;
         _logger = logger;
-        _interval = outboxOptions.Value?.Interval ?? TimeSpan.FromSeconds(1);
+        _interval = outboxOptions.Value?.Interval ?? TimeSpan.FromSeconds(5);
         _enabled = outboxOptions.Value?.Enabled ?? false;
     }
 

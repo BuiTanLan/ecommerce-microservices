@@ -2,7 +2,7 @@ using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.CQRS.Command;
-using ECommerce.Services.Customers.Customers.Features.CreatingCustomersReadModels;
+using ECommerce.Services.Customers.Customers.Features.CreatingMongoCustomersReadModels;
 using ECommerce.Services.Customers.Customers.Models;
 
 namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomer.Events.Domain;
@@ -24,8 +24,9 @@ internal class CustomerCreatedHandler : IDomainEventHandler<CustomerCreated>
     {
         Guard.Against.Null(notification, nameof(notification));
 
-        var command = _mapper.Map<CreateCustomerReadModels>(notification.Customer);
+        var command = _mapper.Map<CreateMongoCustomerReadModels>(notification.Customer);
 
+        // https://github.com/kgrzybek/modular-monolith-with-ddd#38-internal-processing
         return _commandProcessor.SendAsync(command, cancellationToken);
     }
 }
