@@ -43,6 +43,12 @@ internal class DeleteRestockSubscriptionsByTimeHandler : ICommandHandler<DeleteR
         if (exists.Any() == false)
             throw new RestockSubscriptionDomainException("Not found any items to delete");
 
+        // instead of directly use of `UpdateMongoRestockSubscriptionsReadModelByTime` we can use this code
+        // foreach (var restockSubscription in exists)
+        // {
+        //     restockSubscription.Delete();
+        // }
+
         _customersDbContext.RestockSubscriptions.RemoveRange(exists);
 
         await _customersDbContext.SaveChangesAsync(cancellationToken);

@@ -76,6 +76,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rabbitmq", "rabbitmq", "{3E
 		_httpclients\rabbitmq\rabbitmq.rest = _httpclients\rabbitmq\rabbitmq.rest
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api-gateway", "api-gateway", "{952A6E1B-D38F-47CC-A6FC-B87B17BBC349}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ECommerce.ApiGateway", "ECommerce.ApiGateway", "{FAB2466B-DBFA-41F2-B2DC-19DD282B50CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{00420D1E-5944-436B-B19A-31C64B54179E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.ApiGateway", "src\ApiGateway\ECommerce.ApiGateway\src\ECommerce.ApiGateway\ECommerce.ApiGateway.csproj", "{4E739D60-B8BD-4574-B81B-627E60584E38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +119,9 @@ Global
 		{99CDE343-6150-4E78-B395-FAD076E9603D} = {4A09493C-0999-474F-AC85-71398BCD69F9}
 		{538D1306-49AF-43C0-8D06-72437B44BB65} = {4A09493C-0999-474F-AC85-71398BCD69F9}
 		{3E4781A4-44AD-4298-B627-50C8F8BC478A} = {4A09493C-0999-474F-AC85-71398BCD69F9}
+		{FAB2466B-DBFA-41F2-B2DC-19DD282B50CD} = {952A6E1B-D38F-47CC-A6FC-B87B17BBC349}
+		{00420D1E-5944-436B-B19A-31C64B54179E} = {FAB2466B-DBFA-41F2-B2DC-19DD282B50CD}
+		{4E739D60-B8BD-4574-B81B-627E60584E38} = {00420D1E-5944-436B-B19A-31C64B54179E}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E945FBF8-A033-4937-AFDC-74A2F74F425B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -153,5 +164,9 @@ Global
 		{CADC6C4D-7663-4F3F-9D06-8BF7B9B5D258}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CADC6C4D-7663-4F3F-9D06-8BF7B9B5D258}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CADC6C4D-7663-4F3F-9D06-8BF7B9B5D258}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E739D60-B8BD-4574-B81B-627E60584E38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E739D60-B8BD-4574-B81B-627E60584E38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E739D60-B8BD-4574-B81B-627E60584E38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E739D60-B8BD-4574-B81B-627E60584E38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

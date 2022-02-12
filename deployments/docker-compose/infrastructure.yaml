@@ -1,45 +1,4 @@
 services:
-
-  # catalogs-api:
-    # image: catalogs:${TAG:-latest}
-    # build:
-      # args:
-        # Version: "1"
-      # context: ../../src
-      # dockerfile: Services/ECommerce.Services.Catalogs/Dockerfile
-    # depends_on:
-      # - postgres
-      # - rabbitmq
-      # - mongo
-      # - elasticsearch
-    # container_name: catalogs-api
-
-  # customers-api:
-    # image: customers:${TAG:-latest}
-    # build:
-      # args:
-        # Version: "1"
-      # context: ../../src
-      # dockerfile: Services/ECommerce.Services.Customers/Dockerfile
-    # depends_on:
-      # - postgres
-      # - rabbitmq
-      # - mongo
-      # - elasticsearch
-    # container_name: customers-api
-
-  # identity-api:
-    # image: identity:${TAG:-latest}
-    # build:
-      # args:
-        # Version: "1"
-      # context: ../../src
-      # dockerfile: Services/ECommerce.Services.Identity/Dockerfile
-    # depends_on:
-      # - postgres
-      # - rabbitmq
-    # container_name: identity-api
-
     #######################################################
     #  postgres
     #######################################################
@@ -206,6 +165,21 @@ services:
 #           - kafka_network
 #       depends_on:
 #           - kafka_rest
+
+#   #######################################################
+#   #  Redis
+#   #######################################################
+
+  # redis:
+  #   image: redis
+  #   container_name: redis
+  #   restart: unless-stopped
+  #   networks:
+  #     - feedr
+  #   ports:
+  #     - 6379:6379
+  #   volumes:
+  #     - redis:/data
 
 # networks:
 #     postgres:

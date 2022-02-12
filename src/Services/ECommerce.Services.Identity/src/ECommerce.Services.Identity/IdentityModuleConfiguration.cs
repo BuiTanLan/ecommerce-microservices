@@ -35,7 +35,14 @@ public static class IdentityModuleConfiguration
 
     public static IEndpointRouteBuilder MapIdentityModuleEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/", () => "ECommerce.Services.Identity Server Apis").ExcludeFromDescription();
+        endpoints.MapGet("/", (HttpContext context) =>
+        {
+            var requestId = context.Request.Headers.TryGetValue("X-Request-Id", out var requestIdHeader)
+                ? requestIdHeader.FirstOrDefault()
+                : string.Empty;
+
+            return $"Identity Service Apis, RequestId: {requestId}";
+        }).ExcludeFromDescription();
 
         endpoints.MapIdentityEndpoints();
         endpoints.MapUsersEndpoints();

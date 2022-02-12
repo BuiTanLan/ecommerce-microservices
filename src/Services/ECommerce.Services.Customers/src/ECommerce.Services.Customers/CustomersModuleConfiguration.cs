@@ -29,7 +29,14 @@ public class CustomersModuleConfiguration : IRootModuleDefinition
 
     public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/", () => "ECommerce.Services.Customers Service Apis").ExcludeFromDescription();
+        endpoints.MapGet("/", (HttpContext context) =>
+        {
+            var requestId = context.Request.Headers.TryGetValue("X-Request-Id", out var requestIdHeader)
+                ? requestIdHeader.FirstOrDefault()
+                : string.Empty;
+
+            return $"Customers Service Apis, RequestId: {requestId}";
+        }).ExcludeFromDescription();
 
         return endpoints;
     }
