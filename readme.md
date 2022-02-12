@@ -1,5 +1,26 @@
 # ECommerce Microservices
 
+
+## The Domain and Bounded Context (Service Boundary)
+
+`ECommerce Microservices` is a simple e-commerce application that has the basic business scenario for online purchasing with some dedicated services. There are six possible `Bounded context` or `Service` for above business:
+
+- `Identity Service`: the Identity Service uses to authenticate and authorize users through a token. Also, this service is responsible for creating users and their corresponding roles and permission with using [.Net Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity) and Jwt authentication and authorization. I will add also [Identity Server](https://github.com/DuendeSoftware/IdentityServer) in future for this service. Each of `Administrator`, `Customer` and `Supplier` are a `User, actually a `IdentityUser`. To be a User, User Registration is required. Each User is assigned one or more User Role.
+Each User Role has set of Permissions. A Permission defines whether User can invoke a particular action or not.
+
+- `Catalog Service`: The Catalog Service presents the ability to add items to our store, It can be electronics, foods, books or anything else. Items can be grouped into categories and catalogs. A catalog is defined as a list of items that a company showcases online. the catalog is a collection of items, which can be grouped into categories. An item can be assigned to only one category or be direct child of a catalog without any category.
+Buyer can browse the products list with supported filtering and sorting by product name and price. customer can see the detail of the product on the product list and in the detail page, can see a name, description, available product in the inventory,...
+
+- `Customers Service`: This service is responsible for managing our customers information, track the activities and subscribing to get notification for out of stock products
+
+- `Order Service`: The Orders Service main purpose is to store order details and manage orders created by users on client side. This service is not designed to be a full order processing system like ERP but serves as storage for customer orders details and can be synchronized with different external processing systems.
+Some of this service responsibilities are `Saving orders`, `Saving order drafts`, `Ability to view and manage fulfillment, packages`, `Change discounts`
+
+- `Payment Service`: The payment service is responsible for payment process of our customer with different payment process and managing and tracking our payment history
+
+- `Shipping Service`: The Shipping Service provides the ability to extend shipping provider list with custom providers and also provides an interface and API for managing these shipping providers.
+Some of shipping service capabilities are `Register Shipping methods`, `Edit Shipping method`, `Shipment details`, `Shipping settings`
+
 ## Prerequisites
 
 1. Install git - [https://git-scm.com/downloads](https://git-scm.com/downloads).
