@@ -54,13 +54,6 @@ public class RestockSubscription : AggregateRoot<RestockSubscriptionId>, IHaveSo
         AddDomainEvent(new RestockSubscriptionDeleted(this));
     }
 
-    public void DeleteMultiple(IList<RestockSubscription> subscriptions)
-    {
-        Guard.Against.Null(subscriptions, new RestockSubscriptionDomainException("Subscriptions can't be null or "));
-
-        AddDomainEvent(new MultipleRestockSubscriptionDeleted(subscriptions));
-    }
-
     public void MarkAsProcessed(DateTime processedTime)
     {
         Processed = true;

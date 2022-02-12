@@ -30,8 +30,7 @@ internal class VerifyCustomerHandler : ICommandHandler<VerifyCustomer>
 
     public async Task<Unit> Handle(VerifyCustomer command, CancellationToken cancellationToken)
     {
-        var customer =
-            await _customersDbContext.FindCustomerByIdAsync(command.CustomerId);
+        var customer = await _customersDbContext.FindCustomerByIdAsync(command.CustomerId);
         if (customer is null)
         {
             throw new CustomerNotFoundException(command.CustomerId);

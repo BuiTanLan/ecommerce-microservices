@@ -1,6 +1,7 @@
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Customers.ValueObjects;
 using ECommerce.Services.Customers.Shared.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Customers.Shared.Extensions;
 

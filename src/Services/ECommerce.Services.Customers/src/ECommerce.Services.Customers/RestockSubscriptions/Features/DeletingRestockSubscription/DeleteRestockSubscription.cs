@@ -3,6 +3,7 @@ using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Application;
 using ECommerce.Services.Customers.Shared.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscription;
 

@@ -3,6 +3,7 @@ using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Persistence;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Shared.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Customers.Customers.Features.UpdatingUserState.Events.External;
 

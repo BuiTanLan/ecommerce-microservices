@@ -30,13 +30,13 @@ internal class RestockSubscriptionDeletedHandler : IDomainEventHandler<RestockSu
     {
         Guard.Against.Null(notification, nameof(notification));
 
-        var isDeleted = (bool)_customersDbContext.Entry(notification.RestockSubscription)
-            .Property("IsDeleted")
-            .CurrentValue!;
+        // var isDeleted = (bool)_customersDbContext.Entry(notification.RestockSubscription)
+        //     .Property("IsDeleted")
+        //     .CurrentValue!;
 
         // https://github.com/kgrzybek/modular-monolith-with-ddd#38-internal-processing
         await _commandProcessor.SendAsync(
-            new UpdateMongoRestockSubscriptionReadModel(notification.RestockSubscription, isDeleted),
+            new UpdateMongoRestockSubscriptionReadModel(notification.RestockSubscription, true),
             cancellationToken);
     }
 }

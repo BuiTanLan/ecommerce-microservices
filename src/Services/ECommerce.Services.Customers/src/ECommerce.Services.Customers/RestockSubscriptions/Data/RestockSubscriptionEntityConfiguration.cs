@@ -3,6 +3,7 @@ using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.RestockSubscriptions.Models;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 using ECommerce.Services.Customers.Shared.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Data;

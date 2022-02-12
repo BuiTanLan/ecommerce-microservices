@@ -49,7 +49,7 @@ public class InternalMessageSchedulerBackgroundWorkerService : BackgroundService
                 catch (System.Exception exception)
                 {
                     _logger.LogError(
-                        "There was an error when processing outbox, exception is: {Exception}",
+                        "There was an error when processing internal messages, exception is: {Exception}",
                         exception.Message);
                 }
             }

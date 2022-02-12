@@ -2,6 +2,7 @@ using BuildingBlocks.Core.Persistence;
 using BuildingBlocks.Mongo;
 using ECommerce.Services.Customers.Shared.Contracts;
 using ECommerce.Services.Customers.Shared.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Customers.Shared.Extensions.ServiceCollectionExtensions;
 

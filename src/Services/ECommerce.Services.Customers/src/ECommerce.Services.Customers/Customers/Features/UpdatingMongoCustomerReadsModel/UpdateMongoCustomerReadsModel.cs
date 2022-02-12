@@ -45,12 +45,34 @@ internal class UpdateMongoCustomerReadsModelHandler : ICommandHandler<UpdateMong
     {
         Guard.Against.Null(command, nameof(command));
 
-        var updatedEntity = _mapper.Map<CustomerReadModel>(command);
+        var filterDefinition =
+            Builders<CustomerReadModel>.Filter
+                .Eq(x => x.CustomerId, command.CustomerId);
 
-        await _customersReadDbContext.Customers.ReplaceOneAsync(
-            x => x.CustomerId == command.CustomerId,
-            updatedEntity,
-            new ReplaceOptions(),
+        var updateDefinition =
+            Builders<CustomerReadModel>.Update
+                .Set(x => x.Email, command.Email)
+                .Set(x => x.Country, command.Country)
+                .Set(x => x.City, command.City)
+                .Set(x => x.DetailAddress, command.DetailAddress)
+                .Set(x => x.IdentityId, command.IdentityId)
+                .Set(x => x.CustomerId, command.CustomerId)
+                .Set(x => x.CustomerState, command.CustomerState)
+                .Set(x => x.Nationality, command.Nationality)
+                .Set(x => x.FirstName, command.FirstName)
+                .Set(x => x.LastName, command.LastName)
+                .Set(x => x.FullName, command.FullName)
+                .Set(x => x.Notes, command.Notes)
+                .Set(x => x.PhoneNumber, command.PhoneNumber)
+                .Set(x => x.BirthDate, command.BirthDate)
+                .Set(x => x.CompletedAt, command.CompletedAt)
+                .Set(x => x.VerifiedAt, command.VerifiedAt)
+                .Set(x => x.IsActive, command.IsActive);
+
+        await _customersReadDbContext.Customers.UpdateOneAsync(
+            filterDefinition,
+            updateDefinition,
+            new UpdateOptions(),
             cancellationToken);
 
         return Unit.Value;

@@ -33,7 +33,7 @@ public class MongoDbContext : IMongoDbContext, ITxDbContextExecutes
                 new CamelCaseElementNameConvention(),
                 new IgnoreExtraElementsConvention(true),
                 new EnumRepresentationConvention(BsonType.String),
-                new IgnoreIfDefaultConvention(true),
+                new IgnoreIfDefaultConvention(false),
                 new ImmutablePocoConvention()
             }, _ => true);
     }

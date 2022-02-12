@@ -1,6 +1,10 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.CQRS.Command;
+using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
+using ECommerce.Services.Customers.RestockSubscriptions.Features.UpdatingMultipleMongoRestockSubscriptionReadModel;
 using ECommerce.Services.Customers.Shared.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscriptionsByTime;
 
@@ -9,13 +13,19 @@ public record DeleteRestockSubscriptionsByTime(DateTime? From = null, DateTime? 
 internal class DeleteRestockSubscriptionsByTimeHandler : ICommandHandler<DeleteRestockSubscriptionsByTime>
 {
     private readonly CustomersDbContext _customersDbContext;
+    private readonly IDomainEventPublisher _domainEventPublisher;
+    private readonly ICommandProcessor _commandProcessor;
     private readonly ILogger<DeleteRestockSubscriptionsByTimeHandler> _logger;
 
     public DeleteRestockSubscriptionsByTimeHandler(
         CustomersDbContext customersDbContext,
+        IDomainEventPublisher domainEventPublisher,
+        ICommandProcessor commandProcessor,
         ILogger<DeleteRestockSubscriptionsByTimeHandler> logger)
     {
         _customersDbContext = customersDbContext;
+        _domainEventPublisher = domainEventPublisher;
+        _commandProcessor = commandProcessor;
         _logger = logger;
     }
 
@@ -31,12 +41,18 @@ internal class DeleteRestockSubscriptionsByTimeHandler : ICommandHandler<DeleteR
             .ToListAsync(cancellationToken: cancellationToken);
 
         if (exists.Any() == false)
-            return Unit.Value;
+            throw new RestockSubscriptionDomainException("Not found any items to delete");
 
         _customersDbContext.RestockSubscriptions.RemoveRange(exists);
+
         await _customersDbContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("'{Count}' RestockSubscriptions removed.'", exists.Count);
+
+        // https://github.com/kgrzybek/modular-monolith-with-ddd#38-internal-processing
+        await _commandProcessor.SendAsync(
+            new UpdateMongoRestockSubscriptionsReadModelByTime(command.From, command.To, IsDeleted: true),
+            cancellationToken);
 
         return Unit.Value;
     }

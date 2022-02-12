@@ -47,7 +47,8 @@ namespace BuildingBlocks.Mongo
             }
         }
 
-        private static List<PropertyInfo> GetMatchingProperties(ConstructorInfo constructor,
+        private static List<PropertyInfo> GetMatchingProperties(
+            ConstructorInfo constructor,
             List<PropertyInfo> properties)
         {
             var matchProperties = new List<PropertyInfo>();

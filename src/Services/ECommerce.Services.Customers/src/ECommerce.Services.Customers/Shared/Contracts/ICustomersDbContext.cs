@@ -1,4 +1,5 @@
 using ECommerce.Services.Customers.Customers.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Customers.Shared.Contracts;
 
