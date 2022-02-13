@@ -1,5 +1,3 @@
-using System;
-using System.Net.Http;
 using BuildingBlocks.Resiliency.Configs;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -9,11 +7,13 @@ namespace BuildingBlocks.Resiliency;
 
 public static class HttpRetryPolicies
 {
-    public static AsyncRetryPolicy<HttpResponseMessage> GetHttpRetryPolicy(ILogger logger,
-        IRetryPolicyConfig retryPolicyConfig)
+    public static AsyncRetryPolicy<HttpResponseMessage> GetHttpRetryPolicy(
+        ILogger logger,
+        IRetryPolicyOptions retryPolicyConfig)
     {
         return HttpPolicyBuilders.GetBaseBuilder()
-            .WaitAndRetryAsync(retryPolicyConfig.RetryCount,
+            .WaitAndRetryAsync(
+                retryPolicyConfig.RetryCount,
                 ComputeDuration,
                 (result, timeSpan, retryCount, context) =>
                 {
@@ -21,17 +21,28 @@ public static class HttpRetryPolicies
                 });
     }
 
-    private static void OnHttpRetry(DelegateResult<HttpResponseMessage> result, TimeSpan timeSpan, int
-        retryCount, Context context, ILogger logger)
+    private static void OnHttpRetry(
+        DelegateResult<HttpResponseMessage> result,
+        TimeSpan timeSpan,
+        int retryCount,
+        Context context,
+        ILogger logger)
     {
         if (result.Result != null)
+        {
             logger.LogWarning(
-                "Request failed with {StatusCode}. Waiting {timeSpan} before next retry. Retry attempt {retryCount}",
-                result.Result.StatusCode, timeSpan, retryCount);
+                "Request failed with {StatusCode}. Waiting {TimeSpan} before next retry. Retry attempt {RetryCount}",
+                result.Result.StatusCode,
+                timeSpan,
+                retryCount);
+        }
         else
+        {
             logger.LogWarning(
-                "Request failed because network failure. Waiting {timeSpan} before next retry. Retry attempt {retryCount}",
-                timeSpan, retryCount);
+                "Request failed because network failure. Waiting {TimeSpan} before next retry. Retry attempt {RetryCount}",
+                timeSpan,
+                retryCount);
+        }
     }
 
     private static TimeSpan ComputeDuration(int input)

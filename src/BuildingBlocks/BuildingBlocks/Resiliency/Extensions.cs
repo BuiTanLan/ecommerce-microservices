@@ -39,4 +39,15 @@ public static class Extensions
 
         return services;
     }
+
+    public static IServiceCollection AddHttpApiClient<TInterface, TClient>(this IServiceCollection services)
+        where TInterface : class
+        where TClient : class, TInterface
+    {
+        services
+            .AddHttpClient<TInterface, TClient>()
+            .AddCustomPolicyHandlers();
+
+        return services;
+    }
 }

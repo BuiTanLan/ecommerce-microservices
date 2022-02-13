@@ -1,6 +1,6 @@
 namespace BuildingBlocks.Resiliency.Configs;
 
-public interface ITimeoutPolicy
+public interface ITimeoutPolicyOptions
 {
     public int TimeOutDuration { get; set; }
 }

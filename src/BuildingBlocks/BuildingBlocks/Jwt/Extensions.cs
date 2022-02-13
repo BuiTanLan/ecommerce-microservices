@@ -1,9 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using BuildingBlocks.Exception;
 using BuildingBlocks.Exception.Types;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
@@ -17,11 +19,12 @@ namespace BuildingBlocks.Jwt;
 
 public static class Extensions
 {
-    public static IServiceCollection AddCustomJwtAuthentication(this IServiceCollection services,
+    public static IServiceCollection AddCustomJwtAuthentication(
+        this IServiceCollection services,
         IConfiguration configuration,
         TokenStorageType storageType = TokenStorageType.InMemory,
-        Action<JwtBearerOptions> optionsFactory = null,
-        Action<JwtOptions> jwtOptionsConfigure = null)
+        Action<JwtBearerOptions>? optionsFactory = null,
+        Action<JwtOptions>? jwtOptionsConfigure = null)
     {
         // https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/issues/415
         // https://mderriey.com/2019/06/23/where-are-my-jwt-claims/
@@ -33,13 +36,12 @@ public static class Extensions
         // Configuration Setup
         var options = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
 
-        services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
+        services.AddSingleton(options);
 
         if (jwtOptionsConfigure is { })
-            services.Configure(nameof(JwtOptions), jwtOptionsConfigure);
+            jwtOptionsConfigure.Invoke(options);
 
         services.AddSingleton<IJwtHandler, JwtHandler>();
-        services.AddSingleton<IJwtTokenValidator, JwtTokenValidator>();
 
         if (storageType == TokenStorageType.InMemory)
             services.AddSingleton<IAccessTokenService, InMemoryAccessTokenService>();
@@ -108,16 +110,17 @@ public static class Extensions
                 hasCertificate = true;
                 tokenValidationParameters.IssuerSigningKey = new X509SecurityKey(certificate);
                 var actionType = certificate.HasPrivateKey ? "issuing" : "validating";
-                Log.Information("Using X.509 certificate for {ActionType} tokens", actionType);
+                Log.Information("Using asymmetric encryption and X.509 certificate for {ActionType} tokens",
+                    actionType);
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(options.IssuerSigningKey) && !hasCertificate)
+        if (!string.IsNullOrWhiteSpace(options.SecretKey) && !hasCertificate)
         {
             if (string.IsNullOrWhiteSpace(options.Algorithm) || hasCertificate)
                 options.Algorithm = SecurityAlgorithms.HmacSha256;
 
-            var rawKey = Encoding.UTF8.GetBytes(options.IssuerSigningKey);
+            var rawKey = Encoding.UTF8.GetBytes(options.SecretKey);
             tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(rawKey);
             Log.Information("Using symmetric encryption for issuing tokens");
         }
@@ -190,9 +193,11 @@ public static class Extensions
 
         services.AddSingleton(tokenValidationParameters);
 
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(JwtAuthBehavior<,>));
+        services.AddScoped<ISecurityContextAccessor, SecurityContextAccessor>();
+
         return services;
     }
-
 
     public static IServiceCollection AddCustomAuthorization(
         this IServiceCollection services,

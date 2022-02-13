@@ -1,4 +1,7 @@
+using System.Net;
+using Ardalis.GuardClauses;
 using BuildingBlocks.Resiliency.Configs;
+using BuildingBlocks.Web.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -9,45 +12,50 @@ public static class HttpClientBuilderExtensions
 {
     public static IHttpClientBuilder AddCustomPolicyHandlers(
         this IHttpClientBuilder httpClientBuilder,
-        IConfiguration configuration,
-        string policySectionName)
+        Func<IHttpClientBuilder, IHttpClientBuilder>? builder = null)
     {
-        var policyConfig = new PolicyConfig();
-        configuration.Bind(policySectionName, policyConfig);
+        var result = httpClientBuilder
+            .AddRetryPolicyHandler()
+            .AddCircuitBreakerHandler();
 
-        var circuitBreakerPolicyConfig = (ICircuitBreakerPolicyConfig)policyConfig;
-        var retryPolicyConfig = (IRetryPolicyConfig)policyConfig;
+        if (builder is { })
+            result = builder.Invoke(result);
 
-        return httpClientBuilder.AddRetryPolicyHandler(retryPolicyConfig)
-            .AddCircuitBreakerHandler(circuitBreakerPolicyConfig);
+        return result;
     }
 
     public static IHttpClientBuilder AddRetryPolicyHandler(
-        this IHttpClientBuilder httpClientBuilder,
-        IRetryPolicyConfig retryPolicyConfig)
+        this IHttpClientBuilder httpClientBuilder)
     {
         // https://stackoverflow.com/questions/53604295/logging-polly-wait-and-retry-policy-asp-net-core-2-1
         return httpClientBuilder.AddPolicyHandler((sp, _) =>
         {
+            var options = sp.GetRequiredService<IConfiguration>().GetOptions<PolicyOptions>(nameof(PolicyOptions));
+
+            Guard.Against.Null(options, nameof(options));
+
             var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
             var retryLogger = loggerFactory.CreateLogger("PollyHttpRetryPoliciesLogger");
 
-            return HttpRetryPolicies.GetHttpRetryPolicy(retryLogger, retryPolicyConfig);
+            return HttpRetryPolicies.GetHttpRetryPolicy(retryLogger, options);
         });
     }
 
     public static IHttpClientBuilder AddCircuitBreakerHandler(
-        this IHttpClientBuilder httpClientBuilder,
-        ICircuitBreakerPolicyConfig circuitBreakerPolicyConfig)
+        this IHttpClientBuilder httpClientBuilder)
     {
         return httpClientBuilder.AddPolicyHandler((sp, _) =>
         {
+            var options = sp.GetRequiredService<IConfiguration>().GetOptions<PolicyOptions>(nameof(PolicyOptions));
+
+            Guard.Against.Null(options, nameof(options));
+
             var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
             var circuitBreakerLogger = loggerFactory.CreateLogger("PollyHttpCircuitBreakerPoliciesLogger");
 
             return HttpCircuitBreakerPolicies.GetHttpCircuitBreakerPolicy(
                 circuitBreakerLogger,
-                circuitBreakerPolicyConfig);
+                options);
         });
     }
 }

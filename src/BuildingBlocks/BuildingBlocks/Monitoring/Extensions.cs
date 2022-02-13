@@ -12,6 +12,7 @@ namespace BuildingBlocks.Monitoring;
 
 public static class Extensions
 {
+    // https://github.com/prometheus-net/prometheus-net
     public static IServiceCollection AddMonitoring(
         this IServiceCollection services,
         Action<IHealthChecksBuilder>? healthChecksBuilder = null)
@@ -36,6 +37,7 @@ public static class Extensions
     {
         app.UseHttpMetrics();
         app.UseGrpcMetrics();
+
         app.UseHealthChecks("/healthz",
                 new HealthCheckOptions
                 {

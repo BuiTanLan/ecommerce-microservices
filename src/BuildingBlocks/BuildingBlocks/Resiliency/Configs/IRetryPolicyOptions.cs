@@ -1,6 +1,6 @@
 namespace BuildingBlocks.Resiliency.Configs;
 
-public interface IRetryPolicyConfig
+public interface IRetryPolicyOptions
 {
     int RetryCount { get; set; }
 }

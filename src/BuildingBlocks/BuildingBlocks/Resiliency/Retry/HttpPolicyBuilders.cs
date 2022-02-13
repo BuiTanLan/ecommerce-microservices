@@ -1,4 +1,4 @@
-using System.Net.Http;
+using System.Net;
 using Polly;
 using Polly.Extensions.Http;
 
@@ -8,6 +8,7 @@ public static class HttpPolicyBuilders
 {
     public static PolicyBuilder<HttpResponseMessage> GetBaseBuilder()
     {
-        return HttpPolicyExtensions.HandleTransientHttpError();
+        return HttpPolicyExtensions.HandleTransientHttpError()
+            .OrResult(msg => msg.StatusCode == HttpStatusCode.BadRequest);
     }
 }

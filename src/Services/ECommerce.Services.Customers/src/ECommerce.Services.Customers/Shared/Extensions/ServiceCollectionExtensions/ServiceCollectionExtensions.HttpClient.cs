@@ -8,8 +8,7 @@ public static partial class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCustomHttpClients(
         this IServiceCollection services,
-        IConfiguration configuration,
-        string pollySectionName = "PolicyConfig")
+        IConfiguration configuration)
     {
         services.AddOptions<IdentityApiClientOptions>().Bind(configuration.GetSection(nameof(IdentityApiClientOptions)))
             .ValidateDataAnnotations();
@@ -17,11 +16,8 @@ public static partial class ServiceCollectionExtensions
         services.AddOptions<CatalogsApiClientOptions>().Bind(configuration.GetSection(nameof(CatalogsApiClientOptions)))
             .ValidateDataAnnotations();
 
-        services.AddHttpClient<ICatalogApiClient, CatalogApiClient>()
-            .AddCustomPolicyHandlers(configuration, pollySectionName);
-
-        services.AddHttpClient<IIdentityApiClient, IdentityApiClient>()
-            .AddCustomPolicyHandlers(configuration, pollySectionName);
+        services.AddHttpApiClient<ICatalogApiClient, CatalogApiClient>();
+        services.AddHttpApiClient<IIdentityApiClient, IdentityApiClient>();
 
         return services;
     }

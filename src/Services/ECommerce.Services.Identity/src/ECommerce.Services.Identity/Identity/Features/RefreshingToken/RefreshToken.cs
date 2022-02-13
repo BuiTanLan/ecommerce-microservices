@@ -30,15 +30,15 @@ internal class RefreshTokenValidator : AbstractValidator<RefreshToken>
 internal class RefreshTokenHandler : ICommandHandler<RefreshToken, RefreshTokenResult>
 {
     private readonly ICommandProcessor _commandProcessor;
-    private readonly IJwtTokenValidator _tokenValidator;
+    private readonly IJwtHandler _jwtHandler;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public RefreshTokenHandler(
-        IJwtTokenValidator tokenValidator,
+        IJwtHandler jwtHandler,
         UserManager<ApplicationUser> userManager,
         ICommandProcessor commandProcessor)
     {
-        _tokenValidator = tokenValidator;
+        _jwtHandler = jwtHandler;
         _userManager = userManager;
         _commandProcessor = commandProcessor;
     }
@@ -48,7 +48,7 @@ internal class RefreshTokenHandler : ICommandHandler<RefreshToken, RefreshTokenR
         Guard.Against.Null(request, nameof(RefreshToken));
 
         // invalid token/signing key was passed and we can't extract user claims
-        var userClaimsPrincipal = _tokenValidator.GetPrincipalFromToken(request.AccessTokenData);
+        var userClaimsPrincipal = _jwtHandler.ValidateToken(request.AccessTokenData);
 
         if (userClaimsPrincipal is null)
             throw new InvalidTokenException();

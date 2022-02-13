@@ -17,6 +17,6 @@ public interface IJwtHandler
         IList<string> rolesClaims = null,
         IList<string> permissionsClaims = null);
 
-    ClaimsPrincipal ValidateToken(string token, TokenValidationParameters tokenValidationParameters);
-    JsonWebTokenPayload GetTokenPayload(string accessToken);
+    ClaimsPrincipal? ValidateToken(string token, TokenValidationParameters? tokenValidationParameters = null);
+    JsonWebTokenPayload? GetTokenPayload(string accessToken);
 }
