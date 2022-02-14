@@ -1,5 +1,9 @@
 # ECommerce Microservices
+> `ECommerce microservices` is implementing an API with microservices using CQRS pattern, message brokers, Outbox Pattern and using Postgress for write side and MongoDb for read side and Using Domain Driven Design and etc.
 
+
+
+This project is still in progress and I update it with latest technologies continuously.
 
 ## The Domain and Bounded Context (Service Boundary)
 
@@ -21,30 +25,31 @@ Some of this service responsibilities are `Saving orders`, `Saving order drafts`
 - `Shipping Service`: The Shipping Service provides the ability to extend shipping provider list with custom providers and also provides an interface and API for managing these shipping providers.
 Some of shipping service capabilities are `Register Shipping methods`, `Edit Shipping method`, `Shipment details`, `Shipping settings`
 
-## Prerequisites
+## Application Architecture
 
-1. Install git - [https://git-scm.com/downloads](https://git-scm.com/downloads).
-2. Install .NET Core 6.0 - [https://dotnet.microsoft.com/download/dotnet/6.0](https://dotnet.microsoft.com/download/dotnet/6.0).
-3. Install Visual Studio 2022, Rider or VSCode.
-4. Install docker - [https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/).
-5. Make sure that you have ~10GB disk space.
-7. Clone Project [https://github.com/mehdihadeli/e-commerce-microservices](https://github.com/mehdihadeli/e-commerce-microservices), make sure that's compiling
-8. Open `ECommerce.sln` solution.
-9. Docker useful commands
+The architecture shows that there is one public API (API gateway). This is accessible for the clients. This is done via HTTP request/response.
 
-    - `docker-compose up` - start dockers
-    - `docker-compose kill` - to stop running dockers.
-    - `docker-compose down -v` - to clean stopped dockers.
-    - `docker ps` - for showing running dockers
-    - `docker ps -a` - to show all dockers (also stopped)
+The API gateway then routes the HTTP request to the correct microservice. The HTTP request is received by the microservice that hosts its own REST API. Each microservice is running within its own domain and has directly access to its own dependencies such as databases, stores, etc. All these dependencies are only accessible for the microservice and not to the outside world. In fact microservices are decoupled from each other. This also means that the microservice does not rely on other parts in the system and can run independently of other services.
 
-10. Go to [deployments/docker-compose](./deployments/docker-compose) and run: `docker-compose up`.
-11. Wait until all dockers got are downloaded and running.
-12. You should automatically get:
-    - Postgres running
-    - RabbitMQ running
-    - MongoDB running
-    - Microservies Api Gateway, Available at: http://localhost:8000
+![](./assets/microservices.png)
+
+Microservices are event based which means they can publish and/or subscribe to any events occurring in the setup. By using this approach for communicating between services, each microservice does not need to know about the other services or handle errors occurred in other microservices.
+
+I this architecture we use [CQRS pattern](https://www.eventstore.com/cqrs-pattern) for separating read and write model beside of other [CQRS advantages](https://youtu.be/dK4Yb6-LxAk?t=1029). Here for now I don't use [Event Sourcing](https://www.eventstore.com/blog/event-sourcing-and-cqrs) for simplicity. we can use ES for syncing read and write sides with using projections, beside of other its usage but In future I will update this project to using Event Sourcing. Here I have a write model that uses a postgres database for handling better consistency and ACID transaction guaranty. beside o this write side I use a read side model that uses MongoDB for better performance of our read side without any joins with suing some nested document in our document also better scalability with some good scaling features of MongoDB.
+For syncing our read side and write side we have 2 options:
+
+- If `Our read sides` are in `same service`, during saving data in write side I save a [Internal Command](https://github.com/kgrzybek/modular-monolith-with-ddd#38-internal-processing) record in my `Command Processor` storage (like something we do in outbox pattern) and after commenting write side, our `command processor manager` reads unsent commands and sends them to their `Command Handlers` in same corresponding service and this handlers could save their read models in our MongoDb database as a read side.
+
+- If `Our read sides` are in `another services` we publish an integration event after committing our write side and all of our `Subscribers` could get this event and save it in their read models (MongoDB).
+
+[Outbox](http://www.kamilgrzybek.com/design/the-outbox-pattern/) can be used as a landing zone for integration events before they are published to the message broker for preventing missing any message and some retry mechanism in any failure ([At least one Delivery](https://www.cloudcomputingpatterns.org/at_least_once_delivery/)). Events in the Outbox database are published to the message broker via a background service. If the connection to the message broker is broken, the background service will try until the event has been published successfully. After the event has been published successfully to the message broker, the event in the Outbox storage which is either removed or kept with a flag that it has been published successfully. Our Outbox data will store in our write side `Postgres` database for better consistency and transaction support.
+
+All of this is optional in the application and it is possible to only use what that the service needs. Eg. if the service does not want to Use DDD because of business is very simple and it is mostly `CRUD` we can use `Data Centric` Architecture or If our application is not `Task based` instead of CQRS and separating read side and write side again we can just use a simple `CRUD` based application.
+
+Also here I used `RabbitMQ` as my `Message Broker` for my async communication between the microservices with using eventually consistency mechanism. beside of this eventually consistency we have a synchronous call with using `REST` (in future I will use gRpc) for our immediate consistency needs.
+
+Here we use a `Api Gateway` in front of our services, we could also have multiple Api Gateway for reaching [BFF pattern](https://blog.bitsrc.io/bff-pattern-backend-for-frontend-an-introduction-e4fa965128bf). for example one Gateway for mobile apps, One Gateway for web apps.
+With using api Gateway our internal microservices are transparent and user can not access them directly and all requests will server through this Gateway. also we could use gateway for load balancing, authentication and authorization, caching ,...
 
 ## Application Structure
 
@@ -74,7 +79,7 @@ Also here I used [CQRS](https://www.eventstore.com/cqrs-pattern) for decompose m
 - easy to maintain and any changes only affect on one command or query (or a slice) and avoid any breaking changes on other parts
 - it gives us better separation of concerns and cross cutting concern (with help of mediatr behavior pipelines) in our code instead of a big service class for doing a lot of things.
 
-With using CQRS, our code will be more aligned with [SOLID principles](https://en.wikipedia.org/wiki/SOLID), especially with:
+With using [CQRS](https://event-driven.io/en/cqrs_facts_and_myths_explained/), our code will be more aligned with [SOLID principles](https://en.wikipedia.org/wiki/SOLID), especially with:
 
 - [Single Responsibility](https://en.wikipedia.org/wiki/Single-responsibility_principle) rule - because logic responsible for a given operation is enclosed in its own type.
 - [Open-Closed](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle) rule - because to add new operation you don’t need to edit any of the existing types, instead you need to add a new file with a new type representing that operation.
@@ -84,3 +89,31 @@ We cut each business functionality into some vertical slices, and inner each of 
 For checking `validation rules` we use two type of validation:
 - [Data Validation](http://www.kamilgrzybek.com/design/rest-api-data-validation/): Data validation verify data items which are coming to our application from external sources and check if theirs values are acceptable but Business rules validation is a more broad concept and more close to how business works and behaves. So it is mainly focused on behavior For implementing data validation I used [FluentValidation](https://github.com/FluentValidation/FluentValidation) library for cleaner validation also better separation of concern in my handlers for preventing mixing validation logic with orchestration logic in my handlers.
 - [Business Rules validation](http://www.kamilgrzybek.com/design/domain-model-validation/): I explicitly check all of the our business rules, inner my handlers and I will throw a customized exception based on the error that these errors should inherits from [AppException](./src/BuildingBlocks/BulidingBlocks/Exception/AppException.cs) class, because of these exceptions, occurs in application layer and we catch this exceptions in api layer with using [Hellang.Middleware.ProblemDetails](https://www.nuget.org/packages/Hellang.Middleware.ProblemDetails/) middleware and pass a correct status code to client.
+
+## Prerequisites & How to Run
+
+1. Install git - [https://git-scm.com/downloads](https://git-scm.com/downloads).
+2. Install .NET Core 6.0 - [https://dotnet.microsoft.com/download/dotnet/6.0](https://dotnet.microsoft.com/download/dotnet/6.0).
+3. Install Visual Studio 2022, Rider or VSCode.
+4. Install docker - [https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/).
+5. Make sure that you have ~10GB disk space.
+7. Clone Project [https://github.com/mehdihadeli/e-commerce-microservices](https://github.com/mehdihadeli/e-commerce-microservices), make sure that's compiling
+8. Open `ECommerce.sln` solution.
+9. Docker useful commands
+
+    - `docker-compose  -f .\docker-compose.yaml up` or `docker-compose -f .\docker-compose.yaml build --no-cache` - start dockers
+    - `docker-compose kill` - to stop running dockers.
+    - `docker-compose down -v` - to clean stopped dockers.
+    - `docker ps` - for showing running dockers
+    - `docker ps -a` - to show all dockers (also stopped)
+
+10. Go to [deployments/docker-compose/docker-compose.yaml](./deployments/docker-compose/docker-compose.yaml) and run: `docker-compose up`.
+11. Wait until all dockers got are downloaded and running.
+12. You should automatically get:
+    - Postgres running
+    - RabbitMQ running
+    - MongoDB running
+    - Microservies running and accessible through Api Gateway, Available at: http://localhost:3000
+
+
+
