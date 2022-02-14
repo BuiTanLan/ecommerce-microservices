@@ -48,7 +48,7 @@ All of this is optional in the application and it is possible to only use what t
 
 Also here I used `RabbitMQ` as my `Message Broker` for my async communication between the microservices with using eventually consistency mechanism. beside of this eventually consistency we have a synchronous call with using `REST` (in future I will use gRpc) for our immediate consistency needs.
 
-Here we use a `Api Gateway` and I used [YARP](https://microsoft.github.io/reverse-proxy/articles/getting-started.html) taht is microsoft reverse proxy (we could use envoy, traefik, Ocelot, ...), in front of our services, we could also have multiple Api Gateway for reaching [BFF pattern](https://blog.bitsrc.io/bff-pattern-backend-for-frontend-an-introduction-e4fa965128bf). for example one Gateway for mobile apps, One Gateway for web apps.
+We use a `Api Gateway` and here I used [YARP](https://microsoft.github.io/reverse-proxy/articles/getting-started.html) that is microsoft reverse proxy (we could use envoy, traefik, Ocelot, ...), in front of our services, we could also have multiple Api Gateway for reaching [BFF pattern](https://blog.bitsrc.io/bff-pattern-backend-for-frontend-an-introduction-e4fa965128bf). for example one Gateway for mobile apps, One Gateway for web apps.
 With using api Gateway our internal microservices are transparent and user can not access them directly and all requests will server through this Gateway. also we could use gateway for load balancing, authentication and authorization, caching ,...
 
 ## Application Structure
