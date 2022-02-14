@@ -1,0 +1,7 @@
+# version: '3'
+# services:
+#   catalogs:
+#     environment:
+#       - ASPNETCORE_ENVIRONMENT=Development
+#     ports:
+#       - "80"

@@ -1,0 +1,109 @@
+# https://docs.docker.com/compose/environment-variables/#the-env-file
+version: '3'
+services:
+  # gateway:
+  #   build:
+  #     context: ../../src
+  #     dockerfile: ApiGateway/ECommerce.ApiGateway/Dockerfile
+  #   container_name: e-commerce-gateway
+  #   restart: unless-stopped
+  #   ports:
+  #     - 5000:80
+  #   networks:
+  #     - e-commerce
+
+  catalogs:
+    image: catalogs:${TAG}
+    build:
+      args:
+        Version: "1"
+      context: ../../
+      dockerfile: src/Services/ECommerce.Services.Catalogs/Dockerfile
+    container_name: e-commerce-catalogs
+    restart: unless-stopped
+    ports:
+      - 4000:80
+    # depends_on:
+      # - postgres
+      # - rabbitmq
+      # - mongo
+    networks:
+      - e-commerce
+
+  # identity:
+  #   image: identity:${TAG}
+  #   build:
+  #     args:
+  #       Version: "1"
+  #     context: ../../src
+  #     dockerfile: Services/ECommerce.Services.Identity/Dockerfile
+  #   container_name: e-commerce-identity
+  #   restart: unless-stopped
+  #   ports:
+  #     - 7000:80
+  #   depends_on:
+  #     - postgres
+  #     - rabbitmq
+  #     - mongo
+  #   networks:
+  #     - e-commerce
+
+  # customers:
+  #   image: customers:${TAG}
+  #   build:
+  #     args:
+  #       Version: "1"
+  #     context: ../../src
+  #     dockerfile: Services/ECommerce.Services.Customers/Dockerfile
+  #   container_name: e-commerce-customers
+  #   restart: unless-stopped
+  #   ports:
+  #     - 6000:80
+  #   depends_on:
+  #     - postgres
+  #     - rabbitmq
+  #     - mongo
+  #   networks:
+  #     - e-commerce
+
+  # rabbitmq:
+    # image: rabbitmq:3-management
+    # container_name: rabbitmq
+    # restart: unless-stopped
+    # ports:
+      # - 5672:5672
+      # - 15672:15672
+      # # volumes:
+      # #   - rabbitmq:/var/lib/rabbitmq
+    # networks:
+      # - e-commerce
+
+    # #######################################################
+    # #  mongo
+    # #######################################################
+  # mongo:
+    # image: mongo
+    # container_name: mongo
+    # restart: unless-stopped
+    # # environment:
+    # #   - MONGO_INITDB_ROOT_USERNAME=root
+    # #   - MONGO_INITDB_ROOT_PASSWORD=secret
+    # ports:
+      # - 27017:27017
+    # networks:
+      # - e-commerce
+
+  # postgres:
+    # image: postgres:11.1-alpine
+    # ports:
+      # - '5432:5432'
+    # restart: unless-stopped
+    # environment:
+      # - POSTGRES_USER=postgres
+      # - POSTGRES_PASSWORD=
+    # networks:
+      # - e-commerce
+
+networks:
+  e-commerce:
+    name: e-commerce
