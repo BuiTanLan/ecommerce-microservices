@@ -8,6 +8,10 @@
   <ItemGroup>
     <ProjectReference Include="..\ECommerce.Services.Identity\ECommerce.Services.Identity.csproj" />
   </ItemGroup>
+  
+ <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
 
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

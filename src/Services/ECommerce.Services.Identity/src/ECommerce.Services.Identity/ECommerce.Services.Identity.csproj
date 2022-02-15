@@ -12,6 +12,10 @@
     <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="6.0.0" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="appsettings.json" />
     <Content Include="appsettings.json">

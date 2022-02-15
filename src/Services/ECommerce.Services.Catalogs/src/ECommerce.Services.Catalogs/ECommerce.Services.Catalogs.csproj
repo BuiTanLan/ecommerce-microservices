@@ -18,6 +18,10 @@
     </Content>
   </ItemGroup>
   
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+  
   <ItemGroup>
     <Folder Include="Products\Features\AddingProductImage" />
     <Folder Include="Products\Features\ChangingPrice" />

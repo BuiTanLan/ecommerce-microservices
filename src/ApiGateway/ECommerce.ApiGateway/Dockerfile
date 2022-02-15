@@ -1,11 +1,31 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /app
-COPY . .
-RUN dotnet publish src/Gateway/FeedR.Gateway -c release -o out
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS builder
+
+# Setup working directory for the project
+WORKDIR /src
+
+COPY ./src/ApiGateway/ECommerce.ApiGateway/src/ECommerce.ApiGateway/ECommerce.ApiGateway.csproj ./ApiGateway/ECommerce.ApiGateway/src/ECommerce.ApiGateway/
+
+# Restore nuget packages
+RUN dotnet restore ./ApiGateway/ECommerce.ApiGateway/src/ECommerce.ApiGateway/ECommerce.ApiGateway.csproj
+
+# Copy project files
+COPY ./src/ApiGateway/ECommerce.ApiGateway/src/ECommerce.ApiGateway/  ./ApiGateway/ECommerce.ApiGateway/src/ECommerce.ApiGateway/
+
+# Build project with Release configuration
+# and no restore, as we did it already
+RUN dotnet build -c Release --no-restore  ./ApiGateway/ECommerce.ApiGateway/src/ECommerce.ApiGateway/ECommerce.ApiGateway.csproj
+
+WORKDIR /src/ApiGateway/ECommerce.ApiGateway/src/ECommerce.ApiGateway/
+# Publish project to output folder
+# and no build, as we did it already
+RUN ls
+RUN dotnet publish -c Release --no-build -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
+# Setup working directory for the project
 WORKDIR /app
-COPY --from=build /app/out .
-ENV ASPNETCORE_URLS http://*:80
+COPY --from=builder /src/ApiGateway/ECommerce.ApiGateway/src/ECommerce.ApiGateway/out  .
+EXPOSE 3000
+ENV ASPNETCORE_URLS http://*:3000
 ENV ASPNETCORE_ENVIRONMENT docker
-ENTRYPOINT dotnet FeedR.Gateway.dll
+ENTRYPOINT ["dotnet", "ECommerce.ApiGateway.dll"]

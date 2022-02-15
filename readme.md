@@ -1,5 +1,5 @@
 # ECommerce Microservices
-> `ECommerce microservices` is implementing an API with microservices using CQRS pattern, message brokers, Outbox Pattern and using Postgress for write side and MongoDb for read side and Using Domain Driven Design and etc.
+> `ECommerce microservices` is implementing an API with microservices using CQRS pattern, message brokers, Outbox Pattern and using Postgres for write side and MongoDb for read side and Using Domain Driven Design and etc.
 
 
 

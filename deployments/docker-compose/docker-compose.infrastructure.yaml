@@ -10,6 +10,8 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    networks:
+      - e-commerce
     # networks:
     #         - postgres
 
@@ -37,6 +39,8 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq
     restart: unless-stopped
+    networks:
+      - e-commerce
     ports:
       - 5672:5672
       - 15672:15672
@@ -49,6 +53,8 @@ services:
   mongo:
     image: mongo
     container_name: mongo
+    networks:
+      - e-commerce
     restart: unless-stopped
     # environment:
     #   - MONGO_INITDB_ROOT_USERNAME=root
@@ -190,3 +196,7 @@ services:
 # volumes:
 #     postgres:
 #     pgadmin:
+
+networks:
+  e-commerce:
+    name: e-commerce
