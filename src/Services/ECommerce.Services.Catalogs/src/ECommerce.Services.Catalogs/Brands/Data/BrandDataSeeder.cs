@@ -19,11 +19,14 @@ public class BrandDataSeeder : IDataSeeder
         if (await _context.Brands.AnyAsync())
             return;
 
+        long id = 1;
+
         // https://github.com/bchavez/Bogus
         // https://www.youtube.com/watch?v=T9pwE1GAr_U
         var brandFaker = new Faker<Brand>().CustomInstantiator(faker =>
         {
-            var brand = Brand.Create(SnowFlakIdGenerator.NewId(), faker.Company.CompanyName());
+            var brand = Brand.Create(id, faker.Company.CompanyName());
+            id++;
             return brand;
         });
         var brands = brandFaker.Generate(5);

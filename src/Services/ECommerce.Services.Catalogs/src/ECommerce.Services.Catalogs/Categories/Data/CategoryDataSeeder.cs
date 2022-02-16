@@ -20,9 +20,9 @@ public class CategoryDataSeeder : IDataSeeder
 
         await _dbContext.Categories.AddRangeAsync(new List<Category>
         {
-            Category.Create(SnowFlakIdGenerator.NewId(), "Electronics", "0001", "All electronic goods"),
-            Category.Create(SnowFlakIdGenerator.NewId(), "Clothing", "0002", "All clothing goods"),
-            Category.Create(SnowFlakIdGenerator.NewId(), "Books", "0003", "All books"),
+            Category.Create(1, "Electronics", "0001", "All electronic goods"),
+            Category.Create(2, "Clothing", "0002", "All clothing goods"),
+            Category.Create(3, "Books", "0003", "All books"),
         });
         await _dbContext.SaveChangesAsync();
     }

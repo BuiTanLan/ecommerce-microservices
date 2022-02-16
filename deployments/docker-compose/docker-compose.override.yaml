@@ -14,9 +14,6 @@ services:
       - OutboxOptions__ConnectionString=Server=postgres;Port=5432;Database=ECommerce.Services.Catalogs;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Include Error Detail=true
       - HangfireMessageSchedulerOptions__ConnectionString=Server=postgres;Port=5432;Database=ECommerce.Services.Catalogs;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Include Error Detail=true
       - InternalMessageSchedulerOptions__ConnectionString=Server=postgres;Port=5432;Database=ECommerce.Services.Catalogs;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Include Error Detail=true
-    ports:
-      - 4000:${CATALOGS_SVC_PORT}
-
   rabbitmq:
     ports:
       - 15672:15672
@@ -32,4 +29,4 @@ services:
 
   mongo:
     ports:
-      - 27017:${MONGODB_PORT}
+      - ${MONGODB_PORT}:27017

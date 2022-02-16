@@ -1,4 +1,35 @@
+version: '3'
 services:
+    #######################################################
+    #  rabbitmq
+    #######################################################
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+      # volumes:
+      #   - rabbitmq:/var/lib/rabbitmq
+    networks:
+      - e-commerce
+
+    #######################################################
+    #  mongo
+    #######################################################
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: unless-stopped
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=root
+    #   - MONGO_INITDB_ROOT_PASSWORD=secret
+    ports:
+      - 27017:${MONGODB_PORT}
+    networks:
+      - e-commerce
+
     #######################################################
     #  postgres
     #######################################################
@@ -8,59 +39,10 @@ services:
       - '5432:5432'
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - e-commerce
-    # networks:
-    #         - postgres
-
-    #######################################################
-    #  pgadmin
-    #######################################################
-  # pgadmin:
-  #     image: dpage/pgadmin4
-  #     container_name: pgadmin_container
-  #     environment:
-  #         PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-  #         PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-  #         PGADMIN_CONFIG_SERVER_MODE: 'False'
-  #     volumes:
-  #         - pgadmin:/var/lib/pgadmin
-  #     ports:
-  #         - "${PGADMIN_PORT:-5050}:80"
-  #     networks:
-  #         - postgres
-
-    #######################################################
-    #  rabbitmq
-    #######################################################
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    restart: unless-stopped
-    networks:
-      - e-commerce
-    ports:
-      - 5672:5672
-      - 15672:15672
-      # volumes:
-      #   - rabbitmq:/var/lib/rabbitmq
-
-    #######################################################
-    #  mongo
-    #######################################################
-  mongo:
-    image: mongo
-    container_name: mongo
-    networks:
-      - e-commerce
-    restart: unless-stopped
-    # environment:
-    #   - MONGO_INITDB_ROOT_USERNAME=root
-    #   - MONGO_INITDB_ROOT_PASSWORD=secret
-    ports:
-      - 27017:27017
 
     #######################################################
     #  elasticsearch

@@ -1,6 +1,5 @@
 using Bogus;
 using BuildingBlocks.Core.Persistence;
-using BuildingBlocks.IdsGenerator;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 
 namespace ECommerce.Services.Catalogs.Suppliers.Data;
@@ -19,9 +18,11 @@ public class SupplierDataSeeder : IDataSeeder
         if (await _dbContext.Suppliers.AnyAsync())
             return;
 
+        long id = 1;
         var suppliersFaker = new Faker<Supplier>().CustomInstantiator(faker =>
         {
-            var supplier = new Supplier(SnowFlakIdGenerator.NewId(), faker.Person.FullName);
+            var supplier = new Supplier(id, faker.Person.FullName);
+            id++;
             return supplier;
         });
 

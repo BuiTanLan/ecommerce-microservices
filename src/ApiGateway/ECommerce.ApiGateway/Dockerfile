@@ -25,7 +25,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 # Setup working directory for the project
 WORKDIR /app
 COPY --from=builder /src/ApiGateway/ECommerce.ApiGateway/src/ECommerce.ApiGateway/out  .
-EXPOSE 3000
-ENV ASPNETCORE_URLS http://*:3000
+EXPOSE 80
+ENV ASPNETCORE_URLS http://*:80
 ENV ASPNETCORE_ENVIRONMENT docker
 ENTRYPOINT ["dotnet", "ECommerce.ApiGateway.dll"]

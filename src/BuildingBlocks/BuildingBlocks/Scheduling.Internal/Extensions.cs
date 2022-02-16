@@ -1,4 +1,5 @@
-﻿using Ardalis.GuardClauses;
+﻿using System.Reflection;
+using Ardalis.GuardClauses;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Messaging.Scheduling;
 using BuildingBlocks.Scheduling.Internal.MessagesScheduler;
@@ -14,7 +15,8 @@ public static class Extensions
 {
     public static IServiceCollection AddInternalScheduler<TContext>(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        Assembly migrationAssembly)
         where TContext : AppDbContextBase
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -30,7 +32,7 @@ public static class Extensions
 
             cfg.UseNpgsql(options.ConnectionString, sqlOptions =>
             {
-                sqlOptions.MigrationsAssembly(typeof(TContext).Assembly.GetName().Name);
+                sqlOptions.MigrationsAssembly(migrationAssembly.GetName().Name);
                 sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             }).UseSnakeCaseNamingConvention();
         });

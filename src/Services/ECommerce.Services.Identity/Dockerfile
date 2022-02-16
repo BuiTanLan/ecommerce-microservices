@@ -29,8 +29,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 # Setup working directory for the project
 WORKDIR /app
 COPY --from=builder /src/Services/ECommerce.Services.Identity/src/ECommerce.Services.Identity.Api/out  .
-EXPOSE 7000
+EXPOSE 80
 
-ENV ASPNETCORE_URLS http://*:7000
+ENV ASPNETCORE_URLS http://*:80
 ENV ASPNETCORE_ENVIRONMENT docker
 ENTRYPOINT ["dotnet", "ECommerce.Services.Identity.Api.dll"]

@@ -31,9 +31,9 @@ public static class ServiceCollection
         services.AddCore();
 
         services.AddMessaging(configuration)
-            .AddEntityFrameworkOutbox<OutboxDataContext>(configuration);
+            .AddEntityFrameworkOutbox<OutboxDataContext>(configuration, Assembly.GetExecutingAssembly());
 
-        services.AddInternalScheduler<InternalMessageDbContext>(configuration);
+        services.AddInternalScheduler<InternalMessageDbContext>(configuration, Assembly.GetExecutingAssembly());
 
         services.AddRabbitMqTransport(configuration);
 

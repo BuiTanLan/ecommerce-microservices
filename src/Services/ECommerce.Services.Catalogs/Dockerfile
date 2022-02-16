@@ -29,7 +29,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 # Setup working directory for the project
 WORKDIR /app
 COPY --from=builder /src/Services/ECommerce.Services.Catalogs/src/ECommerce.Services.Catalogs.Api/out  .
-EXPOSE 4000
-ENV ASPNETCORE_URLS http://*:4000
+EXPOSE 80
+ENV ASPNETCORE_URLS http://*:80
 ENV ASPNETCORE_ENVIRONMENT docker
 ENTRYPOINT ["dotnet", "ECommerce.Services.Catalogs.Api.dll"]

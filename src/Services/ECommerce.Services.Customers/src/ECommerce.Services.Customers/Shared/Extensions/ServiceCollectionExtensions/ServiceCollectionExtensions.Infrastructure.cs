@@ -8,9 +8,7 @@ using BuildingBlocks.Messaging;
 using BuildingBlocks.Messaging.Outbox.EF;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
-using BuildingBlocks.Scheduling.Hangfire;
 using BuildingBlocks.Scheduling.Internal;
-using BuildingBlocks.Scheduling.Internal.MessagesScheduler;
 using BuildingBlocks.Validation;
 using BuildingBlocks.Web.Extensions;
 
@@ -48,10 +46,10 @@ public static partial class ServiceCollectionExtensions
         });
 
         services.AddMessaging(configuration)
-            .AddEntityFrameworkOutbox<OutboxDataContext>(configuration);
+            .AddEntityFrameworkOutbox<OutboxDataContext>(configuration, Assembly.GetExecutingAssembly());
 
         // Or --> Hangfire
-        services.AddInternalScheduler<InternalMessageDbContext>(configuration);
+        services.AddInternalScheduler<InternalMessageDbContext>(configuration, Assembly.GetExecutingAssembly());
 
         services.AddRabbitMqTransport(configuration);
 

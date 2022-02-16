@@ -12,6 +12,7 @@ using BuildingBlocks.Messaging.Scheduling;
 using BuildingBlocks.Messaging.Serialization;
 using BuildingBlocks.Messaging.Serialization.Newtonsoft;
 using BuildingBlocks.Utils.Reflections;
+using BuildingBlocks.Web.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,10 +43,16 @@ public static class Extensions
 
     public static IServiceCollection AddEntityFrameworkOutbox<TContext>(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        Assembly migrationAssembly)
         where TContext : AppDbContextBase
     {
-        var outboxOption = Guard.Against.Null(configuration.GetOutboxOptions(), nameof(OutboxOptions));
+        var outboxOption = Guard.Against.Null(
+            configuration.GetOptions<OutboxOptions>(nameof(OutboxOptions)),
+            nameof(OutboxOptions));
+
+        services.AddOptions<OutboxOptions>().Bind(configuration.GetSection(nameof(OutboxOptions)))
+            .ValidateDataAnnotations();
 
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -53,7 +60,7 @@ public static class Extensions
         {
             options.UseNpgsql(outboxOption.ConnectionString, sqlOptions =>
             {
-                sqlOptions.MigrationsAssembly(typeof(TContext).Assembly.GetName().Name);
+                sqlOptions.MigrationsAssembly(migrationAssembly.GetName().Name);
                 sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             }).UseSnakeCaseNamingConvention();
         });
@@ -82,8 +89,8 @@ public static class Extensions
 
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         var types = assemblies.SelectMany(x => x.GetTypes())
-                .Where(type =>
-                    messageType.IsAssignableFrom(type) && type.IsInterface == false && type.IsAbstract == false)
+            .Where(type =>
+                messageType.IsAssignableFrom(type) && type.IsInterface == false && type.IsAbstract == false)
             .Distinct()
             .ToList();
 
