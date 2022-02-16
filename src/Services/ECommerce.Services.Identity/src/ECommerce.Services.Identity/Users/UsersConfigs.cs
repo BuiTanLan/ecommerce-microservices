@@ -28,7 +28,6 @@ internal static class UsersConfigs
         endpoints.MapUpdateUserStateEndpoint();
         endpoints.MapGetUserByIdEndpoint();
         endpoints.MapGetUserByEmailEndpoint();
-        endpoints.MapGetUsersEndpoint();
 
         return endpoints;
     }

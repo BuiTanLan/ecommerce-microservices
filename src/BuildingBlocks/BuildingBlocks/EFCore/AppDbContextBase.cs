@@ -178,9 +178,12 @@ public abstract class AppDbContextBase :
                         entry.CurrentValues["IsDeleted"] = false;
                     break;
                 case EntityState.Deleted:
-                    entry.State = EntityState.Modified;
                     if (entry.Entity is IHaveSoftDelete)
+                    {
+                        entry.State = EntityState.Modified;
                         Entry(entry.Entity).CurrentValues["IsDeleted"] = true;
+                    }
+
                     break;
             }
         }

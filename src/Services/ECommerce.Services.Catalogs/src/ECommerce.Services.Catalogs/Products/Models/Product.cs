@@ -25,7 +25,7 @@ namespace ECommerce.Services.Catalogs.Products.Models;
 // https://ardalis.com/avoid-collections-as-properties/?utm_sq=grcpqjyka3
 public class Product : AggregateRoot<ProductId>
 {
-    private readonly List<ProductImage> _images = new();
+    private List<ProductImage> _images = new();
 
     public Name Name { get; private set; } = default!;
     public string? Description { get; private set; }
@@ -275,7 +275,11 @@ public class Product : AggregateRoot<ProductId>
 
     public void AddProductImages(IList<ProductImage>? productImages)
     {
-        Guard.Against.Null(productImages, nameof(productImages));
+        if (productImages is null)
+        {
+            _images = null!;
+            return;
+        }
 
         _images.AddRange(productImages);
     }

@@ -1,35 +1,41 @@
+using Ardalis.ApiEndpoints;
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ECommerce.Services.Identity.Users.Features.GettingUsers;
 
-public static class GetUsersEndpoint
+// https://www.youtube.com/watch?v=SDu0MA6TmuM
+// https://github.com/ardalis/ApiEndpoints
+public class GetUsersEndpoint : EndpointBaseAsync
+    .WithRequest<GetUsersRequest?>
+    .WithActionResult<GetUsersResult>
 {
-    internal static IEndpointRouteBuilder MapGetUsersEndpoint(this IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapGet($"{UsersConfigs.UsersPrefixUri}", GetUsers)
-            .WithTags(UsersConfigs.Tag)
-            // .RequireAuthorization()
-            .Produces(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status401Unauthorized)
-            .Produces(StatusCodes.Status400BadRequest)
-            .WithName("GetUsers")
-            .WithDisplayName("Get users.");
+    private readonly IQueryProcessor _queryProcessor;
 
-        return endpoints;
+    public GetUsersEndpoint(IQueryProcessor queryProcessor)
+    {
+        _queryProcessor = queryProcessor;
     }
 
-    private static async Task<IResult> GetUsers(
-        GetUsersRequest? request,
-        IQueryProcessor queryProcessor,
-        CancellationToken cancellationToken)
+    [HttpGet(UsersConfigs.UsersPrefixUri, Name = "GetUsers")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(
+        Summary = "Get all users",
+        Description = "Get all users",
+        OperationId = "GetUsers",
+        Tags = new[] { UsersConfigs.Tag })]
+    public override async Task<ActionResult<GetUsersResult>> HandleAsync(
+        [FromQuery] GetUsersRequest? request,
+        CancellationToken cancellationToken = default)
     {
         Guard.Against.Null(request, nameof(request));
 
-        var result = await queryProcessor.SendAsync(
+        var result = await _queryProcessor.SendAsync(
             new GetUsers
             {
                 Filters = request.Filters,
@@ -40,6 +46,6 @@ public static class GetUsersEndpoint
             },
             cancellationToken);
 
-        return Results.Ok(result);
+        return Ok(result);
     }
 }

@@ -18,8 +18,6 @@ internal static class ProductsConfigs
     internal static IServiceCollection AddProductsServices(this IServiceCollection services)
     {
         services.AddScoped<IDataSeeder, ProductDataSeeder>();
-
-        // services.AddSingleton<IEventMapper<Product>, ProductEventMapper>();
         services.AddSingleton<IEventMapper, ProductEventMapper>();
 
         return services;
@@ -27,7 +25,6 @@ internal static class ProductsConfigs
 
     internal static IEndpointRouteBuilder MapProductsEndpoints(this IEndpointRouteBuilder endpoints) =>
         endpoints.MapCreateProductsEndpoint()
-            .MapGetProductsEndpoint()
             .MapDebitProductStockEndpoint()
             .MapReplenishProductStockEndpoint()
             .MapGetProductByIdEndpoint()

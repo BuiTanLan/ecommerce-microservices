@@ -10,6 +10,7 @@ public static class ReplenishingProductStockEndpoint
         endpoints.MapPost(
                 $"{ProductsConfigs.ProductsPrefixUri}/{{productId}}/replenish-stock",
                 ReplenishProductStock)
+            .RequireAuthorization()
             .WithTags(ProductsConfigs.Tag)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status401Unauthorized)

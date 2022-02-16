@@ -33,7 +33,10 @@ public class ProductMappers : Profile
             .ForMember(x => x.Description, opt => opt.MapFrom(x => x.Description))
             .ForMember(x => x.Images, opt => opt.MapFrom(x => x.Images));
 
-        CreateMap<ProductImage, ProductImageDto>();
+        CreateMap<ProductImage, ProductImageDto>()
+            .ForMember(x => x.Id, opt => opt.MapFrom(x => x.Id.Value))
+            .ForMember(x => x.ProductId, opt => opt.MapFrom(x => x.ProductId.Value));
+
         CreateMap<ProductView, ProductViewDto>();
 
         CreateMap<CreateProduct, Product>();

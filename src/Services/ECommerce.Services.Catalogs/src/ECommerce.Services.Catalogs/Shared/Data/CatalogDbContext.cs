@@ -1,5 +1,4 @@
 using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.Core.Domain.Model;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products.Models;

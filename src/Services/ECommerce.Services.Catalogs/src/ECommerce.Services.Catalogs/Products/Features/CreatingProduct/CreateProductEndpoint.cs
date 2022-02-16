@@ -12,7 +12,7 @@ public static class CreateProductEndpoint
     {
         endpoints.MapPost($"{ProductsConfigs.ProductsPrefixUri}", CreateProducts)
             .WithTags(ProductsConfigs.Tag)
-            // .RequireAuthorization()
+            .RequireAuthorization()
             .Produces<CreateProductResult>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)

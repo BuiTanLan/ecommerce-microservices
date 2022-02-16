@@ -1,36 +1,40 @@
+using Ardalis.ApiEndpoints;
 using Ardalis.GuardClauses;
 using BuildingBlocks.CQRS.Query;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ECommerce.Services.Catalogs.Products.Features.GettingProducts;
 
-// GET api/v1/catalog/products
-public static class GetProductsEndpoint
+// https://www.youtube.com/watch?v=SDu0MA6TmuM
+// https://github.com/ardalis/ApiEndpoints
+public class GetProductsEndpoint : EndpointBaseAsync
+    .WithRequest<GetProductsRequest?>
+    .WithActionResult<GetProductsResult>
 {
-    internal static IEndpointRouteBuilder MapGetProductsEndpoint(this IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapGet($"{ProductsConfigs.ProductsPrefixUri}", GetProducts)
-            .WithTags(ProductsConfigs.Tag)
-            // .RequireAuthorization()
-            .Produces<GetProductsResult>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status401Unauthorized)
-            .Produces(StatusCodes.Status400BadRequest)
-            .WithName("GetProducts")
-            .WithDisplayName("Get products.");
+    private readonly IQueryProcessor _queryProcessor;
 
-        return endpoints;
+    public GetProductsEndpoint(IQueryProcessor queryProcessor)
+    {
+        _queryProcessor = queryProcessor;
     }
 
-    private static async Task<IResult> GetProducts(
-            GetProductsRequest? request,
-            IQueryProcessor queryProcessor,
-            CancellationToken cancellationToken)
-
-        // [FromHeader(Name = "x-query")] string xQuery,)
+    [HttpGet(ProductsConfigs.ProductsPrefixUri, Name = "GetProducts")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(
+        Summary = "Get all products",
+        Description = "Get all products",
+        OperationId = "GetProducts",
+        Tags = new[] { ProductsConfigs.Tag })]
+    public override async Task<ActionResult<GetProductsResult>> HandleAsync(
+        [FromQuery] GetProductsRequest? request,
+        CancellationToken cancellationToken = default)
     {
-        // var request = httpContext.ExtractXQueryObjectFromHeader<GetProductRequest>(xQuery);
         Guard.Against.Null(request, nameof(request));
 
-        var result = await queryProcessor.SendAsync(
+
+        var result = await _queryProcessor.SendAsync(
             new GetProducts
             {
                 Page = request.Page,
@@ -41,6 +45,6 @@ public static class GetProductsEndpoint
             },
             cancellationToken);
 
-        return Results.Ok(result);
+        return Ok(result);
     }
 }
