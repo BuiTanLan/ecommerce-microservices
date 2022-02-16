@@ -1,9 +1,43 @@
 # ECommerce Microservices
-> `ECommerce microservices` is implementing an API with microservices using CQRS pattern, message brokers, Outbox Pattern and using Postgres for write side and MongoDb for read side and Using Domain Driven Design and etc.
-
-
+> `ECommerce Microservices` is a fictional eCommerce based on different software architecture and technologies like Microservices Architecture, Vertical Slice Architecture, CQRS pattern, Event Sourcing, Domain Driven Design, Event Driven Architecture, Inbox and Outbox Pattern and using Postgres for write side and MongoDb for read side and etc.
 
 This project is still in progress and I update it with latest technologies continuously.
+
+## Plan
+> This project is in progress, New features are added over time.
+
+I will try to register some [Issues](https://github.com/mehdihadeli/e-commerce-microservices/issues) for my `TODO` works, just to not forget and also for tracking my works in future.
+
+High-level plan is represented in the table
+
+| Feature | Status |
+| ------- | ------ |
+| Building Blocks | Completed ✔️ |
+| API Gateway | Completed ✔️ |
+| Identity Service | Completed ✔️ |
+| Customer Service | Not Started ✔️ |
+| Catalog Service | Not Started ✔️ |
+| Order Service |  Under Development 👷‍♂️ |
+| Shipping Service | Not Started 🚩 |
+| Payment Service | Not Started 🚩 |
+
+## Technologies - Libraries
+- ✔️ **[`.NET Core 6`](https://dotnet.microsoft.com/download)** - .NET Framework and .NET Core, including ASP.NET and ASP.NET Core
+- ✔️ **[`MVC Versioning API`](https://github.com/microsoft/aspnet-api-versioning)** - Set of libraries which add service API versioning to ASP.NET Web API, OData with ASP.NET Web API, and ASP.NET Core
+- ✔️ **[`Npgsql Entity Framework Core Provider`](https://www.npgsql.org/efcore/)** - Npgsql has an Entity Framework (EF) Core provider. It behaves like other EF Core providers (e.g. SQL Server), so the general EF Core docs apply here as well
+- ✔️ **[`FluentValidation`](https://github.com/FluentValidation/FluentValidation)** - Popular .NET validation library for building strongly-typed validation rules
+- ✔️ **[`Swagger & Swagger UI`](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)** - Swagger tools for documenting API's built on ASP.NET Core
+- ✔️ **[`Serilog`](https://github.com/serilog/serilog)** - Simple .NET logging with fully-structured events
+- ✔️ **[`Polly`](https://github.com/App-vNext/Polly)** - Polly is a .NET resilience and transient-fault-handling library that allows developers to express policies such as Retry, Circuit Breaker, Timeout, Bulkhead Isolation, and Fallback in a fluent and thread-safe manner
+- ✔️ **[`Scrutor`](https://github.com/khellang/Scrutor)** - Assembly scanning and decoration extensions for Microsoft.Extensions.DependencyInjection
+- ✔️ **[`Opentelemetry-dotnet`](https://github.com/open-telemetry/opentelemetry-dotnet)** - The OpenTelemetry .NET Client
+- ✔️ **[`DuendeSoftware IdentityServer`](https://github.com/DuendeSoftware/IdentityServer)** - The most flexible and standards-compliant OpenID Connect and OAuth 2.x framework for ASP.NET Core
+- ✔️ **[`Hangfire`](https://github.com/HangfireIO/Hangfire)** - Easy way to perform fire-and-forget, delayed and recurring tasks inside ASP.NET apps
+- ✔️ **[`EasyCaching`](https://github.com/dotnetcore/EasyCaching)** - Open source caching library that contains basic usages and some advanced usages of caching which can help us to handle caching more easier.
+- ✔️ **[`AutoMapper`](https://github.com/AutoMapper/AutoMapper)** - Convention-based object-object mapper in .NET.
+- ✔️ **[`Hellang.Middleware.ProblemDetails`](https://github.com/khellang/Middleware/tree/master/src/ProblemDetails)** - A middleware for handling exception in .Net Core
+- ✔️ **[`IdGen`](https://github.com/RobThree/IdGen)** - Twitter Snowflake-alike ID generator for .Net
+
 
 ## The Domain and Bounded Context (Service Boundary)
 
