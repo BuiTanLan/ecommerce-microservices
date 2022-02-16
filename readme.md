@@ -159,7 +159,10 @@ For checking `validation rules` we use two type of validation:
     - Postgres running
     - RabbitMQ running
     - MongoDB running
-    - Microservies running and accessible through Api Gateway, Available at: http://localhost:3000
+    - Microservies running and accessible through:
+      - Api Gateway, Available at: [http://localhost:3000](http://localhost:3000)
+      - Customers Service, Available at: [http://localhost:8000](http://localhost:8000)
+      - Catalogs Service, Available at: [http://localhost:4000](http://localhost:4000)
+      - Identity Service, Available at: [http://localhost:7000](http://localhost:7000)
 
-
-
+For testing apis I used [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin of VSCode its related file scenarios are avalable in [_httpclients](\_httpclients) folder. also after running api you have access to `swagger open api` for all microservices in `/swagger` route path.
