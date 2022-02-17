@@ -67,8 +67,6 @@ if (environment.IsDevelopment() || environment.IsEnvironment("docker"))
 
 ServiceActivator.Configure(app.Services);
 
-app.UseHttpsRedirection();
-
 app.UseProblemDetails();
 
 app.UseRouting();

@@ -52,8 +52,6 @@ if (environment.IsDevelopment() || environment.IsEnvironment("docker"))
     app.UseCustomSwagger();
 }
 
-app.UseHttpsRedirection();
-
 app.UseProblemDetails();
 
 app.UseRouting();
