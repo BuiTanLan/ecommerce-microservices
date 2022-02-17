@@ -28,10 +28,10 @@ accept: application/json
 Content-Type: application/json
 
 {
-  "firstName": "mehdi_test3",
+  "firstName": "mehdi4",
   "lastName": "test",
-  "userName": "mehdi_test3",
-  "email": "mehd_test3@test.com",
+  "userName": "mehdi4",
+  "email": "mehdi4@test.com",
   "password": "123456",
   "confirmPassword": "123456",
   "roles": [

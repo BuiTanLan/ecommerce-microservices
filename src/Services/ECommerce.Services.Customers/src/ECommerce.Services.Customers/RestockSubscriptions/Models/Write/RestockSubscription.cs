@@ -6,8 +6,7 @@ using ECommerce.Services.Customers.Customers.ValueObjects;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription.Events.Domain;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscription;
-using ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscriptionsByTime;
-using ECommerce.Services.Customers.RestockSubscriptions.Features.MarkingRestockSubscriptionAsProcessed;
+using ECommerce.Services.Customers.RestockSubscriptions.Features.ProcessingRestockNotification;
 using ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
@@ -59,6 +58,6 @@ public class RestockSubscription : Aggregate<RestockSubscriptionId>, IHaveSoftDe
         Processed = true;
         ProcessedTime = processedTime;
 
-        AddDomainEvent(new RestockSubscriptionMarkedAsProcessed(Id, processedTime));
+        AddDomainEvent(new RestockNotificationProcessed(this));
     }
 }

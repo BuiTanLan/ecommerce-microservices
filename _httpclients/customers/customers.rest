@@ -1,9 +1,8 @@
 # https://github.com/Huachao/vscode-restclient
 @customers-api=http://localhost:8000
 @api-gateway=http://localhost:3000
-@contentType = application/json
 @customer_id = 860808335851520
-@restock_subscription_id = 733645813579776
+@restock_subscription_id = 862777745866752
 @product_id=1
 
 # @name ApiRoot
@@ -43,7 +42,7 @@ accept: application/json
 Content-Type: application/json
 
 {
-  "email": "mehdi@test.com"
+  "email": "mehdi3@test.com"
 }
 
 ###
@@ -53,7 +52,7 @@ accept: */*
 Content-Type: application/json
 
 {
-  "phoneNumber": "121255655",
+  "phoneNumber": "365556565",
   "birthDate": "1980-02-17",
   "country": "Test",
   "city": "Test",

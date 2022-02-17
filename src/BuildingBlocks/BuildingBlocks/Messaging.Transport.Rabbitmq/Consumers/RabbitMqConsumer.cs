@@ -128,7 +128,6 @@ public class RabbitMqConsumer : IEventBusSubscriber
                 "an exception has occured while decoding queue message from Exchange '{ExchangeName}', message cannot be parsed. Error: {ExceptionMessage}",
                 eventArgs.Exchange,
                 ex.Message);
-				
             channel.BasicNack(eventArgs.DeliveryTag, requeue: true, multiple: false);
 
             return;
