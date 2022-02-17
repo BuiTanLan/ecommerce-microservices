@@ -201,8 +201,8 @@ public static class Extensions
 
     public static IServiceCollection AddCustomAuthorization(
         this IServiceCollection services,
-        IList<ClaimPolicy> claimPolicies = null,
-        IList<RolePolicy> rolePolicies = null)
+        IList<ClaimPolicy>? claimPolicies = null,
+        IList<RolePolicy>? rolePolicies = null)
     {
         services.AddAuthorization(authorizationOptions =>
         {

@@ -27,6 +27,7 @@ public class GetRestockSubscriptionsEndpoint : EndpointBaseAsync
         Description = "Get Restock Subscriptions.",
         OperationId = "GetRestockSubscriptions",
         Tags = new[] { RestockSubscriptionsConfigs.Tag })]
+    [Authorize(Roles = CustomersConstants.Role.Admin)]
     public override async Task<ActionResult<GetRestockSubscriptionsResult>> HandleAsync(
         [FromQuery] GetRestockSubscriptionsRequest? request,
         CancellationToken cancellationToken = default)

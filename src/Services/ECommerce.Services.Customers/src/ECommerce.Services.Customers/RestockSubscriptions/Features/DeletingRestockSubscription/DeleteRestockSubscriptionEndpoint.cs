@@ -8,7 +8,7 @@ public class DeleteRestockSubscriptionEndpoint : IMinimalEndpointDefinition
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapDelete($"{RestockSubscriptionsConfigs.RestockSubscriptionsUrl}/{{id}}", DeleteRestockSubscription)
-            .AllowAnonymous()
+            .RequireAuthorization(CustomersConstants.Role.Admin)
             .WithTags(RestockSubscriptionsConfigs.Tag)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)

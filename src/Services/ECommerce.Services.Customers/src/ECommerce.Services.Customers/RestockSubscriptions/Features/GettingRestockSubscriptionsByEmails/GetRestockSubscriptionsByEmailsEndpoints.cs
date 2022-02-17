@@ -28,6 +28,7 @@ public class GetRestockSubscriptionsByEmailsEndpoints : EndpointBaseSync
         Description = "Get Restock Subscriptions by emails.",
         OperationId = "GetRestockSubscriptionsByEmails",
         Tags = new[] { RestockSubscriptionsConfigs.Tag })]
+    [Authorize(Roles = CustomersConstants.Role.Admin)]
     public override ActionResult<IAsyncEnumerable<RestockSubscriptionDto>> Handle(
         [FromQuery] GetRestockSubscriptionsByEmailsRequest? request)
     {

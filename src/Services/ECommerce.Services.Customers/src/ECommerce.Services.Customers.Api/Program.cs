@@ -48,7 +48,18 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 
-builder.Services.AddCustomAuthorization();
+builder.Services.AddCustomAuthorization(
+    rolePolicies: new List<RolePolicy>
+    {
+        new()
+        {
+            Name = CustomersConstants.Role.Admin, Roles = new List<string> { CustomersConstants.Role.Admin }
+        },
+        new()
+        {
+            Name = CustomersConstants.Role.User, Roles = new List<string> { CustomersConstants.Role.User }
+        }
+    });
 
 builder.AddModulesServices();
 

@@ -13,7 +13,7 @@ public class GetRestockSubscriptionByIdEndpoint : IMinimalEndpointDefinition
                 $"{RestockSubscriptionsConfigs.RestockSubscriptionsUrl}/{{id}}",
                 GetRestockSubscriptionById)
             .WithTags(RestockSubscriptionsConfigs.Tag)
-            // .RequireAuthorization()
+            .RequireAuthorization(CustomersConstants.Role.Admin)
             .Produces<GetRestockSubscriptionByIdResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)

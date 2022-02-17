@@ -10,7 +10,6 @@ public class DeleteRestockSubscriptionByTimeEndpoint : IMinimalEndpointDefinitio
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapDelete($"{RestockSubscriptionsConfigs.RestockSubscriptionsUrl}", DeleteRestockSubscriptionByTime)
-            .AllowAnonymous()
             .WithTags(RestockSubscriptionsConfigs.Tag)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
@@ -21,6 +20,7 @@ public class DeleteRestockSubscriptionByTimeEndpoint : IMinimalEndpointDefinitio
         return builder;
     }
 
+    [Authorize(Roles = CustomersConstants.Role.Admin)]
     private static async Task<IResult> DeleteRestockSubscriptionByTime(
         [FromBody]DeleteRestockSubscriptionByTimeRequest request,
         ICommandProcessor commandProcessor,
