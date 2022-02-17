@@ -2,6 +2,7 @@
 @catalog-api=http://localhost:4000
 @api-gateway=http://localhost:3000
 @contentType = application/json
+@product_id = 1
 
 ###
 # @name ApiRoot
@@ -64,17 +65,15 @@ Content-Type: application/x-www-form-urlencoded
 
 ###
 # @name Get_Product_By_Id
-@product_id = 1
+
 GET {{api-gateway}}/api/v1/catalogs/products/{{product_id}}
 accept: application/json
 ###
 
 ###
 # @name Debit_Product_Stock
-@product_id = 1
-@quantity = 1
-
-POST {{api-gateway}}/api/v1/catalogs/products/{{product_id}}/debit-stock?quantity={{quantity}}
+@debit_quantity = 1
+POST {{api-gateway}}/api/v1/catalogs/products/{{product_id}}/debit-stock?quantity={{debit_quantity}}
 accept: */*
 Content-Type: application/x-www-form-urlencoded
 authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
@@ -83,9 +82,8 @@ authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 
 ###
 # @name Replenish_Product_Stock
-@product_id = 1
-@quantity = 1
-POST {{api-gateway}}/api/v1/catalogs/products/{{product_id}}/replenish-stock?quantity={{quantity}}
+@replenish_quantity = 1
+POST {{api-gateway}}/api/v1/catalogs/products/{{product_id}}/replenish-stock?quantity={{replenish_quantity}}
 accept: */*
 Content-Type: application/x-www-form-urlencoded
 authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}

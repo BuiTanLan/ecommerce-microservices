@@ -2,11 +2,11 @@
 @customers-api=http://localhost:8000
 @api-gateway=http://localhost:3000
 @contentType = application/json
+@customer_id = 723479639883776
+@restock_subscription_id = 725077846917120
 
-###
 # @name ApiRoot
 GET {{customers-api}}
-###
 
 ###
 # @name Authenticate
@@ -19,7 +19,6 @@ Content-Type: application/json
   "password": "123456",
   "remember": true
 }
-###
 
 ###
 # @name Get_All_Customers
@@ -28,15 +27,13 @@ Content-Type: application/json
 GET {{api-gateway}}/api/v1/customers?Page={{page}}&PageSize={{pageSize}}
 accept: application/json
 Content-Type: application/x-www-form-urlencoded
-###
+
 
 ###
 # @name Get_Customer_By_Id
-@customer_id=701835906383872
 GET {{api-gateway}}/api/v1/customers/{{customer_id}}
 accept: application/json
 Content-Type: application/x-www-form-urlencoded
-###
 
 ###
 # @name Create_Customer
@@ -45,13 +42,11 @@ accept: application/json
 Content-Type: application/json
 
 {
-  "email": "mehdi2@test.com"
+  "email": "mehdi@test.com"
 }
-###
 
 ###
 # @name Complete_Customer
-@customer_id=718472111194112
 POST {{api-gateway}}/api/v1/customers/{{customer_id}}/complete-profile
 accept: */*
 Content-Type: application/json
@@ -64,20 +59,15 @@ Content-Type: application/json
   "detailAddress": "Test",
   "nationality": "US"
 }
-###
 
 ###
 # @name Verify_Customer
-@customer_id=718472111194112
 POST {{api-gateway}}/api/v1/customers/{{customer_id}}/verify
 accept: */*
 Content-Type: application/x-www-form-urlencoded
-###
-
 
 ###
 # @name Lock_Customer
-@customer_id=718472111194112
 POST {{api-gateway}}/api/v1/customers/{{customer_id}}/lock
 accept: */*
 Content-Type: application/json
@@ -87,10 +77,7 @@ Content-Type: application/json
 }
 
 ###
-
-###
 # @name Unlock_Customer
-@customer_id=718472111194112
 POST {{api-gateway}}/api/v1/customers/{{customer_id}}/unlock
 accept: */*
 Content-Type: application/json
@@ -98,18 +85,16 @@ Content-Type: application/json
 {
   "notes": "string"
 }
-###
-
-
 
 ###
 # @name Get_All_Restock_Subscriptions
-@from=2020-01-01
-@to=2023-01-01
+@from_date=2020-01-01
+@to_date=2023-01-01
 @page=1
 @page_size=10
-GET {{api-gateway}}/api/v1/customers/restock-subscriptions?From={{from}}&To={{to}}&Page={{page}}&PageSize={{page_size}}
+GET {{api-gateway}}/api/v1/customers/restock-subscriptions?From={{from_date}}&To={{to_date}}&Page={{page}}&PageSize={{page_size}}
 accept: application/json
+authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 ###
 
 
@@ -119,21 +104,20 @@ accept: application/json
 @email2=mehdi2@test.com
 GET {{api-gateway}}/api/v1/customers/restock-subscriptions/by-emails?Emails={{email1}}&Emails={{email2}}
 accept: application/json
-###
+authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
+
 
 ###
 # @name Get_Restock_Subscriptions_By_Id
-@restock_subscription_id=719595375427584
+
 GET {{api-gateway}}/api/v1/customers/restock-subscriptions/{{restock_subscription_id}}
 Content-Type: application/x-www-form-urlencoded
 accept: application/json
-###
-
+authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 
 ###
 # @name Create_Restock_Subscriptions_By
 @email="mehdi@test.com"
-@customer_id=718472111194112
 @product_id=1
 POST {{api-gateway}}/api/v1/customers/restock-subscriptions
 accept: application/json
@@ -146,15 +130,10 @@ Content-Type: application/json
 }
 
 ###
-
-###
 # @name Delete_Restock_Subscriptions_By_Id
-@restock_subscription_id=719595375427584
 DELETE {{api-gateway}}/api/v1/customers/restock-subscriptions/{{restock_subscription_id}}
 accept: */*
-###
-
-
+authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 
 ###
 # @name Delete_Restock_Subscriptions_By_Time
@@ -162,6 +141,7 @@ accept: */*
 @to="2022-03-17"
 DELETE {{api-gateway}}/api/v1/customers/restock-subscriptions
 accept: */*
+authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 Content-Type: application/json
 
 {
@@ -169,5 +149,4 @@ Content-Type: application/json
   "to": {{to}}
 }
 
-###
 
