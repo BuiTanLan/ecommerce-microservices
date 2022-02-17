@@ -1,4 +1,3 @@
-using BuildingBlocks.Mongo;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products;
@@ -27,10 +26,11 @@ public static class CatalogModuleConfiguration
 
         services.AddStorage(configuration);
 
-        services.AddCategoriesServices()
-            .AddProductsServices()
-            .AddSuppliersServices()
-            .AddBrandsServices();
+        services.AddBrandsServices();
+        services.AddCategoriesServices();
+        services.AddSuppliersServices();
+
+        services.AddProductsServices();
 
         return services;
     }
