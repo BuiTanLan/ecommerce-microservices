@@ -72,7 +72,7 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
-    restart: unless-stopped
+    # restart: unless-stopped
     ports:
       - 5672:5672
       - 15672:15672
@@ -87,7 +87,7 @@ services:
   mongo:
     image: mongo
     container_name: mongo
-    restart: unless-stopped
+    # restart: unless-stopped
     # environment:
     #   - MONGO_INITDB_ROOT_USERNAME=root
     #   - MONGO_INITDB_ROOT_PASSWORD=secret
@@ -103,7 +103,7 @@ services:
     image: postgres:11.1-alpine
     ports:
       - '5432:5432'
-    restart: unless-stopped
+    # restart: unless-stopped
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
