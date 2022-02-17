@@ -15,9 +15,9 @@ High-level plan is represented in the table
 | Building Blocks | Completed ✔️ |
 | API Gateway | Completed ✔️ |
 | Identity Service | Completed ✔️ |
-| Customer Service | Not Started ✔️ |
-| Catalog Service | Not Started ✔️ |
-| Order Service |  Under Development 👷‍♂️ |
+| Customer Service | Completed ✔️ |
+| Catalog Service | Completed ✔️ |
+| Order Service |  In Progress 👷‍♂️ |
 | Shipping Service | Not Started 🚩 |
 | Payment Service | Not Started 🚩 |
 
@@ -165,4 +165,4 @@ For checking `validation rules` we use two type of validation:
       - Catalogs Service, Available at: [http://localhost:4000](http://localhost:4000)
       - Identity Service, Available at: [http://localhost:7000](http://localhost:7000)
 
-For testing apis I used [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin of VSCode its related file scenarios are avalable in [_httpclients](\_httpclients) folder. also after running api you have access to `swagger open api` for all microservices in `/swagger` route path.
+For testing apis I used [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin of VSCode its related file scenarios are available in [_httpclients](\_httpclients) folder. also after running api you have access to `swagger open api` for all microservices in `/swagger` route path.
