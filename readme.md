@@ -136,22 +136,20 @@ For checking `validation rules` we use two type of validation:
 - [Data Validation](http://www.kamilgrzybek.com/design/rest-api-data-validation/): Data validation verify data items which are coming to our application from external sources and check if theirs values are acceptable but Business rules validation is a more broad concept and more close to how business works and behaves. So it is mainly focused on behavior For implementing data validation I used [FluentValidation](https://github.com/FluentValidation/FluentValidation) library for cleaner validation also better separation of concern in my handlers for preventing mixing validation logic with orchestration logic in my handlers.
 - [Business Rules validation](http://www.kamilgrzybek.com/design/domain-model-validation/): I explicitly check all of the our business rules, inner my handlers and I will throw a customized exception based on the error that these errors should inherits from [AppException](./src/BuildingBlocks/BulidingBlocks/Exception/AppException.cs) class, because of these exceptions, occurs in application layer and we catch this exceptions in api layer with using [Hellang.Middleware.ProblemDetails](https://www.nuget.org/packages/Hellang.Middleware.ProblemDetails/) middleware and pass a correct status code to client.
 
-## Prerequisites & How to Run
+## Prerequisites
 
 1. Install git - [https://git-scm.com/downloads](https://git-scm.com/downloads).
 2. Install .NET Core 6.0 - [https://dotnet.microsoft.com/download/dotnet/6.0](https://dotnet.microsoft.com/download/dotnet/6.0).
 3. Install Visual Studio 2022, Rider or VSCode.
 4. Install docker - [https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/).
 5. Make sure that you have ~10GB disk space.
-7. Clone Project [https://github.com/mehdihadeli/e-commerce-microservices](https://github.com/mehdihadeli/e-commerce-microservices), make sure that's compiling
-8. Open `ECommerce.sln` solution.
-9. Docker useful commands
+6. Clone Project [https://github.com/mehdihadeli/e-commerce-microservices](https://github.com/mehdihadeli/e-commerce-microservices), make sure that's compiling
+7. Open `ECommerce.sln` solution.
 
-    - `docker-compose  -f .\docker-compose.yaml up` or `docker-compose -f .\docker-compose.yaml build --no-cache` - start dockers
-    - `docker-compose kill` - to stop running dockers.
-    - `docker-compose down -v` - to clean stopped dockers.
-    - `docker ps` - for showing running dockers
-    - `docker ps -a` - to show all dockers (also stopped)
+## How to Run
+
+### Using Docker-Compose
+
 
 10. Go to [deployments/docker-compose/docker-compose.yaml](./deployments/docker-compose/docker-compose.yaml) and run: `docker-compose up`.
 11. Wait until all dockers got are downloaded and running.
@@ -164,5 +162,28 @@ For checking `validation rules` we use two type of validation:
       - Customers Service, Available at: [http://localhost:8000](http://localhost:8000)
       - Catalogs Service, Available at: [http://localhost:4000](http://localhost:4000)
       - Identity Service, Available at: [http://localhost:7000](http://localhost:7000)
+
+
+Some useful docker commands:
+
+``` powershell
+// start dockers
+docker-compose -f .\docker-compose.yaml up
+
+// build without caching
+docker-compose -f .\docker-compose.yaml build --no-cache
+
+// to stop running dockers
+docker-compose kill
+
+// to clean stopped dockers
+docker-compose down -v
+
+// showing running dockers
+docker ps
+
+// to show all dockers (also stopped)
+docker ps -a
+```
 
 For testing apis I used [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin of VSCode its related file scenarios are available in [_httpclients](\_httpclients) folder. also after running api you have access to `swagger open api` for all microservices in `/swagger` route path.
