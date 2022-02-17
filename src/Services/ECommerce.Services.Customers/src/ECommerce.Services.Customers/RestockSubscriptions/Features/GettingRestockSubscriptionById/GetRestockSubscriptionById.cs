@@ -41,6 +41,7 @@ internal class GetRestockSubscriptionByIdHandler
 
         var restockSubscription =
             await _customersReadDbContext.RestockSubscriptions.AsQueryable()
+                .Where(x => x.IsDeleted == false)
                 .SingleOrDefaultAsync(x => x.RestockSubscriptionId == query.Id, cancellationToken: cancellationToken);
 
         Guard.Against.NotFound(restockSubscription, new RestockSubscriptionNotFoundException(query.Id));

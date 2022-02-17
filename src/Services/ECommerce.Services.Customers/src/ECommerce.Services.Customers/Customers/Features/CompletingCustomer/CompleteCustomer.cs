@@ -56,7 +56,7 @@ internal class CompleteCustomerHandler : ICommandHandler<CompleteCustomer>
         Guard.Against.NotFound(customer, new CustomerNotFoundException(command.CustomerId));
 
         if (await _customersDbContext.Customers
-                .AnyAsync(x => x.PhoneNumber == command.PhoneNumber, cancellationToken: cancellationToken))
+                .AnyAsync(x => x.PhoneNumber == command.PhoneNumber && x.Id != command.CustomerId, cancellationToken))
         {
             throw new CustomerAlreadyExistsException(command.PhoneNumber);
         }

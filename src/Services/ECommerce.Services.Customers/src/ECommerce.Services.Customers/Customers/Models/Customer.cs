@@ -4,6 +4,7 @@ using BuildingBlocks.Core.Domain.ValueObjects;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.Exceptions;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
+using ECommerce.Services.Customers.Customers.Exceptions.Domain;
 using ECommerce.Services.Customers.Customers.Features.CompletingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.CreatingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.LockingCustomer.Events.Domain;
@@ -59,7 +60,7 @@ public class Customer : AggregateRoot<CustomerId>
 
         if (CompletedAt.HasValue)
         {
-            throw new CannotCompleteCustomerException(Id);
+            throw new CustomerAlreadyCompletedException(Id);
         }
 
         Address = address;
@@ -81,7 +82,7 @@ public class Customer : AggregateRoot<CustomerId>
 
         if (!CompletedAt.HasValue || VerifiedAt.HasValue)
         {
-            throw new CannotVerifyCustomerException(Id);
+            throw new CustomerAlreadyVerifiedException(Id);
         }
 
         VerifiedAt = verifiedAt;
@@ -103,6 +104,11 @@ public class Customer : AggregateRoot<CustomerId>
     {
         IsActive = true;
         Notes = notes?.Trim();
+        CustomerState =
+            VerifiedAt != null ? CustomerState.Verified :
+            CompletedAt != null ? CustomerState.Completed :
+            CustomerState.New;
+
         AddDomainEvent(new CustomerUnlocked(this));
     }
 }

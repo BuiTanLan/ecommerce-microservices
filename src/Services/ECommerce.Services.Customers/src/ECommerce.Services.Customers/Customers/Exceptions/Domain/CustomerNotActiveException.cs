@@ -1,6 +1,6 @@
 using BuildingBlocks.Exception.Types;
 
-namespace ECommerce.Services.Customers.Customers.Exceptions.Application;
+namespace ECommerce.Services.Customers.Customers.Exceptions.Domain;
 
 internal class CustomerNotActiveException : AppException
 {

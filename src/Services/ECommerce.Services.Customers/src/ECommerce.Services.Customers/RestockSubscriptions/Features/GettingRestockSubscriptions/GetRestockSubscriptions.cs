@@ -48,6 +48,7 @@ public class GetProductsHandler : IQueryHandler<GetRestockSubscriptions, GetRest
     {
         var filtering = _customersReadDbContext.RestockSubscriptions.AsQueryable()
             .ApplyFilterList(query.Filters)
+            .Where(x => x.IsDeleted == false)
             .Where(e => query.Emails.Any() == false || query.Emails.Contains(e.Email))
             .Where(x => (query.From == null && query.To == null) || (query.From == null && x.Created <= query.To) ||
                         (query.To == null && x.Created >= query.From) ||

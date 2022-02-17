@@ -19,7 +19,7 @@ public class VerifyCustomerEndpoint : IMinimalEndpointDefinition
     }
 
     private static async Task<IResult> VerifyCustomer(
-        long customerId,
+        [FromRoute]long customerId,
         ICommandProcessor commandProcessor,
         CancellationToken cancellationToken)
     {

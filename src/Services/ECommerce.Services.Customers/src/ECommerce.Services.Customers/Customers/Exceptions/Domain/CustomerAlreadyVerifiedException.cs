@@ -1,12 +1,12 @@
 using BuildingBlocks.Exception.Types;
 
-namespace ECommerce.Services.Customers.Customers.Exceptions.Application;
+namespace ECommerce.Services.Customers.Customers.Exceptions.Domain;
 
-internal class CannotVerifyCustomerException : AppException
+internal class CustomerAlreadyVerifiedException : AppException
 {
     public long CustomerId { get; }
 
-    public CannotVerifyCustomerException(long customerId)
+    public CustomerAlreadyVerifiedException(long customerId)
         : base($"Customer with Id: '{customerId}' cannot be verified.")
     {
         CustomerId = customerId;

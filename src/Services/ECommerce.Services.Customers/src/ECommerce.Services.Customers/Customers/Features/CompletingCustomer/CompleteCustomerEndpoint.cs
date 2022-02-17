@@ -8,7 +8,7 @@ public class CompleteCustomerEndpoint : IMinimalEndpointDefinition
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost($"{CustomersConfigs.CustomersPrefixUri}/complete-profile", CompleteCustomer)
+        builder.MapPost($"{CustomersConfigs.CustomersPrefixUri}/{{customerId}}/complete-profile", CompleteCustomer)
             .AllowAnonymous()
             .WithTags(CustomersConfigs.Tag)
             .Produces(StatusCodes.Status204NoContent)
@@ -19,6 +19,7 @@ public class CompleteCustomerEndpoint : IMinimalEndpointDefinition
     }
 
     private static async Task<IResult> CompleteCustomer(
+        long customerId,
         CompleteCustomerRequest request,
         ICommandProcessor commandProcessor,
         CancellationToken cancellationToken)
@@ -26,7 +27,7 @@ public class CompleteCustomerEndpoint : IMinimalEndpointDefinition
         Guard.Against.Null(request, nameof(request));
 
         var command = new CompleteCustomer(
-            request.CustomerId,
+            customerId,
             request.PhoneNumber,
             request.BirthDate,
             request.Country,

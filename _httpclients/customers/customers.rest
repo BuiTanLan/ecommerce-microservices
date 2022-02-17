@@ -1,5 +1,6 @@
 # https://github.com/Huachao/vscode-restclient
 @customers-api=http://localhost:8000
+@api-gateway=http://localhost:3000
 @contentType = application/json
 
 ###
@@ -8,10 +9,23 @@ GET {{customers-api}}
 ###
 
 ###
+# @name Authenticate
+POST {{api-gateway}}/api/v1/identity/login
+accept: application/json
+Content-Type: application/json
+
+{
+  "userNameOrEmail": "mehdi",
+  "password": "123456",
+  "remember": true
+}
+###
+
+###
 # @name Get_All_Customers
 @page=1
 @pageSize=10
-GET {{customers-api}}/api/v1/customers?Page={{page}}&PageSize={{pageSize}}
+GET {{api-gateway}}/api/v1/customers?Page={{page}}&PageSize={{pageSize}}
 accept: application/json
 Content-Type: application/x-www-form-urlencoded
 ###
@@ -19,8 +33,141 @@ Content-Type: application/x-www-form-urlencoded
 ###
 # @name Get_Customer_By_Id
 @customer_id=701835906383872
-GET https://localhost:8001/api/v1/customers/{{customer_id}}
+GET {{api-gateway}}/api/v1/customers/{{customer_id}}
 accept: application/json
 Content-Type: application/x-www-form-urlencoded
+###
+
+###
+# @name Create_Customer
+POST {{api-gateway}}/api/v1/customers
+accept: application/json
+Content-Type: application/json
+
+{
+  "email": "mehdi2@test.com"
+}
+###
+
+###
+# @name Complete_Customer
+@customer_id=718472111194112
+POST {{api-gateway}}/api/v1/customers/{{customer_id}}/complete-profile
+accept: */*
+Content-Type: application/json
+
+{
+  "phoneNumber": "121255655",
+  "birthDate": "1980-02-17",
+  "country": "Test",
+  "city": "Test",
+  "detailAddress": "Test",
+  "nationality": "US"
+}
+###
+
+###
+# @name Verify_Customer
+@customer_id=718472111194112
+POST {{api-gateway}}/api/v1/customers/{{customer_id}}/verify
+accept: */*
+Content-Type: application/x-www-form-urlencoded
+###
+
+
+###
+# @name Lock_Customer
+@customer_id=718472111194112
+POST {{api-gateway}}/api/v1/customers/{{customer_id}}/lock
+accept: */*
+Content-Type: application/json
+
+{
+  "notes": "string"
+}
+
+###
+
+###
+# @name Unlock_Customer
+@customer_id=718472111194112
+POST {{api-gateway}}/api/v1/customers/{{customer_id}}/unlock
+accept: */*
+Content-Type: application/json
+
+{
+  "notes": "string"
+}
+###
+
+
+
+###
+# @name Get_All_Restock_Subscriptions
+@from=2020-01-01
+@to=2023-01-01
+@page=1
+@page_size=10
+GET {{api-gateway}}/api/v1/customers/restock-subscriptions?From={{from}}&To={{to}}&Page={{page}}&PageSize={{page_size}}
+accept: application/json
+###
+
+
+###
+# @name Get_Restock_Subscriptions_By_Emails
+@email1=mehdi@test.com
+@email2=mehdi2@test.com
+GET {{api-gateway}}/api/v1/customers/restock-subscriptions/by-emails?Emails={{email1}}&Emails={{email2}}
+accept: application/json
+###
+
+###
+# @name Get_Restock_Subscriptions_By_Id
+@restock_subscription_id=719595375427584
+GET {{api-gateway}}/api/v1/customers/restock-subscriptions/{{restock_subscription_id}}
+Content-Type: application/x-www-form-urlencoded
+accept: application/json
+###
+
+
+###
+# @name Create_Restock_Subscriptions_By
+@email="mehdi@test.com"
+@customer_id=718472111194112
+@product_id=1
+POST {{api-gateway}}/api/v1/customers/restock-subscriptions
+accept: application/json
+Content-Type: application/json
+
+{
+  "customerId": {{customer_id}},
+  "productId": {{product_id}},
+  "email": {{email}}
+}
+
+###
+
+###
+# @name Delete_Restock_Subscriptions_By_Id
+@restock_subscription_id=719595375427584
+DELETE {{api-gateway}}/api/v1/customers/restock-subscriptions/{{restock_subscription_id}}
+accept: */*
+###
+
+
+
+###
+# @name Delete_Restock_Subscriptions_By_Time
+@from="2021-02-17"
+@to="2022-03-17"
+DELETE {{api-gateway}}/api/v1/customers/restock-subscriptions
+accept: */*
+Content-Type: application/json
+
+{
+  "from": {{from}},
+  "to": {{to}}
+}
+
 ###
 

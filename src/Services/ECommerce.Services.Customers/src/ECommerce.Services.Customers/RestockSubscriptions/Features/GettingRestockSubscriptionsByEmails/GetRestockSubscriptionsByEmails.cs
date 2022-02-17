@@ -42,6 +42,7 @@ internal class GetRestockSubscriptionsByEmailsHandler
         Guard.Against.Null(query, nameof(query));
 
         var result = _customersReadDbContext.RestockSubscriptions.AsQueryable()
+            .Where(x => x.IsDeleted == false)
             .Where(x => query.Emails.Contains(x.Email!))
             .ProjectTo<RestockSubscriptionDto>(_mapper.ConfigurationProvider)
             .ToAsyncEnumerable();

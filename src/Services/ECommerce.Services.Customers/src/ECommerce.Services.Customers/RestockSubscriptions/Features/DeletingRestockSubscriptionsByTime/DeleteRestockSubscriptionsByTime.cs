@@ -49,7 +49,11 @@ internal class DeleteRestockSubscriptionsByTimeHandler : ICommandHandler<DeleteR
         //     restockSubscription.Delete();
         // }
 
-        _customersDbContext.RestockSubscriptions.RemoveRange(exists);
+        foreach (var restockSubscription in exists)
+        {
+            _customersDbContext.Entry(restockSubscription).State = EntityState.Deleted;
+            _customersDbContext.Entry(restockSubscription.ProductInformation).State = EntityState.Unchanged;
+        }
 
         await _customersDbContext.SaveChangesAsync(cancellationToken);
 

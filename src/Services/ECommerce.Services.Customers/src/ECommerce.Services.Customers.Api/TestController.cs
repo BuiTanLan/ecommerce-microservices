@@ -6,6 +6,7 @@ namespace Customers.Api;
 
 [ApiController]
 [Route("api/[controller]")]
+[ApiExplorerSettings(IgnoreApi = true)]
 public class TestController : ControllerBase
 {
     private readonly IEventProcessor _eventProcessor;

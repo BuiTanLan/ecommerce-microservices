@@ -1,6 +1,6 @@
 # https://github.com/Huachao/vscode-restclient
 @catalog-api=http://localhost:4000
-@identity-api=http://localhost:7000
+@api-gateway=http://localhost:3000
 @contentType = application/json
 
 ###
@@ -10,7 +10,7 @@ GET {{catalog-api}}
 
 ###
 # @name Authenticate
-POST {{identity-api}}/api/v1/identity/login
+POST {{api-gateway}}/api/v1/identity/login
 accept: application/json
 Content-Type: application/json
 
@@ -23,13 +23,13 @@ Content-Type: application/json
 
 ###
 # @name Create_New_Product
-POST {{catalog-api}}/api/v1/catalogs/products
+POST {{api-gateway}}/api/v1/catalogs/products
 accept: application/json
 Content-Type: application/json
 authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 
 {
-  "name": "test2",
+  "name": "test3",
   "price": 100,
   "stock": 10,
   "restockThreshold": 5,
@@ -57,7 +57,7 @@ authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 # @name Get_All_Products
 @page = 1
 @pageSize = 20
-GET {{catalog-api}}/api/v1/catalogs/products?Page={{page}}&PageSize={{pageSize}}
+GET {{api-gateway}}/api/v1/catalogs/products?Page={{page}}&PageSize={{pageSize}}
 accept: application/json
 Content-Type: application/x-www-form-urlencoded
 ###
@@ -65,7 +65,7 @@ Content-Type: application/x-www-form-urlencoded
 ###
 # @name Get_Product_By_Id
 @product_id = 1
-GET {{catalog-api}}/api/v1/catalogs/products/{{product_id}}
+GET {{api-gateway}}/api/v1/catalogs/products/{{product_id}}
 accept: application/json
 ###
 
@@ -74,7 +74,7 @@ accept: application/json
 @product_id = 1
 @quantity = 1
 
-POST {{catalog-api}}/api/v1/catalogs/products/{{product_id}}/debit-stock?quantity={{quantity}}
+POST {{api-gateway}}/api/v1/catalogs/products/{{product_id}}/debit-stock?quantity={{quantity}}
 accept: */*
 Content-Type: application/x-www-form-urlencoded
 authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
@@ -85,7 +85,7 @@ authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 # @name Replenish_Product_Stock
 @product_id = 1
 @quantity = 1
-POST {{catalog-api}}/api/v1/catalogs/products/{{product_id}}/replenish-stock?quantity={{quantity}}
+POST {{api-gateway}}/api/v1/catalogs/products/{{product_id}}/replenish-stock?quantity={{quantity}}
 accept: */*
 Content-Type: application/x-www-form-urlencoded
 authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
