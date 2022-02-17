@@ -57,13 +57,12 @@ public static class HostBuilderExtensions
             .MinimumLevel.Is(level)
             .Enrich.WithProperty("Environment", hostBuilderContext.HostingEnvironment.EnvironmentName);
 
-
         if (hostBuilderContext.HostingEnvironment.IsDevelopment())
         {
             loggerConfiguration.WriteTo.SpectreConsole(
                 loggerOptions.LogTemplate ??
                 "{Timestamp:HH:mm:ss} [{Level:u4}] {Message:lj}{NewLine}{Exception}",
-                LogEventLevel.Information);
+                level);
         }
         else
         {
@@ -78,7 +77,7 @@ public static class HostBuilderExtensions
             loggerConfiguration.WriteTo.SpectreConsole(
                 loggerOptions.LogTemplate ??
                 "{Timestamp:HH:mm:ss} [{Level:u4}] {Message:lj}{NewLine}{Exception}",
-                LogEventLevel.Information);
+                level);
         }
 
         foreach (var (key, value) in loggerOptions.Tags ?? new Dictionary<string, object>())
