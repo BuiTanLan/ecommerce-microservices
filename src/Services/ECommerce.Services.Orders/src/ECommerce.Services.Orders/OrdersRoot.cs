@@ -2,8 +2,8 @@ using NullGuard;
 
 [assembly: NullGuard(ValidationFlags.All)]
 
-namespace Shop.Api;
+namespace ECommerce.Services.Orders;
 
-public class CatalogsApiRoot
+public class OrdersRoot
 {
 }

@@ -28,21 +28,21 @@ public class NewtonsoftJsonMessageSerializer : IMessageSerializer
         return JsonConvert.SerializeObject(obj, CreateSerializerSettings(camelCase, indented));
     }
 
-    public T Deserialize<T>(string payload, bool camelCase = true)
+    public T? Deserialize<T>(string payload, bool camelCase = true)
     {
         return JsonConvert.DeserializeObject<T>(payload, CreateSerializerSettings(camelCase));
     }
 
-    public object Deserialize(string payload, Type type, bool camelCase = true)
+    public object? Deserialize(string payload, Type type, bool camelCase = true)
     {
         return JsonConvert.DeserializeObject(payload, type, CreateSerializerSettings(camelCase));
     }
 
-    protected virtual JsonSerializerSettings CreateSerializerSettings(bool camelCase = true, bool indented = false)
+    protected virtual JsonSerializerSettings? CreateSerializerSettings(bool camelCase = true, bool indented = false)
     {
         var settings = new JsonSerializerSettings();
 
-        ((List<JsonConverter>) settings.Converters).AddRange(_converters);
+        ((List<JsonConverter>)settings.Converters).AddRange(_converters);
 
         settings.ContractResolver = new ContractResolverWithPrivate();
 

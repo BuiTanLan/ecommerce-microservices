@@ -23,7 +23,5 @@ public interface IOutboxService
 
     Task SaveAsync(IDomainNotificationEvent domainNotificationEvent, CancellationToken cancellationToken = default);
 
-    Task SaveAsync(IInternalCommand internalCommand, CancellationToken cancellationToken = default);
-
     Task PublishUnsentOutboxMessagesAsync(CancellationToken cancellationToken = default);
 }

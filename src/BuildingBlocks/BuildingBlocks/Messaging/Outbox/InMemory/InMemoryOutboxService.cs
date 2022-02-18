@@ -120,35 +120,6 @@ public class InMemoryOutboxService : IOutboxService
         return Task.CompletedTask;
     }
 
-    public Task SaveAsync(IInternalCommand internalCommand, CancellationToken cancellationToken = default)
-    {
-        Guard.Against.Null(internalCommand, nameof(internalCommand));
-
-        if (!_options.Enabled)
-        {
-            _logger.LogWarning("Outbox is disabled, outgoing messages won't be saved");
-            return Task.CompletedTask;
-        }
-
-        string name = internalCommand.GetType().Name;
-
-        var outboxMessages = new OutboxMessage(
-            internalCommand.Id,
-            internalCommand.OccurredOn,
-            internalCommand.CommandType,
-            name.Underscore(),
-            _messageSerializer.Serialize(internalCommand),
-            EventType.DomainNotificationEvent,
-            correlationId: null);
-
-        _inMemoryOutboxStore.Events.Add(outboxMessages);
-
-        _logger.LogInformation("Saved message to the outbox");
-
-        return Task.CompletedTask;
-    }
-
-
     public async Task PublishUnsentOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
         var unsentMessages = _inMemoryOutboxStore.Events.Where(x => x.ProcessedOn == null).ToList();
@@ -167,17 +138,19 @@ public class InMemoryOutboxService : IOutboxService
         {
             var type = Type.GetType(outboxMessage.Type);
 
+            Guard.Against.Null(type, nameof(type));
+
             var data = _messageSerializer.Deserialize(outboxMessage.Data, type);
+
             if (data is null)
             {
                 _logger.LogError("Invalid message type: {Name}", type?.Name);
                 continue;
             }
 
-            if (outboxMessage.EventType == EventType.DomainNotificationEvent)
+            if (outboxMessage.EventType == EventType.DomainNotificationEvent &&
+                data is IDomainNotificationEvent domainNotificationEvent)
             {
-                var domainNotificationEvent = data as IDomainNotificationEvent;
-
                 // domain event notification
                 await _mediator.Publish(domainNotificationEvent, cancellationToken);
 
@@ -187,10 +160,8 @@ public class InMemoryOutboxService : IOutboxService
                     domainNotificationEvent?.EventId);
             }
 
-            if (outboxMessage.EventType == EventType.IntegrationEvent)
+            if (outboxMessage.EventType == EventType.IntegrationEvent && data is IIntegrationEvent integrationEvent)
             {
-                var integrationEvent = data as IIntegrationEvent;
-
                 // integration event
                 await _busPublisher.PublishAsync(integrationEvent, cancellationToken);
 
