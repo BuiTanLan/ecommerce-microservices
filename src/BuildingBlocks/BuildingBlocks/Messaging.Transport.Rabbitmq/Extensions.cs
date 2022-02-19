@@ -1,3 +1,5 @@
+using BuildingBlocks.Abstractions.Messaging;
+using BuildingBlocks.Abstractions.Messaging.Transport;
 using BuildingBlocks.Messaging.Transport.Rabbitmq.Consumers;
 using BuildingBlocks.Messaging.Transport.Rabbitmq.Producers;
 using Microsoft.Extensions.Configuration;

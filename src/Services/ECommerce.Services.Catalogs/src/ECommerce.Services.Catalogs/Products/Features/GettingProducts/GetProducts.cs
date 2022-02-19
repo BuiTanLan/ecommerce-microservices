@@ -1,4 +1,6 @@
 using AutoMapper;
+using BuildingBlocks.Abstractions.CQRS;
+using BuildingBlocks.Abstractions.CQRS.Query;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.CQRS.Query;
 using ECommerce.Services.Catalogs.Products.Dtos;

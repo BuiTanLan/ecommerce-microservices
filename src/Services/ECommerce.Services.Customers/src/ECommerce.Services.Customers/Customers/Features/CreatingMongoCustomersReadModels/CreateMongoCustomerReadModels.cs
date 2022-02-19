@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
+using BuildingBlocks.Abstractions.CQRS.Command;
 using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Customers.Models.Reads;

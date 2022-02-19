@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
+using BuildingBlocks.Abstractions.Persistence;
+using BuildingBlocks.Abstractions.Persistence.Specification;
 using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Core.Persistence;
-using BuildingBlocks.Core.Persistence.Specification;
 using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.EFCore;

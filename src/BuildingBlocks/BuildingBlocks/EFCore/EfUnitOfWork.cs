@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
+using BuildingBlocks.Abstractions.Persistence;
 using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using IsolationLevel = System.Data.IsolationLevel;

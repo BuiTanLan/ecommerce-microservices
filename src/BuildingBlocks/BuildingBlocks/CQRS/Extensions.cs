@@ -1,4 +1,6 @@
 using System.Reflection;
+using BuildingBlocks.Abstractions.CQRS.Command;
+using BuildingBlocks.Abstractions.CQRS.Query;
 using BuildingBlocks.Caching;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.CQRS.Query;

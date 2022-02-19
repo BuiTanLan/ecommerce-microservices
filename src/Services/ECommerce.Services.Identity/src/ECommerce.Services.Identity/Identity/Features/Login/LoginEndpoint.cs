@@ -1,3 +1,4 @@
+using BuildingBlocks.Abstractions.CQRS.Command;
 using BuildingBlocks.CQRS.Command;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

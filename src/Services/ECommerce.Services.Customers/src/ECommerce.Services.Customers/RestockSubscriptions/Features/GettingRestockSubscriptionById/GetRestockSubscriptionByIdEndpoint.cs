@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.CQRS.Query;
 using BuildingBlocks.CQRS.Query;
 using BuildingBlocks.Web.MinimalApi;
 using BuildingBlocks.Web.Module;

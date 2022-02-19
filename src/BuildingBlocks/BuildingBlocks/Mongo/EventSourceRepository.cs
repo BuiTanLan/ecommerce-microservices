@@ -1,5 +1,5 @@
-﻿using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Core.Persistence;
+﻿using BuildingBlocks.Abstractions.Persistence;
+using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Mongo;
 using MongoDB.Driver;
 

@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Abstractions.Persistence;
 using BuildingBlocks.IdsGenerator;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 

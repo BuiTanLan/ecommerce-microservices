@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.CQRS.Command;
 using BuildingBlocks.Core.Domain;
 using BuildingBlocks.Core.Domain.ValueObjects;
-using BuildingBlocks.Core.Persistence;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.Exceptions;

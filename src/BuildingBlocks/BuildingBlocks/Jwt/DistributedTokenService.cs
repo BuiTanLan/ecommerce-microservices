@@ -1,8 +1,6 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Caching;
 using BuildingBlocks.Web.Extensions;
-using EasyCaching.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
@@ -11,16 +9,16 @@ namespace BuildingBlocks.Jwt;
 
 public class DistributedTokenService : IAccessTokenService
 {
-    private readonly IEasyCachingProvider _cacheProvider;
     private readonly TimeSpan _expires;
+    private readonly ICacheManager _cacheManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public DistributedTokenService(
-        IEasyCachingProviderFactory cachingFactory,
+        ICacheManager cacheManager,
         IHttpContextAccessor httpContextAccessor,
         IOptions<JwtOptions> jwtOptions)
     {
-        _cacheProvider = cachingFactory.GetCachingProvider("redis");
+        _cacheManager = Guard.Against.Null(cacheManager, nameof(cacheManager));
         _httpContextAccessor = httpContextAccessor;
         _expires = TimeSpan.FromMinutes(jwtOptions.Value?.ExpiryMinutes ?? 120);
     }
@@ -37,12 +35,12 @@ public class DistributedTokenService : IAccessTokenService
 
     public async Task<bool> IsActiveAsync(string token)
     {
-        return string.IsNullOrWhiteSpace((await _cacheProvider.GetAsync<string>(GetKey(token))).Value);
+        return string.IsNullOrWhiteSpace(await _cacheManager.GetAsync<string>(GetKey(token)));
     }
 
     public Task DeactivateAsync(string token)
     {
-        return _cacheProvider.SetAsync(GetKey(token), "revoked", _expires);
+        return _cacheManager.SetAsync(GetKey(token), "revoked", _expires.Seconds);
     }
 
     private string GetCurrent()

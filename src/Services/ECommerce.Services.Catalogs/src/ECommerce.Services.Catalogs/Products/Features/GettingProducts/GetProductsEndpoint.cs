@@ -1,5 +1,6 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.CQRS.Query;
 using BuildingBlocks.CQRS.Query;
 using Swashbuckle.AspNetCore.Annotations;
 

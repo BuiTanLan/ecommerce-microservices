@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using BuildingBlocks.Abstractions.CQRS.Query;
 using MediatR;
 
 namespace BuildingBlocks.CQRS.Query;

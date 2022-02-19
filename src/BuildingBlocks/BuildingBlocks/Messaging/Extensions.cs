@@ -1,17 +1,19 @@
 using System.Reflection;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Messaging;
+using BuildingBlocks.Abstractions.Messaging.Outbox;
+using BuildingBlocks.Abstractions.Messaging.Serialization;
+using BuildingBlocks.Abstractions.Messaging.Transport;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Objects;
+using BuildingBlocks.Core.Utils.Reflections;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Messaging.BackgroundServices;
-using BuildingBlocks.Messaging.Message;
 using BuildingBlocks.Messaging.Outbox;
 using BuildingBlocks.Messaging.Outbox.EF;
 using BuildingBlocks.Messaging.Outbox.InMemory;
-using BuildingBlocks.Messaging.Scheduling;
 using BuildingBlocks.Messaging.Serialization;
 using BuildingBlocks.Messaging.Serialization.Newtonsoft;
-using BuildingBlocks.Utils.Reflections;
 using BuildingBlocks.Web.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -67,7 +69,6 @@ public static class Extensions
 
         services.AddUnitOfWork<TContext>();
         services.AddScoped<IOutboxService, EfOutboxService<TContext>>();
-        services.AddScoped<IMessagesExecutor, MessagesExecutor>();
 
         return services;
     }

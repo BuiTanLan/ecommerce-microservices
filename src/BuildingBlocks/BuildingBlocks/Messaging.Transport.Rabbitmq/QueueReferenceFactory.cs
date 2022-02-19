@@ -2,8 +2,7 @@ using System.Collections.Concurrent;
 using BuildingBlocks.Core;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Objects;
-using BuildingBlocks.Utils;
-using BuildingBlocks.Utils.Reflections;
+using BuildingBlocks.Core.Utils.Reflections;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.Messaging.Transport.Rabbitmq;

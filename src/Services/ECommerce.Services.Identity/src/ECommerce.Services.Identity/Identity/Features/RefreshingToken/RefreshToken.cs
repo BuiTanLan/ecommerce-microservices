@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.CQRS.Command;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Jwt;
 using ECommerce.Services.Identity.Identity.Exceptions;

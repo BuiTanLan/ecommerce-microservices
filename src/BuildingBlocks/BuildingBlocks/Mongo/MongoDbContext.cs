@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Abstractions.Persistence;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;

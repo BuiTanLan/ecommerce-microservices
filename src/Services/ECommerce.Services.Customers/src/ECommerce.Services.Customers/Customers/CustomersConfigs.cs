@@ -1,5 +1,5 @@
+using BuildingBlocks.Abstractions.Persistence;
 using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Core.Persistence;
 using BuildingBlocks.Web.Module;
 using ECommerce.Services.Customers.Customers.Data;
 

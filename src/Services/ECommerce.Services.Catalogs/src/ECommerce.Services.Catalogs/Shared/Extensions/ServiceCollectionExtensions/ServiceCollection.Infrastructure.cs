@@ -1,5 +1,6 @@
-using BuildingBlocks.Caching;
-using BuildingBlocks.Core.Extensions;
+using BuildingBlocks.Abstractions.Caching;
+using BuildingBlocks.Caching.InMemory;
+using BuildingBlocks.Core;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Email;
 using BuildingBlocks.IdsGenerator;
@@ -70,8 +71,8 @@ public static class ServiceCollection
         services.AddCustomValidators(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-        services.AddCachingRequestPolicies(new List<Assembly> { Assembly.GetExecutingAssembly() });
-        services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
+        services.AddCustomInMemoryCache(configuration)
+            .AddCachingRequestPolicies(Assembly.GetExecutingAssembly());
 
         return services;
     }

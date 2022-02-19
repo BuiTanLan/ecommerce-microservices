@@ -1,4 +1,5 @@
 using System.Text;
+using BuildingBlocks.Abstractions.Messaging.Serialization;
 using BuildingBlocks.Core;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Objects;

@@ -1,4 +1,5 @@
-using BuildingBlocks.Messaging.Scheduling;
+using BuildingBlocks.Abstractions.CQRS.Command;
+using BuildingBlocks.Abstractions.Scheduler;
 using MediatR;
 
 namespace BuildingBlocks.CQRS.Command;
@@ -6,28 +7,31 @@ namespace BuildingBlocks.CQRS.Command;
 public class CommandProcessor : ICommandProcessor
 {
     private readonly IMediator _mediator;
-    private readonly IMessagesScheduler _messagesScheduler;
+    private readonly ICommandScheduler _commandScheduler;
 
     public CommandProcessor(
         IMediator mediator,
-        IMessagesScheduler messagesScheduler
+        ICommandScheduler commandScheduler
     )
     {
         _mediator = mediator;
-        _messagesScheduler = messagesScheduler;
+        _commandScheduler = commandScheduler;
     }
 
-    public async Task<TResult> SendAsync<TResult>(
+    public Task<TResult> SendAsync<TResult>(
         ICommand<TResult> command,
         CancellationToken cancellationToken = default)
     {
-        if (command is IInternalCommand internalCommand)
-        {
-            await _messagesScheduler.EnqueueAsync(internalCommand);
+        return _mediator.Send(command, cancellationToken);
+    }
 
-            return default!;
-        }
+    public Task ScheduleAsync(IInternalCommand internalCommandCommand, CancellationToken cancellationToken = default)
+    {
+        return _commandScheduler.ScheduleAsync(internalCommandCommand, cancellationToken);
+    }
 
-        return await _mediator.Send(command, cancellationToken);
+    public Task ScheduleAsync(IInternalCommand[] internalCommandCommands, CancellationToken cancellationToken = default)
+    {
+        return _commandScheduler.ScheduleAsync(internalCommandCommands, cancellationToken);
     }
 }

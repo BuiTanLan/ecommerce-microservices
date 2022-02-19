@@ -1,3 +1,4 @@
+using BuildingBlocks.Abstractions.CQRS.Command;
 using BuildingBlocks.Core.Domain;
 using BuildingBlocks.CQRS.Command;
 

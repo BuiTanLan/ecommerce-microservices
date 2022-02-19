@@ -1,8 +1,5 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using BuildingBlocks.Abstractions.Caching;
 using BuildingBlocks.Web.Extensions;
-using EasyCaching.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
@@ -11,15 +8,16 @@ namespace BuildingBlocks.Jwt;
 
 internal sealed class InMemoryAccessTokenService : IAccessTokenService
 {
-    private readonly IEasyCachingProvider _cacheProvider;
     private readonly TimeSpan _expires;
+    private readonly ICacheManager _cacheManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public InMemoryAccessTokenService(IEasyCachingProviderFactory cachingFactory,
+    public InMemoryAccessTokenService(
+        ICacheManager cacheManager,
         IHttpContextAccessor httpContextAccessor,
         IOptions<JwtOptions> jwtOptions)
     {
-        _cacheProvider = cachingFactory.GetCachingProvider("mem");
+        _cacheManager = cacheManager;
         _httpContextAccessor = httpContextAccessor;
         _expires = TimeSpan.FromMinutes(jwtOptions.Value?.ExpiryMinutes ?? 120);
     }
@@ -36,12 +34,12 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
 
     public async Task<bool> IsActiveAsync(string token)
     {
-        return string.IsNullOrWhiteSpace((await _cacheProvider.GetAsync<string>(GetKey(token))).Value);
+        return string.IsNullOrWhiteSpace(await _cacheManager.GetAsync<string>(GetKey(token)));
     }
 
     public Task DeactivateAsync(string token)
     {
-        return _cacheProvider.SetAsync(GetKey(token), "revoked", _expires);
+        return _cacheManager.SetAsync(GetKey(token), "revoked", _expires.Seconds);
     }
 
     private string GetCurrent()

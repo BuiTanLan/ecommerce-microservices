@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.CQRS.Command;
+using BuildingBlocks.Core.Utils;
 using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Utils;
 using ECommerce.Services.Identity.Identity.Dtos;
 using ECommerce.Services.Identity.Identity.Features.RefreshingToken;
 using ECommerce.Services.Identity.Shared.Data;

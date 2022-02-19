@@ -1,3 +1,4 @@
+using BuildingBlocks.Abstractions.CQRS.Command;
 using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.Customers.Exceptions;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;

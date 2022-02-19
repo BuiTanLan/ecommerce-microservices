@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Scheduler;
+using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.EFCore;
-using BuildingBlocks.Messaging.Scheduling;
+using BuildingBlocks.Messaging;
 using BuildingBlocks.Scheduling.Internal.MessagesScheduler;
 using BuildingBlocks.Scheduling.Internal.Services;
 using BuildingBlocks.Web.Extensions;
@@ -37,8 +39,10 @@ public static class Extensions
             }).UseSnakeCaseNamingConvention();
         });
 
-        services.AddScoped<IMessagesScheduler, InternalMessageScheduler>();
-        services.AddScoped<IInternalMessageService, InternalMessageService>();
+        services.AddScoped<IScheduler, InternalScheduler>();
+        services.AddScoped<IMessageScheduler, InternalScheduler>();
+        services.AddScoped<ICommandScheduler, InternalScheduler>();
+        services.AddScoped<IInternalSchedulerService, InternalSchedulerService>();
 
         services.AddHostedService<InternalMessageSchedulerBackgroundWorkerService>();
 

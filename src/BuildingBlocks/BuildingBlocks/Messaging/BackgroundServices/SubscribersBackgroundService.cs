@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BuildingBlocks.Abstractions.Messaging;
+using BuildingBlocks.Abstractions.Messaging.Transport;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace BuildingBlocks.Messaging.BackgroundServices;

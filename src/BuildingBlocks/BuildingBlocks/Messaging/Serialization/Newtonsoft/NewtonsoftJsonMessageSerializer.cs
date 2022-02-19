@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using BuildingBlocks.Abstractions.Messaging.Serialization;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

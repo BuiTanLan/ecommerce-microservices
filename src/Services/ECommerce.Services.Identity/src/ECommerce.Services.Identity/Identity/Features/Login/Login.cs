@@ -1,6 +1,8 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.CQRS.Command;
+using BuildingBlocks.Abstractions.CQRS.Query;
+using BuildingBlocks.Abstractions.Persistence;
 using BuildingBlocks.Core.Domain;
-using BuildingBlocks.Core.Persistence;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.CQRS.Query;
 using BuildingBlocks.Exception;

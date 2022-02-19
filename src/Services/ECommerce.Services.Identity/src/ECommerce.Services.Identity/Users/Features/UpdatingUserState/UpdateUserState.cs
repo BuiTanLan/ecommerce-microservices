@@ -1,4 +1,6 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.CQRS.Command;
+using BuildingBlocks.Abstractions.Messaging.Outbox;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Exception;
 using BuildingBlocks.Messaging.Outbox;

@@ -1,8 +1,8 @@
 using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
+using BuildingBlocks.Abstractions.Persistence;
 using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.Core.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Abstractions.Persistence;
 using BuildingBlocks.Mongo;
 using ECommerce.Services.Customers.Shared.Contracts;
 using ECommerce.Services.Customers.Shared.Data;

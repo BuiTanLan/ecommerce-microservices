@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using BuildingBlocks.Abstractions.CQRS.Command;
 using BuildingBlocks.CQRS.Command;
 using MediatR;
 

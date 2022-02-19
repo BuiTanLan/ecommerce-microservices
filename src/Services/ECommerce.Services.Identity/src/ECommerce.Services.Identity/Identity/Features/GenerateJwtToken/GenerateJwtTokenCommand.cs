@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using BuildingBlocks.Abstractions.CQRS.Command;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Jwt;
 using ECommerce.Services.Identity.Shared.Models;

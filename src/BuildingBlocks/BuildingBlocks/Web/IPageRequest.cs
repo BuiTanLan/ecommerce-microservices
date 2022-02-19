@@ -1,3 +1,4 @@
+using BuildingBlocks.Abstractions.CQRS;
 using BuildingBlocks.CQRS;
 
 namespace BuildingBlocks.Web;

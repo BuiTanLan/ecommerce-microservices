@@ -1,9 +1,9 @@
 using System.Reflection;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Persistence;
 using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Core.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +21,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddPostgresDbContext<TDbContext>(
         this IServiceCollection services,
         IConfiguration configuration,
+        Assembly? migrationAssembly = null,
         Action<PostgresOptions>? configurator = null,
         Action<DbContextOptionsBuilder>? builder = null)
         where TDbContext : DbContext, IDbFacadeResolver, IDomainEventContext
@@ -34,12 +35,12 @@ public static class ServiceCollectionExtensions
             services.Configure(nameof(PostgresOptions), configurator);
 
         Guard.Against.NullOrEmpty(config.ConnectionString, nameof(config.ConnectionString));
-        
+
         services.AddDbContext<TDbContext>(options =>
         {
             options.UseNpgsql(config.ConnectionString, sqlOptions =>
             {
-                sqlOptions.MigrationsAssembly(typeof(TDbContext).Assembly.GetName().Name);
+                sqlOptions.MigrationsAssembly((migrationAssembly ?? typeof(TDbContext).Assembly).GetName().Name);
                 sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             }).UseSnakeCaseNamingConvention();
 

@@ -43,7 +43,7 @@ public class InternalMessageSchedulerBackgroundWorkerService : BackgroundService
             {
                 try
                 {
-                    var internalMessageService = scope.ServiceProvider.GetRequiredService<IInternalMessageService>();
+                    var internalMessageService = scope.ServiceProvider.GetRequiredService<IInternalSchedulerService>();
                     await internalMessageService.PublishUnsentInternalMessagesAsync(stoppingToken);
                 }
                 catch (System.Exception exception)

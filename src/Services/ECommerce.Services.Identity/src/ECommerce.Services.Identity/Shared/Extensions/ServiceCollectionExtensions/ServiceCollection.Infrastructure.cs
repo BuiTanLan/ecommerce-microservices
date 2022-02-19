@@ -1,6 +1,9 @@
 using System.Reflection;
+using BuildingBlocks.Abstractions.Caching;
+using BuildingBlocks.Abstractions.Extensions;
 using BuildingBlocks.Caching;
-using BuildingBlocks.Core.Extensions;
+using BuildingBlocks.Caching.InMemory;
+using BuildingBlocks.Core;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Email;
@@ -73,8 +76,8 @@ public static class ServiceCollection
 
         services.AddRabbitMqTransport(configuration);
 
-        services.AddCachingRequestPolicies(new List<Assembly> { Assembly.GetExecutingAssembly() });
-        services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
+        services.AddCustomInMemoryCache(configuration)
+            .AddCachingRequestPolicies(Assembly.GetExecutingAssembly());
 
         return services;
     }

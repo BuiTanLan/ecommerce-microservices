@@ -1,8 +1,10 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Events;
+using BuildingBlocks.Abstractions.Messaging;
+using BuildingBlocks.Abstractions.Messaging.Outbox;
+using BuildingBlocks.Abstractions.Messaging.Serialization;
+using BuildingBlocks.Abstractions.Messaging.Transport;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Messaging.Serialization;
 using Humanizer;
@@ -73,24 +75,38 @@ public class EfOutboxService<TContext> : IOutboxService
     {
         Guard.Against.Null(integrationEvent, nameof(integrationEvent));
 
+        await SaveAsync(new[] { integrationEvent }, cancellationToken);
+    }
+
+    public async Task SaveAsync(IIntegrationEvent[] integrationEvents, CancellationToken cancellationToken = default)
+    {
+        Guard.Against.Null(integrationEvents, nameof(integrationEvents));
+
+        if (integrationEvents.Any() == false)
+            return;
+
         if (!_options.Enabled)
         {
             _logger.LogWarning("Outbox is disabled, outgoing messages won't be saved");
             return;
         }
 
-        string name = integrationEvent.GetType().Name;
+        foreach (var integrationEvent in integrationEvents)
+        {
+            string name = integrationEvent.GetType().Name;
 
-        var outboxMessages = new OutboxMessage(
-            integrationEvent.EventId,
-            integrationEvent.OccurredOn,
-            integrationEvent.EventType,
-            name.Underscore(),
-            _messageSerializer.Serialize(integrationEvent),
-            EventType.IntegrationEvent,
-            correlationId: null);
+            var outboxMessages = new OutboxMessage(
+                integrationEvent.EventId,
+                integrationEvent.OccurredOn,
+                integrationEvent.EventType,
+                name.Underscore(),
+                _messageSerializer.Serialize(integrationEvent),
+                EventType.IntegrationEvent,
+                correlationId: null);
 
-        await _outboxDataContext.OutboxMessages.AddAsync(outboxMessages, cancellationToken);
+            await _outboxDataContext.OutboxMessages.AddAsync(outboxMessages, cancellationToken);
+        }
+
         await _outboxDataContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Saved message to the outbox");
@@ -102,24 +118,40 @@ public class EfOutboxService<TContext> : IOutboxService
     {
         Guard.Against.Null(domainNotificationEvent, nameof(domainNotificationEvent));
 
+        await SaveAsync(new[] { domainNotificationEvent }, cancellationToken);
+    }
+
+    public async Task SaveAsync(
+        IDomainNotificationEvent[] domainNotificationEvents,
+        CancellationToken cancellationToken = default)
+    {
+        Guard.Against.Null(domainNotificationEvents, nameof(domainNotificationEvents));
+
+        if (domainNotificationEvents.Any() == false)
+            return;
+
         if (!_options.Enabled)
         {
             _logger.LogWarning("Outbox is disabled, outgoing messages won't be saved");
             return;
         }
 
-        string name = domainNotificationEvent.GetType().Name;
+        foreach (var domainNotificationEvent in domainNotificationEvents)
+        {
+            string name = domainNotificationEvent.GetType().Name;
 
-        var outboxMessages = new OutboxMessage(
-            domainNotificationEvent.EventId,
-            domainNotificationEvent.OccurredOn,
-            domainNotificationEvent.EventType,
-            name.Underscore(),
-            _messageSerializer.Serialize(domainNotificationEvent),
-            EventType.DomainNotificationEvent,
-            correlationId: null);
+            var outboxMessages = new OutboxMessage(
+                domainNotificationEvent.EventId,
+                domainNotificationEvent.OccurredOn,
+                domainNotificationEvent.EventType,
+                name.Underscore(),
+                _messageSerializer.Serialize(domainNotificationEvent),
+                EventType.DomainNotificationEvent,
+                correlationId: null);
 
-        await _outboxDataContext.OutboxMessages.AddAsync(outboxMessages, cancellationToken);
+            await _outboxDataContext.OutboxMessages.AddAsync(outboxMessages, cancellationToken);
+        }
+
         await _outboxDataContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Saved message to the outbox");

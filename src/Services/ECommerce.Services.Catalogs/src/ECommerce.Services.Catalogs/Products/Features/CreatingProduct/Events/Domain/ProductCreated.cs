@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Messaging.Outbox;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Exception;

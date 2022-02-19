@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Abstractions.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Mongo;

@@ -1,3 +1,5 @@
+using BuildingBlocks.Abstractions.Messaging.Outbox;
+
 namespace BuildingBlocks.Messaging.Outbox.InMemory;
 
 public class InMemoryOutboxStore : IInMemoryOutboxStore

@@ -1,4 +1,6 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Messaging;
+using BuildingBlocks.Abstractions.Messaging.Transport;
 using BuildingBlocks.Core.Domain.Events.External;
 using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;

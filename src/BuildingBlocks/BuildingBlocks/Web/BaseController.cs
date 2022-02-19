@@ -1,4 +1,6 @@
 using AutoMapper;
+using BuildingBlocks.Abstractions.CQRS.Command;
+using BuildingBlocks.Abstractions.CQRS.Query;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.CQRS.Query;
 using MediatR;

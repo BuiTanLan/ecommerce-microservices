@@ -1,3 +1,4 @@
+using BuildingBlocks.Abstractions.CQRS.Command;
 using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Identity.Users.Features.RegisteringUser;
 using Microsoft.AspNetCore.Builder;

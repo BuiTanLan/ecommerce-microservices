@@ -2,9 +2,9 @@ using System.Collections.Immutable;
 using System.Data;
 using System.Linq.Expressions;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Persistence;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 

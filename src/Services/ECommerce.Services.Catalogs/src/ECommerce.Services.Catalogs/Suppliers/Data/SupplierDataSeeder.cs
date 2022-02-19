@@ -1,5 +1,5 @@
 using Bogus;
-using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Abstractions.Persistence;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 
 namespace ECommerce.Services.Catalogs.Suppliers.Data;

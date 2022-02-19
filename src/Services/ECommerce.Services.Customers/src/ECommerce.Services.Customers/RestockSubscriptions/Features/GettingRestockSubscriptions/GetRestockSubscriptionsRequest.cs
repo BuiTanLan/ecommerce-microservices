@@ -1,3 +1,4 @@
+using BuildingBlocks.Abstractions.CQRS;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Web;
 using BuildingBlocks.Web.Extensions;

@@ -1,5 +1,5 @@
 using System.Text.Json;
-using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Abstractions.Persistence;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

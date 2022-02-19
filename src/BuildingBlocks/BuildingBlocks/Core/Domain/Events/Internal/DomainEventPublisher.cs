@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Extensions;
 using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Core.Extensions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 

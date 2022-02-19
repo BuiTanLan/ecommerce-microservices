@@ -23,8 +23,10 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration,
         EmailProvider provider = EmailProvider.MimKit,
-        Action<EmailOptions>? configurator = null)
+        Action<EmailOptions>? configureOptions = null)
     {
+        var config = configuration.GetOptions<EmailOptions>(nameof(EmailOptions));
+
         if (provider == EmailProvider.SendGrid)
         {
             services.AddSingleton<IEmailSender, SendGridEmailSender>();
@@ -34,11 +36,15 @@ public static class Extensions
             services.AddSingleton<IEmailSender, MimeKitEmailSender>();
         }
 
-        var config = configuration.GetOptions<EmailOptions>(nameof(EmailOptions));
-
-        services.Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)));
-        if (configurator is { })
-            services.Configure(nameof(EmailOptions), configurator);
+        if (configureOptions is { })
+        {
+            services.Configure(nameof(EmailOptions), configureOptions);
+        }
+        else
+        {
+            services.AddOptions<EmailOptions>().Bind(configuration.GetSection(nameof(EmailOptions)))
+                .ValidateDataAnnotations();
+        }
 
         return services;
     }

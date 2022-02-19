@@ -1,6 +1,6 @@
+using BuildingBlocks.Abstractions.Extensions;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.Core.Extensions;
 using MediatR;
 
 namespace BuildingBlocks.Core.Domain.Events;

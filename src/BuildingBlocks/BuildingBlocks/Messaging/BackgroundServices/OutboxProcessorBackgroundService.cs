@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using BuildingBlocks.Abstractions.Messaging.Outbox;
 using BuildingBlocks.Messaging.Outbox;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

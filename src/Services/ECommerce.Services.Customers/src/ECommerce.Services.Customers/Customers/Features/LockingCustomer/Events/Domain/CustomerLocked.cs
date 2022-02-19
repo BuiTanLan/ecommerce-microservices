@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
+using BuildingBlocks.Abstractions.CQRS.Command;
 using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.Customers.Features.UpdatingMongoCustomerReadsModel;
@@ -26,6 +27,6 @@ internal class CustomerLockedHandler : IDomainEventHandler<CustomerLocked>
 
         var command = _mapper.Map<UpdateMongoCustomerReadsModel>(notification.Customer);
 
-        return _commandProcessor.SendAsync(command, cancellationToken);
+        return _commandProcessor.ScheduleAsync(command, cancellationToken);
     }
 }

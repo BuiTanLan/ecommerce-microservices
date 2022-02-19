@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Abstractions.Persistence;
 
 namespace ECommerce.Services.Customers.Shared.Extensions.ApplicationBuilderExtensions;
 

@@ -1,5 +1,6 @@
 using AutoMapper;
-using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Abstractions.CQRS.Query;
+using BuildingBlocks.Abstractions.Persistence;
 using BuildingBlocks.CQRS.Query;
 using Dapper;
 using ECommerce.Services.Catalogs.Products.Models;

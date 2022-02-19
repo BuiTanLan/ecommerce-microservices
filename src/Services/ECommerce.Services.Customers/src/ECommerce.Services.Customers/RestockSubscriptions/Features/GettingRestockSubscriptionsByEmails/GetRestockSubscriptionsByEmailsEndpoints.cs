@@ -1,5 +1,6 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.CQRS.Query;
 using BuildingBlocks.CQRS.Query;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
 using Swashbuckle.AspNetCore.Annotations;

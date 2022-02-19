@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using BuildingBlocks.Core.Extensions;
+using BuildingBlocks.Abstractions.Extensions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 

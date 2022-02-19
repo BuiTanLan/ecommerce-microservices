@@ -1,7 +1,9 @@
 using System.Reflection;
+using BuildingBlocks.Abstractions.Extensions;
+using BuildingBlocks.Abstractions.Messaging;
+using BuildingBlocks.Abstractions.Messaging.Transport;
 using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;

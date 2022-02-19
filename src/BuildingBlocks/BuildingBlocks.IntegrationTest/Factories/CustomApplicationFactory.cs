@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using BuildingBlocks.Core.Persistence;
+using BuildingBlocks.Abstractions.Persistence;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.IntegrationTests.Mock;
 using BuildingBlocks.Web;

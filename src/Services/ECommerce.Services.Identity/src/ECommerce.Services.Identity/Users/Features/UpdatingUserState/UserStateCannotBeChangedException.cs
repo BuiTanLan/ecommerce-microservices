@@ -1,6 +1,6 @@
+using BuildingBlocks.Core.Utils;
 using BuildingBlocks.Exception;
 using BuildingBlocks.Exception.Types;
-using BuildingBlocks.Utils;
 using ECommerce.Services.Identity.Shared.Models;
 
 namespace ECommerce.Services.Identity.Users.Features.UpdatingUserState;

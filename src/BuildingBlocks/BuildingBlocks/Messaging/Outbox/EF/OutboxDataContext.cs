@@ -1,3 +1,4 @@
+using BuildingBlocks.Abstractions.Messaging.Outbox;
 using BuildingBlocks.EFCore;
 using Microsoft.EntityFrameworkCore;
 

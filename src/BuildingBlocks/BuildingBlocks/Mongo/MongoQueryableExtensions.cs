@@ -1,10 +1,11 @@
 using System.Linq.Expressions;
 using AutoMapper.QueryableExtensions;
-using BuildingBlocks.Core.Persistence.Specification;
+using BuildingBlocks.Abstractions.CQRS;
+using BuildingBlocks.Abstractions.Persistence.Specification;
 using BuildingBlocks.CQRS;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using FilterModel = BuildingBlocks.CQRS.FilterModel;
+using FilterModel = BuildingBlocks.Abstractions.CQRS.FilterModel;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace BuildingBlocks.Mongo;

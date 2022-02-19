@@ -1,11 +1,12 @@
 using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using BuildingBlocks.Core.Persistence.Specification;
+using BuildingBlocks.Abstractions.CQRS;
+using BuildingBlocks.Abstractions.Persistence.Specification;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.CQRS.Query;
 using Microsoft.EntityFrameworkCore;
-using FilterModel = BuildingBlocks.CQRS.FilterModel;
+using FilterModel = BuildingBlocks.Abstractions.CQRS.FilterModel;
 
 namespace BuildingBlocks.EFCore;
 

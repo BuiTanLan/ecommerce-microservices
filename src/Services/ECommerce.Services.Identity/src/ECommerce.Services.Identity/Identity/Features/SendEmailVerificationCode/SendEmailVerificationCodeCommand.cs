@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Security.Cryptography;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.CQRS.Command;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Email;
 using BuildingBlocks.Exception;

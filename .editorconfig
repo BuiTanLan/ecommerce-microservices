@@ -130,6 +130,7 @@ dotnet_diagnostic.CA1305.severity = None
 
 ##################################################################################
 ## https://github.com/DotNetAnalyzers/StyleCopAnalyzers/tree/master/documentation
+## https://documentation.help/StyleCop/StyleCop.html
 ## StyleCop.Analyzers
 ##
 
@@ -228,8 +229,16 @@ dotnet_diagnostic.SA1401.severity = None
 # A C# partial element is missing a documentation header.
 dotnet_diagnostic.SA1601.severity = None
 
+# A <param> tag within a C# element’s documentation header is empty.
+dotnet_diagnostic.SA1614.severity = None
+
 # A C# element is missing documentation for its return value.
 dotnet_diagnostic.SA1615.severity = None
+
+# The <returns> tag within a C# element’s documentation header is empty.
+dotnet_diagnostic.SA1616.severity = None
+
+
 
 ##################################################################################
 ##

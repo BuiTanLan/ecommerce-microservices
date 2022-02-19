@@ -1,4 +1,7 @@
 using System.Text;
+using BuildingBlocks.Abstractions.Messaging;
+using BuildingBlocks.Abstractions.Messaging.Serialization;
+using BuildingBlocks.Abstractions.Messaging.Transport;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Messaging.Serialization;
 using Microsoft.Extensions.Logging;
