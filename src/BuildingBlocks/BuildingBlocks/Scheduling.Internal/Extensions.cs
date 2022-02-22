@@ -1,9 +1,10 @@
 ﻿using System.Reflection;
 using Ardalis.GuardClauses;
 using BuildingBlocks.Abstractions.Scheduler;
+using BuildingBlocks.Core.Persistence.EfCore;
 using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.EFCore;
 using BuildingBlocks.Messaging;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using BuildingBlocks.Scheduling.Internal.MessagesScheduler;
 using BuildingBlocks.Scheduling.Internal.Services;
 using BuildingBlocks.Web.Extensions;
@@ -19,7 +20,7 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration,
         Assembly migrationAssembly)
-        where TContext : AppDbContextBase
+        where TContext : EfDbContextBase
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 

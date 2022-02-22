@@ -1,5 +1,6 @@
 using BuildingBlocks.Messaging.Outbox;
 using BuildingBlocks.Messaging.Outbox.EF;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using BuildingBlocks.Scheduling.Internal;
 
 namespace ECommerce.Services.Catalogs.Shared.Data;

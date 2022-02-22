@@ -1,3 +1,4 @@
+using BuildingBlocks.Core.Persistence.EfCore;
 using ECommerce.Services.Identity.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -16,7 +17,7 @@ internal class ApplicationUserConfiguration : IEntityTypeConfiguration<Applicati
         builder.Property(x => x.NormalizedEmail).HasMaxLength(50).IsRequired();
         builder.Property(x => x.PhoneNumber).HasMaxLength(15).IsRequired(false);
 
-        builder.Property(x => x.CreatedAt).HasDefaultValueSql(BuildingBlocks.EFCore.Constants.DateAlgorithm);
+        builder.Property(x => x.CreatedAt).HasDefaultValueSql(EfConstants.DateAlgorithm);
 
         builder.Property(x => x.UserState)
             .HasDefaultValue(UserState.Active)

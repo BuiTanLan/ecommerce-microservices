@@ -1,11 +1,11 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Abstractions.Domain.Model;
 using ECommerce.Services.Catalogs.Categories.Exceptions.Domain;
 
 namespace ECommerce.Services.Catalogs.Categories;
 
 // https://stackoverflow.com/a/32354885/581476
-public class Category : AggregateRoot<CategoryId>
+public class Category : Aggregate<CategoryId>
 {
     public string Name { get; private set; } = null!;
     public string Description { get; private set; } = null!;

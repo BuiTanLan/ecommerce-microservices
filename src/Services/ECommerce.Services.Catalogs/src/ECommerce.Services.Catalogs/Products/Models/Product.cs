@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Abstractions.Domain.Model;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
@@ -15,7 +15,7 @@ using ECommerce.Services.Catalogs.Products.Features.DebitingProductStock.Events.
 using ECommerce.Services.Catalogs.Products.Features.ReplenishingProductStock.Events.Domain;
 using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Suppliers;
-using static BuildingBlocks.Core.Domain.Events.Internal.DomainEvents;
+using static BuildingBlocks.Abstractions.Domain.Events.Internal.DomainEvents;
 using Size = ECommerce.Services.Catalogs.Products.ValueObjects.Size;
 
 namespace ECommerce.Services.Catalogs.Products.Models;
@@ -23,7 +23,7 @@ namespace ECommerce.Services.Catalogs.Products.Models;
 // https://event-driven.io/en/notes_about_csharp_records_and_nullable_reference_types/
 // https://enterprisecraftsmanship.com/posts/link-to-an-aggregate-reference-or-id/
 // https://ardalis.com/avoid-collections-as-properties/?utm_sq=grcpqjyka3
-public class Product : AggregateRoot<ProductId>
+public class Product : Aggregate<ProductId>
 {
     private List<ProductImage> _images = new();
 

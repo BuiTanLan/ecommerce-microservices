@@ -1,4 +1,3 @@
-using BuildingBlocks.Core.Domain.Model;
 using ECommerce.Services.Customers.Customers.Exceptions;
 using ECommerce.Services.Customers.Customers.Exceptions.Domain;
 

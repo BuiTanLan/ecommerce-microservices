@@ -1,5 +1,5 @@
 using BuildingBlocks.Abstractions.Persistence;
-using BuildingBlocks.EFCore;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Identity.Shared.Data;
 using ECommerce.Services.Identity.Shared.Models;
 using Microsoft.AspNetCore.Builder;

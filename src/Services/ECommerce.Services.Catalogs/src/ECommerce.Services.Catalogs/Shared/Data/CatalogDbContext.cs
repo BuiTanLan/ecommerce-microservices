@@ -1,4 +1,6 @@
-using BuildingBlocks.Core.Domain.Events.Internal;
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
+using BuildingBlocks.Core.Persistence.EfCore;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products.Models;
@@ -7,7 +9,7 @@ using ECommerce.Services.Catalogs.Suppliers;
 
 namespace ECommerce.Services.Catalogs.Shared.Data;
 
-public class CatalogDbContext : AppDbContextBase, ICatalogDbContext
+public class CatalogDbContext : EfDbContextBase, ICatalogDbContext
 {
     public const string DefaultSchema = "catalog";
 
@@ -22,7 +24,7 @@ public class CatalogDbContext : AppDbContextBase, ICatalogDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasPostgresExtension(Constants.UuidGenerator);
+        modelBuilder.HasPostgresExtension(EfConstants.UuidGenerator);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         base.OnModelCreating(modelBuilder);

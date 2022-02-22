@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Domain.Events;
+using BuildingBlocks.Abstractions.Domain.Events;
 using BuildingBlocks.Web.Module;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions;

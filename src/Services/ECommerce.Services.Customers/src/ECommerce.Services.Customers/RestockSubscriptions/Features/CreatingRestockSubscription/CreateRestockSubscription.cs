@@ -1,10 +1,10 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Core.Domain.ValueObjects;
+using BuildingBlocks.Abstractions.Domain.ValueObjects;
+using BuildingBlocks.Core.IdsGenerator;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Exception;
-using BuildingBlocks.IdsGenerator;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Products.Exceptions;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;

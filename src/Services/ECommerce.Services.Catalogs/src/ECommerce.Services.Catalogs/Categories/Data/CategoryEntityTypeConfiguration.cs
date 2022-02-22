@@ -1,3 +1,5 @@
+using BuildingBlocks.Core.Persistence.EfCore;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Catalogs.Shared.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,7 +18,7 @@ public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category
 
         builder.Ignore(c => c.DomainEvents);
 
-        builder.Property(x => x.Created).HasDefaultValueSql(Constants.DateAlgorithm);
-        builder.Property(x => x.Name).HasColumnType(Constants.ColumnTypes.NormalText).IsRequired();
+        builder.Property(x => x.Created).HasDefaultValueSql(EfConstants.DateAlgorithm);
+        builder.Property(x => x.Name).HasColumnType(EfConstants.ColumnTypes.NormalText).IsRequired();
     }
 }

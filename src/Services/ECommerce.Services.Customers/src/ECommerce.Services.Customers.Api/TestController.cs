@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Domain.Events;
+using BuildingBlocks.Abstractions.Domain.Events;
 using ECommerce.Services.Customers;
 using Microsoft.AspNetCore.Mvc;
 

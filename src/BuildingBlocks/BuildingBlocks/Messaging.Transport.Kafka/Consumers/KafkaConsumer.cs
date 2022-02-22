@@ -1,8 +1,8 @@
 using Ardalis.GuardClauses;
 using Avro.Generic;
+using BuildingBlocks.Abstractions.Domain.Events;
 using BuildingBlocks.Abstractions.Messaging;
 using BuildingBlocks.Abstractions.Messaging.Transport;
-using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Messaging.Transport.Kafka.SchemaRegistry;
 using Confluent.Kafka;
 using Confluent.Kafka.SyncOverAsync;
@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Messaging.Transport.Kafka.Consumers;
 
-public class KafkaConsumer : IBusSubscriber
+public class KafkaConsumer : IEventBusSubscriber
 {
     private readonly KafkaConsumerConfig _config;
     private readonly IServiceScopeFactory _serviceScopeFactory;

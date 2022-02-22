@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.Core.Domain.Events.External;
+﻿using BuildingBlocks.Abstractions.Domain.Events.External;
 
 namespace BuildingBlocks.Tracing.Messaging.Events;
 

@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.Abstractions.CQRS.Command;
+using BuildingBlocks.Core.IdsGenerator;
 using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Requests;
 
@@ -25,6 +26,7 @@ public static class CreateProductEndpoint
 
     private static async Task<IResult> CreateProducts(
         CreateProductRequest request,
+        IIdGenerator<long> idGenerator,
         ICommandProcessor commandProcessor,
         IMapper mapper,
         CancellationToken cancellationToken)

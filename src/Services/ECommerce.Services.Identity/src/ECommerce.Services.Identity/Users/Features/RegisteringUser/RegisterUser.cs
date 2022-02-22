@@ -1,6 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Core.Domain.Events;
+using BuildingBlocks.Abstractions.Domain.Events;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Messaging.Outbox;
 using ECommerce.Services.Identity.Shared.Models;

@@ -1,6 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.SendingRestockNotification;
 

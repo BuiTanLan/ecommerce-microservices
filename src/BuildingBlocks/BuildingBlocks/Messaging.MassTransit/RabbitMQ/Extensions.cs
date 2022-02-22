@@ -1,5 +1,5 @@
 using System.Reflection;
-using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 using BuildingBlocks.Messaging.MassTransit.RabbitMQ.Options;
 using BuildingBlocks.Web.Extensions;
 using GreenPipes;

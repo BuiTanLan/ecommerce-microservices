@@ -13,8 +13,8 @@ namespace BuildingBlocks.Messaging.Transport.InMemory
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddSingleton<IBusPublisher, InMemoryPublisher>()
-                .AddSingleton<IBusSubscriber, InMemorySubscriber>()
+            services.AddSingleton<IEventBusPublisher, InMemoryPublisher>()
+                .AddSingleton<IEventBusSubscriber, InMemorySubscriber>()
                 .AddTransient<InMemoryProducerDiagnostics>()
                 .AddTransient<InMemoryConsumerDiagnostics>();
 

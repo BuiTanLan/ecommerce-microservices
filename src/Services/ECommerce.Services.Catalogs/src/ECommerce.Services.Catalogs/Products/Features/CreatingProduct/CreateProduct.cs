@@ -1,10 +1,9 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Core.Domain.Events.Internal;
+using BuildingBlocks.Core.IdsGenerator;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Exception;
-using BuildingBlocks.IdsGenerator;
 using ECommerce.Services.Catalogs.Brands.Exceptions.Application;
 using ECommerce.Services.Catalogs.Categories.Exceptions.Domain;
 using ECommerce.Services.Catalogs.Products.Dtos;

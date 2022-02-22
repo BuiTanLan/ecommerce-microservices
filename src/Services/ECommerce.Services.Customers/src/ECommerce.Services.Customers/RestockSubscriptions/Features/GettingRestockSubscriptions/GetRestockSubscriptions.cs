@@ -3,7 +3,7 @@ using BuildingBlocks.Abstractions.CQRS;
 using BuildingBlocks.Abstractions.CQRS.Query;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.Mongo;
+using BuildingBlocks.Persistence.Mongo;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Read;
 using ECommerce.Services.Customers.Shared.Data;

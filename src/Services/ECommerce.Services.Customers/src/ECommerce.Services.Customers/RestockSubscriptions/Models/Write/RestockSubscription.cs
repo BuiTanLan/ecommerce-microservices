@@ -1,6 +1,6 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Core.Domain.ValueObjects;
+using BuildingBlocks.Abstractions.Domain.Model;
+using BuildingBlocks.Abstractions.Domain.ValueObjects;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.ValueObjects;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
@@ -12,7 +12,7 @@ using ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 
-public class RestockSubscription : AggregateRoot<RestockSubscriptionId>, IHaveSoftDelete
+public class RestockSubscription : Aggregate<RestockSubscriptionId>, IHaveSoftDelete
 {
     public CustomerId CustomerId { get; private set; } = null!;
     public Email Email { get; private set; } = null!;

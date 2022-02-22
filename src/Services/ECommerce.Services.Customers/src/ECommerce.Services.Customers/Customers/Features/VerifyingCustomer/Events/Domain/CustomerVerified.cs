@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
 using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Core.Domain.Events.Internal;
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.Customers.Features.UpdatingMongoCustomerReadsModel;
 using ECommerce.Services.Customers.Customers.Models;

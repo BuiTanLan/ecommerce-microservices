@@ -1,5 +1,5 @@
+using BuildingBlocks.Abstractions.Domain.Events;
 using BuildingBlocks.Abstractions.Persistence;
-using BuildingBlocks.Core.Domain.Events;
 using ECommerce.Services.Catalogs.Products.Data;
 using ECommerce.Services.Catalogs.Products.Features.CreatingProduct;
 using ECommerce.Services.Catalogs.Products.Features.DebitingProductStock;

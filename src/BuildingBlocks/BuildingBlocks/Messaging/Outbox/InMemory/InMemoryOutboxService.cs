@@ -1,10 +1,10 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Domain.Events.External;
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using BuildingBlocks.Abstractions.Messaging;
 using BuildingBlocks.Abstractions.Messaging.Outbox;
 using BuildingBlocks.Abstractions.Messaging.Serialization;
 using BuildingBlocks.Abstractions.Messaging.Transport;
-using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.CQRS.Command;
 using BuildingBlocks.Messaging.Serialization;
 using Humanizer;
@@ -20,7 +20,7 @@ public class InMemoryOutboxService : IOutboxService
     private readonly ILogger<InMemoryOutboxService> _logger;
     private readonly IMessageSerializer _messageSerializer;
     private readonly IMediator _mediator;
-    private readonly IBusPublisher _busPublisher;
+    private readonly IEventBusPublisher _eventBusPublisher;
     private readonly IInMemoryOutboxStore _inMemoryOutboxStore;
 
     public InMemoryOutboxService(
@@ -28,14 +28,14 @@ public class InMemoryOutboxService : IOutboxService
         ILogger<InMemoryOutboxService> logger,
         IMessageSerializer messageSerializer,
         IMediator mediator,
-        IBusPublisher busPublisher,
+        IEventBusPublisher eventBusPublisher,
         IInMemoryOutboxStore inMemoryOutboxStore)
     {
         _options = options.Value;
         _logger = logger;
         _messageSerializer = messageSerializer;
         _mediator = mediator;
-        _busPublisher = busPublisher;
+        _eventBusPublisher = eventBusPublisher;
         _inMemoryOutboxStore = inMemoryOutboxStore;
     }
 
@@ -195,7 +195,7 @@ public class InMemoryOutboxService : IOutboxService
             if (outboxMessage.EventType == EventType.IntegrationEvent && data is IIntegrationEvent integrationEvent)
             {
                 // integration event
-                await _busPublisher.PublishAsync(integrationEvent, cancellationToken);
+                await _eventBusPublisher.PublishAsync(integrationEvent, cancellationToken);
 
                 _logger.LogInformation(
                     "Published a message: '{Name}' with ID: '{Id} (outbox)'",

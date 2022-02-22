@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 using ECommerce.Services.Identity.Shared.Models;
 
 namespace ECommerce.Services.Identity.Users.Features.UpdatingUserState;

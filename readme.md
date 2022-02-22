@@ -144,7 +144,7 @@ For checking `validation rules` we use two type of validation:
 4. Install docker - [https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/).
 5. Make sure that you have ~10GB disk space.
 6. Clone Project [https://github.com/mehdihadeli/e-commerce-microservices](https://github.com/mehdihadeli/e-commerce-microservices), make sure that's compiling
-7. Open `ECommerce.sln` solution.
+7. Open [ECommerce.sln](./ECommerce.sln) solution.
 
 ## How to Run
 

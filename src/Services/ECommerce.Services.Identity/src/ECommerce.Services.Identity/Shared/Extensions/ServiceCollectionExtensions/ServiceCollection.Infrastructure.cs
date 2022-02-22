@@ -1,17 +1,18 @@
 using System.Reflection;
 using BuildingBlocks.Abstractions.Caching;
-using BuildingBlocks.Abstractions.Extensions;
 using BuildingBlocks.Caching;
 using BuildingBlocks.Caching.InMemory;
 using BuildingBlocks.Core;
+using BuildingBlocks.Core.Extensions.DependencyInjection;
+using BuildingBlocks.Core.Persistence.EfCore;
 using BuildingBlocks.CQRS;
-using BuildingBlocks.EFCore;
 using BuildingBlocks.Email;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Messaging;
 using BuildingBlocks.Messaging.Outbox.EF;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using BuildingBlocks.Scheduling.Internal;
 using BuildingBlocks.Validation;
 using BuildingBlocks.Web.Extensions;
@@ -35,7 +36,7 @@ public static class ServiceCollection
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddCore();
+        services.AddCore(configuration);
         services.AddEmailService(configuration);
 
         services.AddCustomValidators(Assembly.GetExecutingAssembly());

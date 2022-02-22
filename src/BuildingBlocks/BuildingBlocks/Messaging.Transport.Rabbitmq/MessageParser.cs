@@ -1,7 +1,7 @@
 using System.Text;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 using BuildingBlocks.Abstractions.Messaging.Serialization;
 using BuildingBlocks.Core;
-using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Objects;
 using BuildingBlocks.Messaging.Serialization;
 using Microsoft.Net.Http.Headers;

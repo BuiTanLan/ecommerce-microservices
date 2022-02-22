@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using BuildingBlocks.Abstractions.Persistence;
-using BuildingBlocks.EFCore;
 
 namespace BuildingBlocks.IntegrationTests.Mock;
 

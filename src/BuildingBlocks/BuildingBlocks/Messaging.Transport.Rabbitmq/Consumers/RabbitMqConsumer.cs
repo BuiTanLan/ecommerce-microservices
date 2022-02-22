@@ -1,9 +1,10 @@
 using System.Reflection;
-using BuildingBlocks.Abstractions.Extensions;
+using BuildingBlocks.Abstractions.Domain.Events;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 using BuildingBlocks.Abstractions.Messaging;
 using BuildingBlocks.Abstractions.Messaging.Transport;
-using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Core.Extensions;
+using BuildingBlocks.Core.Extensions.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
@@ -11,7 +12,7 @@ using RabbitMQ.Client.Events;
 
 namespace BuildingBlocks.Messaging.Transport.Rabbitmq.Consumers;
 
-public class RabbitMqConsumer : IBusSubscriber
+public class RabbitMqConsumer : IEventBusSubscriber
 {
     private readonly IBusConnection _connection;
     private readonly IMessageParser _messageParser;

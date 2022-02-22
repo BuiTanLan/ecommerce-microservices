@@ -1,4 +1,4 @@
-using BuildingBlocks.Mongo;
+using BuildingBlocks.Persistence.Mongo;
 using ECommerce.Services.Catalogs.Products.Models.Read;
 using Humanizer;
 using Microsoft.Extensions.Options;

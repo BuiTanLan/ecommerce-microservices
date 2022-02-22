@@ -1,13 +1,13 @@
-﻿using BuildingBlocks.Abstractions.Messaging;
+﻿using BuildingBlocks.Abstractions.Domain.Events.External;
+using BuildingBlocks.Abstractions.Messaging;
 using BuildingBlocks.Abstractions.Messaging.Transport;
-using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Messaging.Transport.InMemory.Channels;
 using BuildingBlocks.Messaging.Transport.InMemory.Diagnostics;
 using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Messaging.Transport.InMemory;
 
-public class InMemoryPublisher : IBusPublisher
+public class InMemoryPublisher : IEventBusPublisher
 {
     private readonly ILogger<InMemoryPublisher> _logger;
     private readonly IMessageChannel _channel;

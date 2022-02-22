@@ -1,6 +1,6 @@
-using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Core.Domain.Events.Internal;
+using BuildingBlocks.Abstractions.Domain.Events;
+using BuildingBlocks.Abstractions.Domain.Events.External;
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using ECommerce.Services.Customers.Customers.Features.CompletingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.CreatingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.LockingCustomer.Events.Domain;

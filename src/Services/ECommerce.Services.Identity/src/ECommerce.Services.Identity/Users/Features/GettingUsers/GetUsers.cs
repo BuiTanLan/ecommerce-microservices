@@ -1,9 +1,10 @@
 using AutoMapper;
 using BuildingBlocks.Abstractions.CQRS;
 using BuildingBlocks.Abstractions.CQRS.Query;
+using BuildingBlocks.Core.Persistence.EfCore;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.EFCore;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Identity.Shared.Models;
 using ECommerce.Services.Identity.Users.Dtos;
 using FluentValidation;

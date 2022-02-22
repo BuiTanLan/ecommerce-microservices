@@ -1,5 +1,5 @@
 using AutoMapper;
-using BuildingBlocks.Core.Domain.ValueObjects;
+using BuildingBlocks.Abstractions.Domain.ValueObjects;
 using ECommerce.Services.Customers.Customers.Dtos;
 using ECommerce.Services.Customers.Customers.Features.CreatingMongoCustomersReadModels;
 using ECommerce.Services.Customers.Customers.Features.UpdatingMongoCustomerReadsModel;

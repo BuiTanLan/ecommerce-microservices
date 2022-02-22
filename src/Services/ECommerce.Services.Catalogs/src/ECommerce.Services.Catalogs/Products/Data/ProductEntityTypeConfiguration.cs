@@ -1,3 +1,5 @@
+using BuildingBlocks.Core.Persistence.EfCore;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products.Models;
@@ -24,12 +26,12 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
         builder.Ignore(c => c.DomainEvents);
 
         builder.Property(x => x.Name)
-            .HasColumnType(Constants.ColumnTypes.NormalText)
+            .HasColumnType(EfConstants.ColumnTypes.NormalText)
             .HasConversion(name => name.Value, name => Name.Create(name))
             .IsRequired();
 
         builder.Property(ci => ci.Price)
-            .HasColumnType(Constants.ColumnTypes.PriceDecimal)
+            .HasColumnType(EfConstants.ColumnTypes.PriceDecimal)
             .HasConversion(price => price.Value, price => price)
             .IsRequired();
 
@@ -39,14 +41,14 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property(x => x.ProductStatus)
             .HasDefaultValue(ProductStatus.Available)
-            .HasMaxLength(Constants.Lenght.Short)
+            .HasMaxLength(EfConstants.Lenght.Short)
             .HasConversion(
                 x => x.ToString(),
                 x => (ProductStatus)Enum.Parse(typeof(ProductStatus), x));
 
         builder.Property(x => x.Color)
             .HasDefaultValue(ProductColor.Black)
-            .HasMaxLength(Constants.Lenght.Short)
+            .HasMaxLength(EfConstants.Lenght.Short)
             .HasConversion(
                 x => x.ToString(),
                 x => (ProductColor)Enum.Parse(typeof(ProductColor), x));
@@ -91,6 +93,6 @@ public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
             .HasForeignKey(x => x.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(x => x.Created).HasDefaultValueSql(Constants.DateAlgorithm);
+        builder.Property(x => x.Created).HasDefaultValueSql(EfConstants.DateAlgorithm);
     }
 }

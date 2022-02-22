@@ -1,9 +1,10 @@
-using BuildingBlocks.EFCore;
+using BuildingBlocks.Core.Persistence.EfCore;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Scheduling.Internal;
 
-public class InternalMessageDbContext : AppDbContextBase
+public class InternalMessageDbContext : EfDbContextBase
 {
     /// <summary>
     /// The default database schema.

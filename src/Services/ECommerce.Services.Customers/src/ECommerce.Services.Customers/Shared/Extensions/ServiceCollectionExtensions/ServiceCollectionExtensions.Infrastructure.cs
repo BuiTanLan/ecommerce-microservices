@@ -1,16 +1,18 @@
 using BuildingBlocks.Abstractions.Caching;
-using BuildingBlocks.Abstractions.Extensions;
 using BuildingBlocks.Caching;
 using BuildingBlocks.Caching.InMemory;
 using BuildingBlocks.Core;
+using BuildingBlocks.Core.Extensions.DependencyInjection;
+using BuildingBlocks.Core.IdsGenerator;
+using BuildingBlocks.Core.Persistence.EfCore;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Email;
-using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Messaging;
 using BuildingBlocks.Messaging.Outbox.EF;
 using BuildingBlocks.Messaging.Transport.Rabbitmq;
 using BuildingBlocks.Monitoring;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using BuildingBlocks.Scheduling.Internal;
 using BuildingBlocks.Validation;
 using BuildingBlocks.Web.Extensions;
@@ -31,7 +33,7 @@ public static partial class ServiceCollectionExtensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         SnowFlakIdGenerator.Configure(2);
-        services.AddCore();
+        services.AddCore(configuration);
 
         services.AddMonitoring(healthChecksBuilder =>
         {

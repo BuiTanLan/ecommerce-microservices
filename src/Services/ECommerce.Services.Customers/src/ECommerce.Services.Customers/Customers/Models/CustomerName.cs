@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Abstractions.Domain.Model;
 using ECommerce.Services.Customers.Customers.Exceptions.Domain;
 
 namespace ECommerce.Services.Customers.Customers.Models;

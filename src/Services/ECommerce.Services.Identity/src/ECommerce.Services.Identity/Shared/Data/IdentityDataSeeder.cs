@@ -1,5 +1,4 @@
 using BuildingBlocks.Abstractions.Persistence;
-using BuildingBlocks.EFCore;
 using ECommerce.Services.Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 

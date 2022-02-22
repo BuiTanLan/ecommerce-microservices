@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net;
-using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 using BuildingBlocks.Tracing;
 using BuildingBlocks.Tracing.Messaging.Events;
 using BuildingBlocks.Tracing.Transports;

@@ -1,6 +1,6 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Core.Domain.ValueObjects;
+using BuildingBlocks.Abstractions.Domain.Model;
+using BuildingBlocks.Abstractions.Domain.ValueObjects;
 using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.Exceptions;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
@@ -14,7 +14,7 @@ using ECommerce.Services.Customers.Customers.ValueObjects;
 
 namespace ECommerce.Services.Customers.Customers.Models;
 
-public class Customer : AggregateRoot<CustomerId>
+public class Customer : Aggregate<CustomerId>
 {
     public Guid IdentityId { get; private set; }
     public Email Email { get; private set; } = null!;

@@ -16,7 +16,7 @@ public class SubscribersBackgroundService : BackgroundService
 
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
-        var subscribers = _serviceProvider.GetServices<IBusSubscriber>();
+        var subscribers = _serviceProvider.GetServices<IEventBusSubscriber>();
         await Task.WhenAll(subscribers.Select(s => s.StopAsync(cancellationToken)));
 
         await base.StopAsync(cancellationToken);
@@ -24,7 +24,7 @@ public class SubscribersBackgroundService : BackgroundService
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var subscribers = _serviceProvider.GetServices<IBusSubscriber>();
+        var subscribers = _serviceProvider.GetServices<IEventBusSubscriber>();
 
         return Task.WhenAll(subscribers.Select(s => s.StartAsync(stoppingToken)));
     }

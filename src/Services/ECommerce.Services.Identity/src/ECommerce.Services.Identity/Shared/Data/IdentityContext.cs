@@ -1,8 +1,7 @@
 using System.Data;
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using BuildingBlocks.Abstractions.Persistence;
-using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.EFCore;
+using BuildingBlocks.Abstractions.Persistence.EfCore;
 using ECommerce.Services.Identity.Shared.Models;
 using Humanizer;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -14,7 +13,7 @@ namespace ECommerce.Services.Identity.Shared.Data;
 public class IdentityContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>,
     IDbFacadeResolver,
     IDomainEventContext,
-    ITxDbContextExecutes
+    ITxDbContextExecution
 {
     public IdentityContext(DbContextOptions options) : base(options)
     {
@@ -54,17 +53,6 @@ public class IdentityContext : IdentityDbContext<ApplicationUser, ApplicationRol
             {
             }
         }
-    }
-
-    public IReadOnlyList<IDomainEvent> GetDomainEvents()
-    {
-        return new List<IDomainEvent>();
-    }
-
-    public IReadOnlyList<(IHaveAggregate Aggregate, IReadOnlyList<IDomainEvent> DomainEvents)>
-        GetAggregateDomainEvents()
-    {
-        return new List<(IHaveAggregate Aggregate, IReadOnlyList<IDomainEvent> DomainEvents)>();
     }
 
     public Task ExecuteTransactionalAsync(Func<Task> action, CancellationToken cancellationToken = default)
@@ -109,5 +97,10 @@ public class IdentityContext : IdentityDbContext<ApplicationUser, ApplicationRol
                 throw;
             }
         });
+    }
+
+    public IReadOnlyList<IDomainEvent> GetAllUncommittedEvents()
+    {
+        return new List<IDomainEvent>();
     }
 }

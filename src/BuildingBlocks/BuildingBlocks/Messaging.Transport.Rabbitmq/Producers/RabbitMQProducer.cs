@@ -1,15 +1,15 @@
 using System.Text;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 using BuildingBlocks.Abstractions.Messaging;
 using BuildingBlocks.Abstractions.Messaging.Serialization;
 using BuildingBlocks.Abstractions.Messaging.Transport;
-using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Messaging.Serialization;
 using Microsoft.Extensions.Logging;
 using Polly;
 
 namespace BuildingBlocks.Messaging.Transport.Rabbitmq.Producers;
 
-public class RabbitMqProducer : IBusPublisher
+public class RabbitMqProducer : IEventBusPublisher
 {
     private readonly IPublisherChannelFactory _publisherChannelFactory;
     private readonly IMessageSerializer _messageSerializer;

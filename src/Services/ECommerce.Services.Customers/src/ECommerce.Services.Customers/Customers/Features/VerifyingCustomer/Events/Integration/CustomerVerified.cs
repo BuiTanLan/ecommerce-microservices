@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 
 namespace ECommerce.Services.Customers.Customers.Features.VerifyingCustomer.Events.Integration;
 

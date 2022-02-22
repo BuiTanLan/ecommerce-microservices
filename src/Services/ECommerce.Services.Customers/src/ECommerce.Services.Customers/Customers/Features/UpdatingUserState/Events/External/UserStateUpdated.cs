@@ -1,6 +1,5 @@
+using BuildingBlocks.Abstractions.Domain.Events.External;
 using BuildingBlocks.Abstractions.Persistence;
-using BuildingBlocks.Core.Domain;
-using BuildingBlocks.Core.Domain.Events.External;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Shared.Data;
 using Microsoft.EntityFrameworkCore;

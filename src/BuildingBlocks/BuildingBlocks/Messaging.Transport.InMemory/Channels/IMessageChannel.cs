@@ -1,5 +1,5 @@
 using System.Threading.Channels;
-using BuildingBlocks.Core.Domain.Events.External;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 
 namespace BuildingBlocks.Messaging.Transport.InMemory.Channels;
 

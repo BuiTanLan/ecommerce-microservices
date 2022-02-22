@@ -1,19 +1,20 @@
 using System.Reflection;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 using BuildingBlocks.Abstractions.Messaging;
 using BuildingBlocks.Abstractions.Messaging.Outbox;
 using BuildingBlocks.Abstractions.Messaging.Serialization;
 using BuildingBlocks.Abstractions.Messaging.Transport;
-using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Objects;
+using BuildingBlocks.Core.Persistence.EfCore;
 using BuildingBlocks.Core.Utils.Reflections;
-using BuildingBlocks.EFCore;
 using BuildingBlocks.Messaging.BackgroundServices;
 using BuildingBlocks.Messaging.Outbox;
 using BuildingBlocks.Messaging.Outbox.EF;
 using BuildingBlocks.Messaging.Outbox.InMemory;
 using BuildingBlocks.Messaging.Serialization;
 using BuildingBlocks.Messaging.Serialization.Newtonsoft;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using BuildingBlocks.Web.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,7 +48,7 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration,
         Assembly migrationAssembly)
-        where TContext : AppDbContextBase
+        where TContext : EfDbContextBase
     {
         var outboxOption = Guard.Against.Null(
             configuration.GetOptions<OutboxOptions>(nameof(OutboxOptions)),
@@ -122,7 +123,7 @@ public static class Extensions
     public static IServiceCollection AddBusSubscriber(this IServiceCollection services, Type subscriberType)
     {
         if (services.All(s => s.ImplementationType != subscriberType))
-            services.AddSingleton(typeof(IBusSubscriber), subscriberType);
+            services.AddSingleton(typeof(IEventBusSubscriber), subscriberType);
         return services;
     }
 }

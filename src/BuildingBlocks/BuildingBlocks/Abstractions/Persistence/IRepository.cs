@@ -1,34 +1,49 @@
 using System.Linq.Expressions;
-using BuildingBlocks.Abstractions.Persistence.Specification;
-using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Abstractions.Domain.Model;
 
 namespace BuildingBlocks.Abstractions.Persistence;
 
-public interface IRepository<TEntity, TId> : IDisposable
-    where TEntity : IAggregateRoot<TId>
+public interface IReadRepository<TEntity, in TId>
+    where TEntity : class, IHaveIdentity<TId>
 {
-    Task<TEntity?> FindByIdAsync(IIdentity<TId> id, CancellationToken cancellationToken = default);
+    Task<TEntity?> FindByIdAsync(TId id, CancellationToken cancellationToken = default);
 
     Task<TEntity?> FindOneAsync(
         Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken = default);
 
-    Task<TEntity?> FindOneAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
-    Task<IList<TEntity>> FindAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken = default);
-
-    Task<IList<TEntity>> FindAsync(
+    Task<IReadOnlyList<TEntity>> FindAsync(
         Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken = default);
 
-    Task<IList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+
+    public Task<IReadOnlyList<TEntity>> RawQuery(
+        string query,
+        CancellationToken cancellationToken = default,
+        params object[] queryParams);
+}
+
+public interface IWriteRepository<TEntity, in TId>
+    where TEntity : class, IHaveIdentity<TId>
+{
     Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
-    Task DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    Task DeleteRangeAsync(IReadOnlyList<TEntity> entities, CancellationToken cancellationToken = default);
     Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
     Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
+    Task DeleteByIdAsync(TId id, CancellationToken cancellationToken = default);
+}
+
+public interface IRepository<TEntity, in TId> :
+    IReadRepository<TEntity, TId>,
+    IWriteRepository<TEntity, TId>,
+    IDisposable
+    where TEntity : class, IHaveIdentity<TId>
+{
 }
 
 public interface IRepository<TEntity> : IRepository<TEntity, long>
-    where TEntity : IAggregateRoot<long>
+    where TEntity : class, IHaveIdentity<long>
 {
 }

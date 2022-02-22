@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Abstractions.Domain.Model;
 
 namespace ECommerce.Services.Catalogs.Suppliers;
 

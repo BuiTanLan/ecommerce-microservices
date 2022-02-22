@@ -1,7 +1,6 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using BuildingBlocks.Abstractions.Messaging.Outbox;
-using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Core.Domain.Events.Internal;
 using BuildingBlocks.Exception;
 using BuildingBlocks.Messaging.Outbox;
 using ECommerce.Services.Catalogs.Products.Exceptions.Application;

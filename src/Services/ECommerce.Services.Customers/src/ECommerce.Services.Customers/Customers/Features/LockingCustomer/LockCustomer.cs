@@ -1,7 +1,4 @@
 using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Core.Domain;
-using BuildingBlocks.CQRS.Command;
-using ECommerce.Services.Customers.Customers.Exceptions;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Shared.Data;
 using ECommerce.Services.Customers.Shared.Extensions;

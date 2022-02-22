@@ -1,5 +1,6 @@
 using BuildingBlocks.Abstractions.Persistence;
-using BuildingBlocks.Mongo;
+using BuildingBlocks.Persistence.EfCore.Postgres;
+using BuildingBlocks.Persistence.Mongo;
 using ECommerce.Services.Customers.Shared.Contracts;
 using ECommerce.Services.Customers.Shared.Data;
 using Microsoft.EntityFrameworkCore;

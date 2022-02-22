@@ -1,6 +1,6 @@
-﻿using BuildingBlocks.Abstractions.Messaging;
+﻿using BuildingBlocks.Abstractions.Domain.Events;
+using BuildingBlocks.Abstractions.Messaging;
 using BuildingBlocks.Abstractions.Messaging.Transport;
-using BuildingBlocks.Core.Domain.Events;
 using BuildingBlocks.Messaging.Transport.InMemory.Channels;
 using BuildingBlocks.Messaging.Transport.InMemory.Diagnostics;
 using MediatR;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Messaging.Transport.InMemory;
 
-public class InMemorySubscriber : IBusSubscriber
+public class InMemorySubscriber : IEventBusSubscriber
 {
     private readonly InMemoryConsumerDiagnostics _consumerDiagnostics;
     private readonly IServiceProvider _serviceProvider;

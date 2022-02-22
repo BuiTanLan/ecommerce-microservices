@@ -1,14 +1,14 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 using BuildingBlocks.Abstractions.Messaging;
 using BuildingBlocks.Abstractions.Messaging.Transport;
-using BuildingBlocks.Core.Domain.Events.External;
 using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace BuildingBlocks.Messaging.Transport.Kafka.Producers;
 
-public class KafkaProducer : IBusPublisher
+public class KafkaProducer : IEventBusPublisher
 {
     private readonly KafkaProducerConfig _config;
 

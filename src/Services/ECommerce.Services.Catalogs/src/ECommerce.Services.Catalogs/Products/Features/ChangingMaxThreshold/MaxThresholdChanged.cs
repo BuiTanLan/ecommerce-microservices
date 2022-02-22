@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Domain.Events.Internal;
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ChangingMaxThreshold;
 

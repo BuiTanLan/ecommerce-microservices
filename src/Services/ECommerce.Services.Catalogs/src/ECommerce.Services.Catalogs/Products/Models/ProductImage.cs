@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Model;
+using BuildingBlocks.Abstractions.Domain.Model;
 using ECommerce.Services.Catalogs.Products.ValueObjects;
 
 namespace ECommerce.Services.Catalogs.Products.Models;

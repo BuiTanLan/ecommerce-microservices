@@ -1,5 +1,6 @@
 using System.Reflection;
 using BuildingBlocks.Core;
+using BuildingBlocks.Core.Dependency;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Web;

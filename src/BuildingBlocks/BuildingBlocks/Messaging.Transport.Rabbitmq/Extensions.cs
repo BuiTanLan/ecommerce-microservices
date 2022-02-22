@@ -17,8 +17,8 @@ public static class Extensions
     {
         services.AddSingleton<IQueueReferenceFactory, QueueReferenceFactory>();
         services.AddSingleton<IMessageParser, MessageParser>();
-        services.AddSingleton<IBusPublisher, RabbitMqProducer>();
-        services.AddSingleton<IBusSubscriber, RabbitMqConsumer>();
+        services.AddSingleton<IEventBusPublisher, RabbitMqProducer>();
+        services.AddSingleton<IEventBusSubscriber, RabbitMqConsumer>();
         services.AddSingleton<IPublisherChannelContextPool, PublisherChannelContextPool>();
         services.AddSingleton<IPublisherChannelFactory, PublisherChannelFactory>();
 

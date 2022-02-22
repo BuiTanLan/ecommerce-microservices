@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Domain.Exceptions;
+using BuildingBlocks.Abstractions.Domain.Exceptions;
 
 namespace ECommerce.Services.Catalogs.Products.Exceptions.Domain;
 

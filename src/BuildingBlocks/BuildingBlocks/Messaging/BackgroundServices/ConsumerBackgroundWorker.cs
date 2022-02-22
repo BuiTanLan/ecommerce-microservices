@@ -8,12 +8,12 @@ namespace BuildingBlocks.Messaging.BackgroundServices;
 
 public class ConsumerBackgroundWorker : BackgroundService
 {
-    private readonly IEnumerable<IBusSubscriber> _subscribers;
+    private readonly IEnumerable<IEventBusSubscriber> _subscribers;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ILogger<ConsumerBackgroundWorker> _logger;
 
     public ConsumerBackgroundWorker(
-        IEnumerable<IBusSubscriber> subscribers,
+        IEnumerable<IEventBusSubscriber> subscribers,
         IServiceScopeFactory serviceScopeFactory,
         ILogger<ConsumerBackgroundWorker> logger)
     {

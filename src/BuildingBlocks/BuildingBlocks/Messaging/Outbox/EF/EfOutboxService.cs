@@ -1,12 +1,13 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Abstractions.Domain.Events.External;
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using BuildingBlocks.Abstractions.Messaging;
 using BuildingBlocks.Abstractions.Messaging.Outbox;
 using BuildingBlocks.Abstractions.Messaging.Serialization;
 using BuildingBlocks.Abstractions.Messaging.Transport;
-using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.EFCore;
+using BuildingBlocks.Core.Persistence.EfCore;
 using BuildingBlocks.Messaging.Serialization;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using Humanizer;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +17,12 @@ using Microsoft.Extensions.Options;
 namespace BuildingBlocks.Messaging.Outbox.EF;
 
 public class EfOutboxService<TContext> : IOutboxService
-    where TContext : AppDbContextBase
+    where TContext : EfDbContextBase
 {
     private readonly OutboxOptions _options;
     private readonly ILogger<EfOutboxService<TContext>> _logger;
     private readonly IMessageSerializer _messageSerializer;
-    private readonly IBusPublisher _busPublisher;
+    private readonly IEventBusPublisher _eventBusPublisher;
     private readonly IMediator _mediator;
     private readonly OutboxDataContext _outboxDataContext;
 
@@ -29,14 +30,14 @@ public class EfOutboxService<TContext> : IOutboxService
         IOptions<OutboxOptions> options,
         ILogger<EfOutboxService<TContext>> logger,
         IMessageSerializer messageSerializer,
-        IBusPublisher busPublisher,
+        IEventBusPublisher eventBusPublisher,
         IMediator mediator,
         OutboxDataContext outboxDataContext)
     {
         _options = options.Value;
         _logger = logger;
         _messageSerializer = messageSerializer;
-        _busPublisher = busPublisher;
+        _eventBusPublisher = eventBusPublisher;
         _mediator = mediator;
         _outboxDataContext = outboxDataContext;
     }
@@ -200,7 +201,7 @@ public class EfOutboxService<TContext> : IOutboxService
             if (outboxMessage.EventType == EventType.IntegrationEvent && data is IIntegrationEvent integrationEvent)
             {
                 // integration event
-                await _busPublisher.PublishAsync(integrationEvent, cancellationToken);
+                await _eventBusPublisher.PublishAsync(integrationEvent, cancellationToken);
 
                 _logger.LogInformation(
                     "Publish a message: '{Name}' with ID: '{Id} (outbox)'",

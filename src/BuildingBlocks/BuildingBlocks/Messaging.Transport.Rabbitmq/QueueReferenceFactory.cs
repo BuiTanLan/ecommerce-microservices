@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
+using BuildingBlocks.Abstractions.Domain.Events.External;
 using BuildingBlocks.Core;
-using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.Core.Objects;
 using BuildingBlocks.Core.Utils.Reflections;
 using Microsoft.Extensions.DependencyInjection;

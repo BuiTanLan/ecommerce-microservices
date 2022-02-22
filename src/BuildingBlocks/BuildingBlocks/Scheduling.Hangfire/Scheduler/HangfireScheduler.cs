@@ -1,7 +1,8 @@
 ﻿using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Abstractions.Extensions;
 using BuildingBlocks.Abstractions.Messaging;
 using BuildingBlocks.Abstractions.Scheduler;
+using BuildingBlocks.Core.Extensions;
+using BuildingBlocks.Core.Extensions.Mediator;
 using BuildingBlocks.CQRS.Command;
 using Hangfire;
 using MediatR;

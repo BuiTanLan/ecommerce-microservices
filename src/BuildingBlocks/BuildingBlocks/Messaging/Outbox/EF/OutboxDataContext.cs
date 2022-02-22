@@ -1,10 +1,11 @@
 using BuildingBlocks.Abstractions.Messaging.Outbox;
-using BuildingBlocks.EFCore;
+using BuildingBlocks.Core.Persistence.EfCore;
+using BuildingBlocks.Persistence.EfCore.Postgres;
 using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Messaging.Outbox.EF;
 
-public class OutboxDataContext : AppDbContextBase
+public class OutboxDataContext : EfDbContextBase
 {
     /// <summary>
     /// The default database schema.

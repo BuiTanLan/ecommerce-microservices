@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Domain.Exceptions;
+using BuildingBlocks.Abstractions.Domain.Exceptions;
 using BuildingBlocks.Exception;
 using BuildingBlocks.Exception.Types;
 using BuildingBlocks.Validation;
