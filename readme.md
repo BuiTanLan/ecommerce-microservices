@@ -3,6 +3,46 @@
 
 This project is still in progress and I update it to the latest technologies continuously.
 
+
+# Support ⭐
+If you like my work, feel free to:
+
+- ⭐ this repository. And we will be happy together :)
+
+
+Thanks a bunch for supporting me!
+
+[tweet]: https://twitter.com/intent/tweet?url=https://github.com/mehdihadeli/Online-Store-Modular-Monolith&text=Implementing%20an%20online%20store%20Modular%20Monolith%20application%20with%20Domain-Driven%20Design%20and%20CQRS%20in%20.Net%20Core&hashtags=dotnetcore,dotnet,csharp,microservices,netcore,aspnetcore,ddd,cqrs
+
+# Table of Contents
+
+- [The Goals of This Project](#the-goals-of-this-project)
+- [Plan](#plan)
+- [Technologies - Libraries](#technologies---libraries)
+- [The Domain and Bounded Context - Service Boundary](#the-domain-and-bounded-context---service-boundary)
+- [Application Architecture](#application-architecture)
+- [Application Structure](#application-structure)
+- [Prerequisites](#prerequisites)
+- [Prerequisites](#prerequisites)
+- [How to Run](#how-to-run)
+  - [Using Docker-Compose](#using-docker-compose)
+  - [Using Kubernetes](#using-kubernetes)
+- [Contribution](#contribution)
+- [License](#license)
+
+## The Goals of This Project
+
+- The `Microservices Architecture` with `Domain Driven Design (DDD)` implementation.
+- Correct separation of bounded contexts for each microservice.
+- Communications between bounded contexts through asynchronous `Message Broker` with using `RabbitMQ` with some autonomous services.
+- Simple `CQRS` implementation and `Event Driven Architecture` with using Postgres for `Write Side` and MongoDB and Elastic Search for `Read Side`. For syncing Read Side and Write Side I will use [EventStore Projections](https://developers.eventstore.com/server/v5/projections.html#introduction-to-projections) or [Marten Projections](https://martendb.io/events/projections/). we could also sync our Read and Write models with passing some integration event between services for achieving eventually consistency.
+- Implementing various type of testing like `Unit Testing`,  `Integration Testing` and `End-To-End Testing`.
+- Using [Inbox Pattern](https://event-driven.io/en/outbox_inbox_patterns_and_delivery_guarantees_explained/) for guaranty message [Idempotency](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html) for receiver microservice and [Exactly-once Delivery](https://www.cloudcomputingpatterns.org/exactly_once_delivery/) pattern and using [Outbox Pattern](https://event-driven.io/en/outbox_inbox_patterns_and_delivery_guarantees_explained/) for ensuring about any message lost and [At-Least one Delivery](https://www.cloudcomputingpatterns.org/at_least_once_delivery/) rule.
+- Using `Best Practice` and `New Technologies` and `Design Patterns`.
+- Using `Event Storming` for extracting data model and bounded context (using Miro).
+- Using Docker-Compose, Helm and Kubernetes for our deployment mechanism and Also using Terraform as infrastructure as a code.
+- Using Istio and Service Mesh for our mecroservices
+
 ## Plan
 > This project is in progress, New features will be added over time.
 
@@ -39,7 +79,7 @@ High-level plan is represented in the table
 - ✔️ **[`IdGen`](https://github.com/RobThree/IdGen)** - Twitter Snowflake-alike ID generator for .Net
 
 
-## The Domain and Bounded Context (Service Boundary)
+## The Domain And Bounded Context - Service Boundary
 
 `ECommerce Microservices` is a simple e-commerce application that has the basic business scenario for online purchasing with some dedicated services. There are six possible `Bounded context` or `Service` for above business:
 
@@ -99,7 +139,7 @@ Also we could use gateway for load balancing, authentication and authorization, 
 
 ## Application Structure
 
-In this application I used a [mediator pattern](https://dotnetcoretutorials.com/2019/04/30/the-mediator-pattern-in-net-core-part-1-whats-a-mediator/) with using [MediatR](https://github.com/jbogard/MediatR) library in my controllers for a clean and [thin controller](https://codeopinion.com/thin-controllers-cqrs-mediatr/), also instead of using and injecting a `application service` class in our controller, we just inject a mediator class, because after some times our controller will depends to different services and this breaks single responsibility principle.
+In this application I used a [Mediator Pattern](https://dotnetcoretutorials.com/2019/04/30/the-mediator-pattern-in-net-core-part-1-whats-a-mediator/) with using [ICommandProcessor](./src/BuildingBlocks/BuildingBlocks/CQRS/Command/ICommandProcessor.cs) and [IQueryProcessor](./src/BuildingBlocks/BuildingBlocks/CQRS/Query/IQueryProcessor.cs) (In top of MediatR library) as mediator gateway for sending command and query to our `handlers`. Also I use these mediators in my controllers for a clean and [Thin Controller](https://codeopinion.com/thin-controllers-cqrs-mediatr/). instead of using and injecting some `Application Service` classes in our controller and depending to different services that breaks single responsibility principle in our controller and a bug bull of mode in our code, we just inject a mediator class which is responsible for routing to corresponding handler for handling logic.
 
 Mediator mediate between objects and prevent direct coupling between objects, and objects could communicate each other with sending some message through mediator as a gateway. Here We use mediator pattern to manage the delivery of messages to handlers. For example in our controllers we create a command and send it to mediator and mediator will route our command to a specific command handler in application layer.
 
@@ -148,8 +188,13 @@ For checking `validation rules` we use two type of validation:
 
 ## How to Run
 
-### Using Docker-Compose
+For Running this application we could run our microservices one by one in our Dev Environment, for me, it's Rider, Or we could run it with using [Docker-Compose](#using-docker-compose) or we could use [Kubernetes](#using-kubernetes).
 
+For testing apis I used [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin of VSCode its related file scenarios are available in [_httpclients](\_httpclients) folder. also after running api you have access to `swagger open api` for all microservices in `/swagger` route path.
+
+In this application I use a `fake email sender` with name of [ethereal](https://ethereal.email/) as a SMTP provider for sending email. after sending email by the application you can see the list of sent emails in [ethereal messages panel](https://ethereal.email/messages). My temp username and password is available inner the all of [appsettings file](./src/Services/ECommerce.Services.Customers/src/ECommerce.Services.Customers.Api/appsettings.json)
+
+### Using Docker-Compose
 
 10. Go to [deployments/docker-compose/docker-compose.yaml](./deployments/docker-compose/docker-compose.yaml) and run: `docker-compose up`.
 11. Wait until all dockers got are downloaded and running.
@@ -186,6 +231,12 @@ docker ps
 docker ps -a
 ```
 
-For testing apis I used [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin of VSCode its related file scenarios are available in [_httpclients](\_httpclients) folder. also after running api you have access to `swagger open api` for all microservices in `/swagger` route path.
+### Using Kubernetes
 
-In this application I use a `fake email sender` with name of [ethereal](https://ethereal.email/) as a SMTP provider for sending email. after sending email by the application you can see the list of sent emails in [ethereal messages panel](https://ethereal.email/messages). My temp username and password is available inner the all of [appsettings file](./src/Services/ECommerce.Services.Customers/src/ECommerce.Services.Customers.Api/appsettings.json)
+TODO
+
+## Contribution
+The application is in development status. You are feel free to submit pull request or create the issue.
+
+## License
+The project is under [MIT license](https://github.com/mehdihadeli/e-commerce-microservices/blob/main/LICENSE).
