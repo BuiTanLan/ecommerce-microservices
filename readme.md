@@ -5,9 +5,7 @@ This project is still in progress and I update it to the latest technologies con
 
 
 # Support ⭐
-If you like my work, feel free to:
-
-- ⭐ this repository. And we will be happy together :)
+If you like my work, feel free to ⭐ this repository, and we will be happy together :)
 
 
 Thanks a bunch for supporting me!
@@ -22,7 +20,6 @@ Thanks a bunch for supporting me!
 - [The Domain and Bounded Context - Service Boundary](#the-domain-and-bounded-context---service-boundary)
 - [Application Architecture](#application-architecture)
 - [Application Structure](#application-structure)
-- [Prerequisites](#prerequisites)
 - [Prerequisites](#prerequisites)
 - [How to Run](#how-to-run)
   - [Using Docker-Compose](#using-docker-compose)
