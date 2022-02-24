@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Core.Domain.Events.External;
 using BuildingBlocks.CQRS.Command;
+using ECommerce.Services.Customers.RestockSubscriptions.Features.ProcessingRestockNotification;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.SendingRestockNotification;
 
 namespace ECommerce.Services.Customers.Products.Features.ReplenishingProductStock.Events.External;
@@ -20,13 +21,14 @@ internal class ProductStockReplenishedHandler : IIntegrationEventHandler<Product
         _logger = logger;
     }
 
+    // If this handler is called successfully, it will send a ACK to rabbitmq for removing message from the queue and if we have an exception it send an NACK to rabbitmq
+    // and with NACK we can retry the message with re-queueing this message to the broker
     public async Task Handle(ProductStockReplenished notification, CancellationToken cancellationToken)
     {
         Guard.Against.Null(notification, nameof(notification));
 
-        // send internal command to process in background with outbox or message scheduler
         await _commandProcessor.SendAsync(
-            new SendRestockNotification(notification.ProductId, notification.NewStock),
+            new ProcessRestockNotification(notification.ProductId, notification.NewStock),
             cancellationToken);
 
         _logger.LogInformation("Sending restock notification command for product {ProductId}", notification.ProductId);

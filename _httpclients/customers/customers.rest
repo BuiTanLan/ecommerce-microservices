@@ -1,9 +1,9 @@
 # https://github.com/Huachao/vscode-restclient
 @customers-api=http://localhost:8000
 @api-gateway=http://localhost:3000
-@contentType = application/json
-@customer_id = 723479639883776
-@restock_subscription_id = 725077846917120
+@customer_id = 860808335851520
+@restock_subscription_id = 862777745866752
+@product_id=1
 
 # @name ApiRoot
 GET {{customers-api}}
@@ -42,7 +42,7 @@ accept: application/json
 Content-Type: application/json
 
 {
-  "email": "mehdi@test.com"
+  "email": "mehdi3@test.com"
 }
 
 ###
@@ -52,7 +52,7 @@ accept: */*
 Content-Type: application/json
 
 {
-  "phoneNumber": "121255655",
+  "phoneNumber": "365556565",
   "birthDate": "1980-02-17",
   "country": "Test",
   "city": "Test",
@@ -70,6 +70,7 @@ Content-Type: application/x-www-form-urlencoded
 # @name Lock_Customer
 POST {{api-gateway}}/api/v1/customers/{{customer_id}}/lock
 accept: */*
+authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 Content-Type: application/json
 
 {
@@ -80,6 +81,7 @@ Content-Type: application/json
 # @name Unlock_Customer
 POST {{api-gateway}}/api/v1/customers/{{customer_id}}/unlock
 accept: */*
+authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 Content-Type: application/json
 
 {
@@ -117,8 +119,7 @@ authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 
 ###
 # @name Create_Restock_Subscriptions_By
-@email="mehdi@test.com"
-@product_id=1
+@email="mehdi3@test.com"
 POST {{api-gateway}}/api/v1/customers/restock-subscriptions
 accept: application/json
 Content-Type: application/json

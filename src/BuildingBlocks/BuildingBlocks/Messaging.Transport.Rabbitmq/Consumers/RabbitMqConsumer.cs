@@ -125,7 +125,7 @@ public class RabbitMqConsumer : IBusSubscriber
                 "an exception has occured while decoding queue message from Exchange '{ExchangeName}', message cannot be parsed. Error: {ExceptionMessage}",
                 eventArgs.Exchange,
                 ex.Message);
-            channel.BasicReject(eventArgs.DeliveryTag, requeue: false);
+            channel.BasicNack(eventArgs.DeliveryTag, requeue: true, multiple: false);
 
             return;
         }
@@ -142,6 +142,7 @@ public class RabbitMqConsumer : IBusSubscriber
             // Publish to internal event bus
             await eventProcessor.DispatchAsync(message, default).ConfigureAwait(false);
 
+            // https://www.rabbitmq.com/confirms.html
             channel.BasicAck(eventArgs.DeliveryTag, multiple: false);
         }
         catch (System.Exception ex)
@@ -162,7 +163,9 @@ public class RabbitMqConsumer : IBusSubscriber
             deliveryProps.Exchange,
             ex.Message);
 
-        channel.BasicReject(deliveryProps.DeliveryTag, requeue: false);
+        // https://www.rabbitmq.com/confirms.html
+        // https://www.rabbitmq.com/nack.html
+        channel.BasicNack(deliveryProps.DeliveryTag, requeue: true, multiple: false);
     }
 
     private void StopChannel(IModel channel)

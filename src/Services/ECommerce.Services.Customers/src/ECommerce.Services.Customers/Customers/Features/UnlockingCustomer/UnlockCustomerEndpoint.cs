@@ -9,9 +9,10 @@ public class UnlockCustomerEndpoint : IMinimalEndpointDefinition
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapPost($"{CustomersConfigs.CustomersPrefixUri}/{{customerId}}/unlock", UnlockCustomer)
-            .AllowAnonymous()
+            .RequireAuthorization(CustomersConstants.Role.Admin)
             .WithTags(CustomersConfigs.Tag)
             .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .WithDisplayName("Unlock Customer.");

@@ -58,7 +58,8 @@ internal class CompleteCustomerHandler : ICommandHandler<CompleteCustomer>
         if (await _customersDbContext.Customers
                 .AnyAsync(x => x.PhoneNumber == command.PhoneNumber && x.Id != command.CustomerId, cancellationToken))
         {
-            throw new CustomerAlreadyExistsException(command.PhoneNumber);
+            throw new CustomerAlreadyExistsException(
+                $"Customer with phoneNumber: '{command.PhoneNumber}' already exists.");
         }
 
         customer!.Complete(
