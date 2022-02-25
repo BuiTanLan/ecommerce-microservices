@@ -6,8 +6,7 @@ namespace BuildingBlocks.Abstractions.Domain.Model;
 
 public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
 {
-    [NonSerialized]
-    private readonly List<IDomainEvent> _uncommittedDomainEvents = new();
+    [NonSerialized] private readonly List<IDomainEvent> _uncommittedDomainEvents = new();
 
     private bool _versionIncremented;
 
@@ -20,13 +19,17 @@ public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
 
     public void AddDomainEvent(IDomainEvent domainEvent)
     {
-        if (!_uncommittedDomainEvents.Any() && !_versionIncremented)
-        {
-            Version++;
-            _versionIncremented = true;
-        }
+        // if (!_uncommittedDomainEvents.Any() && !_versionIncremented)
+        // {
+        //     Version++;
+        //     _versionIncremented = true;
+        // }
 
-        _uncommittedDomainEvents.Add(domainEvent);
+        IDomainEvent eventWithAggregate = domainEvent.WithAggregate(Id, Version);
+
+        ((IHaveEventSourcedAggregate)this).ApplyEvent(eventWithAggregate, Version + 1);
+
+        _uncommittedDomainEvents.Add(eventWithAggregate);
     }
 
     public IReadOnlyList<IDomainEvent> FlushUncommittedEvents()
@@ -54,12 +57,27 @@ public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
         _versionIncremented = true;
     }
 
+    void IHaveEventSourcedAggregate.ApplyEvent(IDomainEvent @event, int version)
+    {
+        if (!_uncommittedDomainEvents.Any(x => Equals(x.EventId, @event.EventId)))
+        {
+            ((dynamic)this).Apply((dynamic)@event);
+            Version = version;
+            _versionIncremented = true;
+        }
+    }
+
     public void CheckRule(IBusinessRule rule)
     {
         if (rule.IsBroken())
         {
             throw new BusinessRuleValidationException(rule);
         }
+    }
+
+    public string IdAsString()
+    {
+        return $"{GetType().Name}-{Id.ToString()}";
     }
 
     public virtual void When(object @event)

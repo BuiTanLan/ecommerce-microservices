@@ -9,7 +9,7 @@ public class AggregatesDomainEventsStore : IAggregatesDomainEventsStore
     private readonly List<IDomainEvent> _uncommittedDomainEvents = new();
 
     public IReadOnlyList<IDomainEvent> AddEventsFrom<T>(T aggregate)
-        where T : IHaveAggregate
+        where T : IHaveEventSourcedAggregate
     {
         var events = aggregate.GetUncommittedEvents();
 

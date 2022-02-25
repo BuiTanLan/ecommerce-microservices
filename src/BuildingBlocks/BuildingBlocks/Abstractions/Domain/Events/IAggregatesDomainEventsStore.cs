@@ -6,7 +6,7 @@ namespace BuildingBlocks.Abstractions.Domain.Events;
 public interface IAggregatesDomainEventsStore
 {
     IReadOnlyList<IDomainEvent> AddEventsFrom<T>(T aggregate)
-        where T : IHaveAggregate;
+        where T : IHaveEventSourcedAggregate;
 
     IReadOnlyList<IDomainEvent> AddEventsFrom(object entity);
 

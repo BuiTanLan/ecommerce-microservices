@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 using BuildingBlocks.Abstractions.Domain.Events.Internal;
-using BuildingBlocks.Abstractions.Domain.Events.Store;
+using BuildingBlocks.Abstractions.Persistence.EventStore;
 using Marten;
 
 
@@ -15,7 +15,7 @@ public class MartenEventStore : IEventStore
         _documentSession = documentSession;
     }
 
-    public Task AppendAsync<TEntity>(
+    public Task AppendAsync<TAggregate>(
         Guid streamId,
         int? version,
         CancellationToken cancellationToken = default,
@@ -28,14 +28,14 @@ public class MartenEventStore : IEventStore
         return Task.CompletedTask;
     }
 
-    public Task<TEntity?> AggregateAsync<TEntity>(
+    public Task<TAggregate?> AggregateAsync<TAggregate>(
         Guid streamId,
         CancellationToken cancellationToken = default,
         int version = 0,
         DateTime? timestamp = null)
-        where TEntity : class, new()
+        where TAggregate : class, new()
     {
-        return _documentSession.Events.AggregateStreamAsync<TEntity>(
+        return _documentSession.Events.AggregateStreamAsync<TAggregate>(
             streamId,
             version,
             timestamp,
@@ -55,6 +55,11 @@ public class MartenEventStore : IEventStore
             .Select(ev => ev.Data)
             .OfType<IDomainEvent>()
             .ToList();
+    }
+
+    public Task<IEnumerable<Event>> QueryAsync(Guid streamId, CancellationToken cancellationToken = default, int version = 0)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<IReadOnlyList<TEvent>> QueryAsync<TEvent>(

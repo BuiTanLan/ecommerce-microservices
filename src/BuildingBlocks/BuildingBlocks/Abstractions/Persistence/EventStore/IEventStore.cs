@@ -1,31 +1,36 @@
 using BuildingBlocks.Abstractions.Domain.Events.Internal;
 
-namespace BuildingBlocks.Abstractions.Domain.Events.Store;
+namespace BuildingBlocks.Abstractions.Persistence.EventStore;
 
 public interface IEventStore
 {
     Task AppendAsync<TEntity>(
-        Guid streamId,
+        string streamId,
         int? version,
         CancellationToken cancellationToken,
         params IDomainEvent[] events);
 
-    Task<TEntity?> AggregateAsync<TEntity>(
+    Task<TAggregate?> AggregateAsync<TAggregate>(
         Guid streamId,
         CancellationToken cancellationToken = default,
         int version = 0,
         DateTime? timestamp = null)
-        where TEntity : class, new();
+        where TAggregate : class, new();
 
     Task<IReadOnlyList<IDomainEvent>> QueryAsync(
-        Guid? streamId = null,
+        string? streamId = null,
         CancellationToken cancellationToken = default,
         int? fromVersion = null,
         DateTime? fromTimestamp = null
     );
 
+    Task<IEnumerable<Event>> QueryAsync(
+        string streamId,
+        CancellationToken cancellationToken = default,
+        int version = 0);
+
     Task<IReadOnlyList<TEvent>> QueryAsync<TEvent>(
-        Guid? streamId = null,
+        string? streamId = null,
         CancellationToken cancellationToken = default,
         int? fromVersion = null,
         DateTime? fromTimestamp = null

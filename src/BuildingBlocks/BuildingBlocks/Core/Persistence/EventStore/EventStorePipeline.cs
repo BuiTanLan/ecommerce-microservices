@@ -1,9 +1,9 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Abstractions.Domain.Events;
 using BuildingBlocks.Abstractions.Domain.Events.Internal;
-using BuildingBlocks.Abstractions.Domain.Events.Store;
+using BuildingBlocks.Abstractions.Persistence.EventStore;
 
-namespace BuildingBlocks.Core.Events.Store;
+namespace BuildingBlocks.Core.Persistence.EventStore;
 
 public class EventStorePipeline<TEvent> : IEventHandler<TEvent>
     where TEvent : IDomainEvent

@@ -2,7 +2,7 @@
 @customers-api=http://localhost:8000
 @api-gateway=http://localhost:3000
 @contentType = application/json
-@customer_id = 737321343254528
+@customer_id = 860808335851520
 @restock_subscription_id = 733645813579776
 @product_id=1
 
@@ -120,7 +120,7 @@ authorization: bearer {{Authenticate.response.body.jsonWebToken.accessToken}}
 
 ###
 # @name Create_Restock_Subscriptions_By
-@email="mehdi@test.com"
+@email="mehdi3@test.com"
 POST {{api-gateway}}/api/v1/customers/restock-subscriptions
 accept: application/json
 Content-Type: application/json

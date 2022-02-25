@@ -9,6 +9,7 @@ using EventStore.Client;
 
 namespace BuildingBlocks.Persistence.EventStoreDB.Repository;
 
+// http://www.andreavallotti.tech/en/2018/01/event-sourcing-and-cqrs-in-c/
 public class EventStoreDbRepository<TAggregate> : IEventSourcedRepository<TAggregate>
     where TAggregate : class, IHaveIdentity<Guid>, IAggregate<Guid>, new()
 {

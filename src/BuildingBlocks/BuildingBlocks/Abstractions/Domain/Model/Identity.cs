@@ -1,6 +1,6 @@
 namespace BuildingBlocks.Abstractions.Domain.Model;
 
-public abstract record Identity<TId>
+public abstract record Identity<TId> : IIdentity<TId>
 {
     protected Identity(TId value) => Value = value;
     public TId Value { get; protected set; }
@@ -9,6 +9,11 @@ public abstract record Identity<TId>
         => identityId.Value;
 
     public override string ToString()
+    {
+        return IdAsString();
+    }
+
+    public string IdAsString()
     {
         return $"{GetType().Name} [Id={Value}]";
     }

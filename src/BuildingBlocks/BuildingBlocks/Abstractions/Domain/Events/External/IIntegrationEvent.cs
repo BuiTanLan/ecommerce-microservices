@@ -5,5 +5,5 @@ namespace BuildingBlocks.Abstractions.Domain.Events.External;
 /// </summary>
 public interface IIntegrationEvent : IEvent
 {
-    public string CorrelationId { get; }
+    public string? CorrelationId { get; }
 }

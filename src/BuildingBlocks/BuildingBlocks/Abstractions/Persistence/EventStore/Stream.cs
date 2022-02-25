@@ -1,4 +1,4 @@
-namespace BuildingBlocks.Abstractions.Domain.Events.Store;
+namespace BuildingBlocks.Abstractions.Persistence.EventStore;
 
 public class Stream
 {

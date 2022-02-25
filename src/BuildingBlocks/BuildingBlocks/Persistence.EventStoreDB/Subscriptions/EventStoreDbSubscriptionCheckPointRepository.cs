@@ -1,10 +1,12 @@
 ﻿using BuildingBlocks.Abstractions.Domain.Events;
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using BuildingBlocks.Persistence.EventStoreDB.Serialization;
 using EventStore.Client;
+using BuildingBlocks.Persistence.EventStoreDB.Serialization;
 
 namespace BuildingBlocks.Persistence.EventStoreDB.Subscriptions;
 
-public record CheckpointStored(string SubscriptionId, ulong? Position, DateTime CheckPointedAt) : Event;
+public record CheckpointStored(string SubscriptionId, ulong? Position, DateTime CheckPointedAt) : DomainEvent;
 
 public class EventStoreDbSubscriptionCheckPointRepository : ISubscriptionCheckpointRepository
 {

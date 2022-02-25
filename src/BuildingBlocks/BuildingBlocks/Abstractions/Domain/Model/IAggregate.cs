@@ -1,10 +1,11 @@
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using BuildingBlocks.Abstractions.Domain.Projections;
-using BuildingBlocks.Core.Objects.Versioning;
 
 namespace BuildingBlocks.Abstractions.Domain.Model;
 
-public interface IAggregate<out TId> : IEntity<TId>, IHaveAggregate, IHaveVersion, IHaveProjection
+public interface IAggregate<out TId> : IEntity<TId>, IHaveAggregate, IHaveEventSourcedAggregate, IHaveProjection
 {
+    void AddDomainEvent(IDomainEvent domainEvent);
     void IncrementVersion();
     void CheckRule(IBusinessRule rule);
 }

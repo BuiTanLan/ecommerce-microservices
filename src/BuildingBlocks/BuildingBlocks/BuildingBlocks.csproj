@@ -29,6 +29,7 @@
     <PackageReference Include="dbup-postgresql" Version="4.5.0" />
     <PackageReference Include="DynamicExpresso.Core" Version="2.10.0" />
     <PackageReference Include="EFCore.NamingConventions" Version="6.0.0" />
+    <PackageReference Include="EventStore.Client" Version="21.2.2" />
     <PackageReference Include="EventStore.Client.Grpc.Streams" Version="21.2.0" />
     <PackageReference Include="ExpressionDebugger" Version="2.2.0" />
     <PackageReference Include="ExpressionTranslator" Version="2.4.3" />

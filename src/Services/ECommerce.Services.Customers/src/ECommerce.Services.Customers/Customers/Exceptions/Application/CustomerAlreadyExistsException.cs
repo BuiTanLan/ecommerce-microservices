@@ -4,14 +4,11 @@ namespace ECommerce.Services.Customers.Customers.Exceptions.Application;
 
 internal class CustomerAlreadyExistsException : AppException
 {
-    public string? PhoneNumber { get; }
     public long? CustomerId { get; }
     public Guid? IdentityId { get; }
 
-    public CustomerAlreadyExistsException(string phoneNumber)
-        : base($"Customer with phoneNumber: '{phoneNumber}' already exists.")
+    public CustomerAlreadyExistsException(string message) : base(message)
     {
-        PhoneNumber = phoneNumber;
     }
 
     public CustomerAlreadyExistsException(Guid identityId)

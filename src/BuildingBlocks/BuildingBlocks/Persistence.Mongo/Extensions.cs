@@ -1,4 +1,4 @@
-using BuildingBlocks.Abstractions.Domain.Events.Store;
+using BuildingBlocks.Abstractions.Persistence.EventStore;
 using BuildingBlocks.Abstractions.Persistence.Mongo;
 using BuildingBlocks.Persistence.Mongo.Repositories;
 using Microsoft.Extensions.Configuration;

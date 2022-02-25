@@ -1,4 +1,4 @@
-namespace BuildingBlocks.Abstractions.Domain.Events.Store;
+namespace BuildingBlocks.Abstractions.Persistence.EventStore;
 
 public class StreamEvent
 {
@@ -8,7 +8,7 @@ public class StreamEvent
     /// <summary>
     /// The version of the stream this event reflects. The place in the stream.
     /// </summary>
-    public int Version  { get; init; }
+    public int Version { get; init; }
 
     /// <summary>The actual event data body</summary>
     public string Data { get; init; }
@@ -21,4 +21,6 @@ public class StreamEvent
 
     /// <summary>type alias string for the Event type</summary>
     public string EventTypeName { get; init; }
+
+    public DateTimeOffset Timestamp { get; init; }
 }

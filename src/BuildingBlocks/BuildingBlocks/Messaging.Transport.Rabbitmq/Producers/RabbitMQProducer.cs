@@ -61,6 +61,8 @@ public class RabbitMqProducer : IEventBusPublisher
 
         policy.Execute(() =>
         {
+			// https://www.rabbitmq.com/tutorials/tutorial-three-dotnet.html
+			// https://www.rabbitmq.com/confirms.html
             context.Channel.BasicPublish(
                 exchange: context.QueueReferences.ExchangeName,
                 routingKey: context.QueueReferences.RoutingKey,

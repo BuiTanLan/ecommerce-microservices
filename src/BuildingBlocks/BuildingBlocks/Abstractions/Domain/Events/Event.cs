@@ -10,4 +10,6 @@ public abstract record Event : IEvent
     public DateTime OccurredOn { get; protected set; } = DateTime.Now;
 
     public string EventType { get { return GetType().AssemblyQualifiedName; } }
+
+    public DateTimeOffset TimeStamp { get; } = DateTimeOffset.Now;
 }

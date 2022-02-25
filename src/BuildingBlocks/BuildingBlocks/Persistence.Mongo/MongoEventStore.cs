@@ -1,11 +1,11 @@
 using Baseline;
 using BuildingBlocks.Abstractions.Domain.Events.Internal;
-using BuildingBlocks.Abstractions.Domain.Events.Store;
 using BuildingBlocks.Abstractions.Domain.Model;
+using BuildingBlocks.Abstractions.Persistence.EventStore;
 using BuildingBlocks.Core.Utils.Reflections;
 using MongoDB.Driver;
 using Newtonsoft.Json;
-using Stream = BuildingBlocks.Abstractions.Domain.Events.Store.Stream;
+using Stream = BuildingBlocks.Abstractions.Persistence.EventStore.Stream;
 
 namespace BuildingBlocks.Persistence.Mongo;
 
@@ -37,6 +37,7 @@ public class MongoEventStore : IEventStore
                 StreamId = streamId,
                 Version = version ?? 0,
                 Id = Guid.NewGuid(),
+                Timestamp = domainEvent.TimeStamp,
                 EventTypeName = domainEvent.GetType().AssemblyQualifiedName
             }).ToList();
 
@@ -58,6 +59,7 @@ public class MongoEventStore : IEventStore
                 StreamId = streamId,
                 Version = version ?? 0,
                 Id = Guid.NewGuid(),
+                Timestamp = domainEvent.TimeStamp,
                 EventTypeName = domainEvent.GetType().AssemblyQualifiedName
             }).ToList();
 
@@ -108,7 +110,8 @@ public class MongoEventStore : IEventStore
         }
 
         var query = streams.SelectMany(x => x.Events)
-            .Where(x => x.Version >= fromVersion).OrderBy(x => x.Version)
+            .Where(x => x.Version >= fromVersion && (fromTimestamp == null || x.Timestamp >= fromTimestamp))
+            .OrderBy(x => x.Version)
             .Select(x => (dynamic)x);
 
         var result = query.Select(se =>
@@ -117,6 +120,11 @@ public class MongoEventStore : IEventStore
             .ToList();
 
         return result;
+    }
+
+    public Task<IEnumerable<Event>> ReadEventsAsync<TAggregateId>(TAggregateId id)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<IReadOnlyList<TEvent>> QueryAsync<TEvent>(
@@ -135,7 +143,8 @@ public class MongoEventStore : IEventStore
         }
 
         var query = streams.SelectMany(x => x.Events)
-            .Where(x => x.Version >= fromVersion).OrderBy(x => x.Version)
+            .Where(x => x.Version >= fromVersion && (fromTimestamp == null || x.Timestamp >= fromTimestamp))
+            .OrderBy(x => x.Version)
             .Select(x => (dynamic)x);
 
         var result = query.Select(se =>

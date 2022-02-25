@@ -202,7 +202,7 @@ public abstract class EfDbContextBase :
     public IReadOnlyList<IDomainEvent> GetAllUncommittedEvents()
     {
         var domainEvents = ChangeTracker
-            .Entries<IHaveAggregate>()
+            .Entries<IHaveEventSourcedAggregate>()
             .Where(x => x.Entity.GetUncommittedEvents().Any())
             .SelectMany(x => x.Entity.FlushUncommittedEvents())
             .ToList();

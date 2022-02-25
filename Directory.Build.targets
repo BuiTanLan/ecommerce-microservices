@@ -1,0 +1,7 @@
+<!-- https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build -->
+<Project>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
+    <PackageReference Update="Swashbuckle.AspNetCore" Version="6.2.3"
+  </ItemGroup>
+</Project>
