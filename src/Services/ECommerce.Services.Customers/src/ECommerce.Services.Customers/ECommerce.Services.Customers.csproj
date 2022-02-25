@@ -22,13 +22,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Customers\Extensions" />
-    <Folder Include="Customers\Features\CreatingCustomer\Events" />
-    <Folder Include="Customers\Features\UpdatingUserState\Events" />
-    <Folder Include="Identity\Features" />
-    <Folder Include="Products\Features" />
-    <Folder Include="Shared\ValueObjects" />
-  </ItemGroup>
-
 </Project>

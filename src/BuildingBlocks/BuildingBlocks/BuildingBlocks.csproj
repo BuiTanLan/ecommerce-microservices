@@ -137,11 +137,5 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI.SQLite.Storage" Version="6.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Messaging.EasyNetQ" />
-    <Folder Include="Messaging.Rebus" />
-    <Folder Include="Messaging\Inbox" />
-    <Folder Include="ServiceDiscovery" />
-  </ItemGroup>
 
 </Project>
