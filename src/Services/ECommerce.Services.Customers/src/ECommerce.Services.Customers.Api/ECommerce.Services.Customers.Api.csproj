@@ -13,10 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ECommerce.Services.Customers\ECommerce.Services.Customers.csproj" />
   </ItemGroup>
 

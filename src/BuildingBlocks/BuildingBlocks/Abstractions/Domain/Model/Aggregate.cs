@@ -4,11 +4,16 @@ using BuildingBlocks.Abstractions.Domain.Exceptions;
 
 namespace BuildingBlocks.Abstractions.Domain.Model;
 
+// https://www.eventstore.com/blog/what-is-event-sourcing
+// https://zimarev.com/blog/event-sourcing/entities-as-streams/
+// https://event-driven.io/en/how_to_get_the_current_entity_state_in_event_sourcing/?utm_source=event_sourcing_net
+// https://github.com/VenomAV/EventSourcingCQRS/blob/master/EventSourcingCQRS.Domain/Core/AggregateBase.cs
+// https://github.com/gautema/CQRSlite/blob/master/Framework/CQRSlite/Domain/AggregateRoot.cs
+// https://github.com/oskardudycz/EventSourcing.NetCore/blob/main/Core/Aggregates/Aggregate.cs
+// https://github.com/Eventuous/eventuous/blob/dev/src/Core/src/Eventuous/Aggregate.cs
 public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
 {
     [NonSerialized] private readonly List<IDomainEvent> _uncommittedDomainEvents = new();
-
-    private bool _versionIncremented;
 
     public int Version { get; protected set; }
 
@@ -19,10 +24,10 @@ public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
 
     public void AddDomainEvent(IDomainEvent domainEvent)
     {
-        // if (!_uncommittedDomainEvents.Any() && !_versionIncremented)
+        // if (!_uncommittedDomainEvents.Any() && !_version)
         // {
         //     Version++;
-        //     _versionIncremented = true;
+        //     _version = true;
         // }
 
         IDomainEvent eventWithAggregate = domainEvent.WithAggregate(Id, Version);
@@ -30,6 +35,13 @@ public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
         ((IHaveEventSourcedAggregate)this).ApplyEvent(eventWithAggregate, Version + 1);
 
         _uncommittedDomainEvents.Add(eventWithAggregate);
+    }
+
+    public void Apply(IDomainEvent @event)
+    {
+        When(@event);
+        Version++;
+        AddDomainEvent(@event);
     }
 
     public IReadOnlyList<IDomainEvent> FlushUncommittedEvents()
@@ -46,24 +58,12 @@ public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
         return _uncommittedDomainEvents.ToImmutableList();
     }
 
-    public void IncrementVersion()
-    {
-        if (_versionIncremented)
-        {
-            return;
-        }
-
-        Version++;
-        _versionIncremented = true;
-    }
-
     void IHaveEventSourcedAggregate.ApplyEvent(IDomainEvent @event, int version)
     {
         if (!_uncommittedDomainEvents.Any(x => Equals(x.EventId, @event.EventId)))
         {
             ((dynamic)this).Apply((dynamic)@event);
             Version = version;
-            _versionIncremented = true;
         }
     }
 
@@ -80,9 +80,7 @@ public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
         return $"{GetType().Name}-{Id.ToString()}";
     }
 
-    public virtual void When(object @event)
-    {
-    }
+    public abstract void When(IDomainEvent @event);
 }
 
 public abstract class Aggregate<TIdentity, TId> : Aggregate<TIdentity>

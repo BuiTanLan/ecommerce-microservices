@@ -1,6 +1,7 @@
 using System.Reflection;
 using BuildingBlocks.Security.ApiKey;
 using BuildingBlocks.Swagger;
+using Core.WebApi.Swagger;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -62,6 +63,7 @@ public static class Extensions
             options =>
             {
                 options.OperationFilter<SwaggerDefaultValues>();
+                options.OperationFilter<MetadataOperationFilter>();
                 var xmlFile = XmlCommentsFilePath(assembly);
                 if (File.Exists(xmlFile)) options.IncludeXmlComments(xmlFile);
 

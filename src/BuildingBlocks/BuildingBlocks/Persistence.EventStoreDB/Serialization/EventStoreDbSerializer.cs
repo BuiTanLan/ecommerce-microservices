@@ -26,15 +26,24 @@ public static class EventStoreDbSerializer
             Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new { }))
         );
 
-    public static EventStore.ClientAPI.EventData ToJsonEventAPIData(this IDomainEvent @event)
-    {
-        var eventData = new EventStore.ClientAPI.EventData(
-            @event.EventId,
-            @event.GetType().AssemblyQualifiedName,
-            true,
-            Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event)),
-            Encoding.UTF8.GetBytes("{}"));
 
-        return eventData;
-    }
+    public static EventData ToJsonEventData(this object @event) =>
+        new(
+            Uuid.NewUuid(),
+            EventTypeMapper.ToName(@event.GetType()),
+            Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event)),
+            Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new { }))
+        );
+
+    // public static EventStore.ClientAPI.EventData ToJsonEventAPIData(this IDomainEvent @event)
+    // {
+    //     var eventData = new EventStore.ClientAPI.EventData(
+    //         @event.EventId,
+    //         @event.GetType().AssemblyQualifiedName,
+    //         true,
+    //         Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event)),
+    //         Encoding.UTF8.GetBytes("{}"));
+    //
+    //     return eventData;
+    // }
 }

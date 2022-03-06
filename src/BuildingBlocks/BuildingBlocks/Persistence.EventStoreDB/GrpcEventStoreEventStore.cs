@@ -3,12 +3,15 @@ using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using BuildingBlocks.Abstractions.Persistence.EventStore;
 using BuildingBlocks.Persistence.EventStoreDB.Serialization;
 using EventStore.Client;
-using EventStore.ClientAPI;
 using Newtonsoft.Json;
 
 namespace BuildingBlocks.Persistence.EventStoreDB;
 
-public class EventStoreEventStore : IEventStore
+//https://developers.eventstore.com/clients/dotnet/5.0/migration-to-gRPC.html#update-the-target-framework
+//https://www.youtube.com/watch?v=-4_KTfVkjlQ
+// https://github.com/Eventuous/eventuous/blob/dev/src/EventStore/src/Eventuous.EventStore/EsdbEventStore.cs
+
+public class GrpcEventStoreEventStore : IEventStore
 {
     private readonly IEventStoreConnection _connection;
     private readonly EventStoreClient _eventStoreClient;
@@ -71,8 +74,10 @@ public class EventStoreEventStore : IEventStore
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<Event>> QueryAsync(string streamId, CancellationToken cancellationToken = default, int
-        version = 0)
+    public async Task<IEnumerable<Event>> QueryAsync(
+        string streamId,
+        CancellationToken cancellationToken = default,
+        int version = 0)
     {
         var readResult = _eventStoreClient.ReadStreamAsync(
             Direction.Forwards,

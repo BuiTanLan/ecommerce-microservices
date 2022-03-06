@@ -1,3 +1,4 @@
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using BuildingBlocks.Abstractions.Domain.Model;
 
 namespace BuildingBlocks.Abstractions.Persistence;
@@ -5,13 +6,13 @@ namespace BuildingBlocks.Abstractions.Persistence;
 public interface IEventSourcedRepository<TAggregate> : IDisposable
     where TAggregate : class, IAggregate<Guid>, IHaveIdentity<Guid>, new()
 {
-    Task<TAggregate?> FindById(Guid id, CancellationToken cancellationToken = default);
+    public Task<TAggregate?> Find(string streamId, Func<TAggregate?, IDomainEvent, TAggregate> when,
+        CancellationToken cancellationToken = default);
 
-    Task<TAggregate> Add(TAggregate aggregate, CancellationToken cancellationToken);
+    public Task<TAggregate?> Find(string streamId, CancellationToken cancellationToken = default);
 
-    Task<TAggregate> Update(TAggregate aggregate, int? expectedVersion, CancellationToken cancellationToken = default);
+    public Task Append(string streamId, IDomainEvent @event, CancellationToken cancellationToken = default);
 
-    Task Delete(TAggregate aggregate, int? expectedVersion, CancellationToken cancellationToken = default);
-
-    Task DeleteById(Guid id, int? expectedVersion, CancellationToken cancellationToken = default);
+    public Task Append(string streamId, IDomainEvent @event, int version,
+        CancellationToken cancellationToken = default);
 }

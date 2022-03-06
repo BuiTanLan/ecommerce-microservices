@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using Humanizer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -10,6 +10,7 @@ public class SwaggerDefaultValues : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
+
         var apiDescription = context.ApiDescription;
 
         operation.Deprecated |= apiDescription.IsDeprecated();
@@ -22,11 +23,18 @@ public class SwaggerDefaultValues : IOperationFilter
             var response = operation.Responses[responseKey];
 
             foreach (var contentType in response.Content.Keys)
+            {
                 if (responseType.ApiResponseFormats.All(x => x.MediaType != contentType))
+                {
                     response.Content.Remove(contentType);
+                }
+            }
         }
 
-        if (operation.Parameters == null) return;
+        if (operation.Parameters == null)
+        {
+            return;
+        }
 
         // REF: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/412
         // REF: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/pull/413
@@ -34,13 +42,18 @@ public class SwaggerDefaultValues : IOperationFilter
         {
             var description = apiDescription.ParameterDescriptions.First(p => p.Name == parameter.Name);
 
-            if (parameter.Description == null) parameter.Description = description.ModelMetadata?.Description;
+            if (parameter.Description == null)
+            {
+                parameter.Description = description.ModelMetadata?.Description;
+            }
+
+            parameter.Name = description.Name.Camelize();
 
             if (parameter.Schema.Default == null && description.DefaultValue != null)
             {
                 // REF: https://github.com/Microsoft/aspnet-api-versioning/issues/429#issuecomment-605402330
                 var json = JsonConvert.SerializeObject(description.DefaultValue, description.ModelMetadata
-                    .ModelType, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                    .ModelType, new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
                 parameter.Schema.Default = OpenApiAnyFactory.CreateFromJson(json);
             }
 

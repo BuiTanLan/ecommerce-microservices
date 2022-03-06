@@ -3,8 +3,8 @@ using BuildingBlocks.Abstractions.Domain.Events;
 using BuildingBlocks.Abstractions.Domain.Model;
 using BuildingBlocks.Abstractions.Persistence;
 using BuildingBlocks.Core.Events;
-using BuildingBlocks.Persistence.EventStoreDB.Events;
 using BuildingBlocks.Persistence.EventStoreDB.Serialization;
+using ECommerce.Core.EventStoreDB;
 using EventStore.Client;
 
 namespace BuildingBlocks.Persistence.EventStoreDB.Repository;

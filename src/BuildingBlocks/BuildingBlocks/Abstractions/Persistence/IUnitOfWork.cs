@@ -6,11 +6,13 @@ namespace BuildingBlocks.Abstractions.Persistence;
 public interface IUnitOfWork : IDisposable
 {
     Task CommitAsync(CancellationToken cancellationToken = default);
+    Task ExecuteAsync(Func<Task> action);
 }
 
-public interface IUnitOfWork<TContext> : IDisposable
+public interface IUnitOfWork<out TContext> : IDisposable
     where TContext : class
 {
     TContext Context { get; }
     Task CommitAsync(CancellationToken cancellationToken = default);
+    Task ExecuteAsync(Func<Task> action);
 }

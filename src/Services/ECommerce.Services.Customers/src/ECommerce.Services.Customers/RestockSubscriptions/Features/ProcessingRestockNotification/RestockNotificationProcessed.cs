@@ -1,6 +1,6 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.CQRS.Command;
+using BuildingBlocks.Abstractions.CQRS.Command;
+using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.UpdatingMongoRestockSubscriptionReadModel;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 

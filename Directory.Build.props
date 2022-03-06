@@ -1,8 +1,22 @@
 <!-- https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build -->
 <Project>
-  <ItemGroup>
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-  </ItemGroup>
+  <PropertyGroup>
+      <LangVersion>latest</LangVersion>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+	  <NoWarn>CS1587,CS1591,CS1998,NU5105</NoWarn>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>full</DebugType>
+    <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <Optimize>true</Optimize>
+    <DebugType>embedded</DebugType>
+    <DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
 
   <ItemGroup>
 	  <PackageReference Include="Meziantou.Analyzer" Version="1.0.688" Condition="$(MSBuildProjectExtension) == '.csproj'" PrivateAssets="all">

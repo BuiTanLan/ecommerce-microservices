@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Persistence.EventStoreDB;
 
-public static class Extensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddEventStore(
         this IServiceCollection services,
