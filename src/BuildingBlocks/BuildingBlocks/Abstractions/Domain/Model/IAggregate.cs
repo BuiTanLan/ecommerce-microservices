@@ -6,7 +6,6 @@ namespace BuildingBlocks.Abstractions.Domain.Model;
 public interface IAggregate<out TId> : IEntity<TId>, IHaveAggregate, IHaveEventSourcedAggregate, IHaveProjection
 {
     void AddDomainEvent(IDomainEvent domainEvent);
-    void IncrementVersion();
     void CheckRule(IBusinessRule rule);
 }
 

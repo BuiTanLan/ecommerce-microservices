@@ -1,6 +1,8 @@
-﻿namespace BuildingBlocks.Abstractions.Domain.Projections;
+﻿using BuildingBlocks.Abstractions.Domain.Events.Internal;
+
+namespace BuildingBlocks.Abstractions.Domain.Projections;
 
 public interface IHaveProjection
 {
-    void When(object @event);
+    void When(IDomainEvent @event);
 }

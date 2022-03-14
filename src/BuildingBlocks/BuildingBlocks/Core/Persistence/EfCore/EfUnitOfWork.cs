@@ -64,6 +64,11 @@ public class EfUnitOfWork<TDbContext> : IEfUnitOfWork<TDbContext>
         await _context.SaveChangesAsync(cancellationToken);
     }
 
+    public Task ExecuteAsync(Func<Task> action)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
         return _context.RollbackTransactionAsync(cancellationToken);

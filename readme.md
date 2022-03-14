@@ -43,8 +43,6 @@ Thanks a bunch for supporting me!
 ## Plan
 > This project is in progress, New features will be added over time.
 
-I will try to register some [Issues](https://github.com/mehdihadeli/e-commerce-microservices/issues) for my `TODO` works, just to not forget and also for tracking my works in future.
-
 High-level plan is represented in the table
 
 | Feature | Status |
