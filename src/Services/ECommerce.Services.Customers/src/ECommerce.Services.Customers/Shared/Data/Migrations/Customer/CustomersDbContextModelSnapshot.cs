@@ -47,6 +47,10 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .HasColumnType("integer")
                         .HasColumnName("created_by");
 
+                    b.Property<long>("CurrentVersion")
+                        .HasColumnType("bigint")
+                        .HasColumnName("current_version");
+
                     b.Property<string>("CustomerState")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -77,6 +81,10 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .HasColumnType("text")
                         .HasColumnName("notes");
 
+                    b.Property<long>("OriginalVersion")
+                        .HasColumnType("bigint")
+                        .HasColumnName("original_version");
+
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(15)
                         .HasColumnType("character varying(15)")
@@ -85,10 +93,6 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                     b.Property<DateTime?>("VerifiedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("verified_at");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("integer")
-                        .HasColumnName("version");
 
                     b.HasKey("Id")
                         .HasName("pk_customers");
@@ -128,6 +132,10 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .HasColumnType("integer")
                         .HasColumnName("created_by");
 
+                    b.Property<long>("CurrentVersion")
+                        .HasColumnType("bigint")
+                        .HasColumnName("current_version");
+
                     b.Property<long>("CustomerId")
                         .HasColumnType("bigint")
                         .HasColumnName("customer_id");
@@ -141,6 +149,10 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
 
+                    b.Property<long>("OriginalVersion")
+                        .HasColumnType("bigint")
+                        .HasColumnName("original_version");
+
                     b.Property<bool>("Processed")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -150,10 +162,6 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                     b.Property<DateTime?>("ProcessedTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("processed_time");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("integer")
-                        .HasColumnName("version");
 
                     b.HasKey("Id")
                         .HasName("pk_restock_subscriptions");
@@ -170,7 +178,34 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
 
             modelBuilder.Entity("ECommerce.Services.Customers.Customers.Models.Customer", b =>
                 {
-                    b.OwnsOne("BuildingBlocks.Core.Domain.ValueObjects.Address", "Address", b1 =>
+                    b.OwnsOne("ECommerce.Services.Customers.Customers.Models.CustomerName", "Name", b1 =>
+                        {
+                            b1.Property<long>("CustomerId")
+                                .HasColumnType("bigint")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)")
+                                .HasColumnName("name_first_name");
+
+                            b1.Property<string>("LastName")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)")
+                                .HasColumnName("name_last_name");
+
+                            b1.HasKey("CustomerId");
+
+                            b1.ToTable("customers", "customer");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CustomerId")
+                                .HasConstraintName("fk_customers_customers_id");
+                        });
+
+                    b.OwnsOne("MicroBootstrap.Core.Domain.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<long>("CustomerId")
                                 .HasColumnType("bigint")
@@ -193,33 +228,6 @@ namespace ECommerce.Services.Customers.Shared.Data.Migrations.Customer
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
                                 .HasColumnName("address_detail");
-
-                            b1.HasKey("CustomerId");
-
-                            b1.ToTable("customers", "customer");
-
-                            b1.WithOwner()
-                                .HasForeignKey("CustomerId")
-                                .HasConstraintName("fk_customers_customers_id");
-                        });
-
-                    b.OwnsOne("ECommerce.Services.Customers.Customers.Models.CustomerName", "Name", b1 =>
-                        {
-                            b1.Property<long>("CustomerId")
-                                .HasColumnType("bigint")
-                                .HasColumnName("id");
-
-                            b1.Property<string>("FirstName")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("character varying(50)")
-                                .HasColumnName("name_first_name");
-
-                            b1.Property<string>("LastName")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("character varying(50)")
-                                .HasColumnName("name_last_name");
 
                             b1.HasKey("CustomerId");
 

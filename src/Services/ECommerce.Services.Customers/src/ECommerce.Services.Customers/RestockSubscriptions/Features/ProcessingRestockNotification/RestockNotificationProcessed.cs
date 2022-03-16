@@ -1,8 +1,9 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.UpdatingMongoRestockSubscriptionReadModel;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.ProcessingRestockNotification;
 

@@ -1,10 +1,10 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.Domain.Events.Internal;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Catalogs.Products.Exceptions.Application;
 using ECommerce.Services.Catalogs.Products.Models;
-using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Shared.Data;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Core.Domain.Events.Internal;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Catalogs.Products.Features.UpdatingProduct;
 

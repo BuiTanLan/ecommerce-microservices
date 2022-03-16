@@ -1,12 +1,10 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Abstractions.Domain.Events;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Messaging.Outbox;
 using ECommerce.Services.Identity.Shared.Models;
 using ECommerce.Services.Identity.Users.Dtos;
 using ECommerce.Services.Identity.Users.Features.RegisteringUser.Events.Integration;
 using FluentValidation;
+using MicroBootstrap.Abstractions.Core.Domain.Events;
+using MicroBootstrap.Abstractions.CQRS.Command;
 using Microsoft.AspNetCore.Identity;
 
 namespace ECommerce.Services.Identity.Users.Features.RegisteringUser;

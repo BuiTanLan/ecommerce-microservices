@@ -1,5 +1,5 @@
-using BuildingBlocks.Abstractions.Domain.Model;
 using ECommerce.Services.Customers.Customers.Exceptions.Domain;
+using MicroBootstrap.Core.Domain.Model;
 
 namespace ECommerce.Services.Customers.Customers.Models;
 

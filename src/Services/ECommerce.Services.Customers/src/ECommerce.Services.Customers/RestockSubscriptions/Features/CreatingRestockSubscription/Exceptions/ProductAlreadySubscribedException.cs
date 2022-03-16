@@ -1,5 +1,5 @@
 using System.Net;
-using BuildingBlocks.Exception.Types;
+using MicroBootstrap.Core.Exception.Types;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription.Exceptions;
 

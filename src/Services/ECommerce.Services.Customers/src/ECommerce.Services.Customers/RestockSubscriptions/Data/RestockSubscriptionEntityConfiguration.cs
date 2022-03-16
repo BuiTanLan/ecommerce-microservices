@@ -1,10 +1,8 @@
-using BuildingBlocks.Abstractions.Domain.ValueObjects;
-using BuildingBlocks.Core.Persistence.EfCore;
-using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Customers.Customers.Models;
-using ECommerce.Services.Customers.RestockSubscriptions.Models;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Core.Domain.ValueObjects;
+using MicroBootstrap.Core.Persistence.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,19 +1,17 @@
 using System.Reflection;
-using BuildingBlocks.Core;
-using BuildingBlocks.Core.Dependency;
-using BuildingBlocks.Jwt;
-using BuildingBlocks.Logging;
-using BuildingBlocks.Web;
-using BuildingBlocks.Web.Extensions;
-using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
-using BuildingBlocks.Web.Extensions.ServiceCollectionExtensions;
-using Customers;
 using Customers.Api.Extensions.ApplicationBuilderExtensions;
 using Customers.Api.Extensions.ServiceCollectionExtensions;
 using ECommerce.Services.Customers;
 using Hellang.Middleware.ProblemDetails;
+using MicroBootstrap.Core.Dependency;
+using MicroBootstrap.Logging;
+using MicroBootstrap.Security.Jwt;
+using MicroBootstrap.Swagger;
+using MicroBootstrap.Web;
+using MicroBootstrap.Web.Extensions;
+using MicroBootstrap.Web.Extensions.ApplicationBuilderExtensions;
+using MicroBootstrap.Web.Extensions.ServiceCollectionExtensions;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 using Serilog;
 
 // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
@@ -44,7 +42,7 @@ var loggingOptions = builder.Configuration.GetSection(nameof(LoggerOptions)).Get
 builder.AddCompression();
 builder.AddCustomProblemDetails();
 
-builder.AddCustomSerilog(config =>
+builder.Host.AddCustomSerilog(config =>
 {
     config.WriteTo.File(
         Customers.Api.Program.GetLogPath(builder.Environment, loggingOptions) ?? "../logs/customers-service.log",

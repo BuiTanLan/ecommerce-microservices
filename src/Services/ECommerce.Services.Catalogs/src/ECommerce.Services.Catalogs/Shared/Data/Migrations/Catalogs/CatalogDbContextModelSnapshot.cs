@@ -39,14 +39,18 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                         .HasColumnType("integer")
                         .HasColumnName("created_by");
 
+                    b.Property<long>("CurrentVersion")
+                        .HasColumnType("bigint")
+                        .HasColumnName("current_version");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
-                    b.Property<int>("Version")
-                        .HasColumnType("integer")
-                        .HasColumnName("version");
+                    b.Property<long>("OriginalVersion")
+                        .HasColumnType("bigint")
+                        .HasColumnName("original_version");
 
                     b.HasKey("Id")
                         .HasName("pk_brands");
@@ -79,6 +83,10 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                         .HasColumnType("integer")
                         .HasColumnName("created_by");
 
+                    b.Property<long>("CurrentVersion")
+                        .HasColumnType("bigint")
+                        .HasColumnName("current_version");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text")
@@ -89,9 +97,9 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                         .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
-                    b.Property<int>("Version")
-                        .HasColumnType("integer")
-                        .HasColumnName("version");
+                    b.Property<long>("OriginalVersion")
+                        .HasColumnType("bigint")
+                        .HasColumnName("original_version");
 
                     b.HasKey("Id")
                         .HasName("pk_categories");
@@ -135,6 +143,10 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                         .HasColumnType("integer")
                         .HasColumnName("created_by");
 
+                    b.Property<long>("CurrentVersion")
+                        .HasColumnType("bigint")
+                        .HasColumnName("current_version");
+
                     b.Property<string>("Description")
                         .HasColumnType("text")
                         .HasColumnName("description");
@@ -143,6 +155,10 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                         .IsRequired()
                         .HasColumnType("varchar(50)")
                         .HasColumnName("name");
+
+                    b.Property<long>("OriginalVersion")
+                        .HasColumnType("bigint")
+                        .HasColumnName("original_version");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric(18,2)")
@@ -164,10 +180,6 @@ namespace ECommerce.Services.Catalogs.Shared.Data.Migrations.Catalogs
                     b.Property<long>("SupplierId")
                         .HasColumnType("bigint")
                         .HasColumnName("supplier_id");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("integer")
-                        .HasColumnName("version");
 
                     b.HasKey("Id")
                         .HasName("pk_products");

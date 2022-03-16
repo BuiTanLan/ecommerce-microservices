@@ -1,6 +1,4 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.Domain.Model;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products.Exceptions.Domain;
@@ -15,8 +13,8 @@ using ECommerce.Services.Catalogs.Products.Features.DebitingProductStock.Events.
 using ECommerce.Services.Catalogs.Products.Features.ReplenishingProductStock.Events.Domain;
 using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Suppliers;
-using static BuildingBlocks.Abstractions.Domain.Events.Internal.DomainEvents;
-using Size = ECommerce.Services.Catalogs.Products.ValueObjects.Size;
+using MicroBootstrap.Core.Domain.Model;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Catalogs.Products.Models;
 
@@ -235,7 +233,7 @@ public class Product : Aggregate<ProductId>
         Guard.Against.Null(categoryId, new ProductDomainException("CategoryId cannot be null"));
 
         // raising domain event immediately for checking some validation rule with some dependencies such as database
-        RaiseDomainEvent(new ChangingProductCategory(categoryId));
+       MicroBootstrap.Core.Domain.Events.Internal.DomainEvents.RaiseDomainEvent(new ChangingProductCategory(categoryId));
 
         CategoryId = categoryId;
 
@@ -251,7 +249,7 @@ public class Product : Aggregate<ProductId>
     {
         Guard.Against.Null(supplierId, new ProductDomainException("SupplierId cannot be null"));
 
-        RaiseDomainEvent(new ChangingProductSupplier(supplierId));
+        MicroBootstrap.Core.Domain.Events.Internal.DomainEvents.RaiseDomainEvent(new ChangingProductSupplier(supplierId));
 
         SupplierId = supplierId;
 
@@ -266,7 +264,7 @@ public class Product : Aggregate<ProductId>
     {
         Guard.Against.Null(brandId, new ProductDomainException("brandId cannot be null"));
 
-        RaiseDomainEvent(new ChangingProductBrand(brandId));
+        MicroBootstrap.Core.Domain.Events.Internal.DomainEvents.RaiseDomainEvent(new ChangingProductBrand(brandId));
 
         BrandId = brandId;
 

@@ -1,7 +1,7 @@
-using BuildingBlocks.Abstractions.Persistence;
-using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Identity.Shared.Data;
 using ECommerce.Services.Identity.Shared.Models;
+using MicroBootstrap.Abstractions.Persistence;
+using MicroBootstrap.Persistence.EfCore.Postgres;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

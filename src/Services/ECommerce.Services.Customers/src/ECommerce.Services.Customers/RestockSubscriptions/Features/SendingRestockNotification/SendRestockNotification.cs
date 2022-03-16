@@ -1,14 +1,13 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Abstractions.Persistence;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Email;
-using BuildingBlocks.Email.Options;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Abstractions.Persistence;
+using MicroBootstrap.Email;
+using MicroBootstrap.Email.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.SendingRestockNotification;
 

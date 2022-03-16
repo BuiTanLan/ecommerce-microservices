@@ -1,9 +1,8 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Core.IdsGenerator;
-using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Requests;
+using MicroBootstrap.Abstractions.Core;
+using MicroBootstrap.Abstractions.CQRS.Command;
 
 namespace ECommerce.Services.Catalogs.Products.Features.CreatingProduct;
 

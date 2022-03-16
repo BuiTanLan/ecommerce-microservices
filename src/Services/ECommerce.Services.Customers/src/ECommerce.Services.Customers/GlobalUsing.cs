@@ -1,7 +1,6 @@
 global using System.Collections.Generic;
 global using System.Reflection;
 global using System.Threading.Tasks;
-global using BuildingBlocks;
 global using FluentValidation;
 global using Google.Protobuf.Collections;
 global using MediatR;

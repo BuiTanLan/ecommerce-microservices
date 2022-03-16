@@ -1,10 +1,8 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Identity.Identity.Exceptions;
 using ECommerce.Services.Identity.Identity.Features.RefreshingToken;
 using ECommerce.Services.Identity.Shared.Data;
-using MediatR;
+using MicroBootstrap.Abstractions.CQRS.Command;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Identity.Identity.Features.RevokeRefreshToken;

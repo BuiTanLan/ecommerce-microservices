@@ -1,5 +1,5 @@
 using System.Net;
-using BuildingBlocks.Abstractions.Domain.Exceptions;
+using MicroBootstrap.Core.Domain.Exceptions;
 
 namespace ECommerce.Services.Customers.Customers.Exceptions.Domain;
 

@@ -1,5 +1,5 @@
-using BuildingBlocks.Abstractions.Domain.Events;
-using BuildingBlocks.Web.Module;
+using MicroBootstrap.Abstractions.Core.Domain.Events;
+using MicroBootstrap.Web.Module;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions;
 

@@ -1,7 +1,8 @@
-using BuildingBlocks.Abstractions.Domain.Events.External;
-using BuildingBlocks.Abstractions.Persistence;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Abstractions.Core.Domain.Events.External;
+using MicroBootstrap.Abstractions.Persistence;
+using MicroBootstrap.Core.Domain.Events.External;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Customers.Customers.Features.UpdatingUserState.Events.External;

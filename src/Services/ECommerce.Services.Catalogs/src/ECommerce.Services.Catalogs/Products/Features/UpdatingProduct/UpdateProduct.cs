@@ -1,7 +1,4 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Catalogs.Brands.Exceptions.Application;
 using ECommerce.Services.Catalogs.Categories.Exceptions.Application;
 using ECommerce.Services.Catalogs.Products.Exceptions.Application;
@@ -10,6 +7,8 @@ using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Shared.Extensions;
 using ECommerce.Services.Catalogs.Suppliers.Exceptions.Application;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Catalogs.Products.Features.UpdatingProduct;
 

@@ -1,15 +1,15 @@
 using System.Reflection;
-using BuildingBlocks.Core;
-using BuildingBlocks.Core.Dependency;
-using BuildingBlocks.Jwt;
-using BuildingBlocks.Logging;
-using BuildingBlocks.Web;
-using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
-using BuildingBlocks.Web.Extensions.ServiceCollectionExtensions;
 using Catalogs.Api.Extensions.ApplicationBuilderExtensions;
 using Catalogs.Api.Extensions.ServiceCollectionExtensions;
 using ECommerce.Services.Catalogs;
 using Hellang.Middleware.ProblemDetails;
+using MicroBootstrap.Core.Dependency;
+using MicroBootstrap.Logging;
+using MicroBootstrap.Security.Jwt;
+using MicroBootstrap.Swagger;
+using MicroBootstrap.Web;
+using MicroBootstrap.Web.Extensions.ApplicationBuilderExtensions;
+using MicroBootstrap.Web.Extensions.ServiceCollectionExtensions;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Serilog;
 
@@ -41,7 +41,7 @@ var loggingOptions = builder.Configuration.GetSection(nameof(LoggerOptions)).Get
 builder.AddCompression();
 builder.AddCustomProblemDetails();
 
-builder.AddCustomSerilog(config =>
+builder.Host.AddCustomSerilog(config =>
 {
     config.WriteTo.File(
         Program.GetLogPath(builder.Environment, loggingOptions) ?? "../logs/customers-service.log",

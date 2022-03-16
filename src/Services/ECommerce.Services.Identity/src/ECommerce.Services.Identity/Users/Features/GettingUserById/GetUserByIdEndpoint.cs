@@ -1,6 +1,5 @@
-using BuildingBlocks.Abstractions.CQRS.Query;
-using BuildingBlocks.CQRS.Query;
 using ECommerce.Services.Identity.Users.Features.RegisteringUser;
+using MicroBootstrap.Abstractions.CQRS.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

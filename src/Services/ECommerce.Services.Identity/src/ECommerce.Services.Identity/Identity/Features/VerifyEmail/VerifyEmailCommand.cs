@@ -1,14 +1,10 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Exception;
-using BuildingBlocks.Exception.Types;
-using ECommerce.Services.Identity.Identity.Exceptions;
 using ECommerce.Services.Identity.Identity.Features.VerifyEmail.Exceptions;
 using ECommerce.Services.Identity.Shared.Data;
 using ECommerce.Services.Identity.Shared.Exceptions;
 using ECommerce.Services.Identity.Shared.Models;
-using MediatR;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Exception.Types;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

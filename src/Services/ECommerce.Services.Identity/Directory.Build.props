@@ -1,0 +1,16 @@
+<Project>
+
+    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Using Include="Microsoft.AspNetCore.Mvc"/>
+        <Using Include="System.Collections.ObjectModel"/>
+        <Using Include="MediatR"/>
+    </ItemGroup>
+
+</Project>

@@ -1,6 +1,6 @@
-using BuildingBlocks.Persistence.Mongo;
 using ECommerce.Services.Catalogs.Products.Models.Read;
 using Humanizer;
+using MicroBootstrap.Persistence.Mongo;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 

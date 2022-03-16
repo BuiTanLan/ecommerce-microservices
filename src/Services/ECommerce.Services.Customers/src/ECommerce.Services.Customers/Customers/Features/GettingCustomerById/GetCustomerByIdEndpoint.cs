@@ -1,7 +1,6 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Query;
-using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.Web.MinimalApi;
+using MicroBootstrap.Abstractions.CQRS.Query;
+using MicroBootstrap.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.Customers.Features.GettingCustomerById;
 

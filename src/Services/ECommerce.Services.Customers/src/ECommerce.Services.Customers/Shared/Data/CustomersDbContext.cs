@@ -1,9 +1,8 @@
-using BuildingBlocks.Abstractions.Domain.Events.Internal;
-using BuildingBlocks.Core.Persistence.EfCore;
-using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 using ECommerce.Services.Customers.Shared.Contracts;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Core.Persistence.EfCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Customers.Shared.Data;

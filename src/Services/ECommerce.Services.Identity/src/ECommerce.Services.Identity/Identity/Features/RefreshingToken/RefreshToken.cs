@@ -1,15 +1,14 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Jwt;
 using ECommerce.Services.Identity.Identity.Exceptions;
 using ECommerce.Services.Identity.Identity.Features.GenerateJwtToken;
 using ECommerce.Services.Identity.Identity.Features.GenerateRefreshToken;
 using ECommerce.Services.Identity.Shared.Exceptions;
 using ECommerce.Services.Identity.Shared.Models;
 using FluentValidation;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Security.Jwt;
 using Microsoft.AspNetCore.Identity;
 
 namespace ECommerce.Services.Identity.Identity.Features.RefreshingToken;

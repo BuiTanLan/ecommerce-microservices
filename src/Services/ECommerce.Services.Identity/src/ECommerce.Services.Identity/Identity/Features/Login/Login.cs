@@ -1,18 +1,18 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Abstractions.CQRS.Query;
-using BuildingBlocks.Abstractions.Persistence;
-using BuildingBlocks.Exception;
-using BuildingBlocks.Jwt;
 using ECommerce.Services.Identity.Identity.Exceptions;
 using ECommerce.Services.Identity.Identity.Features.GenerateJwtToken;
 using ECommerce.Services.Identity.Identity.Features.GenerateRefreshToken;
 using ECommerce.Services.Identity.Shared.Exceptions;
 using ECommerce.Services.Identity.Shared.Models;
-using FastEndpoints.Validation;
+using FluentValidation;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Abstractions.CQRS.Query;
+using MicroBootstrap.Abstractions.Persistence;
+using MicroBootstrap.Security.Jwt;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Identity.Identity.Features.Login;
 

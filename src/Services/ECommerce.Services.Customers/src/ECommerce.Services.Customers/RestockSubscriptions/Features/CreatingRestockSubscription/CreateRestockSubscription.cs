@@ -1,20 +1,18 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Abstractions.Domain.ValueObjects;
-using BuildingBlocks.Core.IdsGenerator;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Products.Exceptions;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription.Exceptions;
-using ECommerce.Services.Customers.RestockSubscriptions.Models;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 using ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
 using ECommerce.Services.Customers.Shared.Clients.Catalogs;
 using ECommerce.Services.Customers.Shared.Data;
 using ECommerce.Services.Customers.Shared.Extensions;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Domain.ValueObjects;
+using MicroBootstrap.Core.Exception;
+using MicroBootstrap.Core.IdsGenerator;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription;
 

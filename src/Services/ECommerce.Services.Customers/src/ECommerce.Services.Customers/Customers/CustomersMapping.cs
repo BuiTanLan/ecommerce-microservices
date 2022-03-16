@@ -1,11 +1,11 @@
 using AutoMapper;
-using BuildingBlocks.Abstractions.Domain.ValueObjects;
 using ECommerce.Services.Customers.Customers.Dtos;
 using ECommerce.Services.Customers.Customers.Features.CreatingMongoCustomersReadModels;
 using ECommerce.Services.Customers.Customers.Features.UpdatingMongoCustomerReadsModel;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Customers.Models.Reads;
 using ECommerce.Services.Customers.Customers.ValueObjects;
+using MicroBootstrap.Core.Domain.ValueObjects;
 
 namespace ECommerce.Services.Customers.Customers;
 

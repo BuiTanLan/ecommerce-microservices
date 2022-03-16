@@ -1,6 +1,5 @@
-using BuildingBlocks.Core.Persistence.EfCore;
-using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Catalogs.Shared.Data;
+using MicroBootstrap.Core.Persistence.EfCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ECommerce.Services.Catalogs.Categories.Data;

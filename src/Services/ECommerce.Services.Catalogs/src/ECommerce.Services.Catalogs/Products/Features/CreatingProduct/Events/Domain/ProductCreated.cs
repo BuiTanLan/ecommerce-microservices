@@ -1,12 +1,11 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.Domain.Events.Internal;
-using BuildingBlocks.Abstractions.Messaging.Outbox;
-using BuildingBlocks.Exception;
-using BuildingBlocks.Messaging.Outbox;
 using ECommerce.Services.Catalogs.Products.Exceptions.Application;
 using ECommerce.Services.Catalogs.Products.Models;
-using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Shared.Data;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Abstractions.Messaging.Outbox;
+using MicroBootstrap.Core.Domain.Events.Internal;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Events.Domain;
 

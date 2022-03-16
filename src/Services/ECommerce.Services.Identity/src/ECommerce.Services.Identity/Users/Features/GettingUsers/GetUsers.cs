@@ -1,13 +1,11 @@
 using AutoMapper;
-using BuildingBlocks.Abstractions.CQRS;
-using BuildingBlocks.Abstractions.CQRS.Query;
-using BuildingBlocks.Core.Persistence.EfCore;
-using BuildingBlocks.CQRS;
-using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Identity.Shared.Models;
 using ECommerce.Services.Identity.Users.Dtos;
 using FluentValidation;
+using MicroBootstrap.Abstractions.CQRS.Query;
+using MicroBootstrap.Core.Persistence.EfCore;
+using MicroBootstrap.Core.Types;
+using MicroBootstrap.CQRS.Query;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

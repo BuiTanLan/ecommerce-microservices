@@ -1,11 +1,10 @@
-using BuildingBlocks.Abstractions.Domain.Events.Internal;
-using BuildingBlocks.Core.Persistence.EfCore;
-using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products.Models;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Suppliers;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Core.Persistence.EfCore;
 
 namespace ECommerce.Services.Catalogs.Shared.Data;
 

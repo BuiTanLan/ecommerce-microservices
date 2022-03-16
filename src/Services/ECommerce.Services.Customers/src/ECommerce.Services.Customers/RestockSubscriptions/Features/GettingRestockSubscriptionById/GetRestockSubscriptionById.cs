@@ -1,11 +1,10 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
-using BuildingBlocks.Abstractions.CQRS.Query;
-using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Application;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Abstractions.CQRS.Query;
+using MicroBootstrap.Core.Exception;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 

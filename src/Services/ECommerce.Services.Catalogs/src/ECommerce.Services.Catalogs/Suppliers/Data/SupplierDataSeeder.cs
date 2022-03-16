@@ -1,6 +1,6 @@
 using Bogus;
-using BuildingBlocks.Abstractions.Persistence;
 using ECommerce.Services.Catalogs.Shared.Contracts;
+using MicroBootstrap.Abstractions.Persistence;
 
 namespace ECommerce.Services.Catalogs.Suppliers.Data;
 

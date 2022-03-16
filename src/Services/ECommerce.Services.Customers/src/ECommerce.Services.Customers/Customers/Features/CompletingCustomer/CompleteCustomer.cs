@@ -1,10 +1,10 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Abstractions.Domain.ValueObjects;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Shared.Data;
 using ECommerce.Services.Customers.Shared.Extensions;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Domain.ValueObjects;
+using MicroBootstrap.Core.Exception;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Customers.Customers.Features.CompletingCustomer;

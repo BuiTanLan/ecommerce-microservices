@@ -1,6 +1,6 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.Domain.Model;
 using ECommerce.Services.Catalogs.Categories.Exceptions.Domain;
+using MicroBootstrap.Core.Domain.Model;
 
 namespace ECommerce.Services.Catalogs.Categories;
 

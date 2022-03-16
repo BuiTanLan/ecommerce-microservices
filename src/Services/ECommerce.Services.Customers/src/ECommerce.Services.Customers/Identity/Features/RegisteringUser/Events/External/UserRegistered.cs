@@ -1,7 +1,8 @@
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Abstractions.Domain.Events.External;
-using BuildingBlocks.Abstractions.Persistence;
 using ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
+using MicroBootstrap.Abstractions.Core.Domain.Events.External;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Abstractions.Persistence;
+using MicroBootstrap.Core.Domain.Events.External;
 
 namespace ECommerce.Services.Customers.Identity.Features.RegisteringUser.Events.External;
 

@@ -1,11 +1,11 @@
-using BuildingBlocks.Abstractions.Domain.Events;
-using BuildingBlocks.Abstractions.Domain.Events.External;
-using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using ECommerce.Services.Customers.Customers.Features.CompletingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.CreatingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.LockingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.UnlockingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.VerifyingCustomer.Events.Domain;
+using MicroBootstrap.Abstractions.Core.Domain.Events;
+using MicroBootstrap.Abstractions.Core.Domain.Events.External;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Customers.Customers;
 

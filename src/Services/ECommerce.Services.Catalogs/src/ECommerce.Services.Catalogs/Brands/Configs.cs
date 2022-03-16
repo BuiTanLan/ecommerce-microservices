@@ -1,5 +1,5 @@
-using BuildingBlocks.Abstractions.Persistence;
 using ECommerce.Services.Catalogs.Brands.Data;
+using MicroBootstrap.Abstractions.Persistence;
 
 namespace ECommerce.Services.Catalogs.Brands;
 

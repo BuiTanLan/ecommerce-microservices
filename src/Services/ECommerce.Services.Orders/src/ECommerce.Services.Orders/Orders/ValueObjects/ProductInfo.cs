@@ -1,4 +1,4 @@
-using BuildingBlocks.Abstractions.Domain.Model;
+using MicroBootstrap.Core.Domain.Model;
 
 namespace ECommerce.Services.Orders.Orders.ValueObjects;
 

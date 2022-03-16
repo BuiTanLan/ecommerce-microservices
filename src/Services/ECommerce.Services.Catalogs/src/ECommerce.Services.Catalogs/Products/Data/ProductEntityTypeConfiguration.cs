@@ -1,11 +1,10 @@
-using BuildingBlocks.Core.Persistence.EfCore;
-using BuildingBlocks.Persistence.EfCore.Postgres;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products.Models;
 using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Shared.Data;
 using ECommerce.Services.Catalogs.Suppliers;
+using MicroBootstrap.Core.Persistence.EfCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ECommerce.Services.Catalogs.Products.Data;

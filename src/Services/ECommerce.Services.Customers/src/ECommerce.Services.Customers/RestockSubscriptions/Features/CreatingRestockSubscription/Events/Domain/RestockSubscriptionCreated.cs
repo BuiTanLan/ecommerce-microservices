@@ -1,13 +1,13 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Command;
-using BuildingBlocks.Abstractions.Domain.Events.Internal;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingMongoRestockSubscriptionReadModel;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 using ECommerce.Services.Customers.Shared.Data;
 using ECommerce.Services.Customers.Shared.Extensions;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Domain.Events.Internal;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription.Events.Domain;
 

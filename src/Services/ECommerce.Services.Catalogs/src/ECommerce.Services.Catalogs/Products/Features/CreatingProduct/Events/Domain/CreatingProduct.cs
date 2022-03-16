@@ -1,9 +1,9 @@
-using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using ECommerce.Services.Catalogs.Brands;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Products.Models;
 using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Suppliers;
+using MicroBootstrap.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Events.Domain;
 

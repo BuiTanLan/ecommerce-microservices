@@ -1,9 +1,4 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.Domain.Model;
-using BuildingBlocks.Abstractions.Domain.ValueObjects;
-using BuildingBlocks.Exception;
-using ECommerce.Services.Customers.Customers.Exceptions;
-using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Customers.Exceptions.Domain;
 using ECommerce.Services.Customers.Customers.Features.CompletingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.CreatingCustomer.Events.Domain;
@@ -11,6 +6,9 @@ using ECommerce.Services.Customers.Customers.Features.LockingCustomer.Events.Dom
 using ECommerce.Services.Customers.Customers.Features.UnlockingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.Features.VerifyingCustomer.Events.Domain;
 using ECommerce.Services.Customers.Customers.ValueObjects;
+using MicroBootstrap.Core.Domain.Model;
+using MicroBootstrap.Core.Domain.ValueObjects;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Customers.Customers.Models;
 

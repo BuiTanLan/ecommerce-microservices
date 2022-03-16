@@ -1,16 +1,15 @@
 using System.Reflection;
-using BuildingBlocks.Jwt;
-using BuildingBlocks.Web;
-using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
-using BuildingBlocks.Web.Extensions.ServiceCollectionExtensions;
 using ECommerce.Services.Identity;
 using ECommerce.Services.Identity.Api.Extensions.ApplicationBuilderExtensions;
 using ECommerce.Services.Identity.Api.Extensions.ServiceCollectionExtensions;
 using Hellang.Middleware.ProblemDetails;
-using Microsoft.AspNetCore.Builder;
+using MicroBootstrap.Logging;
+using MicroBootstrap.Security.Jwt;
+using MicroBootstrap.Swagger;
+using MicroBootstrap.Web;
+using MicroBootstrap.Web.Extensions.ApplicationBuilderExtensions;
+using MicroBootstrap.Web.Extensions.ServiceCollectionExtensions;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 
 // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
@@ -39,7 +38,7 @@ builder.AddCompression();
 
 builder.AddCustomProblemDetails();
 
-builder.AddCustomSerilog();
+builder.Host.AddCustomSerilog();
 
 builder.AddCustomSwagger(builder.Configuration, typeof(IdentityRoot).Assembly);
 

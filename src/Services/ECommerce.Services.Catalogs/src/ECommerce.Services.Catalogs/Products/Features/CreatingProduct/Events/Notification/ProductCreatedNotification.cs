@@ -1,5 +1,5 @@
-using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Events.Domain;
+using MicroBootstrap.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Events.Notification;
 

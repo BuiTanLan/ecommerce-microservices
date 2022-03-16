@@ -1,9 +1,7 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.CQRS.Query;
-using BuildingBlocks.CQRS.Query;
+using MicroBootstrap.Abstractions.CQRS.Query;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ECommerce.Services.Identity.Users.Features.GettingUsers;

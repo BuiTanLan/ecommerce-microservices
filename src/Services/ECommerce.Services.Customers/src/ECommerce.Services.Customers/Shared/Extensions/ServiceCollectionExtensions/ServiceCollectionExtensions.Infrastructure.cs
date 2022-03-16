@@ -1,21 +1,20 @@
-using BuildingBlocks.Abstractions.Caching;
-using BuildingBlocks.Caching;
-using BuildingBlocks.Caching.InMemory;
-using BuildingBlocks.Core;
-using BuildingBlocks.Core.Extensions.DependencyInjection;
-using BuildingBlocks.Core.IdsGenerator;
-using BuildingBlocks.Core.Persistence.EfCore;
-using BuildingBlocks.CQRS;
-using BuildingBlocks.Email;
-using BuildingBlocks.Logging;
-using BuildingBlocks.Messaging;
-using BuildingBlocks.Messaging.Outbox.EF;
-using BuildingBlocks.Messaging.Transport.Rabbitmq;
-using BuildingBlocks.Monitoring;
-using BuildingBlocks.Persistence.EfCore.Postgres;
-using BuildingBlocks.Scheduling.Internal;
-using BuildingBlocks.Validation;
-using BuildingBlocks.Web.Extensions;
+using MicroBootstrap.Caching.InMemory;
+using MicroBootstrap.Core.Caching;
+using MicroBootstrap.Core.Extensions.Configuration;
+using MicroBootstrap.Core.Extensions.DependencyInjection;
+using MicroBootstrap.Core.IdsGenerator;
+using MicroBootstrap.Core.Persistence.EfCore;
+using MicroBootstrap.CQRS;
+using MicroBootstrap.Email;
+using MicroBootstrap.Logging;
+using MicroBootstrap.Messaging;
+using MicroBootstrap.Messaging.Postgres.Extensions;
+using MicroBootstrap.Messaging.Transport.Rabbitmq;
+using MicroBootstrap.Monitoring;
+using MicroBootstrap.Persistence.EfCore.Postgres;
+using MicroBootstrap.Scheduling.Internal;
+using MicroBootstrap.Scheduling.Internal.Extensions;
+using MicroBootstrap.Validation;
 
 namespace ECommerce.Services.Customers.Shared.Extensions.ServiceCollectionExtensions;
 
@@ -50,11 +49,10 @@ public static partial class ServiceCollectionExtensions
                 tags: new[] { "customers-rabbitmq" });
         });
 
-        services.AddMessaging(configuration)
-            .AddEntityFrameworkOutbox<OutboxDataContext>(configuration, Assembly.GetExecutingAssembly());
+        services.AddPostgresMessaging(configuration);
 
         // Or --> Hangfire
-        services.AddInternalScheduler<InternalMessageDbContext>(configuration, Assembly.GetExecutingAssembly());
+        services.AddInternalScheduler(configuration);
 
         services.AddRabbitMqTransport(configuration);
 

@@ -1,4 +1,4 @@
-using BuildingBlocks.Abstractions.Domain.Exceptions;
+using MicroBootstrap.Core.Domain.Exceptions;
 
 namespace ECommerce.Services.Catalogs.Brands.Exceptions.Domain;
 

@@ -1,8 +1,9 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.Domain.Events.Internal;
 using ECommerce.Services.Catalogs.Categories;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Shared.Extensions;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ChangingProductCategory.Events;
 

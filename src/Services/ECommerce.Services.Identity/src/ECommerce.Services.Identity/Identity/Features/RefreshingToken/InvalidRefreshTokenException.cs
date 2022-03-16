@@ -1,5 +1,4 @@
-using BuildingBlocks.Exception;
-using BuildingBlocks.Exception.Types;
+using MicroBootstrap.Core.Exception.Types;
 
 namespace ECommerce.Services.Identity.Identity.Features.RefreshingToken;
 

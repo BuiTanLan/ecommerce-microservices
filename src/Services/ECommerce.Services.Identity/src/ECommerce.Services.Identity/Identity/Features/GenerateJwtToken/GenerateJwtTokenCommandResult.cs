@@ -1,4 +1,4 @@
-using BuildingBlocks.Jwt;
+using MicroBootstrap.Security.Jwt;
 
 namespace ECommerce.Services.Identity.Identity.Features.GenerateJwtToken;
 

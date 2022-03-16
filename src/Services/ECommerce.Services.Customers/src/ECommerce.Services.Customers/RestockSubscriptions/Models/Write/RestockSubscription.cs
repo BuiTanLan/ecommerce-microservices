@@ -1,13 +1,14 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Abstractions.Domain.Model;
-using BuildingBlocks.Abstractions.Domain.ValueObjects;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.ValueObjects;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription.Events.Domain;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscription;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.ProcessingRestockNotification;
 using ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
+using MicroBootstrap.Abstractions.Core.Domain.Model;
+using MicroBootstrap.Core.Domain.Model;
+using MicroBootstrap.Core.Domain.ValueObjects;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 

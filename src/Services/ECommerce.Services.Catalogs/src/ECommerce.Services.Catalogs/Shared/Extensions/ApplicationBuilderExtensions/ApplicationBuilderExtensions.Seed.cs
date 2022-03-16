@@ -1,4 +1,4 @@
-using BuildingBlocks.Abstractions.Persistence;
+using MicroBootstrap.Abstractions.Persistence;
 
 namespace ECommerce.Services.Catalogs.Shared.Extensions.ApplicationBuilderExtensions;
 

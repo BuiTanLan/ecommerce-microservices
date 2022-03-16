@@ -1,7 +1,7 @@
-using BuildingBlocks.Abstractions.CQRS.Command;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Shared.Data;
 using ECommerce.Services.Customers.Shared.Extensions;
+using MicroBootstrap.Abstractions.CQRS.Command;
 
 namespace ECommerce.Services.Customers.Customers.Features.LockingCustomer;
 

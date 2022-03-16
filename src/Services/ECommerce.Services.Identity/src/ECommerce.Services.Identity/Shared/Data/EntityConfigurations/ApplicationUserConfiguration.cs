@@ -1,5 +1,5 @@
-using BuildingBlocks.Core.Persistence.EfCore;
 using ECommerce.Services.Identity.Shared.Models;
+using MicroBootstrap.Core.Persistence.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

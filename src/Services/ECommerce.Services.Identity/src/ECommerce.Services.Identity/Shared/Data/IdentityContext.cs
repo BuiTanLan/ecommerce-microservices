@@ -1,9 +1,8 @@
 using System.Data;
-using BuildingBlocks.Abstractions.Domain.Events.Internal;
-using BuildingBlocks.Abstractions.Persistence;
-using BuildingBlocks.Abstractions.Persistence.EfCore;
 using ECommerce.Services.Identity.Shared.Models;
 using Humanizer;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Abstractions.Persistence;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;

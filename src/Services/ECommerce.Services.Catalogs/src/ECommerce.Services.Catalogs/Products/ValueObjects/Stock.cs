@@ -1,6 +1,6 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Catalogs.Products.Exceptions.Domain;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Catalogs.Products.ValueObjects;
 
