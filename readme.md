@@ -1,13 +1,13 @@
 # ECommerce Microservices
 
-`ECommerce Microservices` is a fictional eCommerce based on different software architecture and technologies like Microservices Architecture, Vertical Slice Architecture, CQRS pattern, Domain Driven Design, Event Driven Architecture, Inbox and Outbox Pattern and using Postgres for write side and MongoDb for read side and etc.
+`ECommerce Microservices` is a fictional eCommerce, based on different software architecture and technologies like Microservices Architecture, Vertical Slice Architecture, CQRS pattern, Domain Driven Design, Event Driven Architecture, Inbox and Outbox Pattern and using Postgres for write side and MongoDb for read side and etc. 
 
 > For `building blocks` or `cross cutting concerns` part of this application, I used my [micro-bootstrap](https://github.com/mehdihadeli/micro-bootstrap) library. it is has some infrastructure code for developing distributed applications. 
 
 For reading code easier, I used [GitHub SubModule](https://www.atlassian.com/git/tutorials/git-submodule) to create a link to microbootsrap library and use it here. You can also use, its `Nuget Packages` in your applications for easy to use.
 
 
-This project is still in `progress` and I update it to the latest technologies continuously.
+This project is still `in-progress` and I update it to the latest technologies continuously.
 
 
 # Support ⭐
