@@ -1,5 +1,5 @@
 # ECommerce Microservices
-> `ECommerce Microservices` is a fictional eCommerce based on different software architecture and technologies like Microservices Architecture, Vertical Slice Architecture, CQRS pattern, Event Sourcing, Domain Driven Design, Event Driven Architecture, Inbox and Outbox Pattern and using Postgres for write side and MongoDb for read side and etc.
+> `ECommerce Microservices` is a fictional eCommerce based on different software architecture and technologies like Microservices Architecture, Vertical Slice Architecture, CQRS pattern, Domain Driven Design, Event Driven Architecture, Inbox and Outbox Pattern and using Postgres for write side and MongoDb for read side and etc.
 
 This project is still in progress and I update it to the latest technologies continuously.
 
