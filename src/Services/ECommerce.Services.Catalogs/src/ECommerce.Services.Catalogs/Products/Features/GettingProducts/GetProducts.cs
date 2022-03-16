@@ -1,9 +1,11 @@
 using AutoMapper;
-using BuildingBlocks.CQRS;
-using BuildingBlocks.CQRS.Query;
 using ECommerce.Services.Catalogs.Products.Dtos;
 using ECommerce.Services.Catalogs.Products.Models;
 using ECommerce.Services.Catalogs.Shared.Contracts;
+using MicroBootstrap.Abstractions.CQRS.Query;
+using MicroBootstrap.Core.Persistence.EfCore;
+using MicroBootstrap.Core.Types;
+using MicroBootstrap.CQRS.Query;
 
 namespace ECommerce.Services.Catalogs.Products.Features.GettingProducts;
 

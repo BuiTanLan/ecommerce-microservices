@@ -1,13 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Abstractions\MicroBootstrap.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Caching.InMemory\MicroBootstrap.Caching.InMemory.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Caching.Redis\MicroBootstrap.Caching.Redis.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Core\MicroBootstrap.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.CQRS\MicroBootstrap.CQRS.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Email\MicroBootstrap.Email.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Logging\MicroBootstrap.Logging.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Messaging.Postgres\MicroBootstrap.Messaging.Postgres.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Messaging.Transport.Rabbitmq\MicroBootstrap.Messaging.Transport.Rabbitmq.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Monitoring\MicroBootstrap.Monitoring.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Persistence.EfCore.Postgres\MicroBootstrap.Persistence.EfCore.Postgres.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Persistence.EventStoreDB\MicroBootstrap.Persistence.EventStoreDB.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Persistence.Mongo\MicroBootstrap.Persistence.Mongo.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Resiliency\MicroBootstrap.Resiliency.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Scheduling.Internal\MicroBootstrap.Scheduling.Internal.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Security\MicroBootstrap.Security.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Serialization\MicroBootstrap.Serialization.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Swagger\MicroBootstrap.Swagger.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Tracing\MicroBootstrap.Tracing.csproj" />
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Validation\MicroBootstrap.Validation.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\BuildingBlocks\BuildingBlocks\BuildingBlocks.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
   </ItemGroup>
 
 </Project>

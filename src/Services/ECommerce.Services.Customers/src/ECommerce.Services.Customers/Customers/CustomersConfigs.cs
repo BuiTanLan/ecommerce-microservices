@@ -1,7 +1,7 @@
-using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Core.Persistence;
-using BuildingBlocks.Web.Module;
 using ECommerce.Services.Customers.Customers.Data;
+using MicroBootstrap.Abstractions.Core.Domain.Events;
+using MicroBootstrap.Abstractions.Persistence;
+using MicroBootstrap.Web.Module;
 
 namespace ECommerce.Services.Customers.Customers;
 

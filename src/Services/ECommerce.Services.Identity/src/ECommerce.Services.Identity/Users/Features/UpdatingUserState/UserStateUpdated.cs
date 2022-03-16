@@ -1,5 +1,5 @@
-using BuildingBlocks.Core.Domain.Events.External;
 using ECommerce.Services.Identity.Shared.Models;
+using MicroBootstrap.Core.Domain.Events.External;
 
 namespace ECommerce.Services.Identity.Users.Features.UpdatingUserState;
 

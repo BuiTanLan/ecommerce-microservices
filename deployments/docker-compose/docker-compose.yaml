@@ -7,7 +7,7 @@ services:
       context: ../../
       dockerfile: src/ApiGateway/ECommerce.ApiGateway/Dockerfile
     container_name: e-commerce-gateway
-    # restart: unless-stopped
+    restart: on-failure
     ports:
       - ${GATEWAY_PORT}:80
     networks:
@@ -21,7 +21,7 @@ services:
       context: ../../
       dockerfile: src/Services/ECommerce.Services.Catalogs/Dockerfile
     container_name: e-commerce-catalogs
-    # restart: unless-stopped
+    restart: on-failure
     ports:
       - ${CATALOGS_SVC_PORT}:80
     depends_on:
@@ -39,7 +39,7 @@ services:
       context: ../../
       dockerfile: src/Services/ECommerce.Services.Identity/Dockerfile
     container_name: e-commerce-identity
-    # restart: unless-stopped
+    restart: on-failure
     ports:
       - ${IDENTITY_SVC_PORT}:80
     depends_on:
@@ -56,7 +56,7 @@ services:
       context: ../../
       dockerfile: src/Services/ECommerce.Services.Customers/Dockerfile
     container_name: e-commerce-customers
-    # restart: unless-stopped
+    restart: on-failure
     ports:
       - ${CUSTOMERS_SVC_PORT}:80
     depends_on:
@@ -72,7 +72,7 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
-    # restart: unless-stopped
+    restart: on-failure
     ports:
       - 5672:5672
       - 15672:15672
@@ -87,12 +87,12 @@ services:
   mongo:
     image: mongo
     container_name: mongo
-    # restart: unless-stopped
+    restart: on-failure
     # environment:
     #   - MONGO_INITDB_ROOT_USERNAME=root
     #   - MONGO_INITDB_ROOT_PASSWORD=secret
     ports:
-      - 27017:${MONGODB_PORT}
+      - ${MONGODB_PORT}:27017
     networks:
       - e-commerce
 
@@ -103,7 +103,7 @@ services:
     image: postgres:11.1-alpine
     ports:
       - '5432:5432'
-    # restart: unless-stopped
+    restart: on-failure
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

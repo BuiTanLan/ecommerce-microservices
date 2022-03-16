@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using Ardalis.GuardClauses;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Shared.Clients.Identity.Dtos;
+using MicroBootstrap.Core.Exception;
 using Microsoft.Extensions.Options;
 
 namespace ECommerce.Services.Customers.Shared.Clients.Identity;

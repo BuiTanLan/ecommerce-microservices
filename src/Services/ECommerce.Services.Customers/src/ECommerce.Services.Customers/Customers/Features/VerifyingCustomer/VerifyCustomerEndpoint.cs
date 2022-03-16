@@ -1,5 +1,5 @@
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Web.MinimalApi;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.Customers.Features.VerifyingCustomer;
 

@@ -1,4 +1,4 @@
-using BuildingBlocks.CQRS.Query;
+using MicroBootstrap.Abstractions.CQRS.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

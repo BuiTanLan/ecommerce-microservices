@@ -1,9 +1,9 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
-using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Customers.Models.Reads;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Abstractions.CQRS.Command;
 using MongoDB.Driver;
 
 namespace ECommerce.Services.Customers.Customers.Features.UpdatingMongoCustomerReadsModel;

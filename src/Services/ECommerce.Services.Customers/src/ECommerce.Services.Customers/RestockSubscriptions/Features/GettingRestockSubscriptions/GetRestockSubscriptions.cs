@@ -1,12 +1,12 @@
 using AutoMapper;
-using BuildingBlocks.CQRS;
-using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.Mongo;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Read;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Abstractions.CQRS.Query;
+using MicroBootstrap.Core.Persistence.EfCore;
+using MicroBootstrap.Core.Types;
+using MicroBootstrap.CQRS.Query;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptions;
 

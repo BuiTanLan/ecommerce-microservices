@@ -23,7 +23,9 @@ public static class IdentityModuleConfiguration
         return builder;
     }
 
-    public static IServiceCollection AddIdentityModuleServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddIdentityModuleServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddInfrastructure(configuration);
 
@@ -55,7 +57,7 @@ public static class IdentityModuleConfiguration
         IWebHostEnvironment environment,
         ILogger logger)
     {
-        app.UseInfrastructure();
+        await app.UseInfrastructure(logger);
         app.UseIdentityServer();
 
         await app.ApplyDatabaseMigrations(logger);

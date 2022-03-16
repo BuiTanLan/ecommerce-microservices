@@ -1,7 +1,4 @@
-using BuildingBlocks.CQRS;
-using BuildingBlocks.Web;
-using BuildingBlocks.Web.Extensions;
-using ECommerce.Services.Catalogs.Products.Models;
+using MicroBootstrap.CQRS.Query;
 
 namespace ECommerce.Services.Catalogs.Products.Features.GettingProducts;
 
@@ -9,23 +6,23 @@ namespace ECommerce.Services.Catalogs.Products.Features.GettingProducts;
 // https://benfoster.io/blog/minimal-apis-custom-model-binding-aspnet-6/
 public record GetProductsRequest : PageRequest
 {
-    public static ValueTask<GetProductsRequest?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
-    {
-        var page = httpContext.Request.Query.Get<int>("Page", 1);
-        var pageSize = httpContext.Request.Query.Get<int>("PageSize", 20);
-        var sorts = httpContext.Request.Query.GetCollection<List<string>>("Sorts");
-        var filters = httpContext.Request.Query.GetCollection<List<FilterModel>>("Filters");
-        var includes = httpContext.Request.Query.GetCollection<List<string>>("Includes");
-
-        var request = new GetProductsRequest
-        {
-            Page = page,
-            PageSize = pageSize,
-            Sorts = sorts,
-            Filters = filters,
-            Includes = includes
-        };
-
-        return ValueTask.FromResult<GetProductsRequest?>(request);
-    }
+    // public static ValueTask<GetProductsRequest?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
+    // {
+    //     var page = httpContext.Request.Query.Get<int>("Page", 1);
+    //     var pageSize = httpContext.Request.Query.Get<int>("PageSize", 20);
+    //     var sorts = httpContext.Request.Query.GetCollection<List<string>>("Sorts");
+    //     var filters = httpContext.Request.Query.GetCollection<List<FilterModel>>("Filters");
+    //     var includes = httpContext.Request.Query.GetCollection<List<string>>("Includes");
+    //
+    //     var request = new GetProductsRequest
+    //     {
+    //         Page = page,
+    //         PageSize = pageSize,
+    //         Sorts = sorts,
+    //         Filters = filters,
+    //         Includes = includes
+    //     };
+    //
+    //     return ValueTask.FromResult<GetProductsRequest?>(request);
+    // }
 }

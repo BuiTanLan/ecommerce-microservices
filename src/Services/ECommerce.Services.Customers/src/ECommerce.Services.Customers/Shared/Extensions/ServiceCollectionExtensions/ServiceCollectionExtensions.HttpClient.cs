@@ -1,6 +1,6 @@
-using BuildingBlocks.Resiliency;
 using ECommerce.Services.Customers.Shared.Clients.Catalogs;
 using ECommerce.Services.Customers.Shared.Clients.Identity;
+using MicroBootstrap.Resiliency;
 
 namespace ECommerce.Services.Customers.Shared.Extensions.ServiceCollectionExtensions;
 

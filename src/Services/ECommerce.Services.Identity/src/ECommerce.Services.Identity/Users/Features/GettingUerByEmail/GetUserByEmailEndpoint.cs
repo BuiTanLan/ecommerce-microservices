@@ -1,8 +1,7 @@
-using BuildingBlocks.CQRS.Query;
 using ECommerce.Services.Identity.Users.Features.RegisteringUser;
+using MicroBootstrap.Abstractions.CQRS.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
 namespace ECommerce.Services.Identity.Users.Features.GettingUerByEmail;

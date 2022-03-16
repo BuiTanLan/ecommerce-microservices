@@ -1,7 +1,6 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.Web.MinimalApi;
-using BuildingBlocks.Web.Module;
+using MicroBootstrap.Abstractions.CQRS.Query;
+using MicroBootstrap.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptionById;
 

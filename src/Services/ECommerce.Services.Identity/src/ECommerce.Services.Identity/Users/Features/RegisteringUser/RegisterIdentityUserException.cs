@@ -1,4 +1,4 @@
-using BuildingBlocks.Exception.Types;
+using MicroBootstrap.Core.Exception.Types;
 
 namespace ECommerce.Services.Identity.Users.Features.RegisteringUser;
 

@@ -1,8 +1,8 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
-using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Read;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Abstractions.CQRS.Command;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingMongoRestockSubscriptionReadModel;
 

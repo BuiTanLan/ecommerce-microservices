@@ -1,8 +1,8 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Application;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Exception;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscription;
@@ -42,7 +42,7 @@ internal class DeleteRestockSubscriptionHandler : ICommandHandler<DeleteRestockS
 
         // for raising a deleted domain event
         exists!.Delete();
-        
+
         _customersDbContext.Entry(exists).State = EntityState.Deleted;
         _customersDbContext.Entry(exists.ProductInformation).State = EntityState.Unchanged;
 

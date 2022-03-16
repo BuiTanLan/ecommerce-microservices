@@ -1,5 +1,4 @@
-using BuildingBlocks.Core.Persistence;
-using BuildingBlocks.EFCore;
+using MicroBootstrap.Abstractions.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;

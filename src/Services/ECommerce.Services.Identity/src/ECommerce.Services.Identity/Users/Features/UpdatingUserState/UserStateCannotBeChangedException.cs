@@ -1,7 +1,6 @@
-using BuildingBlocks.Exception;
-using BuildingBlocks.Exception.Types;
-using BuildingBlocks.Utils;
 using ECommerce.Services.Identity.Shared.Models;
+using MicroBootstrap.Core.Exception.Types;
+using MicroBootstrap.Core.Extensions.Utils;
 
 namespace ECommerce.Services.Identity.Users.Features.UpdatingUserState;
 

@@ -1,18 +1,20 @@
 using System.Reflection;
-using BuildingBlocks.Caching;
-using BuildingBlocks.Core.Extensions;
-using BuildingBlocks.CQRS;
-using BuildingBlocks.EFCore;
-using BuildingBlocks.Email;
-using BuildingBlocks.Logging;
-using BuildingBlocks.Messaging;
-using BuildingBlocks.Messaging.Outbox.EF;
-using BuildingBlocks.Messaging.Transport.Rabbitmq;
-using BuildingBlocks.Monitoring;
-using BuildingBlocks.Scheduling.Internal;
-using BuildingBlocks.Validation;
-using BuildingBlocks.Web.Extensions;
-using MediatR;
+using MicroBootstrap.Caching.InMemory;
+using MicroBootstrap.Core.Caching;
+using MicroBootstrap.Core.Extensions.Configuration;
+using MicroBootstrap.Core.Extensions.DependencyInjection;
+using MicroBootstrap.Core.Persistence.EfCore;
+using MicroBootstrap.CQRS;
+using MicroBootstrap.Email;
+using MicroBootstrap.Logging;
+using MicroBootstrap.Messaging;
+using MicroBootstrap.Messaging.Postgres.Extensions;
+using MicroBootstrap.Messaging.Transport.Rabbitmq;
+using MicroBootstrap.Monitoring;
+using MicroBootstrap.Persistence.EfCore.Postgres;
+using MicroBootstrap.Scheduling.Internal;
+using MicroBootstrap.Scheduling.Internal.Extensions;
+using MicroBootstrap.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,7 +34,7 @@ public static class ServiceCollection
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddCore();
+        services.AddCore(configuration);
         services.AddEmailService(configuration);
 
         services.AddCustomValidators(Assembly.GetExecutingAssembly());
@@ -66,15 +68,14 @@ public static class ServiceCollection
                 tags: new[] { "identity-rabbitmq" });
         });
 
-        services.AddMessaging(configuration)
-            .AddEntityFrameworkOutbox<OutboxDataContext>(configuration, Assembly.GetExecutingAssembly());
+        services.AddPostgresMessaging(configuration);
 
-        services.AddInternalScheduler<InternalMessageDbContext>(configuration, Assembly.GetExecutingAssembly());
+        services.AddInternalScheduler(configuration);
 
         services.AddRabbitMqTransport(configuration);
 
-        services.AddCachingRequestPolicies(new List<Assembly> { Assembly.GetExecutingAssembly() });
-        services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
+        services.AddCustomInMemoryCache(configuration)
+            .AddCachingRequestPolicies(Assembly.GetExecutingAssembly());
 
         return services;
     }

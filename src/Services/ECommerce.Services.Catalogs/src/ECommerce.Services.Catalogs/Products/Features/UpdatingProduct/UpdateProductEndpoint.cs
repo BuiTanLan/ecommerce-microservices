@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.CQRS.Command;
+using MicroBootstrap.Abstractions.CQRS.Command;
 
 namespace ECommerce.Services.Catalogs.Products.Features.UpdatingProduct;
 

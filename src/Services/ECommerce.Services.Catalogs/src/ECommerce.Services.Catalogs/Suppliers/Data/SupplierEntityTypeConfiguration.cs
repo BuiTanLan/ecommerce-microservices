@@ -1,4 +1,5 @@
 using ECommerce.Services.Catalogs.Shared.Data;
+using MicroBootstrap.Core.Persistence.EfCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ECommerce.Services.Catalogs.Suppliers.Data;
@@ -14,7 +15,7 @@ public class SupplierEntityTypeConfiguration : IEntityTypeConfiguration<Supplier
             .HasConversion(x => x.Value, x => x)
             .ValueGeneratedNever();
 
-        builder.Property(x => x.Created).HasDefaultValueSql(Constants.DateAlgorithm);
-        builder.Property(x => x.Name).HasColumnType(Constants.ColumnTypes.NormalText).IsRequired();
+        builder.Property(x => x.Created).HasDefaultValueSql(EfConstants.DateAlgorithm);
+        builder.Property(x => x.Name).HasColumnType(EfConstants.ColumnTypes.NormalText).IsRequired();
     }
 }

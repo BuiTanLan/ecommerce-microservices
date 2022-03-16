@@ -128,8 +128,12 @@ csharp_space_between_square_brackets = false
 ## CA1305
 dotnet_diagnostic.CA1305.severity = None
 
+## CA1063: Implement IDisposable correctly
+dotnet_diagnostic.CA1063.severity = None
+
 ##################################################################################
 ## https://github.com/DotNetAnalyzers/StyleCopAnalyzers/tree/master/documentation
+## https://documentation.help/StyleCop/StyleCop.html
 ## StyleCop.Analyzers
 ##
 
@@ -228,8 +232,16 @@ dotnet_diagnostic.SA1401.severity = None
 # A C# partial element is missing a documentation header.
 dotnet_diagnostic.SA1601.severity = None
 
+# A <param> tag within a C# element’s documentation header is empty.
+dotnet_diagnostic.SA1614.severity = None
+
 # A C# element is missing documentation for its return value.
 dotnet_diagnostic.SA1615.severity = None
+
+# The <returns> tag within a C# element’s documentation header is empty.
+dotnet_diagnostic.SA1616.severity = None
+
+
 
 ##################################################################################
 ##
@@ -261,6 +273,9 @@ dotnet_diagnostic.S125.severity = None
 dotnet_diagnostic.S112.severity = None
 
 dotnet_diagnostic.S3903.severity = None
+
+# S3881 IDisposable should be implemented correctly
+dotnet_diagnostic.S3881.severity = None
 
 ##################################################################################
 ## https://github.com/meziantou/Meziantou.Analyzer/tree/main/docs

@@ -1,6 +1,5 @@
 using ECommerce.Services.Identity.Shared.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ECommerce.Services.Identity.Shared.Data.EntityConfigurations;
@@ -12,8 +11,7 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
         builder.ToTable("RefreshTokens");
 
         builder.Property<Guid>("Id")
-            .ValueGeneratedOnAdd()
-            .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            .ValueGeneratedOnAdd();
         builder.HasKey("Id");
 
         builder.HasIndex(x => new { x.Token, x.UserId }).IsUnique();

@@ -1,9 +1,7 @@
-using BuildingBlocks.Core.Domain.Exceptions;
-using BuildingBlocks.Exception;
-using BuildingBlocks.Exception.Types;
-using BuildingBlocks.Validation;
 using Hellang.Middleware.ProblemDetails;
-using Microsoft.AspNetCore.Mvc;
+using MicroBootstrap.Core.Domain.Exceptions;
+using MicroBootstrap.Core.Exception.Types;
+using MicroBootstrap.Validation;
 using Newtonsoft.Json;
 
 namespace Catalogs.Api.Extensions.ServiceCollectionExtensions;

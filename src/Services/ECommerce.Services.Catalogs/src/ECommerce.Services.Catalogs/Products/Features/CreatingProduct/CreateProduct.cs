@@ -1,9 +1,5 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
-using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Exception;
-using BuildingBlocks.IdsGenerator;
 using ECommerce.Services.Catalogs.Brands.Exceptions.Application;
 using ECommerce.Services.Catalogs.Categories.Exceptions.Domain;
 using ECommerce.Services.Catalogs.Products.Dtos;
@@ -13,6 +9,9 @@ using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Shared.Extensions;
 using ECommerce.Services.Catalogs.Suppliers.Exceptions.Application;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Exception;
+using MicroBootstrap.Core.IdsGenerator;
 
 namespace ECommerce.Services.Catalogs.Products.Features.CreatingProduct;
 

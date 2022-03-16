@@ -1,5 +1,5 @@
-using BuildingBlocks.Core.Domain.Events;
 using ECommerce.Services.Customers;
+using MicroBootstrap.Abstractions.Core.Domain.Events;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Customers.Api;

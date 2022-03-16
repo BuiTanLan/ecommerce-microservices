@@ -1,16 +1,20 @@
-using BuildingBlocks.Caching;
-using BuildingBlocks.Core.Extensions;
-using BuildingBlocks.CQRS;
-using BuildingBlocks.Email;
-using BuildingBlocks.IdsGenerator;
-using BuildingBlocks.Logging;
-using BuildingBlocks.Messaging;
-using BuildingBlocks.Messaging.Outbox.EF;
-using BuildingBlocks.Messaging.Transport.Rabbitmq;
-using BuildingBlocks.Monitoring;
-using BuildingBlocks.Scheduling.Internal;
-using BuildingBlocks.Validation;
-using BuildingBlocks.Web.Extensions;
+using MicroBootstrap.Caching.InMemory;
+using MicroBootstrap.Core.Caching;
+using MicroBootstrap.Core.Extensions.Configuration;
+using MicroBootstrap.Core.Extensions.DependencyInjection;
+using MicroBootstrap.Core.IdsGenerator;
+using MicroBootstrap.Core.Persistence.EfCore;
+using MicroBootstrap.CQRS;
+using MicroBootstrap.Email;
+using MicroBootstrap.Logging;
+using MicroBootstrap.Messaging;
+using MicroBootstrap.Messaging.Postgres.Extensions;
+using MicroBootstrap.Messaging.Transport.Rabbitmq;
+using MicroBootstrap.Monitoring;
+using MicroBootstrap.Persistence.EfCore.Postgres;
+using MicroBootstrap.Scheduling.Internal;
+using MicroBootstrap.Scheduling.Internal.Extensions;
+using MicroBootstrap.Validation;
 
 namespace ECommerce.Services.Catalogs.Shared.Extensions.ServiceCollectionExtensions;
 
@@ -28,12 +32,11 @@ public static class ServiceCollection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         SnowFlakIdGenerator.Configure(1);
-        services.AddCore();
+        services.AddCore(configuration);
 
-        services.AddMessaging(configuration)
-            .AddEntityFrameworkOutbox<OutboxDataContext>(configuration, Assembly.GetExecutingAssembly());
+        services.AddPostgresMessaging(configuration);
 
-        services.AddInternalScheduler<InternalMessageDbContext>(configuration, Assembly.GetExecutingAssembly());
+        services.AddInternalScheduler(configuration);
 
         services.AddRabbitMqTransport(configuration);
 
@@ -70,8 +73,8 @@ public static class ServiceCollection
         services.AddCustomValidators(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-        services.AddCachingRequestPolicies(new List<Assembly> { Assembly.GetExecutingAssembly() });
-        services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
+        services.AddCustomInMemoryCache(configuration)
+            .AddCachingRequestPolicies(Assembly.GetExecutingAssembly());
 
         return services;
     }

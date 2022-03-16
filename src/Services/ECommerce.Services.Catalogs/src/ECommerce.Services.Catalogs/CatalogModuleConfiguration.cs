@@ -56,7 +56,7 @@ public static class CatalogModuleConfiguration
         IWebHostEnvironment environment,
         ILogger logger)
     {
-        app.UseInfrastructure();
+        await app.UseInfrastructure(environment, logger);
 
         await app.ApplyDatabaseMigrations(logger);
         await app.SeedData(logger, environment);

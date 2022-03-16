@@ -1,5 +1,5 @@
-using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Identity.Users.Features.RegisteringUser;
+using MicroBootstrap.Abstractions.CQRS.Command;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

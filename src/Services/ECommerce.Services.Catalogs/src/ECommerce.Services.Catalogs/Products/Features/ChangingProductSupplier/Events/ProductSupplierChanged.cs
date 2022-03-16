@@ -1,6 +1,6 @@
-using BuildingBlocks.Core.Domain.Events.Internal;
 using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Suppliers;
+using MicroBootstrap.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Catalogs.Products.Features.ChangingProductSupplier.Events;
 

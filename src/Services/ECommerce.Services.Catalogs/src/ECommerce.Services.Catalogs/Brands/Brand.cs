@@ -1,10 +1,10 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Model;
 using ECommerce.Services.Catalogs.Brands.Exceptions.Domain;
+using MicroBootstrap.Core.Domain.Model;
 
 namespace ECommerce.Services.Catalogs.Brands;
 
-public class Brand : AggregateRoot<BrandId>
+public class Brand : Aggregate<BrandId>
 {
     public string Name { get; private set; } = null!;
 

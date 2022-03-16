@@ -1,4 +1,4 @@
-using BuildingBlocks.CQRS.Query;
+using MicroBootstrap.Abstractions.CQRS.Query;
 
 namespace ECommerce.Services.Catalogs.Products.Features.GettingProductsView;
 

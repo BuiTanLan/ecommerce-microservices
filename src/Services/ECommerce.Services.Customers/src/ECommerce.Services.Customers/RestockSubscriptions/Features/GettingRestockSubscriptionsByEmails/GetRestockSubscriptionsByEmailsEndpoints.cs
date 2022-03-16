@@ -1,7 +1,7 @@
 using Ardalis.ApiEndpoints;
 using Ardalis.GuardClauses;
-using BuildingBlocks.CQRS.Query;
 using ECommerce.Services.Customers.RestockSubscriptions.Dtos;
+using MicroBootstrap.Abstractions.CQRS.Query;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptionsByEmails;

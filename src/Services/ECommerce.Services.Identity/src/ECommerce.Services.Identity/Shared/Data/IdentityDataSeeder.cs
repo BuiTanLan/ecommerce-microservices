@@ -1,6 +1,5 @@
-using BuildingBlocks.Core.Persistence;
-using BuildingBlocks.EFCore;
 using ECommerce.Services.Identity.Shared.Models;
+using MicroBootstrap.Abstractions.Persistence;
 using Microsoft.AspNetCore.Identity;
 
 namespace ECommerce.Services.Identity.Shared.Data;

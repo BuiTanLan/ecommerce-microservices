@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Domain.Model;
+using MicroBootstrap.Abstractions.Core.Domain.Model;
 
 namespace ECommerce.Services.Catalogs.Brands;
 

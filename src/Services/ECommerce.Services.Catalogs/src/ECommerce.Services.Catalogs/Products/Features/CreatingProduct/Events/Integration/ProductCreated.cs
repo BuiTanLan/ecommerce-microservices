@@ -1,5 +1,7 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Events.External;
+using MicroBootstrap.Abstractions.Core.Domain.Events.External;
+using MicroBootstrap.Core.Domain.Events.External;
+using MicroBootstrap.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Events.Integration;
 

@@ -1,8 +1,8 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.ProcessingRestockNotification;
-using ECommerce.Services.Customers.RestockSubscriptions.Features.SendingRestockNotification;
+using MicroBootstrap.Abstractions.Core.Domain.Events.External;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Domain.Events.External;
 
 namespace ECommerce.Services.Customers.Products.Features.ReplenishingProductStock.Events.External;
 

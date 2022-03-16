@@ -1,7 +1,7 @@
 using System.Security.Claims;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Jwt;
 using ECommerce.Services.Identity.Shared.Models;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Security.Jwt;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 

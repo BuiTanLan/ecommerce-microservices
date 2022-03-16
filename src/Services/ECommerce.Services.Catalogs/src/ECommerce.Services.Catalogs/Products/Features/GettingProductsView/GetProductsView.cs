@@ -1,8 +1,8 @@
 using AutoMapper;
-using BuildingBlocks.Core.Persistence;
-using BuildingBlocks.CQRS.Query;
 using Dapper;
 using ECommerce.Services.Catalogs.Products.Models;
+using MicroBootstrap.Abstractions.CQRS.Query;
+using MicroBootstrap.Abstractions.Persistence;
 
 namespace ECommerce.Services.Catalogs.Products.Features.GettingProductsView;
 

@@ -1,9 +1,9 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.UpdatingMultipleMongoRestockSubscriptionReadModel;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Abstractions.CQRS.Command;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscriptionsByTime;

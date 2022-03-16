@@ -1,4 +1,5 @@
 using ECommerce.Services.Catalogs.Shared.Data;
+using MicroBootstrap.Core.Persistence.EfCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ECommerce.Services.Catalogs.Categories.Data;
@@ -16,7 +17,7 @@ public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category
 
         builder.Ignore(c => c.DomainEvents);
 
-        builder.Property(x => x.Created).HasDefaultValueSql(Constants.DateAlgorithm);
-        builder.Property(x => x.Name).HasColumnType(Constants.ColumnTypes.NormalText).IsRequired();
+        builder.Property(x => x.Created).HasDefaultValueSql(EfConstants.DateAlgorithm);
+        builder.Property(x => x.Name).HasColumnType(EfConstants.ColumnTypes.NormalText).IsRequired();
     }
 }

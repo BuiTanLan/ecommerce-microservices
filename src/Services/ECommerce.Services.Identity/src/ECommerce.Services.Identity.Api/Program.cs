@@ -1,21 +1,33 @@
 using System.Reflection;
-using BuildingBlocks.Jwt;
-using BuildingBlocks.Web;
-using BuildingBlocks.Web.Extensions.ApplicationBuilderExtensions;
-using BuildingBlocks.Web.Extensions.ServiceCollectionExtensions;
 using ECommerce.Services.Identity;
 using ECommerce.Services.Identity.Api.Extensions.ApplicationBuilderExtensions;
 using ECommerce.Services.Identity.Api.Extensions.ServiceCollectionExtensions;
 using Hellang.Middleware.ProblemDetails;
-using Microsoft.AspNetCore.Builder;
+using MicroBootstrap.Logging;
+using MicroBootstrap.Security.Jwt;
+using MicroBootstrap.Swagger;
+using MicroBootstrap.Web;
+using MicroBootstrap.Web.Extensions.ApplicationBuilderExtensions;
+using MicroBootstrap.Web.Extensions.ServiceCollectionExtensions;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 
 // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
 // https://benfoster.io/blog/mvc-to-minimal-apis-aspnet-6/
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseDefaultServiceProvider((env, c) =>
+{
+    // Handling Captive Dependency Problem
+    // https://ankitvijay.net/2020/03/17/net-core-and-di-beware-of-captive-dependency/
+    // https://levelup.gitconnected.com/top-misconceptions-about-dependency-injection-in-asp-net-core-c6a7afd14eb4
+    // https://blog.ploeh.dk/2014/06/02/captive-dependency/
+    if (env.HostingEnvironment.IsDevelopment() || env.HostingEnvironment.IsEnvironment("tests") ||
+        env.HostingEnvironment.IsStaging())
+    {
+        c.ValidateScopes = true;
+    }
+});
 
 builder.Services.AddControllers(options =>
         options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer())))
@@ -26,7 +38,7 @@ builder.AddCompression();
 
 builder.AddCustomProblemDetails();
 
-builder.AddCustomSerilog();
+builder.Host.AddCustomSerilog();
 
 builder.AddCustomSwagger(builder.Configuration, typeof(IdentityRoot).Assembly);
 

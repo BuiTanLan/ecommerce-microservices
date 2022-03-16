@@ -1,12 +1,12 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.ValueObjects;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Exception;
-using BuildingBlocks.IdsGenerator;
 using ECommerce.Services.Customers.Customers.Exceptions.Application;
 using ECommerce.Services.Customers.Customers.Models;
 using ECommerce.Services.Customers.Shared.Clients.Identity;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Domain.ValueObjects;
+using MicroBootstrap.Core.Exception;
+using MicroBootstrap.Core.IdsGenerator;
 
 namespace ECommerce.Services.Customers.Customers.Features.CreatingCustomer;
 

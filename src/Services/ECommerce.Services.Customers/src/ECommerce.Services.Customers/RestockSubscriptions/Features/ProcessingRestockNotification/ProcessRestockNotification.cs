@@ -1,9 +1,9 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.SendingRestockNotification;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.ProcessingRestockNotification;
 
@@ -54,7 +54,7 @@ internal class ProcessRestockNotificationHandler : ICommandHandler<ProcessRestoc
 
             // https://github.com/kgrzybek/modular-monolith-with-ddd#38-internal-processing
             // schedule `SendRestockNotification` for running as a internal command after commenting transaction
-            await _commandProcessor.SendAsync(
+            await _commandProcessor.ScheduleAsync(
                 new SendRestockNotification(restockSubscription.Id, command.CurrentStock),
                 cancellationToken);
         }

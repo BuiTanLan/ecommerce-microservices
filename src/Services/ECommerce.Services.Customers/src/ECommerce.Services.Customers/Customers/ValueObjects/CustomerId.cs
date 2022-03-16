@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Model;
+using MicroBootstrap.Abstractions.Core.Domain.Model;
 
 namespace ECommerce.Services.Customers.Customers.ValueObjects;
 

@@ -1,7 +1,8 @@
-using BuildingBlocks.Core.Persistence;
-using BuildingBlocks.Mongo;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Shared.Data;
+using MicroBootstrap.Abstractions.Persistence;
+using MicroBootstrap.Persistence.EfCore.Postgres;
+using MicroBootstrap.Persistence.Mongo;
 
 namespace ECommerce.Services.Catalogs.Shared.Extensions.ServiceCollectionExtensions;
 

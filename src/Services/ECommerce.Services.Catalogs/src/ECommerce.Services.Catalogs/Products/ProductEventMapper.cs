@@ -1,10 +1,10 @@
-using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Core.Domain.Events.Internal;
 using ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Events.Domain;
 using ECommerce.Services.Catalogs.Products.Features.CreatingProduct.Events.Notification;
 using ECommerce.Services.Catalogs.Products.Features.DebitingProductStock.Events.Domain;
 using ECommerce.Services.Catalogs.Products.Features.ReplenishingProductStock.Events.Domain;
+using MicroBootstrap.Abstractions.Core.Domain.Events;
+using MicroBootstrap.Abstractions.Core.Domain.Events.External;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Catalogs.Products;
 

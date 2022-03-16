@@ -1,5 +1,3 @@
-using BuildingBlocks.Core.Persistence;
-using BuildingBlocks.EFCore;
 using ECommerce.Services.Identity.Identity.Features.GetClaims;
 using ECommerce.Services.Identity.Identity.Features.Login;
 using ECommerce.Services.Identity.Identity.Features.Logout;
@@ -9,6 +7,7 @@ using ECommerce.Services.Identity.Identity.Features.SendEmailVerificationCode;
 using ECommerce.Services.Identity.Identity.Features.VerifyEmail;
 using ECommerce.Services.Identity.Shared.Data;
 using ECommerce.Services.Identity.Shared.Extensions.ServiceCollectionExtensions;
+using MicroBootstrap.Abstractions.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;

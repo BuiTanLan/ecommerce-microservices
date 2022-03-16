@@ -1,9 +1,10 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
-using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.Customers.Features.UpdatingMongoCustomerReadsModel;
 using ECommerce.Services.Customers.Customers.Models;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Customers.Customers.Features.VerifyingCustomer.Events.Domain;
 
@@ -26,6 +27,6 @@ internal class CustomerVerifiedHandler : IDomainEventHandler<CustomerVerified>
 
         var command = _mapper.Map<UpdateMongoCustomerReadsModel>(notification.Customer);
 
-        return _commandProcessor.SendAsync(command, cancellationToken);
+        return _commandProcessor.ScheduleAsync(command, cancellationToken);
     }
 }

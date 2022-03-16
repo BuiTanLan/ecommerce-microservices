@@ -1,6 +1,4 @@
-using BuildingBlocks.CQRS;
-using BuildingBlocks.Web;
-using BuildingBlocks.Web.Extensions;
+using MicroBootstrap.CQRS.Query;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.GettingRestockSubscriptions;
 
@@ -12,29 +10,29 @@ public record GetRestockSubscriptionsRequest : PageRequest
     public DateTime? From { get; init; }
     public DateTime? To { get; init; }
 
-    public static ValueTask<GetRestockSubscriptionsRequest?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
-    {
-        var page = httpContext.Request.Query.Get<int>("Page", 1);
-        var pageSize = httpContext.Request.Query.Get<int>("PageSize", 20);
-        var sorts = httpContext.Request.Query.GetCollection<List<string>>("Sorts");
-        var filters = httpContext.Request.Query.GetCollection<List<FilterModel>>("Filters");
-        var includes = httpContext.Request.Query.GetCollection<List<string>>("Includes");
-        var emails = httpContext.Request.Query.GetCollection<List<string>>("Emails");
-        var from = httpContext.Request.Query.Get<DateTime?>("From", null);
-        var to = httpContext.Request.Query.Get<DateTime?>("To", null);
-
-        var request = new GetRestockSubscriptionsRequest
-        {
-            Page = page,
-            PageSize = pageSize,
-            Sorts = sorts,
-            Filters = filters,
-            Includes = includes,
-            Emails = emails,
-            From = from,
-            To = to,
-        };
-
-        return ValueTask.FromResult<GetRestockSubscriptionsRequest?>(request);
-    }
+    // public static ValueTask<GetRestockSubscriptionsRequest?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
+    // {
+    //     var page = httpContext.Request.Query.Get<int>("Page", 1);
+    //     var pageSize = httpContext.Request.Query.Get<int>("PageSize", 20);
+    //     var sorts = httpContext.Request.Query.GetCollection<List<string>>("Sorts");
+    //     var filters = httpContext.Request.Query.GetCollection<List<FilterModel>>("Filters");
+    //     var includes = httpContext.Request.Query.GetCollection<List<string>>("Includes");
+    //     var emails = httpContext.Request.Query.GetCollection<List<string>>("Emails");
+    //     var from = httpContext.Request.Query.Get<DateTime?>("From", null);
+    //     var to = httpContext.Request.Query.Get<DateTime?>("To", null);
+    //
+    //     var request = new GetRestockSubscriptionsRequest
+    //     {
+    //         Page = page,
+    //         PageSize = pageSize,
+    //         Sorts = sorts,
+    //         Filters = filters,
+    //         Includes = includes,
+    //         Emails = emails,
+    //         From = from,
+    //         To = to,
+    //     };
+    //
+    //     return ValueTask.FromResult<GetRestockSubscriptionsRequest?>(request);
+    // }
 }

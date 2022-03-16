@@ -1,10 +1,11 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
-using BuildingBlocks.Core.Domain.Events.Internal;
-using BuildingBlocks.CQRS.Command;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.UpdatingMongoRestockSubscriptionReadModel;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscription;
 

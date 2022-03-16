@@ -1,9 +1,9 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Utils;
 using ECommerce.Services.Identity.Identity.Dtos;
 using ECommerce.Services.Identity.Identity.Features.RefreshingToken;
 using ECommerce.Services.Identity.Shared.Data;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Core.Extensions.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Identity.Identity.Features.GenerateRefreshToken;

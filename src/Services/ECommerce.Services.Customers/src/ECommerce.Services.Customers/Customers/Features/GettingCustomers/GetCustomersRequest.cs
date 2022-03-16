@@ -1,7 +1,5 @@
-using BuildingBlocks.CQRS;
-using BuildingBlocks.Web;
-using BuildingBlocks.Web.Extensions;
 using ECommerce.Services.Customers.Customers.Models;
+using MicroBootstrap.CQRS.Query;
 
 namespace ECommerce.Services.Customers.Customers.Features.GettingCustomers;
 
@@ -11,26 +9,26 @@ public record GetCustomersRequest : PageRequest
 {
     public CustomerState CustomerState { get; init; } = CustomerState.None;
 
-    // For handling in minimal api
-    public static ValueTask<GetCustomersRequest?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
-    {
-        var page = httpContext.Request.Query.Get<int>("Page", 1);
-        var pageSize = httpContext.Request.Query.Get<int>("PageSize", 20);
-        var customerState = httpContext.Request.Query.Get<CustomerState>("CustomerState", CustomerState.None);
-        var sorts = httpContext.Request.Query.GetCollection<List<string>>("Sorts");
-        var filters = httpContext.Request.Query.GetCollection<List<FilterModel>>("Filters");
-        var includes = httpContext.Request.Query.GetCollection<List<string>>("Includes");
-
-        var request = new GetCustomersRequest()
-        {
-            Page = page,
-            PageSize = pageSize,
-            CustomerState = customerState,
-            Sorts = sorts,
-            Filters = filters,
-            Includes = includes
-        };
-
-        return ValueTask.FromResult<GetCustomersRequest?>(request);
-    }
+    // // For handling in minimal api
+    // public static ValueTask<GetCustomersRequest?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
+    // {
+    //     var page = httpContext.Request.Query.Get<int>("Page", 1);
+    //     var pageSize = httpContext.Request.Query.Get<int>("PageSize", 20);
+    //     var customerState = httpContext.Request.Query.Get<CustomerState>("CustomerState", CustomerState.None);
+    //     var sorts = httpContext.Request.Query.GetCollection<List<string>>("Sorts");
+    //     var filters = httpContext.Request.Query.GetCollection<List<FilterModel>>("Filters");
+    //     var includes = httpContext.Request.Query.GetCollection<List<string>>("Includes");
+    //
+    //     var request = new GetCustomersRequest()
+    //     {
+    //         Page = page,
+    //         PageSize = pageSize,
+    //         CustomerState = customerState,
+    //         Sorts = sorts,
+    //         Filters = filters,
+    //         Includes = includes
+    //     };
+    //
+    //     return ValueTask.FromResult<GetCustomersRequest?>(request);
+    // }
 }

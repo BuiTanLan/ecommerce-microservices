@@ -1,11 +1,11 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
-using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Catalogs.Products.Dtos;
 using ECommerce.Services.Catalogs.Products.Exceptions.Application;
 using ECommerce.Services.Catalogs.Shared.Contracts;
 using ECommerce.Services.Catalogs.Shared.Extensions;
+using MicroBootstrap.Abstractions.CQRS.Query;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Catalogs.Products.Features.GettingProductById;
 

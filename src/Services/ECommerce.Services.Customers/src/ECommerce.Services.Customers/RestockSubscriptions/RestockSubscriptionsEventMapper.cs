@@ -1,6 +1,6 @@
-using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Core.Domain.Events.External;
-using BuildingBlocks.Core.Domain.Events.Internal;
+using MicroBootstrap.Abstractions.Core.Domain.Events;
+using MicroBootstrap.Abstractions.Core.Domain.Events.External;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions;
 

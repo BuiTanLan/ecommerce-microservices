@@ -1,7 +1,8 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Events.Internal;
 using ECommerce.Services.Catalogs.Products.ValueObjects;
 using ECommerce.Services.Catalogs.Shared.Contracts;
+using MicroBootstrap.Abstractions.Core.Domain.Events.Internal;
+using MicroBootstrap.Core.Domain.Events.Internal;
 
 namespace ECommerce.Services.Catalogs.Products.Features.DebitingProductStock.Events.Domain;
 

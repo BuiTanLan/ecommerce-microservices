@@ -1,13 +1,6 @@
-using System;
-using BuildingBlocks.Exception;
-using BuildingBlocks.Exception.Types;
-using BuildingBlocks.Validation;
 using Hellang.Middleware.ProblemDetails;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using MicroBootstrap.Core.Exception.Types;
+using MicroBootstrap.Validation;
 using Newtonsoft.Json;
 
 namespace ECommerce.Services.Identity.Api.Extensions.ServiceCollectionExtensions;

@@ -1,11 +1,9 @@
 using Ardalis.GuardClauses;
 using AutoMapper;
-using BuildingBlocks.CQRS.Query;
-using BuildingBlocks.Exception;
-using ECommerce.Services.Identity.Shared.Exceptions;
 using ECommerce.Services.Identity.Shared.Models;
 using ECommerce.Services.Identity.Users.Dtos;
-using FastEndpoints.Validation;
+using FluentValidation;
+using MicroBootstrap.Abstractions.CQRS.Query;
 using Microsoft.AspNetCore.Identity;
 
 namespace ECommerce.Services.Identity.Users.Features.GettingUerByEmail;

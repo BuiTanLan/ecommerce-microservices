@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Abstractions\MicroBootstrap.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Core\MicroBootstrap.Core.csproj" />
+    <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.CQRS\MicroBootstrap.CQRS.csproj" />
+    <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Logging\MicroBootstrap.Logging.csproj" />
+    <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Messaging.Postgres\MicroBootstrap.Messaging.Postgres.csproj" />
+    <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Messaging.Transport.Rabbitmq\MicroBootstrap.Messaging.Transport.Rabbitmq.csproj" />
+    <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Persistence.EfCore.Postgres\MicroBootstrap.Persistence.EfCore.Postgres.csproj" />
+    <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Scheduling.Internal\MicroBootstrap.Scheduling.Internal.csproj" />
+    <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Validation\MicroBootstrap.Validation.csproj" />
+    <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Web\MicroBootstrap.Web.csproj" />
+  </ItemGroup>
+</Project>

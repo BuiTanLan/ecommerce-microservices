@@ -1,6 +1,6 @@
-using BuildingBlocks.Web.Module;
 using ECommerce.Services.Customers.Shared.Extensions.ApplicationBuilderExtensions;
 using ECommerce.Services.Customers.Shared.Extensions.ServiceCollectionExtensions;
+using MicroBootstrap.Web.Module;
 
 namespace ECommerce.Services.Customers;
 
@@ -19,7 +19,7 @@ public class CustomersModuleConfiguration : IRootModuleDefinition
 
     public async Task<WebApplication> ConfigureModule(WebApplication app)
     {
-        app.UseInfrastructure();
+        await app.UseInfrastructure(app.Logger);
 
         await app.ApplyDatabaseMigrations(app.Logger);
         await app.SeedData(app.Logger, app.Environment);

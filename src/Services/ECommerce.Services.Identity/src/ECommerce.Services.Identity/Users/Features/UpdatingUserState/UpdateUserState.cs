@@ -1,14 +1,12 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Exception;
-using BuildingBlocks.Messaging.Outbox;
-using ECommerce.Services.Identity.Identity.Exceptions;
 using ECommerce.Services.Identity.Shared.Exceptions;
 using ECommerce.Services.Identity.Shared.Models;
 using FluentValidation;
-using MediatR;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Abstractions.Messaging.Outbox;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Identity.Users.Features.UpdatingUserState;
 

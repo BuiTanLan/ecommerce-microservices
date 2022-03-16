@@ -1,8 +1,7 @@
-using BuildingBlocks.Core.Domain.Exceptions;
-using BuildingBlocks.Exception;
-using BuildingBlocks.Exception.Types;
-using BuildingBlocks.Validation;
 using Hellang.Middleware.ProblemDetails;
+using MicroBootstrap.Core.Domain.Exceptions;
+using MicroBootstrap.Core.Exception.Types;
+using MicroBootstrap.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 

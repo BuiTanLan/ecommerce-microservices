@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.CQRS.Command;
-using BuildingBlocks.Web.MinimalApi;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscriptionsByTime;
+using MicroBootstrap.Abstractions.CQRS.Command;
+using MicroBootstrap.Web.MinimalApi;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscription;
 
@@ -22,7 +22,7 @@ public class DeleteRestockSubscriptionByTimeEndpoint : IMinimalEndpointDefinitio
 
     [Authorize(Roles = CustomersConstants.Role.Admin)]
     private static async Task<IResult> DeleteRestockSubscriptionByTime(
-        [FromBody]DeleteRestockSubscriptionByTimeRequest request,
+        DeleteRestockSubscriptionByTimeRequest request,
         ICommandProcessor commandProcessor,
         CancellationToken cancellationToken)
     {

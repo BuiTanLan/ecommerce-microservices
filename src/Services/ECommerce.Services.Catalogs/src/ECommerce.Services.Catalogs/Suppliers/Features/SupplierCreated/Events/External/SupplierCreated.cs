@@ -1,5 +1,5 @@
-using BuildingBlocks.Core.Domain.Events;
-using BuildingBlocks.Core.Domain.Events.External;
+using MicroBootstrap.Abstractions.Core.Domain.Events;
+using MicroBootstrap.Core.Domain.Events.External;
 
 namespace ECommerce.Services.Catalogs.Suppliers.Features.SupplierCreated.Events.External;
 

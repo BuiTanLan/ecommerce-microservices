@@ -1,17 +1,18 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Core.Domain.Model;
-using BuildingBlocks.Core.Domain.ValueObjects;
-using BuildingBlocks.Exception;
 using ECommerce.Services.Customers.Customers.ValueObjects;
 using ECommerce.Services.Customers.RestockSubscriptions.Exceptions.Domain;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.CreatingRestockSubscription.Events.Domain;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.DeletingRestockSubscription;
 using ECommerce.Services.Customers.RestockSubscriptions.Features.ProcessingRestockNotification;
 using ECommerce.Services.Customers.RestockSubscriptions.ValueObjects;
+using MicroBootstrap.Abstractions.Core.Domain.Model;
+using MicroBootstrap.Core.Domain.Model;
+using MicroBootstrap.Core.Domain.ValueObjects;
+using MicroBootstrap.Core.Exception;
 
 namespace ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 
-public class RestockSubscription : AggregateRoot<RestockSubscriptionId>, IHaveSoftDelete
+public class RestockSubscription : Aggregate<RestockSubscriptionId>, IHaveSoftDelete
 {
     public CustomerId CustomerId { get; private set; } = null!;
     public Email Email { get; private set; } = null!;

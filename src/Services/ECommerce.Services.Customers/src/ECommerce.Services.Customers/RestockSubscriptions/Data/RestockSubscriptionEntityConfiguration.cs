@@ -1,8 +1,8 @@
-using BuildingBlocks.Core.Domain.ValueObjects;
 using ECommerce.Services.Customers.Customers.Models;
-using ECommerce.Services.Customers.RestockSubscriptions.Models;
 using ECommerce.Services.Customers.RestockSubscriptions.Models.Write;
 using ECommerce.Services.Customers.Shared.Data;
+using MicroBootstrap.Core.Domain.ValueObjects;
+using MicroBootstrap.Core.Persistence.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -37,12 +37,12 @@ public class RestockSubscriptionEntityConfiguration : IEntityTypeConfiguration<R
                 .HasConversion(id => id.Value, id => id);
 
             p.Property(x => x.Name)
-                .HasMaxLength(Constants.Lenght.Normal);
+                .HasMaxLength(EfConstants.Lenght.Normal);
         });
 
         builder.Property(x => x.Email)
             .HasConversion(email => email.Value, email => Email.Create(email));
 
-        builder.Property(x => x.Created).HasDefaultValueSql(Constants.DateAlgorithm);
+        builder.Property(x => x.Created).HasDefaultValueSql(EfConstants.DateAlgorithm);
     }
 }

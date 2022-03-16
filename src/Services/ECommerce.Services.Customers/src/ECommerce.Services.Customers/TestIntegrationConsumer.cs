@@ -1,4 +1,4 @@
-using BuildingBlocks.Core.Domain.Events.External;
+using MicroBootstrap.Abstractions.Core.Domain.Events.External;
 
 namespace ECommerce.Services.Customers;
 
