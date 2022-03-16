@@ -92,7 +92,7 @@ services:
     #   - MONGO_INITDB_ROOT_USERNAME=root
     #   - MONGO_INITDB_ROOT_PASSWORD=secret
     ports:
-      - 27017:${MONGODB_PORT}
+      - ${MONGODB_PORT}:27017
     networks:
       - e-commerce
 
