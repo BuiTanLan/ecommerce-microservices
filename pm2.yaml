@@ -1,30 +1,26 @@
+# https://stackoverflow.com/a/42619477/581476
+# https://pm2.keymetrics.io/docs/usage/application-declaration/
 apps:
-  - name: feedr-gateway
-    script: dotnet run
-    cwd: src/Gateway/FeedR.Gateway
-    max_restarts: 3
+  - name: api-gateway
+    cwd: src\ApiGateway\ECommerce.ApiGateway\ECommerce.ApiGateway\
+    script: dotnet
+    args: run
+    autorestart: false
 
-  - name: feedr-aggregator
-    script: dotnet run
-    cwd: src/Aggregator/FeedR.Aggregator
-    max_restarts: 3
+  - name: catalogs-service
+    cwd: src\Services\ECommerce.Services.Catalogs\ECommerce.Services.Catalogs.Api\
+    script: dotnet 
+    args: run
+    autorestart: false
 
-  - name: feedr-notifier
-    script: dotnet run
-    cwd: src/Notifier/FeedR.Notifier
-    max_restarts: 3
+  - name: customers-service
+    cwd: src\Services\ECommerce.Services.Customers\ECommerce.Services.Customers.Api\
+    script: dotnet
+    args: run
+    autorestart: false
 
-  - name: feedr-feeds-news
-    script: dotnet run
-    cwd: src/Feeds/News/FeedR.Feeds.News
-    max_restarts: 3
-
-  - name: feedr-feeds-quotes
-    script: dotnet run
-    cwd: src/Feeds/Quotes/FeedR.Feeds.Quotes
-    max_restarts: 3
-
-  - name: feedr-feeds-weather
-    script: dotnet run
-    cwd: src/Feeds/Weather/FeedR.Feeds.Weather
-    max_restarts: 3
+  - name: Identity-service
+    cwd: src\Services\ECommerce.Services.Identity\ECommerce.Services.Identity.Api\
+    script: dotnet
+    args: run
+    autorestart: false

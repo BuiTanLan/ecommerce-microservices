@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Web\MicroBootstrap.Web.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Web\MicroBootstrap.Web.csproj" />
     <ProjectReference Include="..\ECommerce.Services.Customers\ECommerce.Services.Customers.csproj" />
   </ItemGroup>
 

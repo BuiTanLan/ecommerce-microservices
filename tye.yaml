@@ -1,0 +1,33 @@
+name: e-commerce
+services:
+- name: api-gateway
+  project: src\ApiGateway\ECommerce.ApiGateway\ECommerce.ApiGateway\ECommerce.ApiGateway.csproj
+  bindings:
+  - port: 3000
+  env:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: Development
+      
+- name: catalogs-service
+  project: src\Services\ECommerce.Services.Catalogs\ECommerce.Services.Catalogs.Api\ECommerce.Services.Catalogs.Api.csproj
+  bindings:
+  - port: 4000
+  env:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: Development
+
+- name: customers-service
+  project: src\Services\ECommerce.Services.Customers\ECommerce.Services.Customers.Api\ECommerce.Services.Customers.Api.csproj
+  bindings:
+  - port: 8000
+  env:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: Development
+    
+- name: Identity-service
+  project: src\Services\ECommerce.Services.Identity\ECommerce.Services.Identity.Api\ECommerce.Services.Identity.Api.csproj
+  bindings:
+  - port: 7000
+  env:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: Development

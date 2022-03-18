@@ -1,13 +1,15 @@
 # ECommerce Microservices
 
-`ECommerce Microservices` is a fictional eCommerce, based on different software architecture and technologies like Microservices Architecture, Vertical Slice Architecture, CQRS pattern, Domain Driven Design, Event Driven Architecture, Inbox and Outbox Pattern and using Postgres for write side and MongoDb for read side and etc. 
+`ECommerce Microservices` is a fictional eCommerce, based on different software architecture and technologies like Microservices Architecture, Vertical Slice Architecture, CQRS pattern, Domain Driven Design, Event Driven Architecture, Inbox, Outbox Pattern and using Postgres for write side and MongoDb.
+
+In developing this application I try to use new features in .NET 6 and C# 10 based on `Minimal APIs` and .Net Core.
 
 > For `building blocks` or `cross cutting concerns` part of this application, I used my [micro-bootstrap](https://github.com/mehdihadeli/micro-bootstrap) library. it is has some infrastructure code for developing distributed applications. 
 
 For reading code easier, I used [GitHub SubModule](https://www.atlassian.com/git/tutorials/git-submodule) to create a link to microbootsrap library and use it here. You can also use, its [Nuget Packages](https://www.nuget.org/packages?q=microbootstrap) in your applications for easy to use.
 
 
-This project is still `in-progress` and I update it to the latest technologies continuously.
+This project is still `In-Progress` and I update it to the latest technologies continuously.
 
 
 # Support ⭐
@@ -28,7 +30,9 @@ Thanks a bunch for supporting me!
 - [Application Structure](#application-structure)
 - [Prerequisites](#prerequisites)
 - [How to Run](#how-to-run)
+  - [Using PM2](#using-pm2)
   - [Using Docker-Compose](#using-docker-compose)
+  - [Using Tye](#using-tye)
   - [Using Kubernetes](#using-kubernetes)
 - [Contribution](#contribution)
 - [License](#license)
@@ -197,7 +201,41 @@ For Running this application we could run our microservices one by one in our De
 
 For testing apis I used [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin of VSCode its related file scenarios are available in [_httpclients](\_httpclients) folder. also after running api you have access to `swagger open api` for all microservices in `/swagger` route path.
 
-In this application I use a `fake email sender` with name of [ethereal](https://ethereal.email/) as a SMTP provider for sending email. after sending email by the application you can see the list of sent emails in [ethereal messages panel](https://ethereal.email/messages). My temp username and password is available inner the all of [appsettings file](./src/Services/ECommerce.Services.Customers/src/ECommerce.Services.Customers.Api/appsettings.json)
+In this application I use a `fake email sender` with name of [ethereal](https://ethereal.email/) as a SMTP provider for sending email. after sending email by the application you can see the list of sent emails in [ethereal messages panel](https://ethereal.email/messages). My temp username and password is available inner the all of [appsettings file](./src/Services/ECommerce.Services.Customers/src/ECommerce.Services.Customers.Api/appsettings.json).
+
+### Using PM2
+For ruining all microservices and control on their running mode we could use [PM2](https://pm2.keymetrics.io/) tools. for installing `pm2` on our system globally we should use this command:
+
+``` bash
+npm install pm2 -g
+```
+
+After installing pm2 on our machine, we could run all of our microservices with running bellow command in root of the application with using [pm2.yaml](./pm2.yaml) file.
+
+``` bash
+pm2 start pm2.yaml
+```
+
+Some PM2 useful commands:
+
+``` bash
+pm2 -h
+
+pm2 list
+
+pm2 logs
+
+pm2 monit
+
+pm2 info pm2.yaml
+
+pm2 stop pm2.yaml
+
+pm2 restart pm2.yaml
+
+pm2 delete pm2.yaml
+```
+
 
 ### Using Docker-Compose
 
@@ -235,6 +273,30 @@ docker ps
 // to show all dockers (also stopped)
 docker ps -a
 ```
+### Using Tye
+We could run our microservices with new microsoft tools with name of [Project Tye](https://devblogs.microsoft.com/dotnet/introducing-project-tye/). 
+
+Project Tye is an experimental developer tool that makes developing, testing, and deploying microservices and distributed applications easier.
+
+For installing `Tye` globally on our machine we should use this command:
+
+``` bash
+dotnet tool install -g Microsoft.Tye --version "0.11.0-alpha.22111.1"
+```
+OR if you already have Tye installed and want to update:
+
+``` bash
+dotnet tool update -g Microsoft.Tye
+```
+
+After installing tye, we could run our microservices with following command in the root of our project:
+
+``` bash
+tye run
+```
+One of key feature from tye run is a dashboard to view the state of your application. Navigate to [http://localhost:8000](http://localhost:8000) to see the dashboard running.
+
+Also We could run some [docker images](https://devblogs.microsoft.com/dotnet/introducing-project-tye/#adding-external-dependencies-redis) with Tye and Tye makes the process of deploying your application to [Kubernetes](https://devblogs.microsoft.com/dotnet/introducing-project-tye/#deploying-to-kubernetes) very simple with minimal knowlege or configuration required.
 
 ### Using Kubernetes
 

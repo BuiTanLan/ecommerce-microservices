@@ -1,5 +1,0 @@
-@url = http://localhost:500
-@categoryId = 00000000-0000-0000-0000-000000000022
-@brandId = d3d6c421-8b3c-4b6d-9ee9-1ac56d683301
-@SupplierId = 
-
