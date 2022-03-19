@@ -195,6 +195,142 @@ For each microservice for implementing vertical slice architecture I have two pr
 - `ECommerce.Services.Catalogs.Api` is responsible for configuring our `web api` and running the application on top of .net core and actually serving our slices to outside of world.
 - `ECommerce.Services.Catalogs` project that we putting all features splitting based on our functionality as some slices here for example we put all [Features or Slices](src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Products/Features/) related to `product` functionalities in [Products](src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Products/) folder, also we have a [Shared Folder](src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Shared/) that contains some infrastructure things will share between all slices (for example [Data-Context](src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Shared/Data/CatalogDbContext.cs), [Extensions](src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Shared/Extensions)). 
 
+In vertical slice flow, we treat each request as a `slice`. For example for [CreatingProduct](src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Products/Features/CreatingProduct/) feature or slice, Our flow will start with a `EndPoint` with name [CreateProductEndpoint](src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Products/Features/CreatingProduct/CreateProductEndpoint.cs) and inner this endpoint we handle the http request from out side of world and pass our request data with a mediator gateway to corresponding handler.
+
+``` csharp
+// POST api/v1/catalog/products
+public static class CreateProductEndpoint
+{
+    internal static IEndpointRouteBuilder MapCreateProductsEndpoint(this IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapPost($"{ProductsConfigs.ProductsPrefixUri}", CreateProducts)
+            .WithTags(ProductsConfigs.Tag)
+            .RequireAuthorization()
+            .Produces<CreateProductResult>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status400BadRequest)
+            .WithName("CreateProduct")
+            .WithDisplayName("Create a new product.");
+
+        return endpoints;
+    }
+
+    private static async Task<IResult> CreateProducts(
+        CreateProductRequest request,
+        IIdGenerator<long> idGenerator,
+        ICommandProcessor commandProcessor,
+        IMapper mapper,
+        CancellationToken cancellationToken)
+    {
+        Guard.Against.Null(request, nameof(request));
+
+        var command = mapper.Map<CreateProduct>(request);
+        var result = await commandProcessor.SendAsync(command, cancellationToken);
+
+        return Results.CreatedAtRoute("GetProductById", new { id = result.Product.Id }, result);
+    }
+}
+```
+
+In this endpoint we use CQRS and pass [CreateProduct](src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Products/Features/CreatingProduct/CreateProduct.cs) command to our command processor for executing and route to corresponding [CreateProductHandler](https://github.com/mehdihadeli/e-commerce-microservices/blob/main/src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Products/Features/CreatingProduct/CreateProduct.cs#L88) command handler.
+
+``` csharp
+public record CreateProduct(
+    string Name,
+    decimal Price,
+    int Stock,
+    int RestockThreshold,
+    int MaxStockThreshold,
+    ProductStatus Status,
+    int Width,
+    int Height,
+    int Depth,
+    string Size,
+    ProductColor Color,
+    long CategoryId,
+    long SupplierId,
+    long BrandId,
+    string? Description = null,
+    IEnumerable<CreateProductImageRequest>? Images = null) : ITxCreateCommand<CreateProductResult>
+{
+    public long Id { get; init; } = SnowFlakIdGenerator.NewId();
+}
+
+public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProductResult>
+{
+    private readonly ILogger<CreateProductHandler> _logger;
+    private readonly IMapper _mapper;
+    private readonly ICatalogDbContext _catalogDbContext;
+
+    public CreateProductHandler(
+        ICatalogDbContext catalogDbContext,
+        IMapper mapper,
+        ILogger<CreateProductHandler> logger)
+    {
+        _logger = Guard.Against.Null(logger, nameof(logger));
+        _mapper = Guard.Against.Null(mapper, nameof(mapper));
+        _catalogDbContext = Guard.Against.Null(catalogDbContext, nameof(catalogDbContext));
+    }
+
+    public async Task<CreateProductResult> Handle(
+        CreateProduct command,
+        CancellationToken cancellationToken)
+    {
+        Guard.Against.Null(command, nameof(command));
+
+        var images = command.Images?.Select(x =>
+            new ProductImage(SnowFlakIdGenerator.NewId(), x.ImageUrl, x.IsMain, command.Id)).ToList();
+
+        var category = await _catalogDbContext.FindCategoryAsync(command.CategoryId);
+        Guard.Against.NotFound(category, new CategoryDomainException(command.CategoryId));
+
+        var brand = await _catalogDbContext.FindBrandAsync(command.BrandId);
+        Guard.Against.NotFound(brand, new BrandNotFoundException(command.BrandId));
+
+        var supplier = await _catalogDbContext.FindSupplierByIdAsync(command.SupplierId);
+        Guard.Against.NotFound(supplier, new SupplierNotFoundException(command.SupplierId));
+
+        var product = Product.Create(
+            command.Id,
+            command.Name,
+            Stock.Create(command.Stock, command.RestockThreshold, command.MaxStockThreshold),
+            command.Status,
+            Dimensions.Create(command.Width, command.Height, command.Depth),
+            command.Size,
+            command.Color,
+            command.Description,
+            command.Price,
+            category!.Id,
+            supplier!.Id,
+            brand!.Id,
+            images);
+
+        await _catalogDbContext.Products.AddAsync(product, cancellationToken: cancellationToken);
+
+        await _catalogDbContext.SaveChangesAsync(cancellationToken);
+
+        var created = await _catalogDbContext.Products
+            .Include(x => x.Brand)
+            .Include(x => x.Category)
+            .Include(x => x.Supplier)
+            .SingleOrDefaultAsync(x => x.Id == product.Id, cancellationToken: cancellationToken);
+
+        var productDto = _mapper.Map<ProductDto>(created);
+
+        _logger.LogInformation("Product a with ID: '{ProductId} created.'", command.Id);
+
+        return new CreateProductResult(productDto);
+    }
+}
+```
+
+This command handler will execute in a transaction with using [EfTxBehavior](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Persistence/EfCore/EfTxBehavior.cs) pipeline, because `CreateProduct` inherits from [ITxCreateCommand](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Abstractions/CQRS/Command/ITxCreateCommand.cs).
+
+And in the end of this handler before [Committing Transaction](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Persistence/EfCore/EfTxBehavior.cs#L76) we publish our domain events and our domain event will with their handlers with help of [DomainEventPublisher](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L37). Also after [publishing our domain event handlers](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L60), if We have a valid [EventMapper](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L125) for mapping our domain events to `integration events` we can get their corresponding `Integration Events` for example [Here](src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Products/ProductEventMapper.cs) is a event mapping file for products functionality. 
+
+These integration events will [save](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L76) with help of [IntegrationEventPublisher](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/IntegrationEventPublisher.cs#L16) in the [Outbox](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Messaging.Postgres/Outbox/EfOutboxService.cs) for guaranty delivery before committing. 
+After [Committing Transaction](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Persistence/EfCore/EfTxBehavior.cs#L79) Our [OutboxProcessorBackgroundService](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/IntegrationEventPublisher.cs#L16) in the [Outbox](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Messaging/BackgroundServices/OutboxProcessorBackgroundService.cs#L46) will send saved outbox events to message broker.
+
 ## Prerequisites
 
 1. Install git - [https://git-scm.com/downloads](https://git-scm.com/downloads).
