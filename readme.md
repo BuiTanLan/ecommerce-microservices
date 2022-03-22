@@ -324,12 +324,12 @@ public class CreateProductHandler : ICommandHandler<CreateProduct, CreateProduct
 }
 ```
 
-This command handler will execute in a transaction with using [EfTxBehavior](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Persistence/EfCore/EfTxBehavior.cs) pipeline, because `CreateProduct` inherits from [ITxCreateCommand](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Abstractions/CQRS/Command/ITxCreateCommand.cs).
+This command handler will execute in a transaction with using [EfTxBehavior](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Core/Persistence/EfCore/EfTxBehavior.cs) pipeline, because `CreateProduct` inherits from [ITxCreateCommand](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Abstractions/CQRS/Command/ITxCreateCommand.cs).
 
-And in the end of this handler before [Committing Transaction](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Persistence/EfCore/EfTxBehavior.cs#L76) we publish our domain events and our domain event will with their handlers with help of [DomainEventPublisher](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L37). Also after [publishing our domain event handlers](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L60), if We have a valid [EventMapper](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L125) for mapping our domain events to `integration events` we can get their corresponding `Integration Events` for example [Here](src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Products/ProductEventMapper.cs) is a event mapping file for products functionality. 
+And in the end of this handler before [Committing Transaction](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Core/Persistence/EfCore/EfTxBehavior.cs#L76) we publish our domain events and our domain event will with their handlers with help of [DomainEventPublisher](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L37). Also after [publishing our domain event handlers](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L60), if We have a valid [EventMapper](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L125) for mapping our domain events to `integration events` we can get their corresponding `Integration Events` for example [Here](src/Services/ECommerce.Services.Catalogs/ECommerce.Services.Catalogs/Products/ProductEventMapper.cs) is a event mapping file for products functionality. 
 
-These integration events will [save](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L76) with help of [IntegrationEventPublisher](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/IntegrationEventPublisher.cs#L16) in the [Outbox](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Messaging.Postgres/Outbox/EfOutboxService.cs) for guaranty delivery before committing. 
-After [Committing Transaction](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Persistence/EfCore/EfTxBehavior.cs#L79) Our [OutboxProcessorBackgroundService](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/IntegrationEventPublisher.cs#L16) in the [Outbox](src/BuildingBlocks/micro-bootstrap/src/MicroBootstrap.Core/Messaging/BackgroundServices/OutboxProcessorBackgroundService.cs#L46) will send saved outbox events to message broker.
+These integration events will [save](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/DomainEventPublisher.cs#L76) with help of [IntegrationEventPublisher](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/IntegrationEventPublisher.cs#L16) in the [Outbox](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Messaging.Postgres/Outbox/EfOutboxService.cs) for guaranty delivery before committing. 
+After [Committing Transaction](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Core/Persistence/EfCore/EfTxBehavior.cs#L79) Our [OutboxProcessorBackgroundService](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Core/Domain/Events/IntegrationEventPublisher.cs#L16) in the [Outbox](https://github.com/mehdihadeli/micro-bootstrap/src/MicroBootstrap.Core/Messaging/BackgroundServices/OutboxProcessorBackgroundService.cs#L46) will send saved outbox events to message broker.
 
 ## Prerequisites
 
@@ -338,7 +338,7 @@ After [Committing Transaction](src/BuildingBlocks/micro-bootstrap/src/MicroBoots
 3. Install Visual Studio 2022, Rider or VSCode.
 4. Install docker - [https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/).
 5. Make sure that you have ~10GB disk space.
-6. Clone Project [https://github.com/mehdihadeli/e-commerce-microservices](https://github.com/mehdihadeli/e-commerce-microservices), make sure that's compiling
+6. Clone Project [https://github.com/mehdihadeli/ecommerce-microservices](https://github.com/mehdihadeli/ecommerce-microservices), make sure that's compiling
 7. Open [ECommerce.sln](./ECommerce.sln) solution.
 
 ## How to Run
@@ -452,4 +452,4 @@ TODO
 The application is in development status. You are feel free to submit pull request or create the issue.
 
 ## License
-The project is under [MIT license](https://github.com/mehdihadeli/e-commerce-microservices/blob/main/LICENSE).
+The project is under [MIT license](https://github.com/mehdihadeli/ecommerce-microservices/blob/main/LICENSE).
