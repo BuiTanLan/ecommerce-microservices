@@ -54,4 +54,28 @@
     <PackageReference Update="AspNetCore.HealthChecks.EventStore" Version="5.0.1"/>
   </ItemGroup>
   
+  <ItemGroup>
+    <PackageReference Update="MicroBootstrap.Abstractions" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Caching.InMemory" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Caching.Redis" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Core" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.CQRS" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Email" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Logging" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Messaging.Postgres" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Messaging.Transport.Rabbitmq" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Monitoring" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Persistence.EfCore.Postgres" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Persistence.EventStoreDB" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Persistence.Mongo" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Resiliency" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Scheduling.Internal" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Security" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Serialization" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Swagger" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Tracing" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Validation" Version="$(MicroBootstrapVersion)"/>
+    <PackageReference Update="MicroBootstrap.Web" Version="$(MicroBootstrapVersion)"/>
+  </ItemGroup>
+  
 </Project>

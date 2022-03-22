@@ -6,11 +6,47 @@ In developing this application I try to use new features in .NET 6 and C# 10 bas
 
 > For `building blocks` or `cross cutting concerns` part of this application, I used my [micro-bootstrap](https://github.com/mehdihadeli/micro-bootstrap) library. it is has some infrastructure code for developing distributed applications. 
 
-For reading code easier, I used [GitHub SubModule](https://www.atlassian.com/git/tutorials/git-submodule) to create a link to microbootsrap library and use it here. You can also use, its [Nuget Packages](https://www.nuget.org/packages?q=microbootstrap) in your applications for easy to use.
-
+For reading code easier, I used [GitHub SubModule](https://www.atlassian.com/git/tutorials/git-submodule) to create a link to microbootsrap library and use it here. You could also use, its [Nuget Packages](https://www.nuget.org/packages?q=microbootstrap) in your applications for easy to use. In [Local Development Craftmanship](#local-development-craftmanship) section I will explain how to use `SubModule` or `Nuget` for Infrastructure or building-blocks part.
 
 This project is still `In-Progress` and I update it to the latest technologies continuously.
 
+# Local Development Craftmanship
+All .NET microservices are developed by using micro-bootstrap library as infrastructure or building-blocks part. So we have two options:
+
+1) Using [micro-bootstrap](https://github.com/mehdihadeli/micro-bootstrap) as a submodule: 
+
+With this approach we need to clone micro-bootstrap beside of our project inside [src/BuildingBlocks/micro-bootstrap](src/BuildingBlocks/micro-bootstrap) and it gives us more readable code also makes our debugging easier.
+
+I recommend this approach for learning purpose.
+For activating loading building-blocks from sub-module, we need to activate it in our [Directory.Build.props](src/Directory.Build.props) file with bellow section and setting `UsingSubModule` to `true`.
+
+``` xml
+<PropertyGroup>
+    <UsingSubModule>true</UsingSubModule>
+</PropertyGroup>
+```
+Also we need to download our sub-module if we already cloned the project, with bellow command:
+
+``` bash
+git submodule update --init --recursive
+```
+
+If we want to clone the project with its sub-modules in one place we could use this command:
+
+``` bash
+git clone --recurse-submodules https://github.com/mehdihadeli/ecommerce-microservices
+```
+
+
+2) Using [micro-bootstrap](https://github.com/mehdihadeli/micro-bootstrap) as a Nuget Package (Default Option): 
+
+We could references to Nuget Packages directly without using sub-modules and get-ride of any source dependency to sub-module with bellow section and setting `UsingSubModule` to `false` in our [Directory.Build.props](src/Directory.Build.props) file.
+
+``` xml
+<PropertyGroup>
+    <UsingSubModule>false</UsingSubModule>
+</PropertyGroup>
+```
 
 # Support ⭐
 If you like my work, feel free to ⭐ this repository, and we will be happy together :)

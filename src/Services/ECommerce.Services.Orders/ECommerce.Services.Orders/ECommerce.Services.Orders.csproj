@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(UsingSubModule)' == 'true'">
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Abstractions\MicroBootstrap.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Caching.InMemory\MicroBootstrap.Caching.InMemory.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Caching.Redis\MicroBootstrap.Caching.Redis.csproj" />
@@ -21,6 +21,29 @@
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Swagger\MicroBootstrap.Swagger.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Tracing\MicroBootstrap.Tracing.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Validation\MicroBootstrap.Validation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UsingSubModule)' == 'false'">
+    <PackageReference Include="MicroBootstrap.Abstractions" />
+    <PackageReference Include="MicroBootstrap.Caching.InMemory" />
+    <PackageReference Include="MicroBootstrap.Caching.Redis" />
+    <PackageReference Include="MicroBootstrap.Core" />
+    <PackageReference Include="MicroBootstrap.CQRS" />
+    <PackageReference Include="MicroBootstrap.Email" />
+    <PackageReference Include="MicroBootstrap.Logging" />
+    <PackageReference Include="MicroBootstrap.Messaging.Postgres" />
+    <PackageReference Include="MicroBootstrap.Messaging.Transport.Rabbitmq" />
+    <PackageReference Include="MicroBootstrap.Monitoring" />
+    <PackageReference Include="MicroBootstrap.Persistence.EfCore.Postgres" />
+    <PackageReference Include="MicroBootstrap.Persistence.EventStoreDB" />
+    <PackageReference Include="MicroBootstrap.Persistence.Mongo" />
+    <PackageReference Include="MicroBootstrap.Resiliency" />
+    <PackageReference Include="MicroBootstrap.Scheduling.Internal" />
+    <PackageReference Include="MicroBootstrap.Security" />
+    <PackageReference Include="MicroBootstrap.Serialization" />
+    <PackageReference Include="MicroBootstrap.Swagger" />
+    <PackageReference Include="MicroBootstrap.Tracing" />
+    <PackageReference Include="MicroBootstrap.Validation" />
   </ItemGroup>
 
   <ItemGroup>

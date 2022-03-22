@@ -9,6 +9,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+     <UsingSubModule>false</UsingSubModule>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>full</DebugType>
     <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>

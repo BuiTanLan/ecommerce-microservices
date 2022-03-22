@@ -13,9 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="appsettings.json" />
     <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
@@ -23,7 +22,7 @@
     <Folder Include="Users\Exceptions" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(UsingSubModule)' == 'true'">
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Abstractions\MicroBootstrap.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Caching.InMemory\MicroBootstrap.Caching.InMemory.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Core\MicroBootstrap.Core.csproj" />
@@ -38,6 +37,23 @@
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Security\MicroBootstrap.Security.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Swagger\MicroBootstrap.Swagger.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Validation\MicroBootstrap.Validation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UsingSubModule)' == 'false'">
+    <PackageReference Include="MicroBootstrap.Abstractions" />
+    <PackageReference Include="MicroBootstrap.Caching.InMemory" />
+    <PackageReference Include="MicroBootstrap.Core" />
+    <PackageReference Include="MicroBootstrap.CQRS" />
+    <PackageReference Include="MicroBootstrap.Email" />
+    <PackageReference Include="MicroBootstrap.Logging" />
+    <PackageReference Include="MicroBootstrap.Messaging.Postgres" />
+    <PackageReference Include="MicroBootstrap.Messaging.Transport.Rabbitmq" />
+    <PackageReference Include="MicroBootstrap.Monitoring" />
+    <PackageReference Include="MicroBootstrap.Persistence.EfCore.Postgres" />
+    <PackageReference Include="MicroBootstrap.Scheduling.Internal" />
+    <PackageReference Include="MicroBootstrap.Security" />
+    <PackageReference Include="MicroBootstrap.Swagger" />
+    <PackageReference Include="MicroBootstrap.Validation" />
   </ItemGroup>
 
   <ItemGroup>

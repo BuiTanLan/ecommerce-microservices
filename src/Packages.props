@@ -7,6 +7,7 @@
   <MicrosoftDependencyInjectionVersion>6.0.0</MicrosoftDependencyInjectionVersion>
   <MicrosoftLoggingVersion>6.0.0</MicrosoftLoggingVersion>
   <MassTransitVersion>7.3.0</MassTransitVersion>
+  <MicroBootstrapVersion>1.0.0</MicroBootstrapVersion>
 </PropertyGroup>
 
 </Project>
