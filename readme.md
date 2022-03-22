@@ -15,7 +15,7 @@ All .NET microservices are developed by using [micro-bootstrap](https://github.c
 
 1) Using [micro-bootstrap](https://github.com/mehdihadeli/micro-bootstrap) as a submodule: 
 
-With this approach we need to clone micro-bootstrap beside of our project inside [src/BuildingBlocks/micro-bootstrap](src/BuildingBlocks/micro-bootstrap) and it gives us more readable code also makes our debugging easier.
+With this approach we need to clone micro-bootstrap beside of our project inside [src/BuildingBlocks/micro-bootstrap](src/BuildingBlocks/micro-bootstrap) folder and it gives us more readable code also makes our debugging easier.
 
 I recommend this approach for learning purpose.
 For activating loading building-blocks from sub-module, we need to activate it in our [Directory.Build.props](src/Directory.Build.props) file with bellow section and setting `UsingSubModule` to `true`.
