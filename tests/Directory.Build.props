@@ -7,6 +7,10 @@
       <ImplicitUsings>enable</ImplicitUsings>
 	  <NoWarn>CS1587,CS1591,CS1998,NU5105</NoWarn>
   </PropertyGroup>
+  
+  <PropertyGroup>
+     <UsingSubModule>false</UsingSubModule>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.TestPlatform" Version="14.0.0"/>

@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
+  <ItemGroup Condition="'$(UsingSubModule)' == 'true'">
     <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Abstractions\MicroBootstrap.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Core\MicroBootstrap.Core.csproj" />
     <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.CQRS\MicroBootstrap.CQRS.csproj" />
@@ -10,5 +10,18 @@
     <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Scheduling.Internal\MicroBootstrap.Scheduling.Internal.csproj" />
     <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Validation\MicroBootstrap.Validation.csproj" />
     <ProjectReference Include="..\..\..\src\BuildingBlocks\micro-bootstrap\src\MicroBootstrap.Web\MicroBootstrap.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UsingSubModule)' == 'false'">
+    <PackageReference Include="MicroBootstrap.Abstractions" />
+    <PackageReference Include="MicroBootstrap.Core" />
+    <PackageReference Include="MicroBootstrap.CQRS" />
+    <PackageReference Include="MicroBootstrap.Logging" />
+    <PackageReference Include="MicroBootstrap.Messaging.Postgres" />
+    <PackageReference Include="MicroBootstrap.Messaging.Transport.Rabbitmq" />
+    <PackageReference Include="MicroBootstrap.Persistence.EfCore.Postgres" />
+    <PackageReference Include="MicroBootstrap.Scheduling.Internal" />
+    <PackageReference Include="MicroBootstrap.Validation" />
+    <PackageReference Include="MicroBootstrap.Web" />
   </ItemGroup>
 </Project>
